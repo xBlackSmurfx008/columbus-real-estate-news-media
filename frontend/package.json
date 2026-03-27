@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",
@@ -20,6 +21,7 @@
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.51.0",
     "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "latest",
     "@types/react": "latest",

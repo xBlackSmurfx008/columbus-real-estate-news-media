@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const tabs = [
@@ -23,21 +24,48 @@ function tabIsActive(pathname: string, href: string) {
 
 export function JourneyBar() {
   const pathname = usePathname();
+  const barRef = useRef<HTMLDivElement>(null);
+  const [slotHeight, setSlotHeight] = useState(72);
+
+  useEffect(() => {
+    const el = barRef.current;
+    if (!el) return;
+    const sync = () => {
+      const h = Math.ceil(el.getBoundingClientRect().height);
+      if (h > 0) setSlotHeight(h);
+    };
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(el);
+    window.addEventListener("resize", sync);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", sync);
+    };
+  }, [pathname]);
 
   return (
-    <div className="journey-bar">
-      <nav className="journey-tabs" aria-label="Story filters">
-        {tabs.map((tab) => (
-          <Link
-            key={tab.href}
-            href={tab.href}
-            className={cn("journey-tab", tabIsActive(pathname, tab.href) && "active")}
-          >
-            {tab.label}
-            {tab.count != null ? <span className="tab-count">{tab.count}</span> : null}
-          </Link>
-        ))}
-      </nav>
-    </div>
+    <>
+      <div ref={barRef} className="journey-bar journey-bar--pinned" data-testid="journey-bar">
+        <nav className="journey-tabs" aria-label="Story filters">
+          {tabs.map((tab) => (
+            <Link
+              key={tab.href}
+              href={tab.href}
+              className={cn("journey-tab", tabIsActive(pathname, tab.href) && "active")}
+            >
+              {tab.label}
+              {tab.count != null ? <span className="tab-count">{tab.count}</span> : null}
+            </Link>
+          ))}
+        </nav>
+      </div>
+      <div
+        className="journey-bar-slot"
+        aria-hidden
+        style={{ height: slotHeight }}
+        data-testid="journey-bar-slot"
+      />
+    </>
   );
 }

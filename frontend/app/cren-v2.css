@@ -71,6 +71,12 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   background: var(--bg);
+  /* Preflight/Tailwind must not clip horizontal overflow on html or sticky/fixed sub-nav breaks */
+  overflow-x: visible;
+}
+
+html:has(body.cren-theme) {
+  overflow-x: visible;
 }
 
 .cren-main {
@@ -438,11 +444,8 @@ a.btn-subscribe {
 .trending-text { font-size: 13.5px; color: var(--text-body); font-weight: 500; line-height: 1.4; }
 .trending-meta { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
 
-/* ── JOURNEY TABS — Sticky under .cren-header-sticky (requires no overflow:hidden on body — see above) ── */
+/* ── JOURNEY TABS — Fixed below header (immune to overflow/sticky ancestor bugs) ── */
 .journey-bar {
-  position: sticky;
-  top: var(--cren-header-sticky-offset);
-  z-index: 1005;
   background: rgba(255, 255, 255, 0.96);
   -webkit-backdrop-filter: blur(14px) saturate(1.2);
   backdrop-filter: blur(14px) saturate(1.2);
@@ -450,6 +453,19 @@ a.btn-subscribe {
   border-bottom: 1px solid var(--border);
   padding: 0;
   box-shadow: 0 1px 0 rgba(20, 18, 16, 0.04);
+}
+
+.journey-bar--pinned {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: var(--cren-header-sticky-offset);
+  z-index: 1005;
+}
+
+.journey-bar-slot {
+  width: 100%;
+  flex-shrink: 0;
 }
 .journey-tabs {
   max-width: 1200px; margin: 0 auto; padding: 12px 24px;

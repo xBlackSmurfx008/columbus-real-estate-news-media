@@ -459,6 +459,8 @@ a.btn-subscribe {
   position: fixed;
   left: 0;
   right: 0;
+  width: 100%;
+  max-width: none;
   top: var(--cren-header-sticky-offset);
   z-index: 1005;
 }

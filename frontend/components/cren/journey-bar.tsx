@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 
 const tabs = [
@@ -26,6 +27,11 @@ export function JourneyBar() {
   const pathname = usePathname();
   const barRef = useRef<HTMLDivElement>(null);
   const [slotHeight, setSlotHeight] = useState(72);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const el = barRef.current;
@@ -44,22 +50,26 @@ export function JourneyBar() {
     };
   }, [pathname]);
 
+  const pinnedBar = (
+    <div ref={barRef} className="journey-bar journey-bar--pinned" data-testid="journey-bar">
+      <nav className="journey-tabs" aria-label="Story filters">
+        {tabs.map((tab) => (
+          <Link
+            key={tab.href}
+            href={tab.href}
+            className={cn("journey-tab", tabIsActive(pathname, tab.href) && "active")}
+          >
+            {tab.label}
+            {tab.count != null ? <span className="tab-count">{tab.count}</span> : null}
+          </Link>
+        ))}
+      </nav>
+    </div>
+  );
+
   return (
     <>
-      <div ref={barRef} className="journey-bar journey-bar--pinned" data-testid="journey-bar">
-        <nav className="journey-tabs" aria-label="Story filters">
-          {tabs.map((tab) => (
-            <Link
-              key={tab.href}
-              href={tab.href}
-              className={cn("journey-tab", tabIsActive(pathname, tab.href) && "active")}
-            >
-              {tab.label}
-              {tab.count != null ? <span className="tab-count">{tab.count}</span> : null}
-            </Link>
-          ))}
-        </nav>
-      </div>
+      {mounted ? createPortal(pinnedBar, document.body) : null}
       <div
         className="journey-bar-slot"
         aria-hidden

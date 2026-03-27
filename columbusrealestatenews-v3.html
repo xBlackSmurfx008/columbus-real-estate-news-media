@@ -71,6 +71,9 @@
   --radius-pill: 100px;
   --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --transition: 0.35s var(--ease);
+  --topbar-h: 36px;
+  --nav-h: 64px;
+  --journey-top-offset: calc(var(--topbar-h) + var(--nav-h));
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -246,10 +249,12 @@ section { padding: 80px 0; }
 .trending-text { font-size: 13.5px; color: var(--text-body); font-weight: 500; line-height: 1.4; }
 .trending-meta { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
 
-/* ── JOURNEY TABS — Sticky under main nav (nav .nav-inner = 64px) ── */
+/* ── JOURNEY TABS — Fixed below header (same behavior as app) ── */
 .journey-bar {
-  position: sticky;
-  top: 64px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: var(--journey-top-offset);
   z-index: 990;
   background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(14px) saturate(1.2);
@@ -258,6 +263,11 @@ section { padding: 80px 0; }
   border-top: 1px solid var(--border);
   padding: 0;
   box-shadow: 0 1px 0 rgba(20, 18, 16, 0.04);
+}
+.journey-bar-slot {
+  width: 100%;
+  height: 64px;
+  flex-shrink: 0;
 }
 .journey-tabs {
   max-width: 1200px; margin: 0 auto; padding: 12px 24px;
@@ -657,6 +667,7 @@ footer {
   .about-grid, .contact-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 768px) {
+  :root { --topbar-h: 0px; }
   .topbar { display: none; }
   .nav-center { display: none; }
   .mobile-menu-btn { display: block; }
@@ -750,6 +761,7 @@ footer {
       <button type="button" class="journey-tab" data-journey="market" onclick="setJourney(this)">Market Data</button>
     </div>
   </div>
+  <div class="journey-bar-slot" aria-hidden="true"></div>
 
   <!-- HERO — Editorial text-first with sidebar -->
   <div class="hero">
@@ -1335,6 +1347,16 @@ function toggleMobile() {
   if(c.style.display==='flex'){c.style.display='none';}
   else{c.style.display='flex';c.style.flexDirection='column';c.style.position='fixed';c.style.top='64px';c.style.left='0';c.style.right='0';c.style.background='rgba(250,247,242,0.98)';c.style.padding='16px';c.style.borderBottom='1px solid var(--border)';c.style.zIndex='999';c.style.backdropFilter='blur(20px)';}
 }
+
+function syncJourneyBarSlot() {
+  const bar = document.querySelector('.journey-bar');
+  const slot = document.querySelector('.journey-bar-slot');
+  if (!bar || !slot) return;
+  slot.style.height = Math.ceil(bar.getBoundingClientRect().height) + 'px';
+}
+window.addEventListener('resize', syncJourneyBarSlot);
+window.addEventListener('load', syncJourneyBarSlot);
+syncJourneyBarSlot();
 </script>
 </body>
 </html>

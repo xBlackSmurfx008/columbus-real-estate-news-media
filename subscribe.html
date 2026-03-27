@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Subscribe | Columbus Real Estate News Media</title>
+    <link rel="stylesheet" href="./assets/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="brand"><a href="./index.html">Columbus Real Estate News Media</a></div>
+      <nav>
+        <a href="./areas.html">Areas</a>
+        <a href="./topics.html">Topics</a>
+      </nav>
+    </header>
+    <main>
+      <section class="panel">
+        <h1>Follow by area and topic</h1>
+        <p class="muted">Get only the Columbus neighborhoods and content categories you care about.</p>
+        <form data-follow-form>
+          <label>Email <input type="email" name="email" required /></label>
+          <label>Area
+            <select name="area" required>
+              <option value="">Choose area</option>
+              <option>Upper Arlington</option>
+              <option>Dublin</option>
+              <option>Grove City</option>
+              <option>Westerville</option>
+              <option>Hilliard</option>
+              <option>Columbus Citywide</option>
+            </select>
+          </label>
+          <label>Topic
+            <select name="topic" required>
+              <option value="">Choose topic</option>
+              <option>Market Trends</option>
+              <option>Neighborhood Guides</option>
+              <option>Schools and Education</option>
+              <option>Development and New Construction</option>
+              <option>Local Politics and Policy</option>
+              <option>Restaurants and Entertainment</option>
+              <option>Local Events</option>
+            </select>
+          </label>
+          <label>Email cadence
+            <select name="frequency" required>
+              <option value="weekly">Weekly</option>
+              <option value="biweekly">Bi-weekly</option>
+              <option value="instant">Instant alerts</option>
+            </select>
+          </label>
+          <button type="submit">Start following</button>
+        </form>
+        <p class="success" data-follow-success></p>
+      </section>
+    </main>
+    <footer><a href="./privacy.html">Privacy</a></footer>
+    <script src="./assets/app.js"></script>
+  </body>
+</html>

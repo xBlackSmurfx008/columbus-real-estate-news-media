@@ -1,0 +1,262 @@
+import { classifyIntent, classifyRisk } from "@/src/agent/email/classifier";
+import { buildDraftReply } from "@/src/agent/email/draft";
+import { initializeKnowledgeBase } from "@/src/agent/knowledge/base";
+import { crmAdapter } from "@/src/agent/integrations/crm";
+import { requiresHumanApproval } from "@/src/agent/policy/risk";
+import {
+  activitiesStore,
+  contactsStore,
+  emailMessagesStore,
+  nextId,
+  threadsStore,
+  upsert,
+} from "@/src/agent/store";
+import type { Channel, Contact, MessageThread } from "@/src/agent/types";
+import { emailGateway, type EmailInbound } from "@/src/agent/integrations/email";
+import { socialDmGateway } from "@/src/agent/integrations/socialDm";
+
+let initialized = false;
+
+function ensureInitialized(): void {
+  if (initialized) return;
+  initializeKnowledgeBase();
+  initialized = true;
+}
+
+function findOrCreateContact(fromEmail: string): Contact {
+  const existing = [...contactsStore.values()].find((c) => c.email === fromEmail);
+  if (existing) return existing;
+  const now = new Date().toISOString();
+  const contact: Contact = {
+    id: nextId("contact"),
+    name: fromEmail.split("@")[0] || "unknown",
+    email: fromEmail,
+    createdAt: now,
+    updatedAt: now,
+  };
+  return upsert(contactsStore, contact);
+}
+
+export async function processInboundEmail(input: EmailInbound): Promise<MessageThread> {
+  return processInboundMessage({
+    from: input.from,
+    subject: input.subject,
+    body: input.body,
+    channel: "email",
+    providerMessageId: input.providerMessageId,
+    receivedAt: input.receivedAt,
+  });
+}
+
+export async function processInboundSocialDm(input: {
+  fromHandle: string;
+  body: string;
+  provider?: string;
+  providerThreadId?: string;
+  receivedAt?: string;
+}): Promise<MessageThread> {
+  return processInboundMessage({
+    from: input.fromHandle,
+    subject: "Social DM inquiry",
+    body: input.body,
+    channel: "social_dm",
+    providerMessageId: input.providerThreadId,
+    dmProvider: input.provider,
+    dmThreadExternalId: input.providerThreadId,
+    dmHandle: input.fromHandle,
+    receivedAt: input.receivedAt,
+  });
+}
+
+export async function processInboundMessage(input: {
+  from: string;
+  subject: string;
+  body: string;
+  channel: Channel;
+  providerMessageId?: string;
+  dmProvider?: string;
+  dmThreadExternalId?: string;
+  dmHandle?: string;
+  receivedAt?: string;
+}): Promise<MessageThread> {
+  ensureInitialized();
+  const now = new Date().toISOString();
+  const contact = findOrCreateContact(input.from);
+  const relatedDeal = crmAdapter
+    .getSnapshot()
+    .deals.find((deal) => deal.primaryContactId === contact.id);
+  const classification = classifyIntent(input.subject, input.body);
+  const risk = classifyRisk(input.subject, input.body);
+  const drafted = buildDraftReply(classification.intent, input.subject, input.body);
+
+  const thread: MessageThread = {
+    id: nextId("thread"),
+    contactId: contact.id,
+    dealId: relatedDeal?.id,
+    channel: input.channel,
+    subject: input.subject,
+    body: input.body,
+    intent: classification.intent,
+    risk,
+    confidence: classification.confidence,
+    status: "drafted",
+    draftReply: drafted.draft,
+    sourceKnowledgeIds: drafted.sourceKnowledgeIds,
+    approvalDecision: "pending",
+    ...(input.channel === "social_dm"
+      ? {
+          dmProvider: input.dmProvider,
+          dmThreadExternalId: input.dmThreadExternalId,
+          dmHandle: input.dmHandle || input.from,
+        }
+      : {}),
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  upsert(threadsStore, thread);
+  upsert(emailMessagesStore, {
+    id: nextId("message"),
+    threadId: thread.id,
+    contactId: contact.id,
+    direction: "inbound",
+    providerMessageId: input.providerMessageId || nextId("inbound"),
+    subject: input.subject || "Inbound message",
+    body: input.body,
+    sentAt: input.receivedAt || now,
+  });
+
+  const approval = requiresHumanApproval(thread);
+  if (approval.required) {
+    thread.status = "pending_approval";
+    thread.approvalReason = approval.reason;
+  } else {
+    thread.approvalDecision = "auto_approved";
+    await sendThreadReply(thread.id, true, "Auto-approved low-risk response.");
+  }
+
+  upsert(threadsStore, thread);
+  upsert(activitiesStore, {
+    id: nextId("activity"),
+    entityType: "thread",
+    entityId: thread.id,
+    contactId: contact.id,
+    dealId: relatedDeal?.id,
+    threadId: thread.id,
+    type: "email_received",
+    summary: `Inbound processed with intent=${thread.intent}, risk=${thread.risk}.`,
+    createdAt: now,
+  });
+
+  if (thread.status === "pending_approval") {
+    upsert(activitiesStore, {
+      id: nextId("activity"),
+      entityType: "thread",
+      entityId: thread.id,
+      contactId: contact.id,
+      dealId: relatedDeal?.id,
+      threadId: thread.id,
+      type: "approval_required",
+      summary: thread.approvalReason || "Requires human approval.",
+      createdAt: now,
+    });
+  }
+
+  return thread;
+}
+
+export async function sendThreadReply(
+  threadId: string,
+  approved: boolean,
+  reason?: string,
+): Promise<MessageThread> {
+  const thread = threadsStore.get(threadId);
+  if (!thread) throw new Error("Thread not found.");
+  const contact = contactsStore.get(thread.contactId);
+  if (!contact) throw new Error("Contact not found.");
+
+  if (!approved) {
+    thread.approvalDecision = "rejected";
+    thread.status = "escalated";
+    thread.approvalReason = reason || "Rejected by reviewer.";
+    thread.updatedAt = new Date().toISOString();
+    upsert(threadsStore, thread);
+    return thread;
+  }
+
+  const draft = thread.draftReply || "Thanks for reaching out.";
+  let outbound: { ok: boolean; providerMessageId: string };
+  try {
+    if (thread.channel === "social_dm") {
+      outbound = await socialDmGateway.send({
+        toHandle: (thread as MessageThread & { dmHandle?: string }).dmHandle || contact.email,
+        body: draft,
+        provider: (thread as MessageThread & { dmProvider?: string }).dmProvider || "staged",
+        providerThreadId: (thread as MessageThread & { dmThreadExternalId?: string }).dmThreadExternalId,
+      });
+    } else {
+      outbound = await emailGateway.send({
+        to: contact.email,
+        subject: `Re: ${thread.subject}`,
+        body: draft,
+      });
+    }
+  } catch (error) {
+    upsert(activitiesStore, {
+      id: nextId("activity"),
+      entityType: "thread",
+      entityId: thread.id,
+      contactId: contact.id,
+      dealId: thread.dealId,
+      threadId: thread.id,
+      type: "approval_required",
+      summary: `Send failed: ${error instanceof Error ? error.message : "unknown error"}`,
+      createdAt: new Date().toISOString(),
+    });
+    throw error;
+  }
+  if (!outbound.ok) throw new Error("Message provider send failed.");
+  upsert(emailMessagesStore, {
+    id: nextId("message"),
+    threadId: thread.id,
+    contactId: contact.id,
+    direction: "outbound",
+    providerMessageId: outbound.providerMessageId,
+    subject: `Re: ${thread.subject}`,
+    body: draft,
+    sentAt: new Date().toISOString(),
+  });
+
+  thread.status = "sent";
+  thread.approvalDecision = thread.approvalDecision === "auto_approved" ? "auto_approved" : "approved";
+  thread.updatedAt = new Date().toISOString();
+  upsert(threadsStore, thread);
+
+  upsert(activitiesStore, {
+    id: nextId("activity"),
+    entityType: "thread",
+    entityId: thread.id,
+    contactId: contact.id,
+    dealId: thread.dealId,
+    threadId: thread.id,
+    type: "email_sent",
+    summary: `Reply sent (${thread.approvalDecision}). reason=${reason || "n/a"}`,
+    createdAt: new Date().toISOString(),
+  });
+
+  // SLA follow-up task if no reply window is missed.
+  crmAdapter.upsertTask({
+    title: `Follow up on thread: ${thread.subject}`,
+    status: "pending",
+    dueAt: (() => {
+      const d = new Date();
+      d.setDate(d.getDate() + 1);
+      return d.toISOString();
+    })(),
+    assigneeRole: "sales",
+    contactId: contact.id,
+    dealId: thread.dealId,
+    notes: "Auto-created after outbound send for <24h follow-up SLA.",
+  });
+  return thread;
+}

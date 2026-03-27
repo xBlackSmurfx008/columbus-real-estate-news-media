@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+@source "./**/*.{js,ts,jsx,tsx,mdx}";
+@source "../components/**/*.{js,ts,jsx,tsx,mdx}";
+
+/* Semantic HSL tokens (space-separated) — swap :root / .dark for themes */
+:root {
+  --background: 210 32% 97%;
+  --foreground: 234 33% 14%;
+  --card: 0 0% 100%;
+  --card-foreground: 234 33% 14%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 234 33% 14%;
+  --primary: 173 45% 37%;
+  --primary-foreground: 0 0% 100%;
+  --muted: 220 14% 96%;
+  --muted-foreground: 220 9% 46%;
+  --accent: 173 45% 95%;
+  --accent-foreground: 173 40% 22%;
+  --border: 220 13% 90%;
+  --input: 220 13% 90%;
+  --ring: 173 45% 37%;
+}
+
+.dark {
+  --background: 234 28% 9%;
+  --foreground: 210 30% 96%;
+  --card: 234 26% 12%;
+  --card-foreground: 210 30% 96%;
+  --popover: 234 26% 12%;
+  --popover-foreground: 210 30% 96%;
+  --primary: 173 48% 48%;
+  --primary-foreground: 234 33% 10%;
+  --muted: 234 22% 18%;
+  --muted-foreground: 220 12% 65%;
+  --accent: 173 30% 18%;
+  --accent-foreground: 173 45% 92%;
+  --border: 234 18% 22%;
+  --input: 234 18% 22%;
+  --ring: 173 48% 48%;
+}
+
+@theme inline {
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-playfair), ui-serif, Georgia, "Times New Roman", serif;
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+}
+
+@theme {
+  --animate-fade-in: fade-in 0.5s ease-out forwards;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@layer base {
+  html,
+  body {
+    background: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+
+  body {
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-playfair), ui-serif, Georgia, "Times New Roman", serif;
+  }
+}
+
+@utility container {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 87.5rem;
+  padding-inline: 2rem;
+}
+
+.surface-card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 16px;
+  box-shadow: 0 8px 24px hsl(var(--foreground) / 0.06);
+}
+
+.surface-soft {
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  border-radius: 14px;
+}
+
+.btn-primary {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.btn-primary:hover {
+  filter: brightness(0.95);
+}
+
+.focus-ring:focus-visible {
+  outline: 3px solid hsl(var(--ring) / 0.45);
+  outline-offset: 2px;
+}

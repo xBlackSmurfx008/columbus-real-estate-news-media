@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Contact | Columbus Real Estate News Media</title>
+    <link rel="stylesheet" href="./assets/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="brand"><a href="./index.html">Columbus Real Estate News Media</a></div>
+      <nav>
+        <a href="./areas.html">Areas</a>
+        <a href="./advertise.html">Advertise</a>
+      </nav>
+    </header>
+    <main>
+      <section class="panel">
+        <h1>Contact</h1>
+        <p class="muted">Use this intake form for editorial tips, sponsorship questions, and partnership requests.</p>
+        <form data-follow-form>
+          <label>Name <input name="name" required /></label>
+          <label>Email <input type="email" name="email" required /></label>
+          <label>Area of interest
+            <select name="area" required>
+              <option value="">Select an area</option>
+              <option>Upper Arlington</option>
+              <option>Dublin</option>
+              <option>Grove City</option>
+              <option>Westerville</option>
+              <option>Columbus Citywide</option>
+            </select>
+          </label>
+          <label>Topic
+            <select name="topic" required>
+              <option value="">Select a topic</option>
+              <option>Market Trends</option>
+              <option>Schools and Education</option>
+              <option>Development and New Construction</option>
+              <option>Local Events</option>
+              <option>Restaurants and Entertainment</option>
+            </select>
+          </label>
+          <input type="hidden" name="frequency" value="weekly" />
+          <button type="submit">Submit</button>
+        </form>
+        <p class="success" data-follow-success></p>
+      </section>
+    </main>
+    <footer><a href="./privacy.html">Privacy</a></footer>
+    <script src="./assets/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,32 @@
+# Next.js
+frontend/.next/
+frontend/out/
+frontend/node_modules/
+
+node_modules/
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+frontend/.env*.local
+
+# Vercel
+.vercel/
+frontend/.vercel/
+
+# OS & IDE
+.DS_Store
+.idea/
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Cursor / local tooling
+.cursor/
+
+# Python
+__pycache__/
+*.pyc

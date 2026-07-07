@@ -50,6 +50,13 @@ Blog (primary — inserted directly into the `articles` table, live). `content/<
 
 - (add Twitter/X handles, neighborhood Facebook groups, etc.)
 
+### Sourcing etiquette (applies to all scraping/fetching)
+- Prefer official RSS feeds, press-release pages, and public APIs over scraping article HTML.
+- Respect robots.txt and paywalls: never reproduce paywalled text; cite the headline and link instead.
+- One fetch per page per run — no crawling, no hammering a site with repeated requests.
+- Government sources (columbus.gov, ohio.gov, county sites) are public record and the most reliable primary sources — prefer them for facts, and use news outlets for context and quotes.
+- Every fact in a published article must be traceable to a specific fetched source. No memory-only claims.
+
 ## SEO conventions
 - Title: front-load Columbus + neighborhood + asset class
 - Meta description: 150–160 chars, lead with the news

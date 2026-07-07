@@ -42,6 +42,8 @@ function generateSlug(title) {
     .substring(0, 80);
 }
 
+const VALID_TOPICS = ["market-trends", "schools", "development", "local-politics", "events-lifestyle"];
+
 const article = JSON.parse(readFileSync(filePath, "utf-8"));
 
 for (const field of ["title", "category", "author", "date"]) {
@@ -51,11 +53,23 @@ for (const field of ["title", "category", "author", "date"]) {
   }
 }
 
+if (article.topic_slug && !VALID_TOPICS.includes(article.topic_slug)) {
+  console.error(`Invalid topic_slug "${article.topic_slug}". Must be one of: ${VALID_TOPICS.join(", ")}`);
+  process.exit(1);
+}
+
+if (article.excerpt && (article.excerpt.length < 100 || article.excerpt.length > 180)) {
+  console.warn(`Warning: excerpt is ${article.excerpt.length} chars; SEO convention is 150-160.`);
+}
+
+// Format using local date parts — toISOString() would shift the day in UTC+ timezones.
+function toIsoDate(d) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 const slug = generateSlug(article.title);
 const parsedDate = new Date(article.date);
-const isoPrefix = Number.isNaN(parsedDate.getTime())
-  ? new Date().toISOString().slice(0, 10)
-  : parsedDate.toISOString().slice(0, 10);
+const isoPrefix = toIsoDate(Number.isNaN(parsedDate.getTime()) ? new Date() : parsedDate);
 const id = `${isoPrefix}-${slug}`;
 
 const sql = neon(databaseUrl);
@@ -77,7 +91,7 @@ const [row] = await sql`
 `;
 
 if (!row) {
-  console.error(`Insert skipped: an article with id "${id}" already exists.`);
+  console.error(`Insert skipped: an article with id "${id}" already exists. Adjust the title (the id is derived from date + title) and retry.`);
   process.exit(1);
 }
 

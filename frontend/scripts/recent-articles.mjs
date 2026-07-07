@@ -15,7 +15,7 @@ if (!databaseUrl) {
 const sql = neon(databaseUrl);
 
 const rows = await sql`
-  SELECT title, date, topic_slug, area_slug, created_at
+  SELECT id, title, date, topic_slug, area_slug, created_at
   FROM articles
   WHERE created_at >= NOW() - (${days} || ' days')::interval
   ORDER BY created_at DESC
@@ -26,6 +26,6 @@ if (rows.length === 0) {
 } else {
   console.log(`${rows.length} article(s) in the last ${days} days:\n`);
   for (const r of rows) {
-    console.log(`- [${r.date}] (${r.topic_slug ?? "no-topic"} / ${r.area_slug ?? "no-area"}) ${r.title}`);
+    console.log(`- [${r.date}] (${r.topic_slug ?? "no-topic"} / ${r.area_slug ?? "no-area"}) ${r.title}  {id: ${r.id}}`);
   }
 }

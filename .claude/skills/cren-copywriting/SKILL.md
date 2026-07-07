@@ -15,6 +15,15 @@ description: Copywriting standard for Columbus Real Estate News articles — 4th
 
 This is a *reading level* standard, not a tone downgrade — still precise, still adult, still credible. Short sentences carry hard facts and real numbers.
 
+## Article shape
+
+- Body: 400–800 words. Long enough to add local analysis, short enough to hold a casual reader.
+- Lead with the news in the first sentence. No warm-up paragraphs.
+- Structure: what happened → what it means for Columbus buyers/sellers/renters/residents → what to watch next.
+- End with one concrete takeaway or next step for the reader.
+- Excerpt: 150–160 characters, leads with the news (this doubles as the meta description).
+- Include at least one internal link to a relevant `/areas/<slug>` or `/topics/<slug>` page when one fits naturally.
+
 ## Voice (from repo CLAUDE.md)
 
 Local-first journalism. Plain English, fact-forward, low on hype. Credible neighborhood paper, not a hot-takes site. Always cite sources. Use direct quotes when available.

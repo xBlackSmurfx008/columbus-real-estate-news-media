@@ -13,23 +13,41 @@ A digital journalism property covering Columbus, Ohio real estate. Daily news, b
 Local-first journalism. Plain English, fact-forward, low on hype. We're a credible neighborhood paper, not a hot-takes site. Always cite sources. Quotes when we have them.
 
 ## Daily cadence
-- **06:33**: `cre-newsroom-orchestrator` (L5) runs:
-  - `journalist-researcher` scans 5+ sources, dedupes, writes briefs to `briefs/<date>.md`
-  - `decision-queue` ranks stories: cover today / cover later / skip
-  - `seo-blog-writer` drafts the chosen story with SEO meta + image briefs to `content/blog/<slug>.md`
-- **16:43**: `social-listener` recap — what's Columbus talking about
-- **Weekly Sun**: SEO performance + topic-gap report
+- **06:33 America/New_York** (cloud-scheduled routine — see "Automation" below):
+  1. Run `node frontend/scripts/recent-articles.mjs` to see what's already been covered in the last 30 days (avoid duplicate topics).
+  2. Research via web search + the source list below. Pull local, government, and national coverage.
+  3. Pick 1 real estate story + 1 lifestyle story not already covered.
+  4. Verify facts across sources; if a story originates on another outlet, write original local analysis and link back to it (see `.claude/skills/cren-copywriting`).
+  5. Draft both articles per the copywriting skill (4th-grade reading level, SEO conventions below).
+  6. Generate one hero image per article via Higgsfield.
+  7. Insert each article directly into the live `articles` table via `node frontend/scripts/publish-article.mjs <file.json>` — `status='live'`, no manual review step.
+  8. Write a brief to `briefs/<date>.md` summarizing sources used and links to the two new articles, then commit and push.
+- New articles appear on the live site within 5 minutes (blog pages use `revalidate = 300`) — no redeploy needed per run.
+
+## Automation
+The daily run above executes as a cloud-scheduled Claude Code routine (not a local cron job — see `claude.ai/code/routines`). It authenticates to NeonDB via a `DATABASE_URL` embedded in the routine's own configuration (not committed to this repo) and uses the Higgsfield MCP connector for image generation.
 
 ## Channels
-Blog (primary), then LinkedIn, Instagram, X, Threads for distribution. Drafts in `content/<channel>/<date>.md`. Blog posts in `content/blog/`.
+Blog (primary — inserted directly into the `articles` table, live). `content/<channel>/<date>.md` markdown drafts are kept for LinkedIn/Instagram/X/Threads distribution copy, written after the blog article is live.
 
-## Source list (kept current — used by `journalist-researcher`)
+## Source list (kept current)
+
+### Local news
 - Columbus Business First
 - Columbus Dispatch (real estate section)
 - Columbus Underground
 - ColumbusRealEstate.com listings deltas
-- City of Columbus development announcements
 - ULI Columbus events
+
+### Local & state government
+- City of Columbus (development announcements, zoning, public notices — columbus.gov)
+- Franklin County Auditor and Franklin County Commissioners
+- Mid-Ohio Regional Planning Commission (MORPC)
+- State of Ohio: ohio.gov, Ohio Department of Development, Ohio Housing Finance Agency
+
+### National coverage
+- Search-driven, not a fixed outlet list: scope web searches to "Columbus, Ohio" real estate, development, or lifestyle news on national outlets (e.g. when Columbus shows up in national housing-market, migration, or economic-development coverage).
+
 - (add Twitter/X handles, neighborhood Facebook groups, etc.)
 
 ## SEO conventions

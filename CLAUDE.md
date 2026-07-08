@@ -21,7 +21,8 @@ Local-first journalism. Plain English, fact-forward, low on hype. We're a credib
   5. Draft both articles per the copywriting skill (4th-grade reading level, SEO conventions below).
   6. Generate one hero image per article via Higgsfield.
   7. Insert each article directly into the live `articles` table via `node frontend/scripts/publish-article.mjs <file.json>` — `status='live'`, no manual review step.
-  8. Write a brief to `briefs/<date>.md` summarizing sources used and links to the two new articles, then commit and push.
+  8. Keep market data fresh (accuracy pass): refresh the metro snapshot/ticker as always, AND rotate through the 14 rows of the `neighborhoods` table refreshing ~3 per run so all 14 stay current within a week. Source: **Redfin's per-city/neighborhood housing-market pages** (e.g. `redfin.com/city/5847/OH/Dublin/housing-market`, `redfin.com/neighborhood/152473/OH/Columbus/Clintonville/housing-market`) — they publish monthly medians, YoY, and days-on-market. Cross-check against Zillow/Rocket when possible. Apply via `node frontend/scripts/update-site-data.mjs <file.json>` using the `neighborhoods` key; set any field you cannot verify to `"UNVERIFIED"` (the script leaves those unchanged) and NEVER guess a figure. Small-neighborhood medians are volatile — prefer the source's 3-month figure where offered.
+  9. Write a brief to `briefs/<date>.md` summarizing sources used, links to the two new articles, and which neighborhood rows you refreshed, then commit and push.
 - New articles appear on the live site within 5 minutes (blog pages use `revalidate = 300`) — no redeploy needed per run.
 
 ## Automation

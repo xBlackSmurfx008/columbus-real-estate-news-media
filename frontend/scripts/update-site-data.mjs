@@ -7,6 +7,7 @@
 //   "ticker": ["headline one", "headline two", ...],                  // replaces all ticker items
 //   "market_snapshot": [{"label","value","change","direction"}, ...], // replaces all snapshot cards
 //   "hero_stats": [{"value","label"}, ...]                            // replaces all hero stats
+//   "neighborhoods": [{"name","median","yoy","rent","dom","inventory"}, ...] // UPDATES by name; fields set to "UNVERIFIED" or omitted are left unchanged
 // }
 
 import { readFileSync } from "node:fs";
@@ -52,6 +53,29 @@ if (Array.isArray(data.hero_stats) && data.hero_stats.length > 0) {
     await sql`INSERT INTO hero_stats (value, label, sort_order) VALUES (${h.value}, ${h.label}, ${i++})`;
   }
   console.log(`hero_stats: replaced with ${data.hero_stats.length} stats`);
+}
+
+if (Array.isArray(data.neighborhoods) && data.neighborhoods.length > 0) {
+  const FIELDS = ["median", "yoy", "rent", "dom", "inventory"];
+  let updated = 0, missing = 0;
+  for (const n of data.neighborhoods) {
+    if (!n.name) continue;
+    // Only touch fields that are present and not the sentinel "UNVERIFIED".
+    const sets = FIELDS.filter((f) => n[f] && n[f] !== "UNVERIFIED");
+    if (sets.length === 0) continue;
+    const rows = await sql`SELECT id FROM neighborhoods WHERE name = ${n.name}`;
+    if (rows.length === 0) { console.log(`  neighborhood not found (skipped): ${n.name}`); missing++; continue; }
+    // Build the update per field (neon tagged-template can't take dynamic column lists cleanly).
+    for (const f of sets) {
+      if (f === "median") await sql`UPDATE neighborhoods SET median = ${n.median} WHERE name = ${n.name}`;
+      else if (f === "yoy") await sql`UPDATE neighborhoods SET yoy = ${n.yoy} WHERE name = ${n.name}`;
+      else if (f === "rent") await sql`UPDATE neighborhoods SET rent = ${n.rent} WHERE name = ${n.name}`;
+      else if (f === "dom") await sql`UPDATE neighborhoods SET dom = ${n.dom} WHERE name = ${n.name}`;
+      else if (f === "inventory") await sql`UPDATE neighborhoods SET inventory = ${n.inventory} WHERE name = ${n.name}`;
+    }
+    updated++;
+  }
+  console.log(`neighborhoods: updated ${updated}, ${missing} name(s) not found`);
 }
 
 console.log("done");

@@ -16,6 +16,12 @@ export default function InvestPage() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
+          <Link href="/invest/deploy-capital" className={cardClass}>
+            <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Deploy capital locally</h2>
+            <p className="cren-body mt-2 text-sm">
+              Have capital ready to work? Start a conversation about real Central Ohio opportunities.
+            </p>
+          </Link>
           <Link href="/topics/market-trends" className={cardClass}>
             <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Market &amp; pricing signals</h2>
             <p className="cren-body mt-2 text-sm">

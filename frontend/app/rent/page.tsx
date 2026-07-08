@@ -16,6 +16,10 @@ export default function RentPage() {
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
+          <Link href="/rent/find-a-home" className={cardClass}>
+            <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Find a rental — free help</h2>
+            <p className="cren-body mt-2 text-sm">Tell us your budget and must-haves. We&apos;ll match you with Columbus rentals that fit. No fees to you.</p>
+          </Link>
           <Link href="/blog/columbus-rent-trends-march-2026" className={cardClass}>
             <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Latest rent trends</h2>
             <p className="cren-body mt-2 text-sm">Read a weekly brief on concessions, pricing, and renter demand by area.</p>

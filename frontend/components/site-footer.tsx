@@ -3,11 +3,11 @@ import { FooterNewsletterForm } from "@/components/cren/footer-newsletter-form";
 
 const coverageLinks = [
   { href: "/blog", label: "Market Reports" },
-  { href: "/blog", label: "Rent Guides" },
-  { href: "/blog", label: "Buy Guides" },
-  { href: "/blog", label: "Investment" },
+  { href: "/sell/your-home", label: "Get an Offer on Your Home" },
+  { href: "/sell/investment-property", label: "Sell a Rental" },
+  { href: "/rent/find-a-home", label: "Find a Rental" },
+  { href: "/invest/deploy-capital", label: "Deploy Capital" },
   { href: "/areas", label: "Neighborhoods" },
-  { href: "/blog", label: "Development" },
 ];
 
 const companyLinks = [

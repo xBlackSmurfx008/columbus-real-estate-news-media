@@ -74,4 +74,32 @@ if (await indexExists("subscribers_email_key")) {
   }
 }
 
+// --- Phase B: leads ---
+
+await ensureTable(
+  "leads",
+  `CREATE TABLE leads (
+    id SERIAL PRIMARY KEY,
+    persona TEXT NOT NULL,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT,
+    area TEXT,
+    details JSONB DEFAULT '{}'::jsonb,
+    source TEXT,
+    status TEXT NOT NULL DEFAULT 'new',
+    consent BOOLEAN NOT NULL DEFAULT false,
+    notes TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+  )`
+);
+
+if (await indexExists("leads_persona_idx")) {
+  console.log("skip: index leads_persona_idx exists");
+} else {
+  await sql`CREATE INDEX leads_persona_idx ON leads(persona, created_at DESC)`;
+  console.log("created: index leads_persona_idx");
+}
+
 console.log("migration complete");

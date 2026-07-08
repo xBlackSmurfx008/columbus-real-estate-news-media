@@ -28,6 +28,14 @@ export default function BuyPage() {
             <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Buyer alerts</h2>
             <p className="cren-body mt-2 text-sm">Get weekly updates by area and topic directly in your inbox.</p>
           </Link>
+          <Link href="/rent/find-a-home" className={cardClass}>
+            <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Renting first?</h2>
+            <p className="cren-body mt-2 text-sm">Get free help finding a Columbus rental while you plan your purchase.</p>
+          </Link>
+          <Link href="/invest/deploy-capital" className={cardClass}>
+            <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Buying as an investment?</h2>
+            <p className="cren-body mt-2 text-sm">Talk to local investors about putting your capital to work in Central Ohio.</p>
+          </Link>
         </div>
       </div>
     </CrenPage>

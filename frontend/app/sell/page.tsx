@@ -11,8 +11,26 @@ export default function SellPage() {
           <div className="section-eyebrow">Sell</div>
           <h1 className="cren-heading-xl">Sell smarter in the Columbus market</h1>
           <p className="cren-body mt-2 max-w-2xl">
-            Use local pricing shifts, demand signals, and neighborhood-level content strategy to position listings effectively.
+            Whether you own the home you live in or a rental you&apos;re ready to exit, start here.
+            Direct offers, no commission, and local market context to back your decision.
           </p>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <Link href="/sell/your-home" className={cardClass}>
+            <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Sell your home without an agent</h2>
+            <p className="cren-body mt-2 text-sm">
+              Get a free, no-obligation offer. No 6% commission, no repairs, no showings. You pick the closing date.
+            </p>
+            <span className="cren-text-link mt-3 inline-block text-sm font-semibold">Get my free offer →</span>
+          </Link>
+          <Link href="/sell/investment-property" className={cardClass}>
+            <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Sell a rental or portfolio</h2>
+            <p className="cren-body mt-2 text-sm">
+              Exit quietly and off-market. As-is condition, tenants in place, no listing disruption.
+            </p>
+            <span className="cren-text-link mt-3 inline-block text-sm font-semibold">Start the conversation →</span>
+          </Link>
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">

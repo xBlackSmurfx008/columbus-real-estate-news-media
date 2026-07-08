@@ -99,7 +99,7 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
             <h2 className="cren-heading-lg mb-4">{area.name} market data</h2>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
               {[
-                ["Median Price", matchingNeighborhood.median],
+                ["Typical Value", matchingNeighborhood.median],
                 ["YoY Change", matchingNeighborhood.yoy],
                 ["Avg Rent", matchingNeighborhood.rent],
                 ["Days on Market", matchingNeighborhood.dom],

@@ -454,7 +454,7 @@ export function HomeSections({
                 <div className="hood-stats">
                   <div>
                     <div className="hood-stat-val">{h.median}</div>
-                    <div className="hood-stat-label">Median Price</div>
+                    <div className="hood-stat-label">Typical Value</div>
                   </div>
                   <div>
                     <div className="hood-stat-val">{h.rent}</div>

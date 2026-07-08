@@ -29,7 +29,7 @@ export default async function MarketDataPage() {
           <div className="section-eyebrow">Market Data</div>
           <h1 className="cren-heading-xl">Columbus Market Data</h1>
           <p className="cren-body mt-2 max-w-2xl">
-            Real-time market indicators for the Columbus metro area. Data sourced from local MLS aggregates and updated regularly.
+            Market indicators for the Columbus metro area, compiled from public real estate data and refreshed regularly.
           </p>
         </div>
 
@@ -37,7 +37,7 @@ export default async function MarketDataPage() {
         <section className="cren-surface p-6 md:p-8">
           <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
             <h2 className="cren-heading-lg">Market Snapshot</h2>
-            <p className="text-xs text-[color:var(--text-muted)]">Updated regularly | Source: Local MLS aggregates</p>
+            <p className="text-xs text-[color:var(--text-muted)]">Refreshed regularly | Sources: Columbus REALTORS, Redfin, Freddie Mac</p>
           </div>
           {snapshot.length > 0 ? (
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -66,7 +66,7 @@ export default async function MarketDataPage() {
                 <thead>
                   <tr className="border-b border-[color:var(--border)]">
                     <th className="pb-3 pr-4 text-left text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">Neighborhood</th>
-                    <th className="pb-3 px-4 text-right text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">Median Price</th>
+                    <th className="pb-3 px-4 text-right text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">Typical Value</th>
                     <th className="pb-3 px-4 text-right text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">YoY</th>
                     <th className="pb-3 px-4 text-right text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">Avg Rent</th>
                     <th className="pb-3 px-4 text-right text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">DOM</th>
@@ -117,8 +117,9 @@ export default async function MarketDataPage() {
         <div className="cren-surface p-6 md:p-8">
           <h2 className="cren-heading-lg">Methodology</h2>
           <p className="cren-body mt-2 text-sm">
-            Figures reflect a rolling snapshot of listing and rent observations across the Columbus metro. Sources include Columbus REALTORS MLS,
-            CoStar, and proprietary data collection. Pair with our neighborhood hubs and analysis articles for deeper interpretation.
+            The Market Snapshot metro figures come from the Columbus REALTORS monthly report (median sale price, listings, days on market) and Freddie Mac (mortgage rate).
+            The Neighborhood Comparison &quot;Typical Value&quot; is Zillow&apos;s smoothed home-value index, which is steadier than single-month median sale prices in small
+            neighborhoods where a few sales can swing the number. Rent and days-on-market columns are directional snapshots. Pair with our neighborhood hubs and analysis articles for deeper interpretation.
           </p>
           <Link href="/blog" className="cren-text-link mt-4 inline-block text-sm font-semibold">
             Read latest analysis

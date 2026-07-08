@@ -1,32 +1,26 @@
 import { test, expect } from "@playwright/test";
 
 /**
- * Home journey strip uses position:fixed + spacer so it must not move in the viewport when scrolling.
+ * The journey bar renders in normal document flow — no portal, no
+ * position:fixed. It must scroll away with the page like the rest of
+ * the header (owner rejected the floating/pinned variant).
  */
 test.describe("Home journey bar", () => {
-  test("stays at the same viewport offset after scroll (pinned below header)", async ({ page }) => {
+  test("renders in flow and scrolls away with the page", async ({ page }) => {
     await page.goto("/");
 
     const bar = page.getByTestId("journey-bar");
     await expect(bar).toBeVisible();
 
+    const position = await bar.evaluate((el) => getComputedStyle(el).position);
+    expect(position).not.toBe("fixed");
+
     const topBefore = await bar.evaluate((el) => el.getBoundingClientRect().top);
-    // Desktop: topbar 36px + nav 64px ≈ 100px
-    expect(topBefore).toBeGreaterThanOrEqual(95);
-    expect(topBefore).toBeLessThanOrEqual(105);
 
     await page.evaluate(() => window.scrollTo(0, 2500));
     await expect.poll(async () => page.evaluate(() => window.scrollY)).toBeGreaterThan(2000);
 
     const topAfter = await bar.evaluate((el) => el.getBoundingClientRect().top);
-    expect(Math.abs(topAfter - topBefore)).toBeLessThan(1.5);
-  });
-
-  test("reserves layout space so hero is not covered", async ({ page }) => {
-    await page.goto("/");
-    const slot = page.getByTestId("journey-bar-slot");
-    await expect(slot).toBeVisible();
-    const h = await slot.evaluate((el) => el.getBoundingClientRect().height);
-    expect(h).toBeGreaterThan(40);
+    expect(topBefore - topAfter).toBeGreaterThan(2000);
   });
 });

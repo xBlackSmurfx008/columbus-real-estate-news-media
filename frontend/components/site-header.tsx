@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
+import { JourneyBar } from "@/components/cren/journey-bar";
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -121,6 +122,7 @@ export function SiteHeader() {
           </div>
         </div>
       </nav>
+      <JourneyBar />
     </div>
   );
 }

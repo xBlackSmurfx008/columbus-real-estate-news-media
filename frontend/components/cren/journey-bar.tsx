@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 
 const tabs = [
@@ -23,35 +21,13 @@ function tabIsActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+// Renders in normal document flow. No portals, no position:fixed — the bar
+// scrolls with the page like the rest of the header.
 export function JourneyBar() {
   const pathname = usePathname();
-  const barRef = useRef<HTMLDivElement>(null);
-  const [slotHeight, setSlotHeight] = useState(72);
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    const el = barRef.current;
-    if (!el) return;
-    const sync = () => {
-      const h = Math.ceil(el.getBoundingClientRect().height);
-      if (h > 0) setSlotHeight(h);
-    };
-    sync();
-    const ro = new ResizeObserver(sync);
-    ro.observe(el);
-    window.addEventListener("resize", sync);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", sync);
-    };
-  }, [pathname]);
-
-  const pinnedBar = (
-    <div ref={barRef} className="journey-bar journey-bar--pinned" data-testid="journey-bar">
+  return (
+    <div className="journey-bar" data-testid="journey-bar">
       <nav className="journey-tabs" aria-label="Story filters">
         {tabs.map((tab) => (
           <Link
@@ -65,17 +41,5 @@ export function JourneyBar() {
         ))}
       </nav>
     </div>
-  );
-
-  return (
-    <>
-      {mounted ? createPortal(pinnedBar, document.body) : null}
-      <div
-        className="journey-bar-slot"
-        aria-hidden
-        style={{ height: slotHeight }}
-        data-testid="journey-bar-slot"
-      />
-    </>
   );
 }

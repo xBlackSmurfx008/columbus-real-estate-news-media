@@ -64,6 +64,7 @@ export default async function BlogPostPage({
     mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
     author: { "@type": "Person", name: article.author },
     publisher: { "@type": "Organization", name: "Columbus Real Estate News" },
+    ...(article.image_url ? { image: [article.image_url] } : {}),
   };
 
   const breadcrumb = {
@@ -111,6 +112,18 @@ export default async function BlogPostPage({
                 </div>
               </div>
             </header>
+
+            {/* Hero image */}
+            {article.image_url && (
+              <figure className="overflow-hidden rounded-[var(--radius-sm)]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={article.image_url}
+                  alt={article.title}
+                  className="aspect-[16/9] w-full object-cover"
+                />
+              </figure>
+            )}
 
             {/* Body */}
             <div className="cren-surface p-6 md:p-8">

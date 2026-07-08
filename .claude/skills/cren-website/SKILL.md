@@ -9,10 +9,8 @@ description: Columbus Real Estate News website development, deployment, and mana
 
 | Item | Value |
 |------|-------|
-| **Live URL** | https://frontend-seven-beta-z1pctkk5kz.vercel.app |
-| **Domain** | columbusrealestatenews.com (DNS pending at Namecheap) |
-| **Vercel Project** | prj_DNobqWei6zEnYnlxMGbrSTPcx2VR |
-| **Vercel Org** | team_bofjJO20r16HH2HjhvOz9Ouy |
+| **Live URL** | https://columbusrealestatenews.com (DNS live, www works too) |
+| **Vercel Project** | `frontend` under scope `stephen-s-projects-96d9c6b4` (deploy with `vercel` from a linked dir; the old prj_DNobq…/team_bofjJ… IDs are stale — `vercel domains inspect columbusrealestatenews.com` confirms the binding) |
 | **Framework** | Next.js 16+ App Router, TypeScript, Tailwind v4 |
 | **Database** | NeonDB (PostgreSQL) via `@neondatabase/serverless` |
 | **DB Connection** | `postgresql://neondb_owner:npg_5qx6sKPEdvBO@ep-shy-truth-amtfxuif-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require` |

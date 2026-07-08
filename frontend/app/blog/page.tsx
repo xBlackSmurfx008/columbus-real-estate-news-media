@@ -15,8 +15,20 @@ function ArticleCard({ article, featured = false }: { article: DbArticle; featur
         data-item-type="article"
         data-item-id={article.id}
       >
-        {featured && (
-          <div className="mb-4 aspect-[16/8] overflow-hidden rounded-[var(--radius-sm)] bg-gradient-to-br from-[color:var(--green)]/15 via-[color:var(--gold)]/10 to-transparent" />
+        {article.image_url ? (
+          <div className={`mb-4 overflow-hidden rounded-[var(--radius-sm)] ${featured ? "aspect-[16/8]" : "aspect-[16/9]"}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={article.image_url}
+              alt={article.title}
+              loading="lazy"
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+            />
+          </div>
+        ) : (
+          featured && (
+            <div className="mb-4 aspect-[16/8] overflow-hidden rounded-[var(--radius-sm)] bg-gradient-to-br from-[color:var(--green)]/15 via-[color:var(--gold)]/10 to-transparent" />
+          )
         )}
         <div className="mb-2 flex flex-wrap items-center gap-2">
           <span className="inline-block rounded-full bg-[color:var(--green)]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--green)]">

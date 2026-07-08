@@ -133,6 +133,34 @@ export async function initSchema() {
     )
   `;
 
+  // Matches the production columns exactly (verified 2026-07-08). The unique
+  // index on email is added by scripts/migrate-lead-layer.mjs, not here —
+  // the prod table predates it.
+  await sql`
+    CREATE TABLE IF NOT EXISTS subscribers (
+      id SERIAL PRIMARY KEY,
+      email TEXT NOT NULL,
+      area TEXT,
+      topic TEXT,
+      source TEXT,
+      status TEXT NOT NULL DEFAULT 'active',
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS contacts (
+      id SERIAL PRIMARY KEY,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      message TEXT NOT NULL,
+      source TEXT,
+      status TEXT NOT NULL DEFAULT 'new',
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+
   await sql`
     CREATE TABLE IF NOT EXISTS testimonials (
       id SERIAL PRIMARY KEY,

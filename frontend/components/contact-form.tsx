@@ -6,11 +6,39 @@ import { trackEvent } from "@/lib/analytics-client";
 
 export function ContactForm({ source }: { source: string }) {
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    trackEvent("contact_request", { method: source, conversion: true });
-    setSubmitted(true);
+    setError(null);
+    setSending(true);
+
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("name"),
+          email: data.get("email"),
+          message: data.get("message"),
+          source,
+        }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        setError(body.error ?? "Something went wrong. Please try again.");
+        return;
+      }
+      trackEvent("contact_request", { method: source, conversion: true });
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setSending(false);
+    }
   }
 
   if (submitted) {
@@ -61,8 +89,13 @@ export function ContactForm({ source }: { source: string }) {
             required
           />
         </label>
-        <button type="submit" className="form-submit mt-2 w-full">
-          Send message
+        {error && (
+          <p className="text-sm text-[color:var(--red)]" role="alert">
+            {error}
+          </p>
+        )}
+        <button type="submit" className="form-submit mt-2 w-full" disabled={sending}>
+          {sending ? "Sending…" : "Send message"}
         </button>
       </form>
     </div>

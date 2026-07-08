@@ -6,21 +6,70 @@ import Script from "next/script";
 
 export const revalidate = 300;
 
+// Turn markdown links [text](url), **bold**, and bare URLs into React nodes.
+// Internal links (/path) render as normal links; external links get
+// rel="nofollow noopener" and open in a new tab.
+function renderInline(text: string, keyBase: string): React.ReactNode[] {
+  const nodes: React.ReactNode[] = [];
+  // Order matters: markdown links first, then bare URLs, then bold.
+  const pattern = /\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]*)\)|(https?:\/\/[^\s)]+)|\*\*([^*]+)\*\*/g;
+  let last = 0;
+  let m: RegExpExecArray | null;
+  let n = 0;
+  while ((m = pattern.exec(text)) !== null) {
+    if (m.index > last) nodes.push(text.slice(last, m.index));
+    const key = `${keyBase}-${n++}`;
+    if (m[1] && m[2]) {
+      const href = m[2];
+      const external = href.startsWith("http");
+      nodes.push(
+        <a
+          key={key}
+          href={href}
+          className="cren-text-link"
+          {...(external ? { target: "_blank", rel: "nofollow noopener" } : {})}
+        >
+          {m[1]}
+        </a>
+      );
+    } else if (m[3]) {
+      nodes.push(
+        <a key={key} href={m[3]} className="cren-text-link" target="_blank" rel="nofollow noopener">
+          {m[3]}
+        </a>
+      );
+    } else if (m[4]) {
+      nodes.push(<strong key={key}>{m[4]}</strong>);
+    }
+    last = pattern.lastIndex;
+  }
+  if (last < text.length) nodes.push(text.slice(last));
+  return nodes;
+}
+
 function renderBody(body: string) {
-  // Split body into paragraphs and render
   const paragraphs = body.split("\n\n").filter((p) => p.trim());
   return paragraphs.map((p, i) => {
-    // Check if it looks like a heading
-    if (p.length < 80 && !p.includes(".") && p === p.trim()) {
+    const trimmed = p.trim();
+    // Markdown heading (## Foo) or a short, punctuation-free line = heading.
+    const headingMatch = trimmed.match(/^#{2,3}\s+(.*)$/);
+    if (headingMatch) {
       return (
         <h2 key={i} className="cren-heading-lg mt-8 mb-4">
-          {p}
+          {headingMatch[1]}
+        </h2>
+      );
+    }
+    if (trimmed.length < 80 && !trimmed.includes(".") && !trimmed.includes("[") && trimmed === p) {
+      return (
+        <h2 key={i} className="cren-heading-lg mt-8 mb-4">
+          {trimmed}
         </h2>
       );
     }
     return (
       <p key={i} className="cren-body mt-4" style={{ lineHeight: 1.8 }}>
-        {p}
+        {renderInline(trimmed, `p${i}`)}
       </p>
     );
   });

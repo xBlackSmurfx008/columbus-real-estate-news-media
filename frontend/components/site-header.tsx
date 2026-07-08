@@ -41,21 +41,21 @@ export function SiteHeader() {
         <div className="topbar-left">
           <div className="topbar-stat">
             <span className="label">Columbus Median:</span>
-            <span className="value">$286,000</span>
-            <span className="up">+5.9%</span>
+            <span className="value">$350,000</span>
+            <span className="up">+4.3%</span>
           </div>
           <div className="topbar-stat">
-            <span className="label">Inventory:</span>
-            <span className="value">4,440</span>
-            <span className="up">+14.2%</span>
+            <span className="label">Active Listings:</span>
+            <span className="value">5,223</span>
+            <span className="up">+8.2%</span>
           </div>
           <div className="topbar-stat">
             <span className="label">Avg. DOM:</span>
-            <span className="value">59 days</span>
+            <span className="value">29 days</span>
           </div>
           <div className="topbar-stat">
             <span className="label">30-Yr Rate:</span>
-            <span className="value">6.82%</span>
+            <span className="value">6.43%</span>
           </div>
         </div>
         <div className="topbar-right">

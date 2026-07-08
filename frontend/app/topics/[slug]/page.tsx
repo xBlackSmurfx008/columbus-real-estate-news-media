@@ -33,25 +33,33 @@ export default async function TopicDetailPage({
         </div>
 
         {articles.length > 0 ? (
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {articles.map((article) => (
               <Link
                 key={article.id}
                 href={`/blog/${generateSlug(article.title)}`}
                 className="block no-underline group"
               >
-                <div className="cren-surface p-5 transition-shadow duration-300 hover:shadow-[var(--shadow-hover)]">
-                  <span className="inline-block rounded-full bg-[color:var(--green)]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--green)] mb-2">
-                    {article.category}
-                  </span>
-                  <h3 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)] transition-colors group-hover:text-[color:var(--green)]">
-                    {article.title}
-                  </h3>
-                  {article.excerpt && (
-                    <p className="mt-2 line-clamp-2 text-sm text-[color:var(--text-secondary)]">{article.excerpt}</p>
+                <div className="cren-surface overflow-hidden transition-shadow duration-300 hover:shadow-[var(--shadow-hover)]">
+                  {article.image_url && (
+                    <div className="aspect-[16/9] overflow-hidden">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={article.image_url} alt={article.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
+                    </div>
                   )}
-                  <div className="mt-3 text-xs text-[color:var(--text-muted)]">
-                    {article.author} · {article.date} · {article.read_time}
+                  <div className="p-5">
+                    <span className="mb-2 inline-block rounded-full bg-[color:var(--green)]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--green)]">
+                      {article.category}
+                    </span>
+                    <h3 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)] transition-colors group-hover:text-[color:var(--green)]">
+                      {article.title}
+                    </h3>
+                    {article.excerpt && (
+                      <p className="mt-2 line-clamp-2 text-sm text-[color:var(--text-secondary)]">{article.excerpt}</p>
+                    )}
+                    <div className="mt-3 text-xs text-[color:var(--text-muted)]">
+                      {article.author} · {article.date} · {article.read_time}
+                    </div>
                   </div>
                 </div>
               </Link>

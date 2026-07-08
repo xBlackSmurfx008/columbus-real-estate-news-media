@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { JourneyBar } from "@/components/cren/journey-bar";
+import { NewsTicker } from "@/components/cren/news-ticker";
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -63,6 +64,8 @@ export function SiteHeader() {
           <Link href="/subscribe">Subscribe</Link>
         </div>
       </div>
+
+      <NewsTicker />
 
       <nav className="cren-site-nav" aria-label="Primary">
         <div className="nav-inner">

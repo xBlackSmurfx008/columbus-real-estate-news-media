@@ -102,4 +102,71 @@ if (await indexExists("leads_persona_idx")) {
   console.log("created: index leads_persona_idx");
 }
 
+// --- Phase C: members ---
+
+await ensureTable(
+  "members",
+  `CREATE TABLE members (
+    id SERIAL PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    name TEXT,
+    interests TEXT,
+    tier TEXT NOT NULL DEFAULT 'free',
+    status TEXT NOT NULL DEFAULT 'active',
+    stripe_customer_id TEXT,
+    tier_started_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+  )`
+);
+
+// --- Phase D: affiliates ---
+
+await ensureTable(
+  "affiliate_partners",
+  `CREATE TABLE affiliate_partners (
+    id SERIAL PRIMARY KEY,
+    slug TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    category TEXT NOT NULL,
+    url TEXT NOT NULL,
+    blurb TEXT,
+    cta_text TEXT DEFAULT 'Learn more',
+    active BOOLEAN NOT NULL DEFAULT true,
+    sort_order INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+  )`
+);
+
+await ensureTable(
+  "affiliate_clicks",
+  `CREATE TABLE affiliate_clicks (
+    id SERIAL PRIMARY KEY,
+    partner_slug TEXT NOT NULL,
+    path TEXT,
+    referrer TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+  )`
+);
+
+// Seed placeholder partners once (real programs replace these; URLs point at
+// vendor homepages until affiliate accounts exist).
+const partnerCount = await sql`SELECT COUNT(*)::int AS n FROM affiliate_partners`;
+if (partnerCount[0].n > 0) {
+  console.log(`skip: affiliate_partners already has ${partnerCount[0].n} rows`);
+} else {
+  const seed = [
+    ["home-warranty", "Home Warranty Coverage", "home-services", "https://www.example.com/home-warranty", "Protect the big systems — HVAC, plumbing, electric — before they protect themselves out of your budget.", "Compare plans", 0],
+    ["moving-services", "Columbus Moving Help", "home-services", "https://www.example.com/moving", "Vetted local movers for apartments and whole houses.", "Get moving quotes", 1],
+    ["renters-insurance", "Renters Insurance", "finance", "https://www.example.com/renters-insurance", "Most Columbus landlords require it. Takes minutes to set up.", "Get a quote", 2],
+    ["mortgage-rates", "Mortgage Rate Check", "finance", "https://www.example.com/mortgage", "See today's rates from multiple lenders before you commit to one.", "Check rates", 3],
+    ["diy-tools", "Home Improvement Supplies", "home-services", "https://www.example.com/tools", "Order project supplies and pick up locally.", "Shop supplies", 4],
+  ];
+  for (const [slug, name, category, url, blurb, cta, sort] of seed) {
+    await sql`INSERT INTO affiliate_partners (slug, name, category, url, blurb, cta_text, active, sort_order)
+      VALUES (${slug}, ${name}, ${category}, ${url}, ${blurb}, ${cta}, true, ${sort})`;
+  }
+  console.log("seeded: 5 placeholder affiliate partners (replace URLs when programs are live)");
+}
+
 console.log("migration complete");

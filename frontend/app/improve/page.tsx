@@ -1,5 +1,8 @@
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
+import { AffiliateBlock } from "@/components/affiliate-block";
+
+export const revalidate = 300;
 
 const resourcePillars = [
   {
@@ -101,6 +104,8 @@ export default function ImprovePage() {
             .
           </p>
         </section>
+
+        <AffiliateBlock category="home-services" fromPath="/improve" heading="Services homeowners ask us about" />
       </div>
     </CrenPage>
   );

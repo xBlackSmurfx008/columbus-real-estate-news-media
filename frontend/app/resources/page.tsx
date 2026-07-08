@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { RenterBuyerResources } from "@/components/sections/renter-buyer-resources";
 import { CrenPage } from "@/components/cren/cren-page";
+import { AffiliateBlock } from "@/components/affiliate-block";
+
+export const revalidate = 300;
 
 export default function ResourcesPage() {
   return (
@@ -15,6 +18,8 @@ export default function ResourcesPage() {
         </div>
 
         <RenterBuyerResources />
+
+        <AffiliateBlock category="finance" fromPath="/resources" heading="Money tools worth a look" />
 
         <div className="cren-soft rounded-[var(--radius)] border border-[color:var(--border)] p-5 text-sm">
           <p className="cren-body">

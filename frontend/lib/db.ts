@@ -162,6 +162,21 @@ export async function initSchema() {
   `;
 
   await sql`
+    CREATE TABLE IF NOT EXISTS members (
+      id SERIAL PRIMARY KEY,
+      email TEXT UNIQUE NOT NULL,
+      name TEXT,
+      interests TEXT,
+      tier TEXT NOT NULL DEFAULT 'free',
+      status TEXT NOT NULL DEFAULT 'active',
+      stripe_customer_id TEXT,
+      tier_started_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+
+  await sql`
     CREATE TABLE IF NOT EXISTS testimonials (
       id SERIAL PRIMARY KEY,
       initials TEXT NOT NULL,

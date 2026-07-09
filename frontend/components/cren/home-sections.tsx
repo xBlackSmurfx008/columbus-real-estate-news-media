@@ -44,6 +44,26 @@ const categoryTagClass: Record<string, string> = {
 // Bento background classes for visual variety
 const bentoBgs = ["bg-1", "bg-2", "bg-3", "bg-4", "bg-5", "bg-6"];
 
+// Renders a bento card's image slot: the article's real hero photo when it has
+// one, otherwise the decorative gradient fallback.
+function BentoImg({ article, bg, height }: { article: DbArticle; bg: string; height?: number }) {
+  return (
+    <div className="bento-img" style={height ? { height } : undefined}>
+      {article.image_url ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={article.image_url}
+          alt={article.title}
+          loading="lazy"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+        />
+      ) : (
+        <div className={`bento-img-bg ${bg}`} />
+      )}
+    </div>
+  );
+}
+
 interface HomeSectionsProps {
   articles?: DbArticle[];
   marketSnapshot?: DbMarketSnapshot[];
@@ -207,9 +227,7 @@ export function HomeSections({
                     href={`/blog/${generateSlug(articles[0].title)}`}
                     className="bento-card bento-lg reveal no-underline"
                   >
-                    <div className="bento-img">
-                      <div className={`bento-img-bg ${bentoBgs[0]}`} />
-                    </div>
+                    <BentoImg article={articles[0]} bg={bentoBgs[0]} />
                     <div className="bento-body">
                       <span className={`bento-tag ${categoryTagClass[articles[0].category] ?? "tag-market"}`}>
                         {articles[0].category}
@@ -232,9 +250,7 @@ export function HomeSections({
                     href={`/blog/${generateSlug(articles[1].title)}`}
                     className="bento-card bento-md reveal no-underline"
                   >
-                    <div className="bento-img">
-                      <div className={`bento-img-bg ${bentoBgs[3]}`} />
-                    </div>
+                    <BentoImg article={articles[1]} bg={bentoBgs[3]} />
                     <div className="bento-body">
                       <span className={`bento-tag ${categoryTagClass[articles[1].category] ?? "tag-development"}`}>
                         {articles[1].category}
@@ -257,6 +273,7 @@ export function HomeSections({
                     href={`/blog/${generateSlug(articles[2].title)}`}
                     className="bento-card bento-wide reveal no-underline"
                   >
+                    <BentoImg article={articles[2]} bg={bentoBgs[1]} height={150} />
                     <div className="bento-body">
                       <span className={`bento-tag ${categoryTagClass[articles[2].category] ?? "tag-rent"}`}>
                         {articles[2].category}
@@ -279,9 +296,7 @@ export function HomeSections({
                     href={`/blog/${generateSlug(articles[3].title)}`}
                     className="bento-card bento-wide reveal no-underline"
                   >
-                    <div className="bento-img" style={{ height: 160 }}>
-                      <div className={`bento-img-bg ${bentoBgs[2]}`} />
-                    </div>
+                    <BentoImg article={articles[3]} bg={bentoBgs[2]} height={150} />
                     <div className="bento-body">
                       <span className={`bento-tag ${categoryTagClass[articles[3].category] ?? "tag-invest"}`}>
                         {articles[3].category}
@@ -305,11 +320,7 @@ export function HomeSections({
                     href={`/blog/${generateSlug(article.title)}`}
                     className="bento-card bento-sm reveal no-underline"
                   >
-                    {idx % 3 === 2 && (
-                      <div className="bento-img" style={{ height: 100 }}>
-                        <div className={`bento-img-bg ${bentoBgs[(idx + 4) % bentoBgs.length]}`} />
-                      </div>
-                    )}
+                    <BentoImg article={article} bg={bentoBgs[(idx + 4) % bentoBgs.length]} height={110} />
                     <div className="bento-body">
                       <span className={`bento-tag ${categoryTagClass[article.category] ?? "tag-market"}`}>
                         {article.category}

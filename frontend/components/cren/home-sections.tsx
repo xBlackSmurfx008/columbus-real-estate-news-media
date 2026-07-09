@@ -116,101 +116,86 @@ export function HomeSections({
 
   return (
     <>
-      {/* ==================== HERO ==================== */}
-      <div className="hero">
+      {/* ==================== HERO (v5) ==================== */}
+      <div className="hero-v5">
         <div className="cren-container-wide">
-          <div className="hero-grid">
-            <div>
-              <div className="hero-date">{currentDate} — Columbus &amp; Central Ohio</div>
-              <h1 className="hero-headline">
+          <div className="hero-v5-grid">
+            <div className="hero-v5-content">
+              <div className="hero-v5-eyebrow">
+                <span className="hero-v5-dot" aria-hidden="true" />
+                Live · {currentDate} · Columbus &amp; Central Ohio
+              </div>
+              <h1 className="hero-v5-headline">
                 {heroArticle ? (
                   <>
                     {heroArticle.title.split("—")[0]}
                     {heroArticle.title.includes("—") && (
                       <em>— {heroArticle.title.split("—").slice(1).join("—")}</em>
                     )}
-                    {!heroArticle.title.includes("—") && heroArticle.title.includes(":") && ""}
                   </>
                 ) : (
                   <>
-                    Columbus Home Prices Hit $286K as Inventory <em>Surges 14%</em> — What It Means for You
+                    Columbus Real Estate, <em>Decoded</em> — Daily Local Intelligence
                   </>
                 )}
               </h1>
-              <p className="hero-excerpt">
+              <p className="hero-v5-excerpt">
                 {heroArticle?.excerpt ??
-                  "February's data reveals a rare combination: rising prices alongside growing inventory. For the first time in three years, Columbus buyers have real negotiating leverage. Here's our deep-dive analysis."}
+                  "Hyper-local market data, neighborhood analysis, and the stories moving Central Ohio real estate — published every day."}
               </p>
-              <div className="hero-meta">
+              <div className="hero-v5-meta">
                 <span className="hero-tag">{heroArticle?.category ?? "Market Report"}</span>
-                <div className="hero-author-img">
-                  {heroArticle?.author ? heroArticle.author.split(" ").map((n) => n[0]).join("") : "SA"}
-                </div>
-                <span>{heroArticle?.author ?? "Stephen Adams"}</span>
+                <span>{heroArticle?.author ?? "CRE Newsroom"}</span>
                 <span>·</span>
-                <span>{heroArticle?.read_time ?? "8 min read"}</span>
+                <span>{heroArticle?.read_time ?? "5 min read"}</span>
               </div>
+              {heroArticle && (
+                <Link href={`/blog/${generateSlug(heroArticle.title)}`} className="hero-v5-cta no-underline">
+                  Read the full story
+                  <span aria-hidden="true">→</span>
+                </Link>
+              )}
             </div>
-            <div className="hero-sidebar">
-              <div className="market-pulse">
-                <div className="mp-header">
-                  <div className="mp-title">Market Pulse</div>
-                  <div className="mp-live">Live</div>
-                </div>
-                {marketPulse.map((m, i) => (
-                  <div key={i} className="mp-row">
-                    <span className="mp-label">{m.label}</span>
-                    <span className="mp-value">{m.value}</span>
-                    {m.change && (
-                      <span className={`mp-change ${m.direction === "up" ? "up" : m.direction === "down" ? "down" : ""}`}>
-                        {m.change}
-                      </span>
-                    )}
-                  </div>
-                ))}
-              </div>
-              <div className="trending-box">
-                <div className="trending-title">Trending Now</div>
-                {otherArticles.slice(0, 4).map((article, idx) => (
-                  <Link
-                    key={article.id}
-                    href={`/blog/${generateSlug(article.title)}`}
-                    className="trending-item no-underline"
-                  >
-                    <span className="trending-num">{String(idx + 1).padStart(2, "0")}</span>
-                    <div>
-                      <div className="trending-text">{article.title}</div>
-                      <div className="trending-meta">{article.category} · {article.date}</div>
-                    </div>
-                  </Link>
-                ))}
-                {otherArticles.length === 0 && (
-                  <>
-                    <Link href="/blog" className="trending-item no-underline">
-                      <span className="trending-num">01</span>
-                      <div>
-                        <div className="trending-text">Short North Corridor: $2.1B Expansion Plan Revealed</div>
-                        <div className="trending-meta">Development · 2h ago</div>
-                      </div>
-                    </Link>
-                    <Link href="/blog" className="trending-item no-underline">
-                      <span className="trending-num">02</span>
-                      <div>
-                        <div className="trending-text">Best Columbus Neighborhoods for First-Time Buyers (2026)</div>
-                        <div className="trending-meta">Buy · 5h ago</div>
-                      </div>
-                    </Link>
-                    <Link href="/blog" className="trending-item no-underline">
-                      <span className="trending-num">03</span>
-                      <div>
-                        <div className="trending-text">Dublin vs. Westerville: Where Should You Invest?</div>
-                        <div className="trending-meta">Invest · 1d ago</div>
-                      </div>
-                    </Link>
-                  </>
+
+            {heroArticle && (
+              <Link
+                href={`/blog/${generateSlug(heroArticle.title)}`}
+                className="hero-v5-feature no-underline reveal"
+                aria-label={heroArticle.title}
+              >
+                {heroArticle.image_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={heroArticle.image_url} alt={heroArticle.title} />
+                ) : (
+                  <div className="hero-v5-feature-fallback" />
                 )}
-              </div>
+                <span className="hero-v5-feature-tag">Featured · {heroArticle.category}</span>
+              </Link>
+            )}
+          </div>
+
+          {/* Market Pulse stat ribbon */}
+          <div className="hero-v5-pulse">
+            <div className="hero-v5-pulse-head">
+              <span className="hero-v5-dot hero-v5-dot-light" aria-hidden="true" />
+              Market Pulse
             </div>
+            <div className="hero-v5-pulse-stats">
+              {marketPulse.map((m, i) => (
+                <div key={i} className="hero-v5-pulse-stat">
+                  <div className="hero-v5-pulse-value">{m.value}</div>
+                  <div className="hero-v5-pulse-label">{m.label}</div>
+                  {m.change && (
+                    <div className={`hero-v5-pulse-change ${m.direction === "up" ? "up" : m.direction === "down" ? "down" : ""}`}>
+                      {m.change}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            <Link href="/market-data" className="hero-v5-pulse-link no-underline">
+              Full market data →
+            </Link>
           </div>
         </div>
       </div>

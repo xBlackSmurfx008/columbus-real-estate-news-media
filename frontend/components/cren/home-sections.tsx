@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HomeNewsletterForm } from "@/components/cren/home-newsletter-form";
+import { CoverImage } from "@/components/cren/cover-image";
 import {
   DbArticle,
   DbMarketSnapshot,
@@ -50,13 +51,7 @@ function BentoImg({ article, bg, height }: { article: DbArticle; bg: string; hei
   return (
     <div className="bento-img" style={height ? { height } : undefined}>
       {article.image_url ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={article.image_url}
-          alt={article.title}
-          loading="lazy"
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
-        />
+        <CoverImage src={article.image_url} alt={article.title} sizes="(max-width: 768px) 100vw, 33vw" />
       ) : (
         <div className={`bento-img-bg ${bg}`} />
       )}
@@ -164,8 +159,7 @@ export function HomeSections({
                 aria-label={heroArticle.title}
               >
                 {heroArticle.image_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={heroArticle.image_url} alt={heroArticle.title} />
+                  <CoverImage src={heroArticle.image_url} alt={heroArticle.title} sizes="(max-width: 900px) 100vw, 46vw" priority />
                 ) : (
                   <div className="hero-v5-feature-fallback" />
                 )}

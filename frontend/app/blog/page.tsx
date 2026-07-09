@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
+import { CoverImage } from "@/components/cren/cover-image";
 import { getArticles, generateSlug, DbArticle } from "@/lib/public-data";
 
 export const revalidate = 300;
@@ -16,14 +17,8 @@ function ArticleCard({ article, featured = false }: { article: DbArticle; featur
         data-item-id={article.id}
       >
         {article.image_url ? (
-          <div className={`mb-4 overflow-hidden rounded-[var(--radius-sm)] ${featured ? "aspect-[16/8]" : "aspect-[16/9]"}`}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={article.image_url}
-              alt={article.title}
-              loading="lazy"
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-            />
+          <div className={`relative mb-4 overflow-hidden rounded-[var(--radius-sm)] ${featured ? "aspect-[16/8]" : "aspect-[16/9]"}`}>
+            <CoverImage src={article.image_url} alt={article.title} sizes="(max-width: 768px) 100vw, 33vw" />
           </div>
         ) : (
           featured && (

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getAreaBySlug } from "@/lib/data";
 import { CrenPage } from "@/components/cren/cren-page";
 import { getArticles, getMarketData, generateSlug, DbArticle, DbNeighborhood } from "@/lib/public-data";
+import { CoverImage } from "@/components/cren/cover-image";
 
 export const revalidate = 300;
 
@@ -11,9 +12,8 @@ function ArticleCard({ article }: { article: DbArticle }) {
     <Link href={`/blog/${generateSlug(article.title)}`} className="block no-underline group">
       <div className="cren-surface overflow-hidden transition-shadow duration-300 hover:shadow-[var(--shadow-hover)]">
         {article.image_url && (
-          <div className="aspect-[16/9] overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={article.image_url} alt={article.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
+          <div className="relative aspect-[16/9] overflow-hidden">
+            <CoverImage src={article.image_url} alt={article.title} sizes="(max-width: 768px) 100vw, 50vw" />
           </div>
         )}
         <div className="p-5">
@@ -73,9 +73,8 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
         {/* Header */}
         <div className="cren-surface overflow-hidden">
           {heroImage && (
-            <div className="aspect-[21/9] w-full overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={heroImage} alt={`${area.name}, Columbus`} className="h-full w-full object-cover" />
+            <div className="relative aspect-[21/9] w-full overflow-hidden">
+              <CoverImage src={heroImage} alt={`${area.name}, Columbus`} sizes="(max-width: 1024px) 100vw, 900px" priority />
             </div>
           )}
           <div className="p-6 md:p-8">

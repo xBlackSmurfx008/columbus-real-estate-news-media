@@ -6,12 +6,11 @@ const nextConfig: NextConfig = {
     return [{ source: "/tools", destination: "/resources", permanent: true }];
   },
   images: {
+    formats: ["image/avif", "image/webp"],
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-        pathname: "/**",
-      },
+      { protocol: "https", hostname: "images.unsplash.com", pathname: "/**" },
+      // Higgsfield-generated hero images (CloudFront)
+      { protocol: "https", hostname: "*.cloudfront.net", pathname: "/**" },
     ],
   },
 };

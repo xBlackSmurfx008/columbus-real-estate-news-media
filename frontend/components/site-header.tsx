@@ -70,7 +70,6 @@ export function SiteHeader() {
       <nav className="cren-site-nav" aria-label="Primary">
         <div className="nav-inner">
           <Link href="/" className="nav-brand" onClick={() => setMobileOpen(false)}>
-            <div className="nav-brand-mark">C</div>
             <div className="nav-brand-text">
               <span className="nav-brand-name">Columbus RE News</span>
               <span className="nav-brand-tag">Your City. Your Market.</span>

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
+import { CoverImage } from "@/components/cren/cover-image";
 import { getArticleBySlug, getArticles, generateSlug, DbArticle } from "@/lib/public-data";
 import Script from "next/script";
 
@@ -164,13 +165,8 @@ export default async function BlogPostPage({
 
             {/* Hero image */}
             {article.image_url && (
-              <figure className="overflow-hidden rounded-[var(--radius-sm)]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={article.image_url}
-                  alt={article.title}
-                  className="aspect-[16/9] w-full object-cover"
-                />
+              <figure className="relative aspect-[16/9] w-full overflow-hidden rounded-[var(--radius-sm)]">
+                <CoverImage src={article.image_url} alt={article.title} sizes="(max-width: 1024px) 100vw, 720px" priority />
               </figure>
             )}
 

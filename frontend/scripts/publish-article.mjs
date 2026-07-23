@@ -74,6 +74,58 @@ const id = `${isoPrefix}-${slug}`;
 
 const sql = neon(databaseUrl);
 
+// --- Duplicate guard -------------------------------------------------------
+// Hard backstop so the same story can never be published twice, even with a
+// different date or slightly reworded title (the id-collision check only stops
+// byte-identical ids). Compares significant title tokens against every existing
+// article. Blocks on a high-overlap match; warns on a moderate one.
+// Override a genuine false positive with `--force`.
+const FORCE = process.argv.includes("--force") || process.env.FORCE === "1";
+// Light stop-list: TRUE function words only. Keep domain nouns (columbus, home,
+// prices, market, dublin, ...) — they are exactly what makes two headlines the
+// same story. Calibrated against the live corpus: distinct same-beat stories
+// top out ~27% overlap, a reworded duplicate scores ~67%, so 0.4 separates them.
+const STOP_WORDS = new Set(
+  "the a an of in on to as at is are was were and or for with from that this its it by into over after amid but if then than so".split(/\s+/)
+);
+function sigTokens(t) {
+  return new Set(
+    String(t).toLowerCase().replace(/[^a-z0-9 ]/g, " ").split(/\s+/)
+      .filter((w) => w.length > 2 && !STOP_WORDS.has(w))
+  );
+}
+const newTokens = sigTokens(article.title);
+if (newTokens.size > 0) {
+  const existing = await sql`SELECT id, title FROM articles`;
+  let worst = { jac: 0, shared: [], id: null, title: null };
+  for (const e of existing) {
+    if (e.id === id) continue; // exact-id collision handled by ON CONFLICT below
+    const et = sigTokens(e.title);
+    const shared = [...newTokens].filter((w) => et.has(w));
+    const union = new Set([...newTokens, ...et]);
+    const jac = union.size ? shared.length / union.size : 0;
+    if (jac > worst.jac) worst = { jac, shared, id: e.id, title: e.title };
+  }
+  const isDuplicate = worst.jac >= 0.4;
+  if (isDuplicate && !FORCE) {
+    console.error(
+      `Duplicate guard blocked this article.\n`
+      + `  New:      "${article.title}"\n`
+      + `  Existing: "${worst.title}" (id: ${worst.id})\n`
+      + `  Overlap:  ${(worst.jac * 100).toFixed(0)}% of title terms; shared: ${worst.shared.join(", ")}\n`
+      + `This looks like a story we already covered. Pick a genuinely new story, or\n`
+      + `if this really is different, re-run with --force.`
+    );
+    process.exit(1);
+  }
+  if (worst.jac >= 0.3) {
+    console.warn(
+      `Warning: title overlaps ${(worst.jac * 100).toFixed(0)}% with existing "${worst.title}" (${worst.shared.join(", ")}). Publishing anyway — confirm it is a distinct story.`
+    );
+  }
+}
+// ---------------------------------------------------------------------------
+
 const [row] = await sql`
   INSERT INTO articles (
     id, status, featured, category, category_class, icon,

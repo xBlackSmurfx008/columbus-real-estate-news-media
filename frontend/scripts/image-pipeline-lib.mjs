@@ -29,13 +29,20 @@ export function selectMissingArticles(rows, limit) {
   return selected.slice(0, limit);
 }
 
+export function normalizeIllustrationRequest(value) {
+  return String(value ?? '')
+    .replace(/\bphotorealistic\b/gi, 'clearly illustrative')
+    .replace(/\bphotograph(?:y|ic)?\b/gi, 'editorial illustration')
+    .replace(/\bphoto\b/gi, 'illustration');
+}
+
 export function buildHeroPrompt(article) {
   const brief = article.image_brief ?? {};
   const anchors = Array.isArray(brief.story_anchors) ? brief.story_anchors.join('; ') : '';
   return [
     'Use case: illustration-story',
     'Asset type: 16:9 editorial news article hero, clearly an illustration rather than a documentary photograph',
-    `Primary request: ${brief.primary_request ?? article.title}`,
+    `Primary request: ${normalizeIllustrationRequest(brief.primary_request ?? article.title)}`,
     `Editorial idea: ${brief.editorial_idea ?? 'Show the reported change and the constraint or process behind it.'}`,
     `Story-specific anchors that must both be visible: ${anchors}`,
     `Local setting: ${article.location_name ?? article.area_slug ?? 'Columbus'}, Ohio; use plausible Central Ohio built form and season without inventing a recognizable property`,

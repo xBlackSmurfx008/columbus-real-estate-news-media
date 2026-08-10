@@ -6,6 +6,7 @@
 /test-results/
 /playwright/.cache/
 .env*
+!.env.example
 
 # Local subscription image-generation artifacts and logs.
 /var/cren-images/

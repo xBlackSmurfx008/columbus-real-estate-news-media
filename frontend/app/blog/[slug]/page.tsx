@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
 import { CoverImage } from "@/components/cren/cover-image";
 import { getArticleBySlug, getArticles, generateSlug, DbArticle } from "@/lib/public-data";
+import { getAreaBySlug, getTopicBySlug } from "@/lib/data";
 import Script from "next/script";
 
 export const revalidate = 300;
@@ -102,6 +103,11 @@ export default async function BlogPostPage({
 
   const canonicalUrl = `https://columbusrealestatenews.com/blog/${slug}`;
   const initials = article.author.split(" ").map((n) => n[0]).join("");
+  const topic = article.topic_slug ? getTopicBySlug(article.topic_slug) : null;
+  const area = article.area_slug ? getAreaBySlug(article.area_slug) : null;
+  const visibleTags = (Array.isArray(article.tags) ? article.tags : []).filter(
+    (tag) => tag !== article.topic_slug && tag !== article.area_slug,
+  );
 
   const jsonLdBlogPosting = {
     "@context": "https://schema.org",
@@ -141,9 +147,24 @@ export default async function BlogPostPage({
             {/* Header */}
             <header className="cren-surface p-6 md:p-8">
               <div className="flex flex-wrap items-center gap-3 mb-4">
-                <span className="inline-block rounded-full bg-[color:var(--green)]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--green)]">
+                <Link href={topic ? `/topics/${topic.slug}` : "/topics"} className="inline-block rounded-full bg-[color:var(--green)]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--green)] no-underline">
                   {article.category}
-                </span>
+                </Link>
+                {topic && topic.name !== article.category && (
+                  <Link href={`/topics/${topic.slug}`} className="inline-block rounded-full border border-[color:var(--border)] px-3 py-1 text-xs font-semibold text-[color:var(--text-secondary)] no-underline">
+                    {topic.name}
+                  </Link>
+                )}
+                {area && area.slug !== "columbus-citywide" && (
+                  <Link href={`/areas/${area.slug}`} className="inline-block rounded-full border border-[color:var(--border)] px-3 py-1 text-xs font-semibold text-[color:var(--text-secondary)] no-underline">
+                    {area.name}
+                  </Link>
+                )}
+                {visibleTags.map((tag) => (
+                  <span key={tag} className="inline-block rounded-full border border-[color:var(--border)] px-3 py-1 text-xs text-[color:var(--text-muted)]">
+                    {tag.replaceAll("-", " ")}
+                  </span>
+                ))}
                 <span className="text-xs text-[color:var(--text-muted)]">{article.read_time}</span>
               </div>
               <h1 className="cren-heading-xl">{article.title}</h1>

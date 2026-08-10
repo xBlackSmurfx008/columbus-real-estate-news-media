@@ -61,10 +61,10 @@ for (let i = 0; i < articles.length; i++) {
   if (!imageUrl) noImage++;
 
   const [row] = await sql`
-    INSERT INTO articles (id, status, featured, category, category_class, icon, title, excerpt, body, author, date, read_time, area_slug, topic_slug, image_url, meta_description, image_alt, image_caption, fact_checked_at)
+    INSERT INTO articles (id, status, featured, category, category_class, icon, title, excerpt, body, author, date, read_time, area_slug, topic_slug, tags, image_url, meta_description, image_alt, image_caption, fact_checked_at)
     VALUES (${id}, 'draft', false, ${a.category}, ${a.category_class ?? "card-img-market"}, ${a.icon ?? "$"},
       ${a.title}, ${a.excerpt ?? null}, ${a.body ?? null}, ${a.author ?? "CRE Newsroom"}, ${a.date}, ${a.read_time ?? "5 min read"},
-      ${a.area_slug ?? null}, ${a.topic_slug}, ${imageUrl}, ${a.meta_description}, ${a.image_alt},
+      ${a.area_slug ?? null}, ${a.topic_slug}, ${JSON.stringify(a.tags ?? [])}::jsonb, ${imageUrl}, ${a.meta_description}, ${a.image_alt},
       ${a.image_provenance.caption}, ${a.fact_checked_at})
     ON CONFLICT (id) DO NOTHING
     RETURNING id

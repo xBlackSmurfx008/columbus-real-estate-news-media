@@ -3,6 +3,7 @@ export async function ensureEditorialReviewTable(sql) {
   await sql`ALTER TABLE articles ADD COLUMN IF NOT EXISTS image_alt TEXT`;
   await sql`ALTER TABLE articles ADD COLUMN IF NOT EXISTS image_caption TEXT`;
   await sql`ALTER TABLE articles ADD COLUMN IF NOT EXISTS fact_checked_at TIMESTAMPTZ`;
+  await sql`ALTER TABLE articles ADD COLUMN IF NOT EXISTS tags JSONB NOT NULL DEFAULT '[]'::jsonb`;
   await sql`
     CREATE TABLE IF NOT EXISTS editorial_review_jobs (
       article_id TEXT PRIMARY KEY REFERENCES articles(id) ON DELETE CASCADE,

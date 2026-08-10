@@ -30,6 +30,7 @@ function validArticle() {
     meta_description: 'A Columbus housing permit entered early city review, showing a possible site change while design, approval, cost, and timing remain unresolved.',
     fact_checked_at: '2026-08-10T10:00:00-04:00',
     canonical_event_key: 'city-permit-example-2026-08-10',
+    tags: ['columbus-ohio', 'central-ohio-real-estate', 'development'],
     location: { name: 'Columbus', state: 'OH' },
     source_ledger: [
       { id: 'S1', type: 'PRIMARY', url: 'https://www.columbus.gov/example', publisher: 'City of Columbus', title: 'Application record', fetched_at: '2026-08-10T09:00:00-04:00', http_status: 200 },
@@ -97,4 +98,30 @@ test('digits inside a source URL do not turn a non-numeric sentence into a numer
   );
   const report = evaluateArticle(article);
   assert.equal(report.passed, true, report.failedCodes.join(','));
+});
+
+test('development drafts without a Development tag fail closed', () => {
+  const article = validArticle();
+  article.tags = ['columbus-ohio', 'central-ohio-real-estate', 'market-trends'];
+  const report = evaluateArticle(article);
+  assert.equal(report.passed, false);
+  assert.ok(report.failedCodes.includes('A2B_TAGS_AND_HUBS'));
+});
+
+test('neighborhood drafts require a specific area and neighborhood tag', () => {
+  const article = validArticle();
+  article.category = 'Neighborhoods';
+  article.topic_slug = 'market-trends';
+  article.area_slug = 'clintonville';
+  article.tags = ['columbus-ohio', 'central-ohio-real-estate', 'market-trends', 'clintonville', 'neighborhood'];
+  const report = evaluateArticle(article);
+  assert.equal(report.passed, true, report.failedCodes.join(','));
+});
+
+test('AI image briefs that ask for a photo are rejected as contradictory', () => {
+  const article = validArticle();
+  article.image_brief.primary_request = 'Create an editorial photo of the site.';
+  const report = evaluateArticle(article);
+  assert.equal(report.passed, false);
+  assert.ok(report.failedCodes.includes('A15_ORIGINALITY_AND_DISCLOSURE'));
 });

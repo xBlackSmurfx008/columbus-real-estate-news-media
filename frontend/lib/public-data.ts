@@ -19,6 +19,7 @@ export interface DbArticle {
   read_time: string;
   area_slug: string | null;
   topic_slug: string | null;
+  tags: string[];
   image_url: string | null;
   image_alt: string | null;
   image_caption: string | null;

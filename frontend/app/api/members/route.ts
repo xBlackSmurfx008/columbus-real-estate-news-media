@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { requireAuth } from "@/lib/auth";
+import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
     const cleanName = typeof name === "string" ? name.trim().slice(0, 200) : null;
     const cleanInterests = typeof interests === "string" ? interests.slice(0, 500) : null;
 
-    await sql`
+    const [member] = await sql`
       INSERT INTO members (email, name, interests, tier, status)
       VALUES (${email}, ${cleanName}, ${cleanInterests}, 'free', 'active')
       ON CONFLICT (email) DO UPDATE
@@ -27,6 +28,7 @@ export async function POST(request: NextRequest) {
           interests = COALESCE(EXCLUDED.interests, members.interests),
           status = 'active',
           updated_at = NOW()
+      RETURNING id
     `;
 
     // Mirror into subscribers (select-then-write; table predates the index).
@@ -39,6 +41,15 @@ export async function POST(request: NextRequest) {
         VALUES (${email}, null, ${cleanInterests}, ${typeof source === "string" ? source.slice(0, 120) : "join"}, 'active')
       `;
     }
+
+    await sendTelegramInquiry({
+      kind: 'membership',
+      recordId: member.id,
+      name: cleanName,
+      email,
+      interests: cleanInterests,
+      source: typeof source === 'string' ? source.slice(0, 120) : 'join',
+    });
 
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch (error) {

@@ -13,6 +13,7 @@
 //   "read_time": string,        // default "5 min read"
 //   "area_slug": string,        // see frontend/lib/franklin-areas.ts
 //   "topic_slug": string,       // market-trends | schools | development | local-politics | events-lifestyle
+//   "tags": string[],           // Columbus + topic + area + category context
 //   "category_class": string,   // default "card-img-market"
 //   "icon": string,             // default "$"
 //   "image_url": string | null,
@@ -139,12 +140,13 @@ const [row] = await sql`
   INSERT INTO articles (
     id, status, featured, category, category_class, icon,
     title, excerpt, body, author, date, read_time,
-    area_slug, topic_slug, image_url, meta_description, image_alt, image_caption, fact_checked_at
+    area_slug, topic_slug, tags, image_url, meta_description, image_alt, image_caption, fact_checked_at
   ) VALUES (
     ${id}, 'draft', ${article.featured ?? false},
     ${article.category}, ${article.category_class ?? "card-img-market"}, ${article.icon ?? "$"},
     ${article.title}, ${article.excerpt ?? null}, ${article.body ?? null}, ${article.author}, ${article.date},
     ${article.read_time ?? "5 min read"}, ${article.area_slug ?? null}, ${article.topic_slug ?? null},
+    ${JSON.stringify(article.tags ?? [])}::jsonb,
     ${article.image_url ?? null}, ${article.meta_description}, ${article.image_alt},
     ${article.image_provenance.caption}, ${article.fact_checked_at}
   )

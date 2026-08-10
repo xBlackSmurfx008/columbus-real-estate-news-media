@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { articleLiveUrl, buildHeroPrompt, selectMissingArticles } from "../scripts/image-pipeline-lib.mjs";
+import { articleLiveUrl, buildHeroPrompt, normalizeIllustrationRequest, selectMissingArticles } from "../scripts/image-pipeline-lib.mjs";
 import { buildImageBackfillPlist } from "../scripts/image-launch-agent-lib.mjs";
 import { easternDate } from "../scripts/newsroom-health.mjs";
 
@@ -38,6 +38,13 @@ test("hero prompts enforce the shared editorial art direction", () => {
   assert.match(prompt, /no readable text/);
   assert.match(prompt, /artist signatures, corner marks, dashed or dotted lines, parcel outlines/);
   assert.match(prompt, /handshakes, keys in a palm/);
+});
+
+test("AI image requests cannot conflict by asking for a documentary photo", () => {
+  assert.equal(
+    normalizeIllustrationRequest('A photorealistic editorial photo of a construction site'),
+    'A clearly illustrative editorial illustration of a construction site',
+  );
 });
 
 test("launch agent includes primary and catch-up attempts", () => {

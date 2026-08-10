@@ -15,9 +15,11 @@ if (!articleId || !/^[a-z0-9-]+$/.test(articleId)) {
 
 const sql = getSql();
 await withRetry(() => ensureImageJobTable(sql));
-await withRetry(() => sql`
+const [started] = await withRetry(() => sql`
   INSERT INTO article_image_jobs (article_id, status, model, attempts, started_at, updated_at)
-  VALUES (${articleId}, 'GENERATING', ${IMAGE_MODEL}, 1, NOW(), NOW())
+  SELECT ${articleId}, 'GENERATING', ${IMAGE_MODEL}, 1, NOW(), NOW()
+  FROM articles
+  WHERE id = ${articleId} AND status = 'draft' AND image_url IS NULL
   ON CONFLICT (article_id) DO UPDATE SET
     status = 'GENERATING',
     model = EXCLUDED.model,
@@ -25,5 +27,13 @@ await withRetry(() => sql`
     last_error_code = NULL,
     started_at = NOW(),
     updated_at = NOW()
+  WHERE EXISTS (
+    SELECT 1 FROM articles
+    WHERE id = ${articleId} AND status = 'draft' AND image_url IS NULL
+  )
+    AND article_image_jobs.status NOT IN ('READY_FOR_REVIEW', 'APPROVED')
+  RETURNING article_id
 `);
-process.stdout.write(`${JSON.stringify({ ok: true, articleId, status: 'GENERATING' })}\n`);
+process.stdout.write(`${JSON.stringify(started
+  ? { ok: true, articleId, status: 'GENERATING' }
+  : { ok: true, articleId, noOp: true })}\n`);

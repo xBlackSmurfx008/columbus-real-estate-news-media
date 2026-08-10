@@ -8,9 +8,12 @@
     "start": "next start",
     "lint": "next lint",
     "test:e2e": "playwright test",
-    "test:image-pipeline": "node --test tests/*.test.mjs",
+    "test:image-pipeline": "node --experimental-strip-types --test tests/*.test.mjs tests/*.test.ts",
     "newsroom:image-backfill": "node scripts/run-image-backfill.mjs",
-    "newsroom:install-image-schedule": "node scripts/install-image-backfill.mjs"
+    "newsroom:install-image-schedule": "node scripts/install-image-backfill.mjs",
+    "newsroom:neighborhood-report": "node scripts/neighborhood-coverage-report.mjs",
+    "newsroom:migrate-tags": "node scripts/migrate-article-tags.mjs",
+    "newsroom:audit-public-images": "node scripts/public-image-audit.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -19,7 +22,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "jose": "^6.2.2",
-    "next": "latest",
+    "next": "^16.3.0",
     "react": "latest",
     "react-dom": "latest",
     "sharp": "^0.35.3",

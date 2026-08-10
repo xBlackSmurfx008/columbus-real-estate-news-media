@@ -4,7 +4,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { sendTelegramAlert } from "./telegram-alert.mjs";
 import { safeErrorSummary } from "./image-pipeline-lib.mjs";
-import { alertZeroPublishOnce, getDailyPublicationHealth } from "./newsroom-health.mjs";
+import { alertPublicImageGapOnce, alertZeroPublishOnce, getDailyPublicationHealth } from "./newsroom-health.mjs";
 
 const CODEX_TIMEOUT_MS = 45 * 60 * 1_000;
 const LOGIN_TIMEOUT_MS = 60_000;
@@ -35,8 +35,10 @@ function run(command, args, { timeoutMs, capture = false, env = process.env } = 
   });
 }
 
-async function listMissing(requestedLimit) {
-  const result = await run(process.execPath, ["scripts/list-missing-images.mjs", "--limit", String(requestedLimit)], {
+async function listMissing(requestedLimit, { claim = false } = {}) {
+  const args = ["scripts/list-missing-images.mjs", "--limit", String(requestedLimit)];
+  if (claim) args.push('--claim');
+  const result = await run(process.execPath, args, {
     timeoutMs: 60_000,
     capture: true,
   });
@@ -48,9 +50,14 @@ async function main() {
   if (!Number.isInteger(limit) || limit < 1 || limit > 20) throw new Error("INVALID_IMAGE_BACKFILL_LIMIT");
   const publishingHealth = await getDailyPublicationHealth();
   const zeroPublishAlert = await alertZeroPublishOnce(publishingHealth);
-  const manifest = await listMissing(limit);
+  const publicImageAlert = await alertPublicImageGapOnce(publishingHealth);
+  const manifest = await listMissing(limit, { claim: true });
   if (manifest.totalMissing === 0) {
-    process.stdout.write(`${JSON.stringify({ ok: true, noOp: true, totalMissing: 0, publishingHealth, zeroPublishAlert })}\n`);
+    process.stdout.write(`${JSON.stringify({ ok: true, noOp: true, totalMissing: 0, publishingHealth, zeroPublishAlert, publicImageAlert })}\n`);
+    return;
+  }
+  if (manifest.selected.length === 0) {
+    process.stdout.write(`${JSON.stringify({ ok: true, noOp: true, totalMissing: manifest.totalMissing, claimed: 0, publishingHealth, zeroPublishAlert, publicImageAlert })}\n`);
     return;
   }
 
@@ -90,7 +97,7 @@ async function main() {
     summary: `${completed.length} image(s) attached; ${failed.length} selected article(s) still need an image; ${remaining.totalMissing} missing overall.`,
     articles: completed,
   });
-  process.stdout.write(`${JSON.stringify({ ok: status !== "FAILED", status, completed: completed.length, failed: failed.length, remaining: remaining.totalMissing, publishingHealth, zeroPublishAlert, telegram })}\n`);
+  process.stdout.write(`${JSON.stringify({ ok: status !== "FAILED", status, completed: completed.length, failed: failed.length, remaining: remaining.totalMissing, publishingHealth, zeroPublishAlert, publicImageAlert, telegram })}\n`);
   if (status === "FAILED") process.exitCode = 1;
 }
 

@@ -27,12 +27,20 @@ export async function getDailyPublicationHealth(date = new Date()) {
   const [drafts] = await withRetry(() => sql`
     SELECT COUNT(*)::int AS count FROM articles WHERE status = 'draft'
   `);
+  const publicImageGaps = await withRetry(() => sql`
+    SELECT id, title
+    FROM articles
+    WHERE status = 'live' AND image_url IS NULL
+    ORDER BY created_at DESC
+  `);
   return {
     dateKey,
     articlesPublished: rows.length,
     imagesMissing: rows.filter((row) => !row.image_url).length,
     articles: rows,
     draftsAwaitingReview: drafts.count,
+    publicImagesMissing: publicImageGaps.length,
+    publicImageGaps,
   };
 }
 
@@ -47,6 +55,29 @@ export async function alertZeroPublishOnce(health) {
   const delivery = await sendTelegramAlert({
     status: "ZERO_PUBLISH",
     summary: `No live CREN article has been published for ${health.dateKey}. ${health.draftsAwaitingReview} draft(s) await editorial review: ${CREN_PUBLIC_BASE_URL}/admin/articles`,
+  });
+  if (delivery.ok) {
+    await withRetry(() => sql`
+      INSERT INTO newsroom_alert_deliveries (alert_key) VALUES (${alertKey})
+      ON CONFLICT (alert_key) DO NOTHING
+    `);
+  }
+  return delivery;
+}
+
+export async function alertPublicImageGapOnce(health) {
+  if (health.publicImagesMissing === 0) return { ok: true, noOp: true };
+  const sql = getSql();
+  const alertKey = `PUBLIC_IMAGE_GAP:${health.dateKey}:${health.publicImageGaps.map((row) => row.id).join(',')}`;
+  const existing = await withRetry(() => sql`
+    SELECT alert_key FROM newsroom_alert_deliveries WHERE alert_key = ${alertKey}
+  `);
+  if (existing.length > 0) return { ok: true, noOp: true, alreadyDelivered: true };
+  const delivery = await sendTelegramAlert({
+    status: 'FAILED',
+    summary: `${health.publicImagesMissing} public CREN article(s) are missing a hero image. Repair immediately; publication should never bypass image approval.`,
+    articles: health.publicImageGaps,
+    linkMode: 'live',
   });
   if (delivery.ok) {
     await withRetry(() => sql`

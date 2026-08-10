@@ -14,6 +14,7 @@ const REQUIRED_FIELDS = [
   'entity_ledger',
   'location',
   'canonical_event_key',
+  'tags',
   'image_brief',
   'image_alt',
   'image_provenance',
@@ -142,6 +143,18 @@ export function evaluateArticle(article) {
   const keywordDensity = bodyWords ? (keywordUses * wordCount(keyword)) / bodyWords : 0;
   const imageAi = article.image_provenance?.type === 'AI_GENERATED';
   const imageCaption = String(article.image_provenance?.caption ?? '');
+  const aiImageRequest = `${article.image_brief?.primary_request ?? ''} ${article.image_brief?.editorial_idea ?? ''}`;
+  const tags = Array.isArray(article.tags) ? article.tags : [];
+  const tagsAreValid = tags.length >= 3 && tags.length <= 7
+    && new Set(tags).size === tags.length
+    && tags.every((tag) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(tag));
+  const contextTagsPresent = tags.includes('columbus-ohio')
+    && tags.includes('central-ohio-real-estate')
+    && (!article.topic_slug || tags.includes(article.topic_slug))
+    && (!article.area_slug || article.area_slug === 'columbus-citywide' || tags.includes(article.area_slug));
+  const categoryTagsPresent = (article.category !== 'Development' || tags.includes('development'))
+    && (article.category !== 'Neighborhoods'
+      || (tags.includes('neighborhood') && article.area_slug && article.area_slug !== 'columbus-citywide'));
 
   const checks = [
     check('A1_REQUIRED_FIELDS', REQUIRED_FIELDS.every((field) => {
@@ -150,6 +163,8 @@ export function evaluateArticle(article) {
     }), 'All editorial metadata and ledgers are present.'),
     check('A2_LOCAL_SCOPE', article.location?.state === 'OH' && localMatch,
       'The title, dek, or opening must establish an exact Ohio/Columbus-area connection.'),
+    check('A2B_TAGS_AND_HUBS', tagsAreValid && contextTagsPresent && categoryTagsPresent,
+      'Use 3–7 unique kebab-case tags, including Columbus, topic, area, and required Development/Neighborhood context.'),
     check('A3_ANSWER_FIRST', answerWords >= 30 && answerWords <= 60 && answerSentences <= 2
       && !THROAT_CLEARING_PATTERNS.some((pattern) => pattern.test(answer)) && firstParagraph.includes(plainText(answer)),
     'A 30–60 word, two-sentence maximum answer summary must be the first paragraph.'),
@@ -184,7 +199,8 @@ export function evaluateArticle(article) {
       && Array.isArray(article.image_brief?.story_anchors) && article.image_brief.story_anchors.length >= 2
       && article.image_brief?.source_asset_considered === true
       && Boolean(article.image_provenance?.type) && Boolean(imageCaption)
-      && (!imageAi || /AI-generated illustration/i.test(imageCaption)),
+      && (!imageAi || (/AI-generated illustration/i.test(imageCaption)
+        && !/\b(?:photo|photograph|photographic|photorealistic)\b/i.test(aiImageRequest))),
     'The brief needs an editorial idea, two story anchors, source-asset consideration, and truthful AI disclosure.'),
   ];
 

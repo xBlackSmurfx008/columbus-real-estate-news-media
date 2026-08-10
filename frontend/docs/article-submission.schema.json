@@ -14,6 +14,7 @@
     "meta_description",
     "fact_checked_at",
     "canonical_event_key",
+    "tags",
     "location",
     "source_ledger",
     "claim_ledger",
@@ -38,6 +39,13 @@
     "topic_slug": {
       "type": ["string", "null"],
       "enum": ["market-trends", "schools", "development", "local-politics", "events-lifestyle", null]
+    },
+    "tags": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 7,
+      "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" }
     },
     "read_time": { "type": "string" },
     "featured": { "type": "boolean" },

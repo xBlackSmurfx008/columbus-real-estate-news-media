@@ -5,6 +5,7 @@ import { ensureEditorialReviewTable } from './editorial-review-store.mjs';
 
 const limitIndex = process.argv.indexOf("--limit");
 const limit = limitIndex >= 0 ? Number(process.argv[limitIndex + 1]) : 4;
+const claim = process.argv.includes('--claim');
 if (!Number.isInteger(limit) || limit < 1 || limit > 20) {
   console.error("INVALID_LIMIT");
   process.exit(1);
@@ -32,28 +33,34 @@ const rows = await withRetry(() => sql`
     AND editorial_review_jobs.machine_score = editorial_review_jobs.machine_possible
   ORDER BY articles.created_at DESC
 `);
-const selected = selectMissingArticles(rows, limit).map((article) => ({
-  ...article,
-  imagePrompt: buildHeroPrompt(article),
-}));
-
-for (const article of selected) {
-  await withRetry(() => sql`
-    INSERT INTO article_image_jobs (article_id, status, prompt, model, updated_at)
-    VALUES (${article.id}, 'PENDING', ${article.imagePrompt}, 'codex-subscription-imagegen', NOW())
+const selected = [];
+const ordered = selectMissingArticles(rows, rows.length);
+for (const article of ordered) {
+  if (selected.length >= limit) break;
+  const imagePrompt = buildHeroPrompt(article);
+  if (!claim) {
+    selected.push({ ...article, imagePrompt });
+    continue;
+  }
+  const [claimed] = await withRetry(() => sql`
+    INSERT INTO article_image_jobs (article_id, status, prompt, model, started_at, updated_at)
+    VALUES (${article.id}, 'CLAIMED', ${imagePrompt}, 'codex-subscription-imagegen', NOW(), NOW())
     ON CONFLICT (article_id) DO UPDATE SET
       prompt = EXCLUDED.prompt,
       model = EXCLUDED.model,
-      status = CASE
-        WHEN article_image_jobs.status IN ('READY_FOR_REVIEW', 'APPROVED') THEN article_image_jobs.status
-        ELSE 'PENDING'
-      END,
+      status = 'CLAIMED',
+      started_at = NOW(),
       updated_at = NOW()
+    WHERE article_image_jobs.status NOT IN ('CLAIMED', 'GENERATING', 'READY_FOR_REVIEW', 'APPROVED')
+       OR article_image_jobs.started_at < NOW() - INTERVAL '60 minutes'
+    RETURNING article_id
   `);
+  if (claimed) selected.push({ ...article, imagePrompt });
 }
 
 process.stdout.write(`${JSON.stringify({
   totalMissing: rows.length,
+  claimed: claim,
   missingIds: rows.map((article) => article.id),
   selected,
 })}\n`);

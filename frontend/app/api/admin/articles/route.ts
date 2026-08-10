@@ -49,6 +49,7 @@ export async function POST(request: NextRequest) {
       read_time,
       area_slug,
       topic_slug,
+      tags,
       meta_description,
       image_alt,
       image_caption,
@@ -66,13 +67,13 @@ export async function POST(request: NextRequest) {
     const result = await sql`
       INSERT INTO articles (
         id, status, featured, category, category_class, icon, title, excerpt,
-        body, author, date, read_time, area_slug, topic_slug,
+        body, author, date, read_time, area_slug, topic_slug, tags,
         meta_description, image_alt, image_caption, fact_checked_at
       ) VALUES (
         ${id}, 'draft', ${featured || false}, ${category},
         ${category_class || "card-img-market"}, ${icon || "$"}, ${title},
         ${excerpt || null}, ${articleBody || null}, ${author}, ${date || new Date().toISOString().split('T')[0]},
-        ${read_time || "5 min read"}, ${area_slug || null}, ${topic_slug || null},
+        ${read_time || "5 min read"}, ${area_slug || null}, ${topic_slug || null}, ${JSON.stringify(Array.isArray(tags) ? tags : [])}::jsonb,
         ${meta_description || null}, ${image_alt || null}, ${image_caption || null}, ${fact_checked_at || null}
       )
       RETURNING *

@@ -19,14 +19,14 @@ Local-first journalism. Plain English, fact-forward, low on hype. We're a credib
   3. Pick 1 real estate story + 1 lifestyle story not already covered.
   4. Verify facts across sources; if a story originates on another outlet, write original local analysis and link back to it (see `.claude/skills/cren-copywriting`).
   5. Draft both articles per the copywriting skill (4th-grade reading level, SEO conventions below).
-  6. Generate one hero image per article via Higgsfield.
-  7. Insert each article directly into the live `articles` table via `node frontend/scripts/publish-article.mjs <file.json>` — `status='live'`, no manual review step.
+  6. Insert each article directly into the live `articles` table via `node frontend/scripts/publish-article.mjs <file.json>` — `status='live'`, no manual review step. Set `image_url` to `null`; text publication must not wait on image generation.
+  7. Do not call Higgsfield from the cloud routine. A separate idempotent local Codex subscription job invokes built-in `$imagegen`, normalizes each accepted hero to 1600×900 WebP, uploads it to Vercel Blob, and conditionally attaches it to any live row whose `image_url` is still null.
   8. Keep market data fresh (accuracy pass): refresh the ticker as always, then run `DATABASE_URL=... node frontend/scripts/refresh-market-data.mjs` — one command that pulls FREE public feeds (Zillow Research ZHVI for the neighborhood "Typical Value" column + YoY, Zillow ZORI for rents, FRED for the 30-yr mortgage rate) and updates the DB automatically. No API keys, no scraping. It only writes what it can resolve and leaves the rest unchanged, so it never fabricates. (Short North, Clintonville, and Franklinton aren't in Zillow's neighborhood file — leave their prior values or update from a named source if you find one; never guess.) The metro Median Sale Price / Active Listings / Days on Market in the snapshot come from the Columbus REALTORS monthly report — update those from that report via `update-site-data.mjs` (`market_snapshot` key) when a new month is out.
   9. Write a brief to `briefs/<date>.md` summarizing sources used, links to the two new articles, and which neighborhood rows you refreshed, then commit and push.
 - New articles appear on the live site within 5 minutes (blog pages use `revalidate = 300`) — no redeploy needed per run.
 
 ## Automation
-The daily run above executes as a cloud-scheduled Claude Code routine (not a local cron job — see `claude.ai/code/routines`). It authenticates to NeonDB via a `DATABASE_URL` embedded in the routine's own configuration (not committed to this repo) and uses the Higgsfield MCP connector for image generation.
+The daily text run above executes as a cloud-scheduled Claude Code routine (not a local cron job — see `claude.ai/code/routines`). It authenticates to NeonDB via a `DATABASE_URL` embedded in the routine's own configuration (not committed to this repo). Image generation is deliberately separate: the local `com.cren.image-backfill` LaunchAgent uses the saved Codex/ChatGPT subscription, never an OpenAI API key, and retries at 7:05 a.m., 8:05 a.m., and 12:35 p.m. Eastern.
 
 ## Channels
 Blog (primary — inserted directly into the `articles` table, live). `content/<channel>/<date>.md` markdown drafts are kept for LinkedIn/Instagram/X/Threads distribution copy, written after the blog article is live.

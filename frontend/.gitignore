@@ -5,3 +5,7 @@
 /playwright-report/
 /test-results/
 /playwright/.cache/
+.env*
+
+# Local subscription image-generation artifacts and logs.
+/var/cren-images/

@@ -7,10 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:image-pipeline": "node --test tests/image-pipeline.test.mjs",
+    "newsroom:image-backfill": "node scripts/run-image-backfill.mjs",
+    "newsroom:install-image-schedule": "node scripts/install-image-backfill.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
+    "@vercel/blob": "^2.7.0",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -18,6 +22,7 @@
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
+    "sharp": "^0.35.3",
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {

@@ -101,7 +101,7 @@ export function evaluateArticle(article) {
   const h2s = [...body.matchAll(/^##\s+(.+)$/gm)].map((match) => match[1].trim());
   const paragraphs = body.split(/\n\s*\n/).map((paragraph) => paragraph.trim()).filter(Boolean);
   const claimSentences = claims.map((claim) => normalizeClaim(claim.claim));
-  const materialSentences = sentences(body).filter((sentence) => /(?:\$|%|\b\d[\d,.]*\b)/.test(sentence));
+  const materialSentences = sentences(body).filter((sentence) => /(?:\$|%|\b\d[\d,.]*\b)/.test(plainText(sentence)));
   const statusSentences = sentences(body).filter((sentence) =>
     /\b(proposed|filed|recommended|approved|under construction|completed|sold)\b/i.test(sentence));
   const validSourceRecords = sources.every((source) => {

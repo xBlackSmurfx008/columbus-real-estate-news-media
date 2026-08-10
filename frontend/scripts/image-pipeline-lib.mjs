@@ -44,7 +44,7 @@ export function buildHeroPrompt(article) {
     'Color palette: CREN forest green, warm brick, muted cream, charcoal, and one restrained amber accent',
     'Truthfulness: express a relationship, change, scale, or process; do not depict an exact unverified building, person, storefront, map boundary, or final design',
     `Caption context: ${article.image_provenance?.caption ?? 'AI-generated illustration for Columbus Real Estate News.'}`,
-    'Constraints: no readable text, signs, logos, brands, watermarks, public figures, identifiable residents, invented renderings, or implied investment results',
+    'Constraints: no readable text, signs, logos, brands, watermarks, artist signatures, corner marks, dashed or dotted lines, parcel outlines, map overlays, public figures, identifiable residents, invented renderings, or implied investment results',
     `Avoid: ${[brief.avoid, 'handshakes, keys in a palm, floating coins, upward arrows, glowing house holograms, boardrooms, hardhat-and-blueprint still lifes, generic glass towers, skyline montages, distorted buildings, and busy collages'].filter(Boolean).join('; ')}`,
   ].join("\n");
 }

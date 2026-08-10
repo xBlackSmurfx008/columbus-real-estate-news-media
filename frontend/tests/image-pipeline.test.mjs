@@ -36,6 +36,7 @@ test("hero prompts enforce the shared editorial art direction", () => {
   assert.match(prompt, /clearly an illustration/);
   assert.match(prompt, /brick warehouse bay; reused loading area/);
   assert.match(prompt, /no readable text/);
+  assert.match(prompt, /artist signatures, corner marks, dashed or dotted lines, parcel outlines/);
   assert.match(prompt, /handshakes, keys in a palm/);
 });
 

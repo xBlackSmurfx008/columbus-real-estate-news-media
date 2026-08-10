@@ -88,3 +88,13 @@ test('human review fails with zero scores, including all blocking criteria', () 
   assert.equal(report.passed, false);
   assert.equal(report.total, 10);
 });
+
+test('digits inside a source URL do not turn a non-numeric sentence into a numeric claim', () => {
+  const article = validArticle();
+  article.body = article.body.replace(
+    'City records give readers a useful starting point',
+    'The [city record](https://example.gov/archive/2026/08/10) gives readers a useful starting point',
+  );
+  const report = evaluateArticle(article);
+  assert.equal(report.passed, true, report.failedCodes.join(','));
+});

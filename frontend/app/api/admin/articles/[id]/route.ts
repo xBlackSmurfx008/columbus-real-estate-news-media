@@ -27,15 +27,23 @@ export async function PUT(
       return NextResponse.json({ error: "Status must be draft or live" }, { status: 400 });
     }
 
+    const editorialFields = [
+      "title", "excerpt", "body", "author", "date", "read_time", "area_slug", "topic_slug",
+      "image_url", "meta_description", "image_alt", "image_caption", "fact_checked_at",
+    ];
+    const changesEditorialContent = editorialFields.some((field) => Object.hasOwn(body, field));
+    const requiresReview = (requestedStatus === "live" && existing[0].status !== "live")
+      || (existing[0].status === "live" && changesEditorialContent && requestedStatus !== "draft");
+
     let humanReview;
-    if (requestedStatus === "live" && existing[0].status !== "live") {
+    if (requiresReview) {
       const [review] = await sql`
         SELECT machine_score, machine_possible
         FROM editorial_review_jobs
         WHERE article_id = ${id}
       `;
       humanReview = validateHumanReview(body.human_scores);
-      if (!review || review.machine_score !== review.machine_possible) {
+      if (!review || review.machine_possible <= 0 || review.machine_score !== review.machine_possible) {
         return NextResponse.json({ error: "The machine editorial gate has not passed" }, { status: 409 });
       }
       if (!humanReview.passed) {
@@ -71,7 +79,7 @@ export async function PUT(
       RETURNING *
     `;
 
-    if (requestedStatus === "live" && humanReview?.passed) {
+    if (requiresReview && humanReview?.passed) {
       await sql`
         UPDATE editorial_review_jobs SET
           status = 'APPROVED',

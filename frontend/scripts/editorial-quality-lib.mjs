@@ -183,6 +183,7 @@ export function evaluateArticle(article) {
     check('A15_ORIGINALITY_AND_DISCLOSURE', Boolean(article.image_brief?.editorial_idea)
       && Array.isArray(article.image_brief?.story_anchors) && article.image_brief.story_anchors.length >= 2
       && article.image_brief?.source_asset_considered === true
+      && Boolean(article.image_provenance?.type) && Boolean(imageCaption)
       && (!imageAi || /AI-generated illustration/i.test(imageCaption)),
     'The brief needs an editorial idea, two story anchors, source-asset consideration, and truthful AI disclosure.'),
   ];

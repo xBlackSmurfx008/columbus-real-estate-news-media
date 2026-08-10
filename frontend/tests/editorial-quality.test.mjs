@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { evaluateArticle } from '../scripts/editorial-quality-lib.mjs';
+import { validateHumanReview } from '../lib/editorial-review.ts';
 
 const answerSummary = 'A Columbus housing permit entered early city review this week. The filing matters because it shows how a vacant commercial site could change, while key design, approval, cost, and construction questions remain open.';
 const contextParagraph = 'City records give readers a useful starting point, but they do not settle the project’s final shape. The review can change after staff comments, public meetings, engineering work, or a new submission. CREN should explain that process in everyday language, name the record being used, and separate the applicant’s stated goal from what the city has decided. That distinction gives nearby residents, property owners, and civic watchers a clear account without pretending an early filing is a finished plan.';
@@ -65,4 +66,25 @@ test('generic promotional HTML copy is blocked before it reaches the draft queue
   assert.equal(report.passed, false);
   assert.ok(report.failedCodes.includes('A11_FAIR_BALANCE'));
   assert.ok(report.failedCodes.includes('A14_WEB_STRUCTURE'));
+});
+
+test('empty ledgers, an empty body, and null image provenance fail closed without throwing', () => {
+  const article = validArticle();
+  article.body = '';
+  article.source_ledger = [];
+  article.claim_ledger = [];
+  article.entity_ledger = [];
+  article.image_provenance = null;
+  const report = evaluateArticle(article);
+  assert.equal(report.passed, false);
+  assert.ok(report.failedCodes.includes('A1_REQUIRED_FIELDS'));
+  assert.ok(report.failedCodes.includes('A4_SOURCE_FLOOR'));
+  assert.ok(report.failedCodes.includes('A5_CLAIM_TRACEABILITY'));
+  assert.ok(report.failedCodes.includes('A15_ORIGINALITY_AND_DISCLOSURE'));
+});
+
+test('human review fails with zero scores, including all blocking criteria', () => {
+  const report = validateHumanReview({ B1: 0, B2: 0, B3: 2, B4: 2, B5: 2, B6: 0, B7: 0, B8: 2, B9: 2 });
+  assert.equal(report.passed, false);
+  assert.equal(report.total, 10);
 });

@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "images.unsplash.com", pathname: "/**" },
       // Higgsfield-generated hero images (CloudFront)
       { protocol: "https", hostname: "*.cloudfront.net", pathname: "/**" },
+      // Stable CREN newsroom heroes uploaded by the subscription image backfill.
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com", pathname: "/**" },
     ],
   },
 };

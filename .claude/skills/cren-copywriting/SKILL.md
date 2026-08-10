@@ -47,4 +47,6 @@ Local-first journalism. Plain English, fact-forward, low on hype. Credible neigh
 - Meta description: 150–160 characters, lead with the news.
 - Tags: include `columbus-ohio`, `central-ohio-real-estate`, neighborhood, asset class.
 - Internal links: cross-link to prior coverage of the same neighborhood/operator.
-- Image briefs: 1 hero (16:9), 1 social (1:1), one inline supporting image.
+- Image briefs: write one specific 16:9 hero brief describing subject, setting, composition, light, factual boundaries,
+  and avoid items. Do not request text overlays, logos, exact unverified buildings/interiors, public figures, or generic
+  skyline filler. Social and inline briefs are optional downstream assets and never block article publication.

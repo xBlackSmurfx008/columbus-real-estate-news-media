@@ -108,9 +108,9 @@ export default async function BlogPostPage({
     "@type": "BlogPosting",
     "@id": `${canonicalUrl}#blogposting`,
     headline: article.title,
-    description: article.excerpt ?? "",
+    description: article.meta_description ?? article.excerpt ?? "",
     datePublished: article.date,
-    dateModified: article.date,
+    dateModified: article.updated_at,
     mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
     author: { "@type": "Person", name: article.author },
     publisher: { "@type": "Organization", name: "Columbus Real Estate News" },
@@ -165,8 +165,15 @@ export default async function BlogPostPage({
 
             {/* Hero image */}
             {article.image_url && (
-              <figure className="relative aspect-[16/9] w-full overflow-hidden rounded-[var(--radius-sm)]">
-                <CoverImage src={article.image_url} alt={article.title} sizes="(max-width: 1024px) 100vw, 720px" priority />
+              <figure className="overflow-hidden rounded-[var(--radius-sm)] cren-surface">
+                <div className="relative aspect-[16/9] w-full">
+                  <CoverImage src={article.image_url} alt={article.image_alt ?? article.title} sizes="(max-width: 1024px) 100vw, 720px" priority />
+                </div>
+                {article.image_caption && (
+                  <figcaption className="px-4 py-3 text-xs text-[color:var(--text-muted)]">
+                    {article.image_caption}
+                  </figcaption>
+                )}
               </figure>
             )}
 

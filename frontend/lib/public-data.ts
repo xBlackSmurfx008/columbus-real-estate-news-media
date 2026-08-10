@@ -20,6 +20,10 @@ export interface DbArticle {
   area_slug: string | null;
   topic_slug: string | null;
   image_url: string | null;
+  image_alt: string | null;
+  image_caption: string | null;
+  meta_description: string | null;
+  fact_checked_at: string | null;
   created_at: string;
   updated_at: string;
 }

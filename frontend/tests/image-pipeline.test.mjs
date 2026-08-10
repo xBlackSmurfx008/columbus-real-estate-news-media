@@ -26,11 +26,17 @@ test("hero prompts enforce the shared editorial art direction", () => {
     title: "Columbus Warehouse Breaks Ground",
     excerpt: "A new logistics project is underway.",
     area_slug: "rickenbacker",
+    image_brief: {
+      primary_request: 'Explain a warehouse reuse decision.',
+      editorial_idea: 'Contrast the existing shell with the new use.',
+      story_anchors: ['brick warehouse bay', 'reused loading area'],
+    },
   });
   assert.match(prompt, /16:9 editorial news article hero/);
-  assert.match(prompt, /representative editorial art/);
+  assert.match(prompt, /clearly an illustration/);
+  assert.match(prompt, /brick warehouse bay; reused loading area/);
   assert.match(prompt, /no readable text/);
-  assert.match(prompt, /Central Ohio/);
+  assert.match(prompt, /handshakes, keys in a palm/);
 });
 
 test("launch agent includes primary and catch-up attempts", () => {

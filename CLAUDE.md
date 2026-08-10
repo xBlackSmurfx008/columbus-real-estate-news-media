@@ -16,20 +16,20 @@ Local-first journalism. Plain English, fact-forward, low on hype. We're a credib
 - **06:33 America/New_York** (cloud-scheduled routine — see "Automation" below):
   1. Run `node frontend/scripts/recent-articles.mjs` to see what's already been covered in the last 30 days (avoid duplicate topics).
   2. Research via web search + the source list below. Pull local, government, and national coverage.
-  3. Pick 1 real estate story + 1 lifestyle story not already covered.
+  3. Pick at most 1 strong real estate story and 1 strong lifestyle story not already covered. Publish zero rather than force a weak or duplicative daily item.
   4. Verify facts across sources; if a story originates on another outlet, write original local analysis and link back to it (see `.claude/skills/cren-copywriting`).
-  5. Draft both articles per the copywriting skill (4th-grade reading level, SEO conventions below).
-  6. Insert each article directly into the live `articles` table via `node frontend/scripts/publish-article.mjs <file.json>` — `status='live'`, no manual review step. Set `image_url` to `null`; text publication must not wait on image generation.
-  7. Do not call Higgsfield from the cloud routine. A separate idempotent local Codex subscription job invokes built-in `$imagegen`, normalizes each accepted hero to 1600×900 WebP, uploads it to Vercel Blob, and conditionally attaches it to any live row whose `image_url` is still null.
+  5. Draft each worthwhile article and its source, claim, entity, SEO, and image metadata per `.claude/skills/cren-copywriting` and `frontend/docs/article-submission.schema.json`. Body format is Markdown only.
+  6. Run `node frontend/scripts/publish-article.mjs <file.json>`. This deterministic gate can only stage `status='draft'`; never bypass it or write a live row directly.
+  7. Do not call Higgsfield from the cloud routine. A separate idempotent local Codex subscription job creates a clearly labeled editorial illustration only for machine-passed drafts, normalizes it to 1600×900 WebP, and attaches it as `READY_FOR_REVIEW`. It cannot modify a live article.
   8. Keep market data fresh (accuracy pass): refresh the ticker as always, then run `DATABASE_URL=... node frontend/scripts/refresh-market-data.mjs` — one command that pulls FREE public feeds (Zillow Research ZHVI for the neighborhood "Typical Value" column + YoY, Zillow ZORI for rents, FRED for the 30-yr mortgage rate) and updates the DB automatically. No API keys, no scraping. It only writes what it can resolve and leaves the rest unchanged, so it never fabricates. (Short North, Clintonville, and Franklinton aren't in Zillow's neighborhood file — leave their prior values or update from a named source if you find one; never guess.) The metro Median Sale Price / Active Listings / Days on Market in the snapshot come from the Columbus REALTORS monthly report — update those from that report via `update-site-data.mjs` (`market_snapshot` key) when a new month is out.
   9. Write a brief to `briefs/<date>.md` summarizing sources used, links to the two new articles, and which neighborhood rows you refreshed, then commit and push.
-- New articles appear on the live site within 5 minutes (blog pages use `revalidate = 300`) — no redeploy needed per run.
+- A draft becomes public only after an authenticated editor reviews the rendered copy and image, scores the nine-part rubric at least 14/18, clears all blocking criteria, and explicitly approves the hero.
 
 ## Automation
 The daily text run above executes as a cloud-scheduled Claude Code routine (not a local cron job — see `claude.ai/code/routines`). It authenticates to NeonDB via a `DATABASE_URL` embedded in the routine's own configuration (not committed to this repo). Image generation is deliberately separate: the local `com.cren.image-backfill` LaunchAgent uses the saved Codex/ChatGPT subscription, never an OpenAI API key, and retries at 7:05 a.m., 8:05 a.m., and 12:35 p.m. Eastern.
 
 ## Channels
-Blog (primary — inserted directly into the `articles` table, live). `content/<channel>/<date>.md` markdown drafts are kept for LinkedIn/Instagram/X/Threads distribution copy, written after the blog article is live.
+Blog drafts are staged in the `articles` table for review. Social copy is written only after an editor approves the article and hero for publication.
 
 ## Source list (kept current)
 
@@ -63,7 +63,8 @@ Blog (primary — inserted directly into the `articles` table, live). `content/<
 - Meta description: 150–160 chars, lead with the news
 - Tags: include `columbus-ohio`, `central-ohio-real-estate`, neighborhood, asset class
 - Internal links: cross-link to prior coverage of same neighborhood/operator
-- Image briefs: 1 hero (16:9), 1 social (1:1), one inline supporting image
+- Image briefs: one 16:9 editorial hero concept with an explanatory idea, two story-specific anchors, truthful
+  provenance/caption, local constraints, and an explicit avoid list. Social and inline images are downstream work.
 
 ## Inbox sources
 - Tips line (Gmail tag `cren/tip`)

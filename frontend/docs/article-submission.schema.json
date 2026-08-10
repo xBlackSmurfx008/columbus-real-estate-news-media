@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CREN staged article submission",
+  "type": "object",
+  "required": [
+    "title",
+    "category",
+    "author",
+    "date",
+    "excerpt",
+    "body",
+    "answer_summary",
+    "primary_keyword",
+    "meta_description",
+    "fact_checked_at",
+    "canonical_event_key",
+    "location",
+    "source_ledger",
+    "claim_ledger",
+    "entity_ledger",
+    "image_brief",
+    "image_alt",
+    "image_provenance"
+  ],
+  "properties": {
+    "title": { "type": "string", "minLength": 45, "maxLength": 75 },
+    "category": { "type": "string" },
+    "author": { "type": "string" },
+    "date": { "type": "string" },
+    "excerpt": { "type": "string", "minLength": 140, "maxLength": 165 },
+    "body": { "type": "string", "description": "Markdown only. The first paragraph must exactly equal answer_summary." },
+    "answer_summary": { "type": "string", "description": "30–60 words and no more than two sentences." },
+    "primary_keyword": { "type": "string" },
+    "meta_description": { "type": "string", "minLength": 140, "maxLength": 165 },
+    "fact_checked_at": { "type": "string", "format": "date-time" },
+    "canonical_event_key": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+    "area_slug": { "type": ["string", "null"] },
+    "topic_slug": {
+      "type": ["string", "null"],
+      "enum": ["market-trends", "schools", "development", "local-politics", "events-lifestyle", null]
+    },
+    "read_time": { "type": "string" },
+    "featured": { "type": "boolean" },
+    "image_url": { "type": ["string", "null"] },
+    "location": {
+      "type": "object",
+      "required": ["name", "state"],
+      "properties": {
+        "name": { "type": "string" },
+        "state": { "const": "OH" }
+      }
+    },
+    "source_ledger": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "url", "publisher", "title", "fetched_at", "http_status"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "enum": ["PRIMARY", "SECONDARY"] },
+          "url": { "type": "string", "format": "uri" },
+          "publisher": { "type": "string" },
+          "title": { "type": "string" },
+          "published_at": { "type": ["string", "null"] },
+          "fetched_at": { "type": "string", "format": "date-time" },
+          "http_status": { "type": "integer", "minimum": 200, "maximum": 399 }
+        }
+      }
+    },
+    "claim_ledger": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "claim", "source_ids"],
+        "properties": {
+          "id": { "type": "string" },
+          "claim": { "type": "string", "description": "Exact sentence as it appears in body." },
+          "source_ids": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+          "kind": { "enum": ["FACT", "QUOTE", "CALCULATION", "STATUS", "COMPARISON"] },
+          "exact_support": { "type": "string", "description": "Required for direct quotes; 25 words maximum." },
+          "calculation": { "type": "string" }
+        }
+      }
+    },
+    "entity_ledger": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "source_ids"],
+        "properties": {
+          "name": { "type": "string" },
+          "source_ids": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+        }
+      }
+    },
+    "image_brief": {
+      "type": "object",
+      "required": ["primary_request", "editorial_idea", "story_anchors", "source_asset_considered", "avoid"],
+      "properties": {
+        "primary_request": { "type": "string" },
+        "editorial_idea": { "type": "string" },
+        "story_anchors": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 3,
+          "items": { "type": "string" }
+        },
+        "source_asset_considered": { "const": true },
+        "source_asset_note": { "type": "string" },
+        "avoid": { "type": "string" }
+      }
+    },
+    "image_alt": { "type": "string", "minLength": 40, "maxLength": 160 },
+    "image_provenance": {
+      "type": "object",
+      "required": ["type", "caption"],
+      "properties": {
+        "type": {
+          "enum": [
+            "AI_GENERATED",
+            "LICENSED_PHOTO",
+            "OFFICIAL_RENDERING",
+            "PUBLIC_RECORD_GRAPHIC",
+            "CREN_GRAPHIC"
+          ]
+        },
+        "caption": { "type": "string" },
+        "source": { "type": "string" },
+        "license": { "type": "string" }
+      }
+    }
+  }
+}

@@ -21,8 +21,14 @@ await writeFile(plistPath, buildImageBackfillPlist({
 await chmod(plistPath, 0o600);
 
 const domain = `gui/${process.getuid()}`;
-spawnSync("/bin/launchctl", ["bootout", domain, plistPath]);
-const bootstrap = spawnSync("/bin/launchctl", ["bootstrap", domain, plistPath], { encoding: "utf8" });
-if (bootstrap.status !== 0) throw new Error(bootstrap.stderr.trim() || "LAUNCH_AGENT_BOOTSTRAP_FAILED");
-spawnSync("/bin/launchctl", ["enable", `${domain}/com.cren.image-backfill`]);
+const service = `${domain}/com.cren.image-backfill`;
+spawnSync("/bin/launchctl", ["bootout", service]);
+spawnSync("/bin/launchctl", ["enable", service]);
+let bootstrap;
+for (let attempt = 1; attempt <= 3; attempt += 1) {
+  bootstrap = spawnSync("/bin/launchctl", ["bootstrap", domain, plistPath], { encoding: "utf8" });
+  if (bootstrap.status === 0) break;
+  await new Promise((resolvePromise) => setTimeout(resolvePromise, 250 * attempt));
+}
+if (bootstrap?.status !== 0) throw new Error(bootstrap?.stderr.trim() || "LAUNCH_AGENT_BOOTSTRAP_FAILED");
 process.stdout.write(`${JSON.stringify({ installed: true, plistPath, attempts: IMAGE_BACKFILL_TIMES })}\n`);

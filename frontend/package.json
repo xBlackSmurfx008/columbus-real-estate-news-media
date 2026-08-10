@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test:e2e": "playwright test",
-    "test:image-pipeline": "node --test tests/image-pipeline.test.mjs",
+    "test:image-pipeline": "node --test tests/*.test.mjs",
     "newsroom:image-backfill": "node scripts/run-image-backfill.mjs",
     "newsroom:install-image-schedule": "node scripts/install-image-backfill.mjs"
   },

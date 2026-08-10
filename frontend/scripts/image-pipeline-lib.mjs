@@ -13,6 +13,10 @@ export function articleLiveUrl(title) {
   return `${CREN_PUBLIC_BASE_URL}/blog/${generateArticleSlug(title)}`;
 }
 
+export function articleReviewUrl(articleId) {
+  return `${CREN_PUBLIC_BASE_URL}/admin/articles?edit=${encodeURIComponent(articleId)}`;
+}
+
 export function selectMissingArticles(rows, limit) {
   if (!Array.isArray(rows) || rows.length === 0 || limit <= 0) return [];
   const newestFirst = [...rows].sort((left, right) => new Date(right.created_at) - new Date(left.created_at));
@@ -26,22 +30,22 @@ export function selectMissingArticles(rows, limit) {
 }
 
 export function buildHeroPrompt(article) {
-  const location = article.area_slug
-    ? `${String(article.area_slug).replaceAll("-", " ")}, Central Ohio`
-    : "Columbus, Ohio";
-  const context = [article.title, article.excerpt].filter(Boolean).join(" — ");
+  const brief = article.image_brief ?? {};
+  const anchors = Array.isArray(brief.story_anchors) ? brief.story_anchors.join('; ') : '';
   return [
-    "Use case: photorealistic-natural",
-    "Asset type: 16:9 editorial news article hero",
-    `Primary request: Create a representative editorial scene for this story: ${context}`,
-    `Scene/backdrop: ${location}; architecture, landscape, and weather should feel plausible for Central Ohio`,
-    "Style/medium: natural documentary editorial photography with realistic materials; polished but not cinematic or promotional",
-    "Composition/framing: wide horizontal composition; one clear focal subject; generous crop room on every edge; important subjects centered within the middle 70 percent",
-    "Lighting/mood: believable natural or practical light; calm, factual, observant, and locally grounded",
-    "Color palette: restrained neutral colors with subtle brick, steel, wood, asphalt, greenery, or warm interior tones appropriate to the subject",
-    "Truthfulness: this is representative editorial art, not a claim to show the exact property, business interior, named person, or construction site",
-    "Constraints: no readable text, signs, logos, brand marks, maps, charts, watermarks, public figures, luxury-sales imagery, cash, keys, handshakes, or implied investment returns",
-    "Avoid: generic skyline-only scenes, distorted buildings, impossible roads, oversaturated colors, artificial HDR, staged stock-photo smiles, duplicated people, malformed hands, and decorative typography",
+    'Use case: illustration-story',
+    'Asset type: 16:9 editorial news article hero, clearly an illustration rather than a documentary photograph',
+    `Primary request: ${brief.primary_request ?? article.title}`,
+    `Editorial idea: ${brief.editorial_idea ?? 'Show the reported change and the constraint or process behind it.'}`,
+    `Story-specific anchors that must both be visible: ${anchors}`,
+    `Local setting: ${article.location_name ?? article.area_slug ?? 'Columbus'}, Ohio; use plausible Central Ohio built form and season without inventing a recognizable property`,
+    'Style/medium: sophisticated contemporary editorial illustration; restrained digital gouache and cut-paper geometry; tactile texture; not photorealistic and not glossy 3D',
+    'Composition/framing: one clear focal idea readable at thumbnail size; wide 16:9; important elements within the middle 70 percent for mobile cropping',
+    'Color palette: CREN forest green, warm brick, muted cream, charcoal, and one restrained amber accent',
+    'Truthfulness: express a relationship, change, scale, or process; do not depict an exact unverified building, person, storefront, map boundary, or final design',
+    `Caption context: ${article.image_provenance?.caption ?? 'AI-generated illustration for Columbus Real Estate News.'}`,
+    'Constraints: no readable text, signs, logos, brands, watermarks, public figures, identifiable residents, invented renderings, or implied investment results',
+    `Avoid: ${[brief.avoid, 'handshakes, keys in a palm, floating coins, upward arrows, glowing house holograms, boardrooms, hardhat-and-blueprint still lifes, generic glass towers, skyline montages, distorted buildings, and busy collages'].filter(Boolean).join('; ')}`,
   ].join("\n");
 }
 

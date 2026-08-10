@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Bulk-publish articles from a JSON array file, attaching hero images by index.
+// Bulk-stage articles as non-public drafts after deterministic editorial checks.
 // Usage: DATABASE_URL=... node scripts/publish-batch.mjs articles.json [images.txt]
 //   articles.json : array of article objects (same shape as publish-article.mjs)
 //   images.txt    : optional lines "<index>|<url>" mapping array index -> image_url
@@ -7,6 +7,8 @@
 
 import { readFileSync } from "node:fs";
 import { neon } from "@neondatabase/serverless";
+import { evaluateArticle } from "./editorial-quality-lib.mjs";
+import { ensureEditorialReviewTable, saveEditorialReview } from "./editorial-review-store.mjs";
 
 const [articlesPath, imagesPath] = process.argv.slice(2);
 if (!articlesPath) {
@@ -37,12 +39,19 @@ if (imagesPath) {
 
 const VALID_TOPICS = ["market-trends", "schools", "development", "local-politics", "events-lifestyle"];
 const sql = neon(databaseUrl);
+await ensureEditorialReviewTable(sql);
 
-let published = 0, skipped = 0, noImage = 0;
+let staged = 0, skipped = 0, noImage = 0;
 for (let i = 0; i < articles.length; i++) {
   const a = articles[i];
   if (!a.title || !a.category || !a.topic_slug) { console.log(`skip[${i}]: missing required field`); skipped++; continue; }
   if (!VALID_TOPICS.includes(a.topic_slug)) { console.log(`skip[${i}]: bad topic ${a.topic_slug}`); skipped++; continue; }
+  const qualityReport = evaluateArticle(a);
+  if (!qualityReport.passed) {
+    console.log(`skip[${i}]: editorial gate failed (${qualityReport.failedCodes.join(",")})`);
+    skipped++;
+    continue;
+  }
 
   const slug = generateSlug(a.title);
   const parsed = new Date(a.date);
@@ -52,15 +61,20 @@ for (let i = 0; i < articles.length; i++) {
   if (!imageUrl) noImage++;
 
   const [row] = await sql`
-    INSERT INTO articles (id, status, featured, category, category_class, icon, title, excerpt, body, author, date, read_time, area_slug, topic_slug, image_url)
-    VALUES (${id}, 'live', false, ${a.category}, ${a.category_class ?? "card-img-market"}, ${a.icon ?? "$"},
+    INSERT INTO articles (id, status, featured, category, category_class, icon, title, excerpt, body, author, date, read_time, area_slug, topic_slug, image_url, meta_description, image_alt, image_caption, fact_checked_at)
+    VALUES (${id}, 'draft', false, ${a.category}, ${a.category_class ?? "card-img-market"}, ${a.icon ?? "$"},
       ${a.title}, ${a.excerpt ?? null}, ${a.body ?? null}, ${a.author ?? "CRE Newsroom"}, ${a.date}, ${a.read_time ?? "5 min read"},
-      ${a.area_slug ?? null}, ${a.topic_slug}, ${imageUrl})
+      ${a.area_slug ?? null}, ${a.topic_slug}, ${imageUrl}, ${a.meta_description}, ${a.image_alt},
+      ${a.image_provenance.caption}, ${a.fact_checked_at})
     ON CONFLICT (id) DO NOTHING
     RETURNING id
   `;
-  if (row) { console.log(`published[${i}]: ${id}${imageUrl ? "" : " (no image)"}`); published++; }
+  if (row) {
+    await saveEditorialReview(sql, id, a, qualityReport);
+    console.log(`staged[${i}]: ${id}${imageUrl ? "" : " (no image)"}`);
+    staged++;
+  }
   else { console.log(`skip[${i}]: id exists ${id}`); skipped++; }
 }
 
-console.log(`\n${published} published, ${skipped} skipped, ${noImage} without image`);
+console.log(`\n${staged} staged for review, ${skipped} skipped, ${noImage} without image`);

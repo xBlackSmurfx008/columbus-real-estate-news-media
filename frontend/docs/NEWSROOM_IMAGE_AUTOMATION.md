@@ -1,21 +1,21 @@
 # CREN newsroom image automation
 
-Text publication remains the Claude cloud routine's responsibility and must happen before image work. The local image
-job is intentionally separate so a generation outage cannot block a verified article from going live.
+Claude may stage machine-passed drafts, but it cannot publish. The local image job is intentionally separate and can
+only prepare a hero for a non-public draft. An authenticated editor approves copy and image together.
 
 ## Image path
 
-1. `list-missing-images.mjs` queries the live `articles` table and selects the newest missing hero plus the oldest
-   backlog items. It creates durable `article_image_jobs` rows for observability.
+1. `list-missing-images.mjs` selects only drafts whose deterministic editorial report is complete, then chooses the
+   newest missing hero plus the oldest backlog items. It creates durable `article_image_jobs` rows for observability.
 2. `run-image-backfill.mjs` verifies saved Codex/ChatGPT authentication and launches an ephemeral Codex job. It removes
    `OPENAI_API_KEY` and `CODEX_API_KEY` from the child environment.
 3. The agent follows `prompts/IMAGE_BACKFILL.md` and explicitly invokes built-in `$imagegen` once per article. Prompts
-   share one natural Central Ohio editorial art direction and prohibit text, logos, exact unverified locations, and
-   generic skyline filler.
+   use a clearly illustrative CREN house style, two required story anchors, and a scored rejection gate. Generic AI
+   stock art and invented local specificity are prohibited.
 4. `attach-article-image.mjs` inspects the source, smart-crops it to 1600×900, converts it to WebP, hashes it, uploads it
    to the public `cren-newsroom-images` Vercel Blob store, verifies the URL, and updates only a live row whose
-   `image_url` is still null.
-5. Telegram reports terminal success/failure with live `https://columbusrealestatenews.com/blog/...` links. A daily
+   `image_url` is still null and `status='draft'`. The job status becomes `READY_FOR_REVIEW`, never live.
+5. Telegram reports terminal success/failure with authenticated review links. A daily
    zero-publish alert is deduplicated in PostgreSQL.
 
 ## Schedule and commands

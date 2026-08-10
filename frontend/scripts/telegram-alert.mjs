@@ -1,5 +1,5 @@
 import { request } from "node:https";
-import { articleLiveUrl } from "./image-pipeline-lib.mjs";
+import { articleLiveUrl, articleReviewUrl } from "./image-pipeline-lib.mjs";
 
 function postTelegram(token, payload) {
   return new Promise((resolve) => {
@@ -37,14 +37,15 @@ function postTelegram(token, payload) {
   });
 }
 
-export async function sendTelegramAlert({ status, summary, articles = [] }) {
+export async function sendTelegramAlert({ status, summary, articles = [], linkMode = 'review' }) {
   const token = process.env.TELEGRAM_BOT_TOKEN?.trim();
   const chatId = process.env.TELEGRAM_CHAT_ID?.trim();
   if (!token || !chatId) return { ok: false, error: "TELEGRAM_NOT_CONFIGURED" };
   const icon = status === "COMPLETED" ? "✅" : status === "FAILED" ? "❌" : "⚠️";
-  const lines = [`${icon} CREN image automation: ${status}`, summary.slice(0, 1_500)];
+  const lines = [`${icon} CREN editorial automation: ${status}`, summary.slice(0, 1_500)];
   for (const article of articles.slice(0, 8)) {
-    lines.push(`${article.title}\n${articleLiveUrl(article.title)}`);
+    const link = linkMode === 'live' ? articleLiveUrl(article.title) : articleReviewUrl(article.id);
+    lines.push(`${article.title}\n${link}`);
   }
   return postTelegram(token, {
     chat_id: chatId,

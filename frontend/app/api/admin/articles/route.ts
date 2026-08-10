@@ -7,7 +7,15 @@ export async function GET(request: NextRequest) {
   try {
     const sql = getDb();
     const articles = await sql`
-      SELECT * FROM articles ORDER BY created_at DESC
+      SELECT
+        articles.*,
+        editorial_review_jobs.machine_score,
+        editorial_review_jobs.machine_possible,
+        editorial_review_jobs.human_scores,
+        editorial_review_jobs.human_decision
+      FROM articles
+      LEFT JOIN editorial_review_jobs ON editorial_review_jobs.article_id = articles.id
+      ORDER BY articles.created_at DESC
     `;
     return NextResponse.json({ articles });
   } catch (error) {
@@ -38,6 +46,10 @@ export async function POST(request: NextRequest) {
       read_time,
       area_slug,
       topic_slug,
+      meta_description,
+      image_alt,
+      image_caption,
+      fact_checked_at,
     } = body;
 
     if (!id || !title || !category || !author) {
@@ -51,12 +63,14 @@ export async function POST(request: NextRequest) {
     const result = await sql`
       INSERT INTO articles (
         id, status, featured, category, category_class, icon, title, excerpt,
-        body, author, date, read_time, area_slug, topic_slug
+        body, author, date, read_time, area_slug, topic_slug,
+        meta_description, image_alt, image_caption, fact_checked_at
       ) VALUES (
-        ${id}, ${status || "draft"}, ${featured || false}, ${category},
+        ${id}, 'draft', ${featured || false}, ${category},
         ${category_class || "card-img-market"}, ${icon || "$"}, ${title},
         ${excerpt || null}, ${articleBody || null}, ${author}, ${date || new Date().toISOString().split('T')[0]},
-        ${read_time || "5 min read"}, ${area_slug || null}, ${topic_slug || null}
+        ${read_time || "5 min read"}, ${area_slug || null}, ${topic_slug || null},
+        ${meta_description || null}, ${image_alt || null}, ${image_caption || null}, ${fact_checked_at || null}
       )
       RETURNING *
     `;

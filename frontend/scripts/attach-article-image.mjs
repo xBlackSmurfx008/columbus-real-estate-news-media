@@ -65,7 +65,7 @@ try {
   const [updated] = await withRetry(() => sql`
     UPDATE articles
     SET image_url = ${blob.url}, updated_at = NOW()
-    WHERE id = ${articleId} AND status = 'live' AND image_url IS NULL
+    WHERE id = ${articleId} AND status = 'draft' AND image_url IS NULL
     RETURNING id, title
   `);
   if (!updated) {
@@ -76,7 +76,7 @@ try {
 
   await withRetry(() => sql`
     UPDATE article_image_jobs SET
-      status = 'COMPLETED',
+      status = 'READY_FOR_REVIEW',
       source_sha256 = ${sha256},
       image_url = ${blob.url},
       last_error_code = NULL,
@@ -84,7 +84,7 @@ try {
       updated_at = NOW()
     WHERE article_id = ${articleId}
   `);
-  process.stdout.write(`${JSON.stringify({ ok: true, articleId, title: updated.title, imageUrl: blob.url, artifactPath })}\n`);
+  process.stdout.write(`${JSON.stringify({ ok: true, articleId, status: 'READY_FOR_REVIEW', title: updated.title, imageUrl: blob.url, artifactPath })}\n`);
 } catch (error) {
   if (blobUrl) await del(blobUrl).catch(() => undefined);
   const errorCode = safeErrorSummary(error).replace(/[^A-Za-z0-9_-]+/g, "_").slice(0, 100) || "IMAGE_ATTACH_FAILED";

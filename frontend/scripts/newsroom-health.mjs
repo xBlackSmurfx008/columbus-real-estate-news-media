@@ -24,11 +24,15 @@ export async function getDailyPublicationHealth(date = new Date()) {
       AND (created_at AT TIME ZONE 'America/New_York')::date = ${dateKey}::date
     ORDER BY created_at DESC
   `);
+  const [drafts] = await withRetry(() => sql`
+    SELECT COUNT(*)::int AS count FROM articles WHERE status = 'draft'
+  `);
   return {
     dateKey,
     articlesPublished: rows.length,
     imagesMissing: rows.filter((row) => !row.image_url).length,
     articles: rows,
+    draftsAwaitingReview: drafts.count,
   };
 }
 
@@ -42,7 +46,7 @@ export async function alertZeroPublishOnce(health) {
   if (existing.length > 0) return { ok: true, noOp: true, alreadyDelivered: true };
   const delivery = await sendTelegramAlert({
     status: "ZERO_PUBLISH",
-    summary: `No live CREN article has been published for ${health.dateKey}. Review the Claude routine and draft queue: ${CREN_PUBLIC_BASE_URL}/blog`,
+    summary: `No live CREN article has been published for ${health.dateKey}. ${health.draftsAwaitingReview} draft(s) await editorial review: ${CREN_PUBLIC_BASE_URL}/admin/articles`,
   });
   if (delivery.ok) {
     await withRetry(() => sql`

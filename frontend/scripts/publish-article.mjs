@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Inserts one article into the live `articles` table.
+// Stages one article as a non-public draft after deterministic editorial checks.
 // Usage: DATABASE_URL=... node scripts/publish-article.mjs path/to/article.json
 //
 // article.json shape:
@@ -21,6 +21,8 @@
 
 import { readFileSync } from "node:fs";
 import { neon } from "@neondatabase/serverless";
+import { evaluateArticle, formatQualityReport } from "./editorial-quality-lib.mjs";
+import { ensureEditorialReviewTable, saveEditorialReview } from "./editorial-review-store.mjs";
 
 const filePath = process.argv[2];
 if (!filePath) {
@@ -45,6 +47,12 @@ function generateSlug(title) {
 const VALID_TOPICS = ["market-trends", "schools", "development", "local-politics", "events-lifestyle"];
 
 const article = JSON.parse(readFileSync(filePath, "utf-8"));
+
+const qualityReport = evaluateArticle(article);
+if (!qualityReport.passed) {
+  console.error(`Editorial quality gate blocked this draft:\n${formatQualityReport(qualityReport)}`);
+  process.exit(1);
+}
 
 for (const field of ["title", "category", "author", "date"]) {
   if (!article[field]) {
@@ -73,6 +81,7 @@ const isoPrefix = toIsoDate(Number.isNaN(parsedDate.getTime()) ? new Date() : pa
 const id = `${isoPrefix}-${slug}`;
 
 const sql = neon(databaseUrl);
+await ensureEditorialReviewTable(sql);
 
 // --- Duplicate guard -------------------------------------------------------
 // Hard backstop so the same story can never be published twice, even with a
@@ -130,13 +139,14 @@ const [row] = await sql`
   INSERT INTO articles (
     id, status, featured, category, category_class, icon,
     title, excerpt, body, author, date, read_time,
-    area_slug, topic_slug, image_url
+    area_slug, topic_slug, image_url, meta_description, image_alt, image_caption, fact_checked_at
   ) VALUES (
-    ${id}, 'live', ${article.featured ?? false},
+    ${id}, 'draft', ${article.featured ?? false},
     ${article.category}, ${article.category_class ?? "card-img-market"}, ${article.icon ?? "$"},
     ${article.title}, ${article.excerpt ?? null}, ${article.body ?? null}, ${article.author}, ${article.date},
     ${article.read_time ?? "5 min read"}, ${article.area_slug ?? null}, ${article.topic_slug ?? null},
-    ${article.image_url ?? null}
+    ${article.image_url ?? null}, ${article.meta_description}, ${article.image_alt},
+    ${article.image_provenance.caption}, ${article.fact_checked_at}
   )
   ON CONFLICT (id) DO NOTHING
   RETURNING *
@@ -147,5 +157,10 @@ if (!row) {
   process.exit(1);
 }
 
-console.log("Published:");
-console.log(JSON.stringify(row, null, 2));
+await saveEditorialReview(sql, id, article, qualityReport);
+console.log("Staged for human editorial review:");
+console.log(JSON.stringify({
+  article: row,
+  quality: { score: qualityReport.score, possible: qualityReport.possible },
+  review_url: `https://columbusrealestatenews.com/admin/articles?edit=${encodeURIComponent(id)}`,
+}, null, 2));

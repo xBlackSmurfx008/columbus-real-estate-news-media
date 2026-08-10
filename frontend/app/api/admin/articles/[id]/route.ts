@@ -28,7 +28,7 @@ export async function PUT(
     }
 
     const editorialFields = [
-      "title", "excerpt", "body", "author", "date", "read_time", "area_slug", "topic_slug",
+      "title", "excerpt", "body", "author", "date", "read_time", "area_slug", "topic_slug", "tags",
       "image_url", "meta_description", "image_alt", "image_caption", "fact_checked_at",
     ];
     const changesEditorialContent = editorialFields.some((field) => Object.hasOwn(body, field));
@@ -69,6 +69,7 @@ export async function PUT(
         read_time = COALESCE(${body.read_time ?? null}, read_time),
         area_slug = COALESCE(${body.area_slug ?? null}, area_slug),
         topic_slug = COALESCE(${body.topic_slug ?? null}, topic_slug),
+        tags = COALESCE(${Array.isArray(body.tags) ? JSON.stringify(body.tags) : null}::jsonb, tags),
         image_url = COALESCE(${body.image_url ?? null}, image_url),
         meta_description = COALESCE(${body.meta_description ?? null}, meta_description),
         image_alt = COALESCE(${body.image_alt ?? null}, image_alt),

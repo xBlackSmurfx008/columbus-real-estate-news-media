@@ -17,6 +17,7 @@ interface Article {
   excerpt: string;
   body: string;
   read_time?: number;
+  tags?: string[];
   image_url?: string | null;
   machine_score?: number | null;
   machine_possible?: number | null;
@@ -49,7 +50,7 @@ export default function ArticlesPage() {
 
   const [formData, setFormData] = useState<Partial<Article>>({
     title: '',
-    category: 'market',
+    category: 'Market Analysis',
     author: '',
     date: new Date().toISOString().split('T')[0],
     status: 'draft',
@@ -59,7 +60,7 @@ export default function ArticlesPage() {
     read_time: 5,
   });
 
-  const categories = ['market', 'news', 'trends', 'guides', 'interviews'];
+  const categories = ['Market Analysis', 'Development', 'Neighborhoods', 'Economic Impact', 'Rental Market', 'Commercial', 'Local Politics', 'Lifestyle', 'Policy'];
 
   useEffect(() => {
     fetchArticles();
@@ -114,7 +115,7 @@ export default function ArticlesPage() {
       setImageApproved(false);
       setFormData({
         title: '',
-        category: 'market',
+        category: 'Market Analysis',
         author: '',
         date: new Date().toISOString().split('T')[0],
         status: 'draft',
@@ -223,7 +224,7 @@ export default function ArticlesPage() {
                 setEditingId(null);
                 setFormData({
                   title: '',
-                  category: 'market',
+                  category: 'Market Analysis',
                   author: '',
                   date: new Date().toISOString().split('T')[0],
                   status: 'draft',
@@ -270,7 +271,7 @@ export default function ArticlesPage() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
                     <select
-                      value={formData.category || 'market'}
+                      value={formData.category || 'Market Analysis'}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none"
                     >
@@ -324,6 +325,21 @@ export default function ArticlesPage() {
                       <option value="live">Live after approval</option>
                     </select>
                   </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Tags</label>
+                  <input
+                    type="text"
+                    value={(formData.tags || []).join(', ')}
+                    onChange={(e) => setFormData({
+                      ...formData,
+                      tags: [...new Set(e.target.value.split(',').map((tag) => tag.trim().toLowerCase()).filter(Boolean))],
+                    })}
+                    placeholder="columbus-ohio, central-ohio-real-estate, development, gahanna"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">Comma-separated. Development and Neighborhoods tags are required by the machine gate.</p>
                 </div>
 
                 <div>

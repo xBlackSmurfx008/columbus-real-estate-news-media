@@ -38,6 +38,13 @@ brokerage funnel, or press-release rewrite. Never insert lead-generation copy or
 - Follow `frontend/docs/article-submission.schema.json` exactly; it is the machine contract for staging.
 - Label proposals, filings, recommendations, approvals, construction, completion, and sales precisely. Do not turn an application into an approval or an announced timeline into certainty.
 
+## Neighborhood lane
+
+- Target one strong Neighborhoods article per Monday-to-Sunday week; publish a second only for a distinct, well-sourced story. Never exceed two in a week.
+- Run `npm run newsroom:neighborhood-report` from `frontend/` and follow `frontend/docs/NEIGHBORHOOD_NEWSROOM.md`.
+- Every Neighborhoods article needs one specific non-citywide `area_slug` and tags for `columbus-ohio`, `central-ohio-real-estate`, its topic, its area, and `neighborhood`.
+- Start with a dated primary record: permit, zoning filing/result, ordinance, parcel/deed record, public project milestone, school record, transportation plan, or official dataset. Add an independent second source and link the exact record.
+
 ## Attribution and rewriting
 
 - If a story is already covered by another outlet or blog, do not copy their language, structure, or framing.

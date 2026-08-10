@@ -2,6 +2,7 @@ import Link from "next/link";
 import { SponsorSpotlight } from "@/components/sections/sponsor-spotlight";
 import { topics } from "@/lib/data";
 import { CrenPage } from "@/components/cren/cren-page";
+import { AdvertisingInquiryForm } from "@/components/advertising-inquiry-form";
 
 const packages = [
   {
@@ -10,7 +11,7 @@ const packages = [
     priceSuffix: "/ month",
     details: ["Area hub placement", "2 newsletter mentions", "Performance snapshot"],
     cta: "Inquire",
-    href: "/contact?source=advertise-starter",
+    href: "#advertising-inquiry",
     featured: false,
   },
   {
@@ -19,7 +20,7 @@ const packages = [
     priceSuffix: "/ 90 days",
     details: ["Area + topic targeting", "Sponsored story", "Featured directory profile"],
     cta: "Book package",
-    href: "/contact?source=advertise-growth",
+    href: "#advertising-inquiry",
     featured: true,
   },
   {
@@ -28,7 +29,7 @@ const packages = [
     priceSuffix: "",
     details: ["Exclusive topic sponsorship", "Co-branded campaign series", "Quarterly strategy review"],
     cta: "Contact sales",
-    href: "/contact?source=advertise-custom",
+    href: "#advertising-inquiry",
     featured: false,
   },
 ];
@@ -56,20 +57,20 @@ export default function AdvertisePage() {
 
         <div className="stats-row">
           <div className="stat-card">
-            <div className="stat-num">10K+</div>
-            <div className="stat-label">Newsletter subscribers</div>
+            <div className="stat-num">Local</div>
+            <div className="stat-label">Central Ohio audience</div>
           </div>
           <div className="stat-card">
-            <div className="stat-num">58%</div>
-            <div className="stat-label">Email open rate</div>
+            <div className="stat-num">Relevant</div>
+            <div className="stat-label">Topic-aligned placement</div>
           </div>
           <div className="stat-card">
-            <div className="stat-num">74%</div>
-            <div className="stat-label">Columbus metro audience</div>
+            <div className="stat-num">Clear</div>
+            <div className="stat-label">Sponsor disclosure</div>
           </div>
           <div className="stat-card">
-            <div className="stat-num">$285K</div>
-            <div className="stat-label">Avg reader income</div>
+            <div className="stat-num">Measured</div>
+            <div className="stat-label">Performance snapshot</div>
           </div>
         </div>
 
@@ -99,6 +100,15 @@ export default function AdvertisePage() {
         </div>
 
         <SponsorSpotlight topics={spotlightTopics} />
+
+        <section className="cren-surface p-6 md:p-8" id="advertising-inquiry">
+          <div className="section-eyebrow">Advertising inquiry</div>
+          <h2 className="cren-heading-lg">Tell us what you want to reach</h2>
+          <p className="cren-body mt-2 mb-6 max-w-2xl">
+            Share the audience, package, and outcome you have in mind. Your inquiry is stored in the newsroom queue and sends an immediate Telegram alert to the publisher.
+          </p>
+          <AdvertisingInquiryForm />
+        </section>
       </div>
     </CrenPage>
   );

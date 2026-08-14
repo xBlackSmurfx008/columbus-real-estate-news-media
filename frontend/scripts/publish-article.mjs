@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Stages one article as a non-public draft after deterministic editorial checks.
+// Publishes one article live after deterministic editorial checks.
+// Owner policy (2026-08-14): publish live by default; fix problems post-publish.
 // Usage: DATABASE_URL=... node scripts/publish-article.mjs path/to/article.json
 //
 // article.json shape:
@@ -142,7 +143,7 @@ const [row] = await sql`
     title, excerpt, body, author, date, read_time,
     area_slug, topic_slug, tags, image_url, meta_description, image_alt, image_caption, fact_checked_at
   ) VALUES (
-    ${id}, 'draft', ${article.featured ?? false},
+    ${id}, 'live', ${article.featured ?? false},
     ${article.category}, ${article.category_class ?? "card-img-market"}, ${article.icon ?? "$"},
     ${article.title}, ${article.excerpt ?? null}, ${article.body ?? null}, ${article.author}, ${article.date},
     ${article.read_time ?? "5 min read"}, ${article.area_slug ?? null}, ${article.topic_slug ?? null},
@@ -160,7 +161,7 @@ if (!row) {
 }
 
 await saveEditorialReview(sql, id, article, qualityReport);
-console.log("Staged for human editorial review:");
+console.log("Published live (post-publish review policy):");
 console.log(JSON.stringify({
   article: row,
   quality: { score: qualityReport.score, possible: qualityReport.possible },

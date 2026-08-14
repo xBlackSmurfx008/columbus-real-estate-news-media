@@ -20,17 +20,17 @@ Local-first journalism. Plain English, fact-forward, low on hype. We're a credib
   4. Pick at most 1 strong real estate story and 1 strong lifestyle story not already covered. A Neighborhoods story consumes the real-estate slot. Publish zero rather than force a weak or duplicative daily item.
   5. Verify facts across sources; if a story originates on another outlet, write original local analysis and link back to it (see `.claude/skills/cren-copywriting`).
   6. Draft each worthwhile article and its source, claim, entity, SEO, tag, and image metadata per `.claude/skills/cren-copywriting` and `frontend/docs/article-submission.schema.json`. Body format is Markdown only.
-  7. Run `node frontend/scripts/publish-article.mjs <file.json>`. This deterministic gate can only stage `status='draft'`; never bypass it or write a live row directly.
-  8. Do not call Higgsfield from the cloud routine. A separate idempotent local Codex subscription job creates a clearly labeled editorial illustration only for machine-passed drafts, normalizes it to 1600×900 WebP, and attaches it as `READY_FOR_REVIEW`. It cannot modify a live article.
+  7. Run `node frontend/scripts/publish-article.mjs <file.json>`. Its deterministic editorial checks (claim traceability, SEO metadata, duplicate guard) still gate every article, but a passing article publishes `status='live'` immediately — owner policy (2026-08-14): publish live by default, fix problems post-publish. Never bypass the script or write a row directly.
+  8. Do not call Higgsfield from the cloud routine. A separate idempotent local Codex subscription job creates a clearly labeled editorial illustration for machine-passed articles, normalizes it to 1600×900 WebP, and attaches it to the live article's `image_url` (a hero attach is the only live-article field it may touch).
   9. Keep market data fresh (accuracy pass): refresh the ticker as always, then run `DATABASE_URL=... node frontend/scripts/refresh-market-data.mjs` — one command that pulls FREE public feeds (Zillow Research ZHVI for the neighborhood "Typical Value" column + YoY, Zillow ZORI for rents, FRED for the 30-yr mortgage rate) and updates the DB automatically. No API keys, no scraping. It only writes what it can resolve and leaves the rest unchanged, so it never fabricates. (Short North, Clintonville, and Franklinton aren't in Zillow's neighborhood file — leave their prior values or update from a named source if you find one; never guess.) The metro Median Sale Price / Active Listings / Days on Market in the snapshot come from the Columbus REALTORS monthly report — update those from that report via `update-site-data.mjs` (`market_snapshot` key) when a new month is out.
   10. Write a brief to `briefs/<date>.md` summarizing sources used, links to the two new articles, and which neighborhood rows you refreshed, then commit and push.
-- A draft becomes public only after an authenticated editor reviews the rendered copy and image, scores the nine-part rubric at least 14/18, clears all blocking criteria, and explicitly approves the hero.
+- Publish-live policy (owner, 2026-08-14): articles that pass the deterministic checks go public immediately. Human review happens post-publish; if a problem is found, fix or unpublish the live article rather than holding the queue. The owner prefers Telegram (not email) for notifications about publishes, errors, and reports.
 
 ## Automation
 The daily text run above executes as a cloud-scheduled Claude Code routine (not a local cron job — see `claude.ai/code/routines`). It authenticates to NeonDB via a `DATABASE_URL` embedded in the routine's own configuration (not committed to this repo). Image generation is deliberately separate: the local `com.cren.image-backfill` LaunchAgent uses the saved Codex/ChatGPT subscription, never an OpenAI API key, and retries at 7:05 a.m., 8:05 a.m., and 12:35 p.m. Eastern.
 
 ## Channels
-Blog drafts are staged in the `articles` table for review. Social copy is written only after an editor approves the article and hero for publication.
+Articles publish live to the `articles` table on the daily run. Social copy is written the same day an article publishes.
 
 ## Source list (kept current)
 

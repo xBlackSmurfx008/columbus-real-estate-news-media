@@ -21,12 +21,11 @@
 //   "featured": boolean         // default false
 // }
 
-import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { readFileSync } from "node:fs";
 import { neon } from "@neondatabase/serverless";
 import { evaluateArticle, formatQualityReport } from "./editorial-quality-lib.mjs";
 import { ensureEditorialReviewTable, saveEditorialReview } from "./editorial-review-store.mjs";
-import { generateCardWebp } from "./editorial-card-lib.mjs";
+import { hostPlaceholderCard, PLACEHOLDER_CAPTION } from "./editorial-card-lib.mjs";
 
 const filePath = process.argv[2];
 if (!filePath) {
@@ -165,27 +164,28 @@ if (!row) {
 // Hero requirement (owner, 2026-08-14): no live article ships imageless. If no
 // image_url was supplied, attach a branded editorial card immediately as a
 // placeholder; the local illustration job replaces it with a real illustration.
-// The card file lands in public/images/heroes/ — commit it so Vercel serves it.
+// With BLOB_READ_WRITE_TOKEN the card is live instantly; without it the card
+// only serves after the next deploy, so the DB is NOT updated (a broken hero
+// is worse than none) — the audit script re-attaches once hosting works.
 if (!row.image_url) {
-  const cardBuffer = await generateCardWebp({
-    title: article.title,
-    category: article.category,
-    areaLabel: (article.area_slug ?? "").split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" "),
-  });
-  const heroDir = resolve(process.cwd(), "public/images/heroes");
-  mkdirSync(heroDir, { recursive: true });
-  writeFileSync(resolve(heroDir, `${id}.webp`), cardBuffer);
-  const placeholderUrl = `/images/heroes/${id}.webp`;
-  await sql`
-    UPDATE articles
-    SET image_url = ${placeholderUrl},
-        image_alt = ${`Editorial graphic: ${article.title}`},
-        image_caption = 'CREN editorial graphic (placeholder pending illustration)',
-        updated_at = NOW()
-    WHERE id = ${id} AND image_url IS NULL
-  `;
-  row.image_url = placeholderUrl;
-  console.log(`Hero placeholder attached: ${placeholderUrl} (commit public/images/heroes/ so it deploys)`);
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const hosted = await hostPlaceholderCard({ id, title: article.title, category: article.category, area_slug: article.area_slug });
+    await sql`
+      UPDATE articles
+      SET image_url = ${hosted.url},
+          image_alt = ${`Editorial graphic: ${article.title}`},
+          image_caption = ${PLACEHOLDER_CAPTION},
+          updated_at = NOW()
+      WHERE id = ${id} AND image_url IS NULL
+    `;
+    row.image_url = hosted.url;
+    console.log(`Hero placeholder attached: ${hosted.url}`);
+  } else {
+    console.warn(
+      "WARNING: article published without a hero and BLOB_READ_WRITE_TOKEN is not set. "
+      + "Run scripts/generate-placeholder-heroes.mjs with blob credentials (or --allow-deploy-lag plus a deploy) immediately — no live article may stay imageless."
+    );
+  }
 }
 
 await saveEditorialReview(sql, id, article, qualityReport);

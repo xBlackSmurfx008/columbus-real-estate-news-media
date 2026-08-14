@@ -100,3 +100,47 @@ export async function generateCardWebp(article) {
   const svg = buildCardSvg(article);
   return sharp(Buffer.from(svg)).webp({ quality: 88 }).toBuffer();
 }
+
+export const PLACEHOLDER_CAPTION = "CREN editorial graphic (placeholder pending illustration)";
+
+export function humanizeAreaSlug(slug) {
+  if (!slug || slug === "no-area") return "";
+  return String(slug).split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+}
+
+// Generates the card and hosts it. Prefers Vercel Blob (live instantly, same
+// store the illustration job uses) when BLOB_READ_WRITE_TOKEN is set; falls
+// back to frontend/public/images/heroes/, which only serves after the next
+// deploy — callers must surface `deployNeeded` when it is true.
+export async function hostPlaceholderCard(article) {
+  const buffer = await generateCardWebp({
+    title: article.title,
+    category: article.category,
+    areaLabel: humanizeAreaSlug(article.area_slug),
+  });
+
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const { put } = await import("@vercel/blob");
+    const { createHash } = await import("node:crypto");
+    const sha = createHash("sha256").update(buffer).digest("hex").slice(0, 16);
+    const blob = await put(`cren/articles/${article.id}/placeholder-${sha}.webp`, buffer, {
+      access: "public",
+      addRandomSuffix: false,
+      allowOverwrite: true,
+      contentType: "image/webp",
+      cacheControlMaxAge: 31_536_000,
+    });
+    const check = await fetch(blob.url, { method: "HEAD", signal: AbortSignal.timeout(10_000) });
+    if (!check.ok || !(check.headers.get("content-type") ?? "").startsWith("image/")) {
+      throw new Error("PLACEHOLDER_BLOB_VERIFICATION_FAILED");
+    }
+    return { url: blob.url, deployNeeded: false, bytes: buffer.length };
+  }
+
+  const { mkdir, writeFile } = await import("node:fs/promises");
+  const { resolve } = await import("node:path");
+  const outDir = resolve(process.cwd(), "public/images/heroes");
+  await mkdir(outDir, { recursive: true });
+  await writeFile(resolve(outDir, `${article.id}.webp`), buffer);
+  return { url: `/images/heroes/${article.id}.webp`, deployNeeded: true, bytes: buffer.length };
+}

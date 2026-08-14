@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 // Attaches a branded editorial-card hero to every live article missing one.
 // Owner requirement (2026-08-14): no live article may be imageless; a failed
-// or missing photo is fixed immediately. Cards are written to
-// frontend/public/images/heroes/<id>.webp (deployed with the site) and marked
-// as placeholders in image_caption so the local illustration job upgrades them.
-// Usage: DATABASE_URL=... node scripts/generate-placeholder-heroes.mjs [--dry-run]
+// or missing photo is fixed immediately. With BLOB_READ_WRITE_TOKEN set the
+// card is uploaded to Vercel Blob and is live instantly; otherwise it is
+// written to frontend/public/images/heroes/ and ONLY serves after the next
+// deploy — in that mode, do not update the DB until the deploy is confirmed
+// (use --allow-deploy-lag to update anyway).
+// The image_caption marks the hero as a placeholder so the local illustration
+// job upgrades it. Usage:
+//   DATABASE_URL=... node scripts/generate-placeholder-heroes.mjs [--dry-run] [--allow-deploy-lag]
 
-import { mkdir, writeFile } from "node:fs/promises";
-import { resolve } from "node:path";
 import { neon } from "@neondatabase/serverless";
-import { generateCardWebp } from "./editorial-card-lib.mjs";
-
-export const PLACEHOLDER_CAPTION = "CREN editorial graphic (placeholder pending illustration)";
-export const PLACEHOLDER_URL_PREFIX = "/images/heroes/";
+import { hostPlaceholderCard, PLACEHOLDER_CAPTION } from "./editorial-card-lib.mjs";
 
 const dryRun = process.argv.includes("--dry-run");
+const allowDeployLag = process.argv.includes("--allow-deploy-lag");
 
 const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) {
@@ -22,14 +22,6 @@ if (!databaseUrl) {
   process.exit(1);
 }
 const sql = neon(databaseUrl);
-
-function humanizeSlug(slug) {
-  if (!slug || slug === "no-area") return "";
-  return slug
-    .split("-")
-    .map((w) => (w === "s" ? "s" : w.charAt(0).toUpperCase() + w.slice(1)))
-    .join(" ");
-}
 
 const missing = await sql`
   SELECT id, title, category, area_slug
@@ -43,30 +35,41 @@ if (missing.length === 0) {
   process.exit(0);
 }
 
-const outDir = resolve(process.cwd(), "public/images/heroes");
-if (!dryRun) await mkdir(outDir, { recursive: true });
+if (!process.env.BLOB_READ_WRITE_TOKEN && !allowDeployLag && !dryRun) {
+  console.error(JSON.stringify({
+    ok: false,
+    error: "NO_BLOB_TOKEN",
+    message:
+      "BLOB_READ_WRITE_TOKEN is not set, so cards would point at /images/heroes/ paths that 404 until the next deploy (broken heroes are worse than none). Set the token, or run with --allow-deploy-lag right before a deploy.",
+    missing: missing.length,
+  }, null, 2));
+  process.exit(1);
+}
 
 const results = [];
 for (const article of missing) {
-  const buffer = await generateCardWebp({
-    title: article.title,
-    category: article.category,
-    areaLabel: humanizeSlug(article.area_slug),
-  });
-  const fileName = `${article.id}.webp`;
-  const publicUrl = `${PLACEHOLDER_URL_PREFIX}${fileName}`;
-  if (!dryRun) {
-    await writeFile(resolve(outDir, fileName), buffer);
-    await sql`
-      UPDATE articles
-      SET image_url = ${publicUrl},
-          image_alt = ${`Editorial graphic: ${article.title}`},
-          image_caption = ${PLACEHOLDER_CAPTION},
-          updated_at = NOW()
-      WHERE id = ${article.id} AND image_url IS NULL
-    `;
+  if (dryRun) {
+    results.push({ id: article.id, dryRun: true });
+    continue;
   }
-  results.push({ id: article.id, url: publicUrl, bytes: buffer.length });
+  const hosted = await hostPlaceholderCard(article);
+  await sql`
+    UPDATE articles
+    SET image_url = ${hosted.url},
+        image_alt = ${`Editorial graphic: ${article.title}`},
+        image_caption = ${PLACEHOLDER_CAPTION},
+        updated_at = NOW()
+    WHERE id = ${article.id} AND image_url IS NULL
+  `;
+  results.push({ id: article.id, url: hosted.url, deployNeeded: hosted.deployNeeded, bytes: hosted.bytes });
 }
 
-console.log(JSON.stringify({ ok: true, generated: results.length, dryRun, articles: results }, null, 2));
+const deployNeeded = results.some((r) => r.deployNeeded);
+console.log(JSON.stringify({
+  ok: true,
+  generated: results.length,
+  dryRun,
+  deployNeeded,
+  ...(deployNeeded ? { warning: "cards serve only after the next deploy — commit frontend/public/images/heroes/ and deploy now" } : {}),
+  articles: results,
+}, null, 2));

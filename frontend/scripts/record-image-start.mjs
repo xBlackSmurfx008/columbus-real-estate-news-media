@@ -19,7 +19,7 @@ const [started] = await withRetry(() => sql`
   INSERT INTO article_image_jobs (article_id, status, model, attempts, started_at, updated_at)
   SELECT ${articleId}, 'GENERATING', ${IMAGE_MODEL}, 1, NOW(), NOW()
   FROM articles
-  WHERE id = ${articleId} AND status = 'draft' AND image_url IS NULL
+  WHERE id = ${articleId} AND status = 'live' AND (image_url IS NULL OR image_url LIKE '/images/heroes/%')
   ON CONFLICT (article_id) DO UPDATE SET
     status = 'GENERATING',
     model = EXCLUDED.model,
@@ -29,7 +29,7 @@ const [started] = await withRetry(() => sql`
     updated_at = NOW()
   WHERE EXISTS (
     SELECT 1 FROM articles
-    WHERE id = ${articleId} AND status = 'draft' AND image_url IS NULL
+    WHERE id = ${articleId} AND status = 'live' AND (image_url IS NULL OR image_url LIKE '/images/heroes/%')
   )
     AND article_image_jobs.status NOT IN ('READY_FOR_REVIEW', 'APPROVED')
   RETURNING article_id

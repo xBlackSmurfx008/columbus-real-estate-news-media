@@ -21,10 +21,12 @@
 //   "featured": boolean         // default false
 // }
 
-import { readFileSync } from "node:fs";
+import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { neon } from "@neondatabase/serverless";
 import { evaluateArticle, formatQualityReport } from "./editorial-quality-lib.mjs";
 import { ensureEditorialReviewTable, saveEditorialReview } from "./editorial-review-store.mjs";
+import { generateCardWebp } from "./editorial-card-lib.mjs";
 
 const filePath = process.argv[2];
 if (!filePath) {
@@ -158,6 +160,32 @@ const [row] = await sql`
 if (!row) {
   console.error(`Insert skipped: an article with id "${id}" already exists. Adjust the title (the id is derived from date + title) and retry.`);
   process.exit(1);
+}
+
+// Hero requirement (owner, 2026-08-14): no live article ships imageless. If no
+// image_url was supplied, attach a branded editorial card immediately as a
+// placeholder; the local illustration job replaces it with a real illustration.
+// The card file lands in public/images/heroes/ — commit it so Vercel serves it.
+if (!row.image_url) {
+  const cardBuffer = await generateCardWebp({
+    title: article.title,
+    category: article.category,
+    areaLabel: (article.area_slug ?? "").split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" "),
+  });
+  const heroDir = resolve(process.cwd(), "public/images/heroes");
+  mkdirSync(heroDir, { recursive: true });
+  writeFileSync(resolve(heroDir, `${id}.webp`), cardBuffer);
+  const placeholderUrl = `/images/heroes/${id}.webp`;
+  await sql`
+    UPDATE articles
+    SET image_url = ${placeholderUrl},
+        image_alt = ${`Editorial graphic: ${article.title}`},
+        image_caption = 'CREN editorial graphic (placeholder pending illustration)',
+        updated_at = NOW()
+    WHERE id = ${id} AND image_url IS NULL
+  `;
+  row.image_url = placeholderUrl;
+  console.log(`Hero placeholder attached: ${placeholderUrl} (commit public/images/heroes/ so it deploys)`);
 }
 
 await saveEditorialReview(sql, id, article, qualityReport);

@@ -65,7 +65,8 @@ try {
   const [updated] = await withRetry(() => sql`
     UPDATE articles
     SET image_url = ${blob.url}, updated_at = NOW()
-    WHERE id = ${articleId} AND status = 'draft' AND image_url IS NULL
+    WHERE id = ${articleId} AND status = 'live'
+      AND (image_url IS NULL OR image_url LIKE '/images/heroes/%')
     RETURNING id, title
   `);
   if (!updated) {

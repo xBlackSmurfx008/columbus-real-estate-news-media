@@ -77,6 +77,40 @@ function renderBody(body: string) {
   });
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  let article: DbArticle | null = null;
+  try {
+    article = await getArticleBySlug(slug);
+  } catch {
+    article = null;
+  }
+  if (!article) return {};
+  const description = article.meta_description ?? article.excerpt ?? undefined;
+  const canonicalUrl = `https://columbusrealestatenews.com/blog/${slug}`;
+  return {
+    title: `${article.title} — Columbus Real Estate News`,
+    description,
+    alternates: { canonical: canonicalUrl },
+    openGraph: {
+      title: article.title,
+      description,
+      url: canonicalUrl,
+      type: "article",
+      ...(article.image_url ? { images: [article.image_url] } : {}),
+    },
+    twitter: {
+      card: article.image_url ? "summary_large_image" : "summary",
+      title: article.title,
+      description,
+    },
+  };
+}
+
 export default async function BlogPostPage({
   params,
 }: {

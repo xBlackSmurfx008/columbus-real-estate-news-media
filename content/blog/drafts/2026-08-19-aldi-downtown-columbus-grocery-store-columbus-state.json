@@ -1,0 +1,157 @@
+{
+  "title": "ALDI Will Build a Downtown Columbus Grocery Store by 2028",
+  "category": "development",
+  "author": "CRE Newsroom",
+  "date": "Aug 19, 2026",
+  "excerpt": "ALDI plans a 20,000-square-foot store on 1.7 acres at Cleveland Avenue and Spring Street, downtown Columbus's first national grocer in decades, opening in 2028.",
+  "answer_summary": "ALDI will build a 20,000-square-foot grocery store on 1.7 vacant acres at Cleveland Avenue and Spring Street, next to Columbus State Community College's downtown campus. Construction starts in spring 2027 and the store opens in 2028, marking the first new grocery store from a national retailer in downtown Columbus in decades.",
+  "body": "ALDI will build a 20,000-square-foot grocery store on 1.7 vacant acres at Cleveland Avenue and Spring Street, next to Columbus State Community College's downtown campus. Construction starts in spring 2027 and the store opens in 2028, marking the first new grocery store from a national retailer in downtown Columbus in decades.\n\n## A Vacant Corner Becomes a Grocery Site\n\nThe store sits on the northwest corner of Cleveland Avenue and Spring Street, a 1.7-acre parcel Columbus State Community College President David T. Harrison described as largely vacant. Columbus State Community Partners, the college's real estate affiliate, will prepare the site and lease it to ALDI, which will build and own the finished store. Franklin County is committing $900,000 toward predevelopment work, utilities, and infrastructure, and the Central Ohio Community Improvement Corporation is putting in another $100,000 for demolition.\n\n## Why a College Is the Landlord\n\nColumbus State treats the store as a student-retention project as much as a real estate deal. Harrison said food insecurity is a leading non-academic barrier to student success, and a grocery store within walking distance of classrooms, housing, and public transit removes one of those barriers. \"Having a national grocer right next to our downtown campus will expand food options,\" Harrison said. That framing is why the college's own real estate arm, rather than a private developer, is the one assembling and leasing the site.\n\n## Filling a Long-Standing Gap\n\nFranklin County Board of Commissioners President John O'Grady called downtown Columbus \"a food desert for decades,\" and reporting on the announcement noted this is the first new grocery store from a national retailer to open in the area in that stretch of time. Downtown has gained smaller specialty grocers and convenience formats in recent years, but not a full-line national chain at ALDI's scale. ALDI regional vice president Laura Bauer said shoppers \"can look forward to a convenient, affordable way to stock up on everyday essentials.\"\n\n## The Timeline From Here\n\nSite work and demolition come first, funded by the county and COCIC commitments already in place. Construction is set to begin in spring 2027, with the store opening in 2028 — a roughly 18-month build once ground breaks. Nothing announced so far addresses store hours, staffing, or whether the site will include any additional retail beyond the grocery store itself.\n\nColumbus State's downtown campus sits inside the broader Discovery District, where a separate, unrelated $96 million residential project from Pizzuti Companies and Encova Insurance is also moving through the pipeline nearby. Together, the two projects point to a downtown core adding both housing and basic retail infrastructure it has lacked for years.",
+  "primary_keyword": "downtown Columbus grocery store",
+  "meta_description": "ALDI will build a 20,000-square-foot store at Cleveland Ave. and Spring St. by 2028, downtown Columbus's first national grocer in decades, county records show.",
+  "fact_checked_at": "2026-08-19T13:00:00Z",
+  "canonical_event_key": "aldi-downtown-columbus-grocery-store-2026",
+  "area_slug": "downtown-columbus",
+  "topic_slug": "development",
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "downtown-columbus",
+    "development",
+    "retail",
+    "columbus-state-community-college"
+  ],
+  "read_time": "4 min",
+  "featured": false,
+  "image_url": null,
+  "location": {
+    "name": "Columbus, OH",
+    "state": "OH"
+  },
+  "source_ledger": [
+    {
+      "id": "src-1",
+      "type": "PRIMARY",
+      "url": "https://www.cscc.edu/about/news/2026/ALDI.shtml",
+      "publisher": "Columbus State Community College",
+      "title": "Columbus State Community Partners secures ALDI to bring new grocery store to downtown Columbus",
+      "published_at": "2026-08-18",
+      "fetched_at": "2026-08-19T12:30:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "src-2",
+      "type": "SECONDARY",
+      "url": "https://abc6onyourside.com/news/local/aldi-to-build-downtown-columbus-store-opening-2028-grocery-produce-cleveland-ave-spring-street-college-campus-students-faculty-staff-residents",
+      "publisher": "WSYX ABC 6",
+      "title": "ALDI to build downtown Columbus store, opening 2028",
+      "published_at": "2026-08-19",
+      "fetched_at": "2026-08-19T12:40:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "src-3",
+      "type": "SECONDARY",
+      "url": "https://columbusunderground.com/aldi-announces-downtown-columbus-grocery-store-we1/",
+      "publisher": "Columbus Underground",
+      "title": "ALDI Announces Downtown Columbus Grocery Store",
+      "published_at": "2026-08-17",
+      "fetched_at": "2026-08-19T12:45:00Z",
+      "http_status": 200
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "cl-0",
+      "claim": "ALDI will build a 20,000-square-foot grocery store on 1.7 vacant acres at Cleveland Avenue and Spring Street, next to Columbus State Community College's downtown campus.",
+      "source_ids": ["src-1", "src-2", "src-3"],
+      "kind": "FACT"
+    },
+    {
+      "id": "cl-1",
+      "claim": "Construction starts in spring 2027 and the store opens in 2028, marking the first new grocery store from a national retailer in downtown Columbus in decades.",
+      "source_ids": ["src-1", "src-2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "cl-2",
+      "claim": "The store sits on the northwest corner of Cleveland Avenue and Spring Street, a 1.7-acre parcel Columbus State Community College President David T. Harrison described as largely vacant.",
+      "source_ids": ["src-1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "cl-3",
+      "claim": "Columbus State Community Partners, the college's real estate affiliate, will prepare the site and lease it to ALDI, which will build and own the finished store.",
+      "source_ids": ["src-1", "src-2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "cl-4",
+      "claim": "Franklin County is committing $900,000 toward predevelopment work, utilities, and infrastructure, and the Central Ohio Community Improvement Corporation is putting in another $100,000 for demolition.",
+      "source_ids": ["src-1", "src-2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "cl-5",
+      "claim": "\"Having a national grocer right next to our downtown campus will expand food options,\" Harrison said.",
+      "source_ids": ["src-1"],
+      "kind": "QUOTE",
+      "exact_support": "Having a national grocer right next to our downtown campus will expand food options"
+    },
+    {
+      "id": "cl-6",
+      "claim": "Franklin County Board of Commissioners President John O'Grady called downtown Columbus \"a food desert for decades,\" and reporting on the announcement noted this is the first new grocery store from a national retailer to open in the area in that stretch of time.",
+      "source_ids": ["src-2"],
+      "kind": "QUOTE",
+      "exact_support": "a food desert for decades"
+    },
+    {
+      "id": "cl-7",
+      "claim": "ALDI regional vice president Laura Bauer said shoppers \"can look forward to a convenient, affordable way to stock up on everyday essentials.\"",
+      "source_ids": ["src-1"],
+      "kind": "QUOTE",
+      "exact_support": "can look forward to a convenient, affordable way to stock up on everyday essentials"
+    },
+    {
+      "id": "cl-8",
+      "claim": "Construction is set to begin in spring 2027, with the store opening in 2028 — a roughly 18-month build once ground breaks.",
+      "source_ids": ["src-1", "src-2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "cl-9",
+      "claim": "Columbus State's downtown campus sits inside the broader Discovery District, where a separate, unrelated $96 million residential project from Pizzuti Companies and Encova Insurance is also moving through the pipeline nearby.",
+      "source_ids": ["src-3"],
+      "kind": "FACT"
+    }
+  ],
+  "entity_ledger": [
+    { "name": "ALDI", "source_ids": ["src-1", "src-2", "src-3"] },
+    { "name": "Columbus State Community College", "source_ids": ["src-1", "src-2"] },
+    { "name": "Columbus State Community Partners", "source_ids": ["src-1", "src-2"] },
+    { "name": "David T. Harrison", "source_ids": ["src-1"] },
+    { "name": "Laura Bauer", "source_ids": ["src-1"] },
+    { "name": "John O'Grady", "source_ids": ["src-2"] },
+    { "name": "Franklin County Board of Commissioners", "source_ids": ["src-1", "src-2"] },
+    { "name": "Central Ohio Community Improvement Corporation", "source_ids": ["src-1", "src-2"] },
+    { "name": "Pizzuti Companies", "source_ids": ["src-3"] },
+    { "name": "Encova Insurance", "source_ids": ["src-3"] }
+  ],
+  "image_brief": {
+    "primary_request": "A CREN house-style illustrated graphic of a corner grocery storefront with a simple produce-crate motif, set against a downtown college-campus streetscape.",
+    "editorial_idea": "Show a vacant downtown corner turning into a neighborhood grocery anchor next to a college campus.",
+    "story_anchors": [
+      "A single-story grocery storefront with a simple ALDI-style awning (no logos), at a street corner",
+      "A produce crate or shopping basket motif suggesting fresh food access"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "No licensed photo or rendering of the actual store was available to CREN; an illustrative CREN-style graphic was requested instead of a fabricated documentary photo or invented rendering of ALDI's real design.",
+    "avoid": "No handshakes, keys, money, arrows, glowing buildings, hardhat-and-blueprint still lifes, skyline montages, real ALDI logos, or invented renderings of the actual store design."
+  },
+  "image_alt": "Illustrated graphic of a corner grocery storefront with produce crates, representing ALDI's planned downtown Columbus store near Columbus State.",
+  "image_provenance": {
+    "type": "AI_GENERATED",
+    "caption": "AI-generated illustration",
+    "source": "CREN editorial graphic",
+    "license": "N/A"
+  }
+}

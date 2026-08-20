@@ -1,0 +1,157 @@
+{
+  "title": "959,579-SF Spec Warehouse Breaks Ground in Columbus's Rickenbacker Area",
+  "category": "development",
+  "author": "CRE Newsroom",
+  "date": "Aug 20, 2026",
+  "excerpt": "A partnership broke ground on a 959,579-square-foot speculative warehouse in Columbus's Rickenbacker area, due in early 2027 with no tenant signed and a 15-year tax break.",
+  "body": "A partnership led by Trident Capital Group broke ground on a 959,579-square-foot speculative warehouse at 1669 Rohr Road in Columbus's Rickenbacker industrial corridor. The building is due in early 2027, is being built without a signed tenant, and carries a 15-year, 75% property tax break.\n\n## What speculative means here\n\nMost large warehouses used to be built only after a company signed a lease. A speculative, or spec, building flips that order — construction starts first, and the owner looks for tenants while the walls go up.\n\nThat choice is a bet. It says the owners expect demand to be there by the time the building is done. The group behind it — Trident Capital Group, O'Connor Capital Partners, and Clarion Partners — is making that bet in the Rickenbacker submarket south of the city, as reported by [Connect CRE](https://www.connectcre.com/stories/960k-sf-speculative-industrial-development-in-columbus-breaks-ground/) and [REBusinessOnline](https://rebusinessonline.com/partnership-breaks-ground-on-959579-sf-spec-industrial-facility-in-columbus-ohio/).\n\n## The building's specs\n\nThe warehouse sits on 57.3 acres, and it will have 40-foot clear ceiling heights, 104 dock doors, 238 trailer parking stalls, and 336 car parking spaces, [according to REBusinessOnline](https://rebusinessonline.com/partnership-breaks-ground-on-959579-sf-spec-industrial-facility-in-columbus-ohio/). Delivery is targeted for the first quarter of 2027.\n\nThose figures describe a distribution building — the kind used to move goods in and out by truck rather than store them for long. The high ceilings and heavy dock count are built for volume. JLL's Dan Wendorf, Brian Marsh, and Joseph Davis are marketing the building for lease.\n\n## A second big building in a growing park\n\nThis is the newest phase of the Rickenbacker Industrial Center, a master-planned park designed to reach about 3.67 million square feet across roughly 230 acres, [according to CBRE](https://www.cbre.com/press-releases/cbre-phase-i-construction-completed-on-rickenbacker-industrial-center-in-columbus-ohio).\n\nThe park's first phase — a warehouse of about 1.06 million square feet — was fully leased to ODW Logistics and later sold to the investment firm AEW, per CBRE and [REJournals](https://rejournals.com/first-phase-of-construction-wraps-on-1-06-million-square-foot-industrial-building-in-columbus/). That the owners moved on to another large building after leasing and selling the first is its own signal about how the corridor is filling.\n\nThe site has rail access and sits near Rickenbacker International Airport, the Norfolk Southern Rickenbacker intermodal terminal, and Interstate 270. That mix of air, rail, and highway is why the area south of Columbus has drawn so much [warehouse and logistics development](/topics/development) in recent years.\n\n## The tax break, in plain terms\n\nThe project sits in a Qualified Opportunity Zone and carries a 15-year, 75% property tax abatement, [according to Connect CRE](https://www.connectcre.com/stories/960k-sf-speculative-industrial-development-in-columbus-breaks-ground/).\n\nThe details matter. An Opportunity Zone is a federal designation that gives investors tax advantages for putting money into areas the government has flagged. The abatement is a separate, local deal: it lets the owner skip most of the property tax on the building's added value for the length of the term. Local governments offer these deals to attract big projects and the jobs they bring.\n\nThe trade-off is less public tax revenue in the near term — a live debate across central Ohio as [industrial and data-center projects](/areas/columbus-citywide) stack up.\n\n## What to watch next\n\nThe real test for a spec building is leasing. An empty warehouse of nearly a million square feet is a large amount of space to fill, and how fast it signs a tenant will say more about Rickenbacker demand than the groundbreaking does.\n\nCREN has tracked the corridor's activity, including a separate [Rickenbacker building sale](/blog/2026-07-28-columbus-rickenbacker-industrial-building-sells-for-49-million-to-boyd-watterson) in July. The next checkpoints here are a lease announcement and a confirmed completion date.",
+  "answer_summary": "A partnership led by Trident Capital Group broke ground on a 959,579-square-foot speculative warehouse at 1669 Rohr Road in Columbus's Rickenbacker industrial corridor. The building is due in early 2027, is being built without a signed tenant, and carries a 15-year, 75% property tax break.",
+  "primary_keyword": "Rickenbacker industrial corridor",
+  "meta_description": "A partnership broke ground on a 959,579-square-foot speculative warehouse in Columbus's Rickenbacker area. Here is what a spec build and its tax break mean.",
+  "fact_checked_at": "2026-08-20T15:30:00Z",
+  "canonical_event_key": "rickenbacker-industrial-center-spec-2026",
+  "area_slug": "columbus-citywide",
+  "topic_slug": "development",
+  "tags": ["columbus-ohio", "central-ohio-real-estate", "columbus-citywide", "development", "industrial", "logistics", "rickenbacker"],
+  "read_time": "4 min",
+  "featured": false,
+  "image_url": null,
+  "location": {
+    "name": "Columbus, OH",
+    "state": "OH"
+  },
+  "source_ledger": [
+    {
+      "id": "S1",
+      "type": "SECONDARY",
+      "url": "https://rebusinessonline.com/partnership-breaks-ground-on-959579-sf-spec-industrial-facility-in-columbus-ohio/",
+      "publisher": "REBusinessOnline",
+      "title": "Partnership Breaks Ground on 959,579 SF Spec Industrial Facility in Columbus, Ohio",
+      "published_at": "2026-08-10",
+      "fetched_at": "2026-08-20T15:00:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "S2",
+      "type": "SECONDARY",
+      "url": "https://www.connectcre.com/stories/960k-sf-speculative-industrial-development-in-columbus-breaks-ground/",
+      "publisher": "Connect CRE",
+      "title": "960K-SF Speculative Industrial Development in Columbus Breaks Ground",
+      "published_at": "2026-08-10",
+      "fetched_at": "2026-08-20T15:00:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "S3",
+      "type": "PRIMARY",
+      "url": "https://www.cbre.com/press-releases/cbre-phase-i-construction-completed-on-rickenbacker-industrial-center-in-columbus-ohio",
+      "publisher": "CBRE (official press release)",
+      "title": "CBRE: Phase I Construction Completed on Rickenbacker Industrial Center in Columbus, Ohio",
+      "published_at": null,
+      "fetched_at": "2026-08-20T15:00:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "S4",
+      "type": "PRIMARY",
+      "url": "https://tridentcapitalgroup.com/trident-announces-full-occupancy-at-the-ric-phase-i/",
+      "publisher": "Trident Capital Group (official)",
+      "title": "Trident Capital Group Achieves Full Occupancy at The RIC Phase I",
+      "published_at": null,
+      "fetched_at": "2026-08-20T15:00:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "S5",
+      "type": "SECONDARY",
+      "url": "https://rejournals.com/first-phase-of-construction-wraps-on-1-06-million-square-foot-industrial-building-in-columbus/",
+      "publisher": "REJournals",
+      "title": "First phase of construction wraps on 1.06-million-square-foot industrial building in Columbus",
+      "published_at": null,
+      "fetched_at": "2026-08-20T15:00:00Z",
+      "http_status": 200
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "C1",
+      "claim": "A partnership led by Trident Capital Group broke ground on a 959,579-square-foot speculative warehouse at 1669 Rohr Road in Columbus's Rickenbacker industrial corridor.",
+      "source_ids": ["S1", "S2"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C2",
+      "claim": "The building is due in early 2027, is being built without a signed tenant, and carries a 15-year, 75% property tax break.",
+      "source_ids": ["S1", "S2"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C3",
+      "claim": "The warehouse sits on 57.3 acres, and it will have 40-foot clear ceiling heights, 104 dock doors, 238 trailer parking stalls, and 336 car parking spaces.",
+      "source_ids": ["S1", "S2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C4",
+      "claim": "Delivery is targeted for the first quarter of 2027.",
+      "source_ids": ["S1", "S2"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C5",
+      "claim": "JLL's Dan Wendorf, Brian Marsh, and Joseph Davis are marketing the building for lease.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C6",
+      "claim": "This is the newest phase of the Rickenbacker Industrial Center, a master-planned park designed to reach about 3.67 million square feet across roughly 230 acres.",
+      "source_ids": ["S3"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C7",
+      "claim": "The park's first phase — a warehouse of about 1.06 million square feet — was fully leased to ODW Logistics and later sold to the investment firm AEW.",
+      "source_ids": ["S3", "S4", "S5"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C8",
+      "claim": "The site has rail access and sits near Rickenbacker International Airport, the Norfolk Southern Rickenbacker intermodal terminal, and Interstate 270.",
+      "source_ids": ["S1", "S2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C9",
+      "claim": "The project sits in a Qualified Opportunity Zone and carries a 15-year, 75% property tax abatement.",
+      "source_ids": ["S1", "S2"],
+      "kind": "FACT"
+    }
+  ],
+  "entity_ledger": [
+    { "name": "Trident Capital Group", "source_ids": ["S1", "S2", "S4"] },
+    { "name": "O'Connor Capital Partners", "source_ids": ["S1", "S2", "S3"] },
+    { "name": "Clarion Partners", "source_ids": ["S1", "S2"] },
+    { "name": "JLL", "source_ids": ["S1"] },
+    { "name": "ODW Logistics", "source_ids": ["S3", "S4", "S5"] },
+    { "name": "AEW", "source_ids": ["S3", "S5"] },
+    { "name": "CBRE", "source_ids": ["S3"] }
+  ],
+  "image_brief": {
+    "primary_request": "A CREN editorial card or data graphic for the Rickenbacker industrial corridor: a labeled diagram or map placing the new 959,579-square-foot warehouse within the master-planned Rickenbacker Industrial Center, near the airport, rail intermodal terminal, and I-270. Do not render a finished building as if it already exists.",
+    "editorial_idea": "A simple footprint or corridor map that conveys scale — nearly a million square feet of new distribution space added to an area already anchored by air, rail, and highway logistics.",
+    "story_anchors": [
+      "A footprint or site-plan diagram of the 57.3-acre parcel at 1669 Rohr Road with dock and trailer counts labeled",
+      "A corridor map showing the Rickenbacker Industrial Center relative to Rickenbacker International Airport, the Norfolk Southern intermodal terminal, and I-270"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "Official site plans or renderings may exist from Trident Capital Group, O'Connor Capital Partners, or JLL marketing materials; prefer an official rendering or public parcel map if available.",
+    "avoid": "No handshakes, keys, money, arrows, glowing buildings, hardhat-and-blueprint still lifes, generic glass towers, skyline montages, invented facades, or any fake documentary photograph of a building that has not been built."
+  },
+  "image_alt": "Editorial graphic showing the location and scale of a new 959,579-square-foot speculative warehouse in the Rickenbacker Industrial Center south of Columbus, near the airport, rail intermodal terminal, and Interstate 270.",
+  "image_provenance": {
+    "type": "AI_GENERATED",
+    "caption": "AI-generated illustration — new Rickenbacker Industrial Center warehouse, south Columbus.",
+    "license": "CREN editorial use"
+  }
+}

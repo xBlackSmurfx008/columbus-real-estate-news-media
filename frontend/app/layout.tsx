@@ -4,6 +4,7 @@ import "./globals.css";
 import "./cren-v2.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { PageviewTracker } from "@/components/pageview-tracker";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -33,6 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${dmSans.variable} ${playfair.variable} ${spaceGrotesk.variable}`}>
       <body className="cren-theme font-sans antialiased">
+        <PageviewTracker />
         <header className="relative z-[1100]">
           <SiteHeader />
         </header>

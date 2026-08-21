@@ -176,6 +176,18 @@ export async function initSchema() {
     )
   `;
 
+  // Server-side traffic (no raw IP / UA stored; visitor_hash rotates daily).
+  await sql`
+    CREATE TABLE IF NOT EXISTS page_views (
+      id BIGSERIAL PRIMARY KEY,
+      path TEXT NOT NULL,
+      article_id TEXT,
+      referrer_host TEXT,
+      visitor_hash TEXT,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+
   await sql`
     CREATE TABLE IF NOT EXISTS testimonials (
       id SERIAL PRIMARY KEY,

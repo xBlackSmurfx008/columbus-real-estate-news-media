@@ -69,9 +69,8 @@ async function selectCandidates(): Promise<Candidate[]> {
     FROM articles a
     JOIN editorial_review_jobs r ON r.article_id = a.id
     LEFT JOIN article_image_jobs j ON j.article_id = a.id
-    WHERE a.status = 'draft'
-      AND r.status = 'AWAITING_HUMAN_REVIEW'
-      AND (a.image_url IS NULL OR a.image_url LIKE '/images/heroes/%')
+    WHERE a.status = 'live'
+      AND (a.image_url IS NULL OR a.image_url LIKE '/images/heroes/%' OR a.image_url LIKE '%/placeholder-%')
       AND (j.status IS NULL OR j.status IN ('PENDING', 'FAILED', 'READY_FOR_REVIEW'))
     ORDER BY a.created_at ASC
     LIMIT 2
@@ -92,8 +91,9 @@ async function processCandidate(candidate: Candidate): Promise<{ attached: boole
       JOIN editorial_review_jobs r ON r.article_id = a.id
       WHERE a.id = ${candidate.articleId}
     `;
-    if (!current || current.status !== 'draft') return { attached: false, reason: 'ARTICLE_NOT_DRAFT' };
-    if (current.image_url && !String(current.image_url).startsWith('/images/heroes/')) {
+    if (!current || current.status !== 'live') return { attached: false, reason: 'ARTICLE_NOT_LIVE' };
+    const currentImage = String(current.image_url ?? '');
+    if (currentImage && !currentImage.startsWith('/images/heroes/') && !currentImage.includes('/placeholder-')) {
       return { attached: false, reason: 'IMAGE_ALREADY_ATTACHED' };
     }
 
@@ -170,8 +170,8 @@ async function processCandidate(candidate: Candidate): Promise<{ attached: boole
       UPDATE articles
       SET image_url = ${blob.url}, updated_at = NOW()
       WHERE id = ${candidate.articleId}
-        AND status = 'draft'
-        AND (image_url IS NULL OR image_url LIKE '/images/heroes/%')
+        AND status = 'live'
+        AND (image_url IS NULL OR image_url LIKE '/images/heroes/%' OR image_url LIKE '%/placeholder-%')
       RETURNING id
     `;
     if (updated.length === 0) {

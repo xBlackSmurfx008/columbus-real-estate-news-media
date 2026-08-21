@@ -14,7 +14,10 @@
     "newsroom:neighborhood-report": "node scripts/neighborhood-coverage-report.mjs",
     "newsroom:migrate-tags": "node scripts/migrate-article-tags.mjs",
     "newsroom:audit-public-images": "node scripts/public-image-audit.mjs",
-    "newsroom:sync-image-fingerprints": "node scripts/sync-image-fingerprints.mjs"
+    "newsroom:sync-image-fingerprints": "node scripts/sync-image-fingerprints.mjs",
+    "newsroom:migrate-page-views": "node scripts/migrate-page-views.mjs",
+    "newsroom:kpi": "node scripts/kpi-report.mjs",
+    "newsroom:alert-failure": "node scripts/alert-failure.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

@@ -65,8 +65,8 @@ brokerage funnel, or press-release rewrite. Never insert lead-generation copy or
 
 ## Publication decision
 
-- `publish-article.mjs` is a staging command. It must pass the deterministic checks and always writes `status='draft'`.
-- A human editor scores accuracy, Columbus news value, usefulness, clarity, educational interest, fairness, original value,
-  SEO/AEO fit, and voice from 0–2. Publication requires 14/18, with no zero for accuracy, Columbus value, fairness, or
-  original reporting value.
-- The editor must inspect the full hero with the article and explicitly approve it. Automation cannot set `status='live'`.
+- Owner policy (2026-08-14, reaffirmed live 2026-08-17): no human pre-publish approval, ever. We make them, we create
+  them, we send them. `publish-article.mjs` runs the deterministic checks and publishes `status='live'` immediately.
+- The deterministic quality gate (claim traceability, SEO metadata, duplicate guard, hero requirement) is the only gate.
+  A draft that fails it gets fixed until it passes, in the same run.
+- Review happens post-publish: if a problem is found in a live article, fix or unpublish it. Never hold the queue.

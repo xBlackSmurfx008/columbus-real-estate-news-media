@@ -19,9 +19,20 @@ interface Article {
   read_time?: number;
   tags?: string[];
   image_url?: string | null;
+  area_slug?: string | null;
+  topic_slug?: string | null;
+  meta_description?: string | null;
+  image_alt?: string | null;
+  image_caption?: string | null;
+  fact_checked_at?: string | null;
   machine_score?: number | null;
   machine_possible?: number | null;
   human_scores?: Partial<HumanReviewScores> | null;
+  human_decision?: string | null;
+  review_status?: string | null;
+  submission?: Partial<Article> & {
+    image_provenance?: { caption?: string };
+  } | null;
 }
 
 const emptyHumanScores = (): HumanReviewScores => Object.fromEntries(
@@ -150,7 +161,15 @@ export default function ArticlesPage() {
   };
 
   const handleEdit = (article: Article) => {
-    setFormData(article);
+    const pending = article.review_status === 'AWAITING_HUMAN_REVIEW' ? article.submission : null;
+    setFormData(pending ? {
+      ...article,
+      ...pending,
+      id: article.id,
+      status: article.status,
+      image_url: pending.image_url ?? article.image_url,
+      image_caption: pending.image_provenance?.caption ?? article.image_caption,
+    } : article);
     setEditingId(article.id);
     setHumanScores({ ...emptyHumanScores(), ...(article.human_scores || {}) });
     setImageApproved(false);
@@ -381,8 +400,8 @@ export default function ArticlesPage() {
                     <div>
                       <h3 className="text-lg font-semibold text-gray-950">Editorial review</h3>
                       <p className="mt-1 text-sm text-gray-600">
-                        Machine gate: {formData.machine_score ?? 0}/{formData.machine_possible ?? 0}. Human approval needs 14/18,
-                        with no zero on a blocking item.
+                        Machine gate: {formData.machine_score ?? 0}/{formData.machine_possible ?? 0}. Human approval needs 17/20,
+                        full marks on accuracy, fairness, originality, and visible evidence, with no zero on a blocking item.
                       </p>
                     </div>
                     <div className="grid gap-3 md:grid-cols-2">
@@ -405,7 +424,7 @@ export default function ArticlesPage() {
                       ))}
                     </div>
                     <p className={`text-sm font-semibold ${validateHumanReview(humanScores).passed ? 'text-green-700' : 'text-amber-700'}`}>
-                      Human score: {validateHumanReview(humanScores).total}/18
+                      Human score: {validateHumanReview(humanScores).total}/20
                     </p>
                   </section>
                 )}

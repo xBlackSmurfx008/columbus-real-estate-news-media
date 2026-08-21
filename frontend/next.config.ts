@@ -1,7 +1,14 @@
 import type { NextConfig } from "next";
+import { withWorkflow } from 'workflow/next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  outputFileTracingIncludes: {
+    '/*': [
+      './node_modules/@img/sharp-linux-x64/**/*',
+      './node_modules/@img/sharp-libvips-linux-x64/**/*',
+    ],
+  },
   async redirects() {
     return [{ source: "/tools", destination: "/resources", permanent: true }];
   },
@@ -17,4 +24,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withWorkflow(nextConfig);

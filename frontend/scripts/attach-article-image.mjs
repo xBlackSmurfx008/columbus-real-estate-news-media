@@ -1,11 +1,15 @@
 #!/usr/bin/env node
-import { createHash } from "node:crypto";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { del, put } from "@vercel/blob";
 import sharp from "sharp";
 import { IMAGE_MODEL, safeErrorSummary } from "./image-pipeline-lib.mjs";
 import { ensureImageJobTable, getSql, withRetry } from "./image-job-store.mjs";
+import {
+  ensureArticleImageFingerprintTable,
+  findDuplicateImageFingerprint,
+  fingerprintArticleImageBytes,
+} from './article-image-policy.mjs';
 
 function arg(name) {
   const index = process.argv.indexOf(`--${name}`);
@@ -21,6 +25,7 @@ if (!articleId || !sourcePath || !/^[a-z0-9-]+$/.test(articleId)) {
 
 const sql = getSql();
 await withRetry(() => ensureImageJobTable(sql));
+await withRetry(() => ensureArticleImageFingerprintTable(sql));
 await withRetry(() => sql`
   INSERT INTO article_image_jobs (article_id, status, model, attempts, started_at, updated_at)
   VALUES (${articleId}, 'GENERATING', ${IMAGE_MODEL}, 1, NOW(), NOW())
@@ -31,6 +36,7 @@ await withRetry(() => sql`
 `);
 
 let blobUrl;
+let articleAttached = false;
 try {
   const source = await readFile(resolve(sourcePath));
   if (source.length < 1_000 || source.length > 25_000_000) throw new Error("IMAGE_SIZE_INVALID");
@@ -44,7 +50,16 @@ try {
     .resize(1600, 900, { fit: "cover", position: "attention" })
     .webp({ quality: 86, effort: 5 })
     .toBuffer();
-  const sha256 = createHash("sha256").update(normalized).digest("hex");
+  const fingerprint = await fingerprintArticleImageBytes(normalized);
+  if (!fingerprint) throw new Error('IMAGE_FINGERPRINT_FAILED');
+  const sha256 = fingerprint.sha256;
+  const existingFingerprints = await withRetry(() => sql`
+    SELECT article_id, sha256, perceptual_hash FROM article_image_fingerprints
+  `);
+  const duplicate = findDuplicateImageFingerprint(existingFingerprints, fingerprint, articleId);
+  if (duplicate) {
+    throw new Error(`IMAGE_DUPLICATE_${duplicate.kind}_${duplicate.articleId}_${duplicate.distance}`);
+  }
   const artifactPath = resolve("var", "cren-images", articleId, `hero-${sha256.slice(0, 16)}.webp`);
   await mkdir(dirname(artifactPath), { recursive: true });
   await writeFile(artifactPath, normalized);
@@ -62,18 +77,30 @@ try {
     throw new Error("BLOB_VERIFICATION_FAILED");
   }
 
+  await withRetry(() => sql`
+    INSERT INTO article_image_fingerprints (article_id, image_url, sha256, perceptual_hash, verified_at)
+    VALUES (${articleId}, ${blob.url}, ${fingerprint.sha256}, ${fingerprint.perceptualHash}, NOW())
+    ON CONFLICT (article_id) DO UPDATE SET
+      image_url = EXCLUDED.image_url,
+      sha256 = EXCLUDED.sha256,
+      perceptual_hash = EXCLUDED.perceptual_hash,
+      verified_at = NOW()
+  `);
+
   const [updated] = await withRetry(() => sql`
     UPDATE articles
     SET image_url = ${blob.url}, updated_at = NOW()
-    WHERE id = ${articleId} AND status = 'live'
+    WHERE id = ${articleId} AND status IN ('draft', 'live')
       AND (image_url IS NULL OR image_url LIKE '/images/heroes/%')
     RETURNING id, title
   `);
   if (!updated) {
+    await sql`DELETE FROM article_image_fingerprints WHERE article_id = ${articleId} AND image_url = ${blob.url}`;
     await del(blob.url).catch(() => undefined);
     process.stdout.write(`${JSON.stringify({ ok: true, noOp: true, articleId })}\n`);
     process.exit(0);
   }
+  articleAttached = true;
 
   await withRetry(() => sql`
     UPDATE article_image_jobs SET
@@ -84,10 +111,14 @@ try {
       completed_at = NOW(),
       updated_at = NOW()
     WHERE article_id = ${articleId}
-  `);
+  `).catch(() => undefined);
   process.stdout.write(`${JSON.stringify({ ok: true, articleId, status: 'READY_FOR_REVIEW', title: updated.title, imageUrl: blob.url, artifactPath })}\n`);
 } catch (error) {
-  if (blobUrl) await del(blobUrl).catch(() => undefined);
+  if (blobUrl && !articleAttached) {
+    await sql`DELETE FROM article_image_fingerprints WHERE article_id = ${articleId} AND image_url = ${blobUrl}`
+      .catch(() => undefined);
+    await del(blobUrl).catch(() => undefined);
+  }
   const errorCode = safeErrorSummary(error).replace(/[^A-Za-z0-9_-]+/g, "_").slice(0, 100) || "IMAGE_ATTACH_FAILED";
   await withRetry(() => sql`
     UPDATE article_image_jobs SET

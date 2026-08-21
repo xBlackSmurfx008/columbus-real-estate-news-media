@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { getSql, withRetry } from './image-job-store.mjs';
 
-process.loadEnvFile?.('.env.local');
+try { process.loadEnvFile?.('.env.local'); } catch { /* env may come from the caller */ }
 
 function slugify(value) {
   return String(value ?? '')

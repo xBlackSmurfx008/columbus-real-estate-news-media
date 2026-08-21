@@ -2,7 +2,7 @@
 import { getSql, withRetry } from './image-job-store.mjs';
 import { NEIGHBORHOOD_SOURCE_REGISTRY, PRIORITY_NEIGHBORHOOD_SLUGS } from './neighborhood-sources.mjs';
 
-process.loadEnvFile?.('.env.local');
+try { process.loadEnvFile?.('.env.local'); } catch { /* env may come from the caller */ }
 
 export function easternWeekStart(date = new Date()) {
   const parts = new Intl.DateTimeFormat('en-CA', {

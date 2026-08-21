@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-// Publishes one article live after deterministic editorial checks.
-// Owner policy (2026-08-14): publish live by default; fix problems post-publish.
+// Stages one article as a non-public draft after deterministic editorial checks.
 // Usage: DATABASE_URL=... node scripts/publish-article.mjs path/to/article.json
 //
 // article.json shape:
@@ -25,7 +24,12 @@ import { readFileSync } from "node:fs";
 import { neon } from "@neondatabase/serverless";
 import { evaluateArticle, formatQualityReport } from "./editorial-quality-lib.mjs";
 import { ensureEditorialReviewTable, saveEditorialReview } from "./editorial-review-store.mjs";
-import { hostPlaceholderCard, PLACEHOLDER_CAPTION } from "./editorial-card-lib.mjs";
+import {
+  ensureArticleImageFingerprintTable,
+  findDuplicateImageFingerprint,
+  fingerprintArticleImageUrl,
+  isDurableArticleImageUrl,
+} from './article-image-policy.mjs';
 
 const filePath = process.argv[2];
 if (!filePath) {
@@ -50,6 +54,11 @@ function generateSlug(title) {
 const VALID_TOPICS = ["market-trends", "schools", "development", "local-politics", "events-lifestyle"];
 
 const article = JSON.parse(readFileSync(filePath, "utf-8"));
+
+if (article.image_url != null && !isDurableArticleImageUrl(article.image_url)) {
+  console.error('Image URL must use an approved durable HTTPS image host. Use null to run the image backfill.');
+  process.exit(1);
+}
 
 const qualityReport = evaluateArticle(article);
 if (!qualityReport.passed) {
@@ -85,6 +94,24 @@ const id = `${isoPrefix}-${slug}`;
 
 const sql = neon(databaseUrl);
 await ensureEditorialReviewTable(sql);
+await ensureArticleImageFingerprintTable(sql);
+
+let imageFingerprint = null;
+if (article.image_url) {
+  imageFingerprint = await fingerprintArticleImageUrl(article.image_url);
+  if (!imageFingerprint) {
+    console.error('Image URL is not reachable as a decodable image.');
+    process.exit(1);
+  }
+  const existingFingerprints = await sql`
+    SELECT article_id, sha256, perceptual_hash FROM article_image_fingerprints
+  `;
+  const duplicateImage = findDuplicateImageFingerprint(existingFingerprints, imageFingerprint);
+  if (duplicateImage) {
+    console.error(`Image duplicates article "${duplicateImage.articleId}" (${duplicateImage.kind}, distance ${duplicateImage.distance}).`);
+    process.exit(1);
+  }
+}
 
 // --- Duplicate guard -------------------------------------------------------
 // Hard backstop so the same story can never be published twice, even with a
@@ -144,7 +171,7 @@ const [row] = await sql`
     title, excerpt, body, author, date, read_time,
     area_slug, topic_slug, tags, image_url, meta_description, image_alt, image_caption, fact_checked_at
   ) VALUES (
-    ${id}, 'live', ${article.featured ?? false},
+    ${id}, 'draft', ${article.featured ?? false},
     ${article.category}, ${article.category_class ?? "card-img-market"}, ${article.icon ?? "$"},
     ${article.title}, ${article.excerpt ?? null}, ${article.body ?? null}, ${article.author}, ${article.date},
     ${article.read_time ?? "5 min read"}, ${article.area_slug ?? null}, ${article.topic_slug ?? null},
@@ -161,35 +188,19 @@ if (!row) {
   process.exit(1);
 }
 
-// Hero requirement (owner, 2026-08-14): no live article ships imageless. If no
-// image_url was supplied, attach a branded editorial card immediately as a
-// placeholder; the local illustration job replaces it with a real illustration.
-// With BLOB_READ_WRITE_TOKEN the card is live instantly; without it the card
-// only serves after the next deploy, so the DB is NOT updated (a broken hero
-// is worse than none) — the audit script re-attaches once hosting works.
-if (!row.image_url) {
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
-    const hosted = await hostPlaceholderCard({ id, title: article.title, category: article.category, area_slug: article.area_slug });
-    await sql`
-      UPDATE articles
-      SET image_url = ${hosted.url},
-          image_alt = ${`Editorial graphic: ${article.title}`},
-          image_caption = ${PLACEHOLDER_CAPTION},
-          updated_at = NOW()
-      WHERE id = ${id} AND image_url IS NULL
-    `;
-    row.image_url = hosted.url;
-    console.log(`Hero placeholder attached: ${hosted.url}`);
-  } else {
-    console.warn(
-      "WARNING: article published without a hero and BLOB_READ_WRITE_TOKEN is not set. "
-      + "Run scripts/generate-placeholder-heroes.mjs with blob credentials (or --allow-deploy-lag plus a deploy) immediately — no live article may stay imageless."
-    );
-  }
-}
-
 await saveEditorialReview(sql, id, article, qualityReport);
-console.log("Published live (post-publish review policy):");
+if (article.image_url && imageFingerprint) {
+  await sql`
+    INSERT INTO article_image_fingerprints (article_id, image_url, sha256, perceptual_hash, verified_at)
+    VALUES (${id}, ${article.image_url}, ${imageFingerprint.sha256}, ${imageFingerprint.perceptualHash}, NOW())
+    ON CONFLICT (article_id) DO UPDATE SET
+      image_url = EXCLUDED.image_url,
+      sha256 = EXCLUDED.sha256,
+      perceptual_hash = EXCLUDED.perceptual_hash,
+      verified_at = NOW()
+  `;
+}
+console.log("Staged for human editorial review:");
 console.log(JSON.stringify({
   article: row,
   quality: { score: qualityReport.score, possible: qualityReport.possible },

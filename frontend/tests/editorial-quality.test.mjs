@@ -8,10 +8,10 @@ const contextParagraph = 'City records give readers a useful starting point, but
 const body = [
   answerSummary,
   '## What did the city receive?',
-  'City staff described the filing as an early review step. The record identifies the applicant, the site, and the broad use under discussion. It does not provide final architecture or a guaranteed construction schedule. This section should link directly to the record and explain which facts come from the applicant, which come from city staff, and which remain unknown. Readers can then understand the news without being pushed toward a sales or investment conclusion.',
+  '[City staff](https://www.columbus.gov/example) described the filing as an early review step. The record identifies the applicant, the site, and the broad use under discussion. It does not provide final architecture or a guaranteed construction schedule. This section should link directly to the record and explain which facts come from the applicant, which come from city staff, and which remain unknown. Readers can then understand the news without being pushed toward a sales or investment conclusion.',
   '## Why does the filing matter locally?',
   contextParagraph,
-  'The local value comes from the site’s relationship to nearby homes, streets, transit, and existing businesses. A useful article describes those relationships with verified geography and explains the likely public process. It avoids generic claims that more development automatically helps or harms the market. It also avoids guessing about rents, returns, traffic, or completion dates when the record does not answer those questions.',
+  'The local value comes from the site’s relationship to nearby homes, streets, transit, and existing businesses. [WOSU](https://news.wosu.org/example) provides independent context for the location and public process. A useful article describes those relationships with verified geography and explains the likely public process. It avoids generic claims that more development automatically helps or harms the market. It also avoids guessing about rents, returns, traffic, or completion dates when the record does not answer those questions.',
   '## What remains unresolved?',
   contextParagraph,
   'Readers should watch for a revised plan, a dated staff recommendation, and any scheduled public meeting. Those events would change the project’s documented status and justify a follow-up article. Until then, CREN should call the proposal what it is: an early filing under review. That ending gives the reader a precise next checkpoint instead of a vague prediction or promotional call to action.',
@@ -19,6 +19,7 @@ const body = [
 
 function validArticle() {
   return {
+    prompt_version: 'cren-article-v1.0.0',
     title: 'Columbus Housing Permit Enters Early City Review',
     category: 'Development',
     author: 'CREN Newsroom',
@@ -69,6 +70,40 @@ test('generic promotional HTML copy is blocked before it reaches the draft queue
   assert.ok(report.failedCodes.includes('A14_WEB_STRUCTURE'));
 });
 
+test('private ledgers do not replace reader-visible source links', () => {
+  const article = validArticle();
+  article.body = article.body
+    .replace('[City staff](https://www.columbus.gov/example)', 'City staff')
+    .replace('[WOSU](https://news.wosu.org/example)', 'WOSU');
+  const report = evaluateArticle(article);
+  assert.equal(report.passed, false);
+  assert.ok(report.failedCodes.includes('A4B_READER_VISIBLE_SOURCES'));
+});
+
+test('raw citation tokens are blocked from publication copy', () => {
+  const article = validArticle();
+  article.body += '\n\nThe permit remains under review. [S1]';
+  const report = evaluateArticle(article);
+  assert.equal(report.passed, false);
+  assert.ok(report.failedCodes.includes('A12_PUBLICATION_READY_COPY'));
+});
+
+test('article stubs cannot pass the publication gate', () => {
+  const article = validArticle();
+  article.body = `${answerSummary}\n\n## What changed?\n\nThe filing remains under review.\n\n## Why does it matter?\n\nThe site is in Columbus.\n\n## What comes next?\n\nCity review continues.`;
+  const report = evaluateArticle(article);
+  assert.equal(report.passed, false);
+  assert.ok(report.failedCodes.includes('A12_PUBLICATION_READY_COPY'));
+});
+
+test('drafts identify the writing-system version that produced them', () => {
+  const article = validArticle();
+  article.prompt_version = 'legacy-unversioned-prompt';
+  const report = evaluateArticle(article);
+  assert.equal(report.passed, false);
+  assert.ok(report.failedCodes.includes('A0_PROMPT_VERSION'));
+});
+
 test('empty ledgers, an empty body, and null image provenance fail closed without throwing', () => {
   const article = validArticle();
   article.body = '';
@@ -88,6 +123,12 @@ test('human review fails with zero scores, including all blocking criteria', () 
   const report = validateHumanReview({ B1: 0, B2: 0, B3: 2, B4: 2, B5: 2, B6: 0, B7: 0, B8: 2, B9: 2 });
   assert.equal(report.passed, false);
   assert.equal(report.total, 10);
+});
+
+test('human review requires excellent accuracy, fairness, originality, and visible evidence', () => {
+  const report = validateHumanReview({ B1: 2, B2: 2, B3: 2, B4: 2, B5: 2, B6: 2, B7: 1, B8: 2, B9: 2, B10: 2 });
+  assert.equal(report.total, 19);
+  assert.equal(report.passed, false);
 });
 
 test('digits inside a source URL do not turn a non-numeric sentence into a numeric claim', () => {
@@ -118,10 +159,10 @@ test('neighborhood drafts require a specific area and neighborhood tag', () => {
   assert.equal(report.passed, true, report.failedCodes.join(','));
 });
 
-test('AI image briefs that ask for a photo are rejected as contradictory', () => {
+test('AI image briefs may request realistic editorial photography when disclosure is explicit', () => {
   const article = validArticle();
   article.image_brief.primary_request = 'Create an editorial photo of the site.';
+  article.image_provenance.caption = 'AI-generated editorial visualization for CREN.';
   const report = evaluateArticle(article);
-  assert.equal(report.passed, false);
-  assert.ok(report.failedCodes.includes('A15_ORIGINALITY_AND_DISCLOSURE'));
+  assert.equal(report.passed, true, report.failedCodes.join(','));
 });

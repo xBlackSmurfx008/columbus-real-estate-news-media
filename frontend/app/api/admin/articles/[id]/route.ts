@@ -2,6 +2,33 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { requireAuth } from "@/lib/auth";
 import { validateHumanReview } from "@/lib/editorial-review";
+import { isDurableArticleImageUrl, verifyArticleImageUrl } from "@/lib/article-image";
+import {
+  fingerprintArticleImageUrl,
+  hammingDistance,
+  NEAR_DUPLICATE_MAX_DISTANCE,
+  type ArticleImageFingerprint,
+} from "@/lib/article-image-fingerprint";
+import { evaluateArticle } from "@/scripts/editorial-quality-lib.mjs";
+
+const SUBMISSION_FIELDS = [
+  "title", "category", "excerpt", "body", "author", "date", "read_time", "area_slug", "topic_slug", "tags",
+  "image_url", "meta_description", "image_alt", "fact_checked_at",
+] as const;
+
+function candidateSubmission(staged: Record<string, unknown>, edits: Record<string, unknown>) {
+  const candidate = structuredClone(staged);
+  for (const field of SUBMISSION_FIELDS) {
+    if (Object.hasOwn(edits, field)) candidate[field] = edits[field];
+  }
+  if (Object.hasOwn(edits, "image_caption")) {
+    const provenance = candidate.image_provenance && typeof candidate.image_provenance === "object"
+      ? candidate.image_provenance as Record<string, unknown>
+      : {};
+    candidate.image_provenance = { ...provenance, caption: edits.image_caption };
+  }
+  return candidate;
+}
 
 // PUT: Update article by id
 export async function PUT(
@@ -36,22 +63,79 @@ export async function PUT(
       || (existing[0].status === "live" && changesEditorialContent && requestedStatus !== "draft");
 
     let humanReview;
+    let machineReview;
+    let reviewedSubmission;
+    let approvedImageFingerprint: ArticleImageFingerprint | null = null;
     if (requiresReview) {
       const [review] = await sql`
-        SELECT machine_score, machine_possible
+        SELECT submission
         FROM editorial_review_jobs
         WHERE article_id = ${id}
       `;
+      if (!review?.submission || typeof review.submission !== "object") {
+        return NextResponse.json({ error: "Stage this article through the CREN editorial gate before publishing" }, { status: 409 });
+      }
+      reviewedSubmission = candidateSubmission(review.submission, body);
+      machineReview = evaluateArticle(reviewedSubmission);
       humanReview = validateHumanReview(body.human_scores);
-      if (!review || review.machine_possible <= 0 || review.machine_score !== review.machine_possible) {
-        return NextResponse.json({ error: "The machine editorial gate has not passed" }, { status: 409 });
+      if (!machineReview.passed) {
+        return NextResponse.json({
+          error: `The exact publication copy failed the editorial gate: ${machineReview.failedCodes.join(", ")}`,
+        }, { status: 409 });
       }
       if (!humanReview.passed) {
-        return NextResponse.json({ error: "Human review requires 14/18 and no zero on blocking criteria" }, { status: 409 });
+        return NextResponse.json({ error: "Human review requires 17/20, full marks on accuracy, fairness, originality, and visible evidence, and no zero on blocking criteria" }, { status: 409 });
       }
-      if (!existing[0].image_url || body.image_approved !== true) {
+      const candidateImageUrl = body.image_url ?? existing[0].image_url;
+      if (!isDurableArticleImageUrl(candidateImageUrl) || body.image_approved !== true) {
         return NextResponse.json({ error: "Inspect and approve a story-specific hero image before publishing" }, { status: 409 });
       }
+      if (!await verifyArticleImageUrl(candidateImageUrl)) {
+        return NextResponse.json({ error: "The approved hero image is not reachable" }, { status: 409 });
+      }
+      approvedImageFingerprint = await fingerprintArticleImageUrl(candidateImageUrl);
+      if (!approvedImageFingerprint) {
+        return NextResponse.json({ error: "The approved hero image could not be decoded and fingerprinted" }, { status: 409 });
+      }
+      await sql`
+        CREATE TABLE IF NOT EXISTS article_image_fingerprints (
+          article_id TEXT PRIMARY KEY REFERENCES articles(id) ON DELETE CASCADE,
+          image_url TEXT NOT NULL,
+          sha256 TEXT NOT NULL UNIQUE,
+          perceptual_hash TEXT NOT NULL,
+          verified_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+      `;
+      const existingFingerprints = await sql`
+        SELECT article_id, sha256, perceptual_hash
+        FROM article_image_fingerprints
+        WHERE article_id <> ${id}
+      `;
+      const duplicateImage = existingFingerprints.find((fingerprint) =>
+        fingerprint.sha256 === approvedImageFingerprint?.sha256
+        || hammingDistance(fingerprint.perceptual_hash, approvedImageFingerprint?.perceptualHash ?? '')
+          <= NEAR_DUPLICATE_MAX_DISTANCE);
+      if (duplicateImage) {
+        return NextResponse.json({
+          error: `That hero duplicates the image assigned to article ${duplicateImage.article_id}`,
+        }, { status: 409 });
+      }
+    }
+
+    if (requiresReview && approvedImageFingerprint) {
+      const candidateImageUrl = body.image_url ?? existing[0].image_url;
+      await sql`
+        INSERT INTO article_image_fingerprints (article_id, image_url, sha256, perceptual_hash, verified_at)
+        VALUES (
+          ${id}, ${candidateImageUrl}, ${approvedImageFingerprint.sha256},
+          ${approvedImageFingerprint.perceptualHash}, NOW()
+        )
+        ON CONFLICT (article_id) DO UPDATE SET
+          image_url = EXCLUDED.image_url,
+          sha256 = EXCLUDED.sha256,
+          perceptual_hash = EXCLUDED.perceptual_hash,
+          verified_at = NOW()
+      `;
     }
 
     const result = await sql`
@@ -80,10 +164,14 @@ export async function PUT(
       RETURNING *
     `;
 
-    if (requiresReview && humanReview?.passed) {
+    if (requiresReview && humanReview?.passed && machineReview && reviewedSubmission) {
       await sql`
         UPDATE editorial_review_jobs SET
           status = 'APPROVED',
+          machine_score = ${machineReview.score},
+          machine_possible = ${machineReview.possible},
+          machine_report = ${JSON.stringify(machineReview)}::jsonb,
+          submission = ${JSON.stringify(reviewedSubmission)}::jsonb,
           human_score = ${humanReview.total},
           human_scores = ${JSON.stringify(humanReview.scores)}::jsonb,
           human_decision = 'APPROVED',

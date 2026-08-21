@@ -15,7 +15,9 @@ export async function GET(request: NextRequest) {
         editorial_review_jobs.machine_score,
         editorial_review_jobs.machine_possible,
         editorial_review_jobs.human_scores,
-        editorial_review_jobs.human_decision
+        editorial_review_jobs.human_decision,
+        editorial_review_jobs.status AS review_status,
+        editorial_review_jobs.submission
       FROM articles
       LEFT JOIN editorial_review_jobs ON editorial_review_jobs.article_id = articles.id
       ORDER BY articles.created_at DESC

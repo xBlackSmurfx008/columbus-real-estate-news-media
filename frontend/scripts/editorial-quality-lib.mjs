@@ -1,4 +1,5 @@
 const REQUIRED_FIELDS = [
+  'prompt_version',
   'title',
   'category',
   'author',
@@ -41,6 +42,10 @@ const PROMOTIONAL_PATTERNS = [
   /book (?:a|your) (?:call|consultation)/i,
   /contact us to (?:invest|buy|sell)/i,
   /if you['’]?re weighing (?:a|an) (?:deal|investment)/i,
+  /\blist your home\b/i,
+  /\bsubscribe (?:to|for)\b/i,
+  /\bfree (?:weekly )?brief\b/i,
+  /\btalk (?:to|with) our team\b/i,
 ];
 
 const THROAT_CLEARING_PATTERNS = [
@@ -86,6 +91,22 @@ function sourceDomains(sources) {
   return domains;
 }
 
+function normalizeUrl(value) {
+  try {
+    const url = new URL(value);
+    url.hash = '';
+    return url.toString().replace(/\/$/, '');
+  } catch {
+    return '';
+  }
+}
+
+function markdownLinkUrls(body) {
+  return [...String(body ?? '').matchAll(/\[[^\]]+\]\((https:\/\/[^)\s]+)\)/g)]
+    .map((match) => normalizeUrl(match[1]))
+    .filter(Boolean);
+}
+
 function check(id, passed, message, details = undefined) {
   return { id, passed: Boolean(passed), message, ...(details ? { details } : {}) };
 }
@@ -128,6 +149,14 @@ export function evaluateArticle(article) {
     const normalized = normalizeClaim(sentence);
     return claimSentences.some((claim) => claim.includes(normalized) || normalized.includes(claim));
   });
+  const unmappedMaterialClaims = materialSentences.filter((sentence) => {
+    const normalized = normalizeClaim(sentence);
+    return !claimSentences.some((claim) => claim.includes(normalized) || normalized.includes(claim));
+  });
+  const unmappedStatusClaims = statusSentences.filter((sentence) => {
+    const normalized = normalizeClaim(sentence);
+    return !claimSentences.some((claim) => claim.includes(normalized) || normalized.includes(claim));
+  });
   const locationName = String(article.location?.name ?? '');
   const localOpening = `${article.title ?? ''} ${article.excerpt ?? ''} ${plainText(body).split(/\s+/).slice(0, 100).join(' ')}`;
   const localMatch = /\b(?:Columbus|Franklin County|Central Ohio)\b/i.test(localOpening)
@@ -139,11 +168,14 @@ export function evaluateArticle(article) {
   const metaLength = String(article.meta_description ?? '').length;
   const keyword = String(article.primary_keyword ?? '').trim().toLowerCase();
   const bodyWords = wordCount(plainText(body));
+  const bodyLinks = new Set(markdownLinkUrls(body));
+  const visiblyCitedSources = sources.filter((source) => bodyLinks.has(normalizeUrl(source.url)));
+  const visibleSourceDomains = sourceDomains(visiblyCitedSources);
+  const hasRawCitationTokens = /\[(?:(?=[^\]]*\d)[a-z0-9_-]{1,20}|calc)\](?!\()/i.test(body);
   const keywordUses = keyword ? normalizedBody.split(normalizeClaim(keyword)).length - 1 : 0;
   const keywordDensity = bodyWords ? (keywordUses * wordCount(keyword)) / bodyWords : 0;
   const imageAi = article.image_provenance?.type === 'AI_GENERATED';
   const imageCaption = String(article.image_provenance?.caption ?? '');
-  const aiImageRequest = `${article.image_brief?.primary_request ?? ''} ${article.image_brief?.editorial_idea ?? ''}`;
   const tags = Array.isArray(article.tags) ? article.tags : [];
   const tagsAreValid = tags.length >= 3 && tags.length <= 7
     && new Set(tags).size === tags.length
@@ -157,6 +189,8 @@ export function evaluateArticle(article) {
       || (tags.includes('neighborhood') && article.area_slug && article.area_slug !== 'columbus-citywide'));
 
   const checks = [
+    check('A0_PROMPT_VERSION', article.prompt_version === 'cren-article-v1.0.0',
+      'Use the current versioned CREN article-writing system.'),
     check('A1_REQUIRED_FIELDS', REQUIRED_FIELDS.every((field) => {
       const value = article[field];
       return Array.isArray(value) ? value.length > 0 : value && (typeof value !== 'object' || Object.keys(value).length > 0);
@@ -171,26 +205,40 @@ export function evaluateArticle(article) {
     check('A4_SOURCE_FLOOR', sources.length >= 2 && sourceDomains(sources).size >= 2
       && sources.some((source) => source.type === 'PRIMARY') && validSourceRecords,
     'Use two independent fetched sources, including one primary record or direct source.'),
+    check('A4B_READER_VISIBLE_SOURCES', visiblyCitedSources.length >= 2 && visibleSourceDomains.size >= 2,
+      'Link at least two independent source-ledger records in the article body so readers can inspect the evidence.'),
     check('A5_CLAIM_TRACEABILITY', claims.length > 0 && allClaimSourcesExist,
       'Every claim-ledger entry must occur in the body and map to valid source IDs.'),
     check('A6_NUMBER_TRACEABILITY', materialSentences.length === 0 || allMaterialClaimsMapped,
-      'Every material sentence containing a number, date, amount, or percentage must be in the claim ledger.'),
+      'Every material sentence containing a number, date, amount, or percentage must be in the claim ledger.',
+      unmappedMaterialClaims.length ? { unmapped: unmappedMaterialClaims } : undefined),
     check('A7_ENTITY_VERIFICATION', entities.length > 0 && allEntitySourcesExist,
       'Named entities must be recorded with valid source IDs.'),
     check('A8_QUOTE_INTEGRITY', !/[“"][^”"]+[”"]/.test(body)
       || claims.some((claim) => claim.kind === 'QUOTE' && claim.exact_support && wordCount(claim.exact_support) <= 25),
-    'Direct quotations require an exact, source-mapped excerpt of no more than 25 words.'),
+    'Direct quotations require an exact, source-mapped excerpt of no more than 25 words.',
+    /[“"][^”"]+[”"]/.test(body) ? { quoted_text_detected: true } : undefined),
     check('A9_TIME_AND_STATUS_LABELS', statusSentences.length === 0 || allStatusClaimsMapped,
-      'Proposal, filing, approval, construction, completion, and sale statuses must be dated claims.'),
+      'Proposal, filing, approval, construction, completion, and sale statuses must be dated claims.',
+      unmappedStatusClaims.length ? { unmapped: unmappedStatusClaims } : undefined),
     check('A10_HYPE_AND_PRESSURE_BLOCKLIST', !HYPE_PATTERNS.some((pattern) => pattern.test(`${article.title} ${article.excerpt} ${body}`)),
       'Promissory, pressure, and unsupported superlative language is prohibited.'),
     check('A11_FAIR_BALANCE', !PROMOTIONAL_PATTERNS.some((pattern) => pattern.test(body))
       && !/what this means for .*\b(?:buyers|sellers|investors|operators)\b/i.test(body),
     'CREN reporting cannot contain promotional CTAs or unsupported transaction/investment advice.'),
+    check('A12_PUBLICATION_READY_COPY', bodyWords >= 350 && !hasRawCitationTokens,
+      'Publishable articles need at least 350 words of supported reporting and cannot expose raw citation tokens.'),
     check('A13_SEO_METADATA', titleLength >= 45 && titleLength <= 75 && metaLength >= 140 && metaLength <= 165
       && keyword && keywordDensity <= 0.008
       && `${article.title} ${article.excerpt} ${plainText(body).split(/\s+/).slice(0, 120).join(' ')}`.toLowerCase().includes(keyword),
-    'Title, meta description, and primary keyword must meet the restrained SEO limits.'),
+    'Title, meta description, and primary keyword must meet the restrained SEO limits.', {
+      title_length: titleLength,
+      meta_length: metaLength,
+      keyword,
+      keyword_density: Number(keywordDensity.toFixed(4)),
+      keyword_in_opening: Boolean(keyword
+        && `${article.title} ${article.excerpt} ${plainText(body).split(/\s+/).slice(0, 120).join(' ')}`.toLowerCase().includes(keyword)),
+    }),
     check('A14_WEB_STRUCTURE', !/<\/?[a-z][^>]*>/i.test(body) && h2s.length >= 3 && h2s.length <= 7
       && !h2s.some((heading) => /^(introduction|background|conclusion|more information)$/i.test(heading))
       && paragraphs.every((paragraph) => paragraph.startsWith('## ') || wordCount(plainText(paragraph)) <= 120),
@@ -199,8 +247,7 @@ export function evaluateArticle(article) {
       && Array.isArray(article.image_brief?.story_anchors) && article.image_brief.story_anchors.length >= 2
       && article.image_brief?.source_asset_considered === true
       && Boolean(article.image_provenance?.type) && Boolean(imageCaption)
-      && (!imageAi || (/AI-generated illustration/i.test(imageCaption)
-        && !/\b(?:photo|photograph|photographic|photorealistic)\b/i.test(aiImageRequest))),
+      && (!imageAi || /AI-generated (?:editorial )?(?:illustration|visualization|image)/i.test(imageCaption)),
     'The brief needs an editorial idea, two story anchors, source-asset consideration, and truthful AI disclosure.'),
   ];
 
@@ -217,6 +264,6 @@ export function evaluateArticle(article) {
 
 export function formatQualityReport(report) {
   return report.checks
-    .map((item) => `${item.passed ? 'PASS' : 'FAIL'} ${item.id}: ${item.message}`)
+    .map((item) => `${item.passed ? 'PASS' : 'FAIL'} ${item.id}: ${item.message}${item.details ? ` ${JSON.stringify(item.details)}` : ''}`)
     .join('\n');
 }

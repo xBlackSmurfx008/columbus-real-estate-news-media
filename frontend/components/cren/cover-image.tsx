@@ -1,4 +1,14 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { displayArticleImageUrl } from "@/lib/article-image";
+
+function placeholderHue(value: string) {
+  let hash = 0;
+  for (const character of value) hash = (hash * 31 + character.charCodeAt(0)) % 360;
+  return hash;
+}
 
 // Optimized cover image for a fixed-aspect container. The PARENT must be
 // position:relative with a defined size (aspect-ratio or height). Uses
@@ -14,14 +24,35 @@ export function CoverImage({
   sizes?: string;
   priority?: boolean;
 }) {
+  const [currentSrc, setCurrentSrc] = useState(() => displayArticleImageUrl(src));
+
+  useEffect(() => {
+    setCurrentSrc(displayArticleImageUrl(src));
+  }, [src]);
+
+  if (!currentSrc) {
+    const hue = placeholderHue(alt);
+    return (
+      <div
+        role="img"
+        aria-label={`${alt} — image unavailable`}
+        className="absolute inset-0 flex items-end p-4 text-xs font-semibold uppercase tracking-[0.18em] text-white"
+        style={{ background: `linear-gradient(135deg, hsl(${hue} 28% 24%), hsl(${(hue + 42) % 360} 35% 42%))` }}
+      >
+        CREN · Image unavailable
+      </div>
+    );
+  }
+
   return (
     <Image
-      src={src}
+      src={currentSrc}
       alt={alt}
       fill
       sizes={sizes}
       priority={priority}
       className="object-cover"
+      onError={() => setCurrentSrc(null)}
     />
   );
 }

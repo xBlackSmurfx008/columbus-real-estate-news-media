@@ -3,6 +3,7 @@
   "title": "CREN staged article submission",
   "type": "object",
   "required": [
+    "prompt_version",
     "title",
     "category",
     "author",
@@ -24,12 +25,13 @@
     "image_provenance"
   ],
   "properties": {
+    "prompt_version": { "const": "cren-article-v1.0.0" },
     "title": { "type": "string", "minLength": 45, "maxLength": 75 },
     "category": { "type": "string" },
     "author": { "type": "string" },
     "date": { "type": "string" },
     "excerpt": { "type": "string", "minLength": 140, "maxLength": 165 },
-    "body": { "type": "string", "description": "Markdown only. The first paragraph must exactly equal answer_summary." },
+    "body": { "type": "string", "minLength": 1800, "description": "Publication-ready Markdown of at least 350 words. The first paragraph must exactly equal answer_summary, at least two independent ledger sources must be linked inline, and raw citation tokens are prohibited." },
     "answer_summary": { "type": "string", "description": "30–60 words and no more than two sentences." },
     "primary_keyword": { "type": "string" },
     "meta_description": { "type": "string", "minLength": 140, "maxLength": 165 },
@@ -66,7 +68,7 @@
         "required": ["id", "type", "url", "publisher", "title", "fetched_at", "http_status"],
         "properties": {
           "id": { "type": "string" },
-          "type": { "enum": ["PRIMARY", "SECONDARY"] },
+          "type": { "enum": ["PRIMARY", "SECONDARY"], "description": "PRIMARY means the originating record, dataset, filing, direct interview, or first-party statement about the issuer's own action. Journalism, trade coverage, broker blogs, aggregators, and rewritten announcements are SECONDARY." },
           "url": { "type": "string", "format": "uri" },
           "publisher": { "type": "string" },
           "title": { "type": "string" },

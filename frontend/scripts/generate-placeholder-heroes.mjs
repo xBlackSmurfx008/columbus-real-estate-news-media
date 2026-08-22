@@ -53,6 +53,23 @@ for (const article of missing) {
     continue;
   }
   const hosted = await hostPlaceholderCard(article);
+  // A bundle-relative /images/heroes/ path only resolves after a deploy. The
+  // daily cloud routine cannot deploy, so writing one to image_url guarantees a
+  // reader-visible 404 and pushes the article onto the shared fallback photo -
+  // which is what made four live articles show the same image in August 2026.
+  // Write the card file for the next deploy, but never point a live article at
+  // a URL that does not resolve yet. Imageless is recoverable; broken is not.
+  if (hosted.deployNeeded) {
+    results.push({
+      id: article.id,
+      url: hosted.url,
+      deployNeeded: true,
+      bytes: hosted.bytes,
+      databaseUpdated: false,
+      skippedReason: "NON_DURABLE_URL_NOT_PERSISTED",
+    });
+    continue;
+  }
   await sql`
     UPDATE articles
     SET image_url = ${hosted.url},
@@ -61,15 +78,24 @@ for (const article of missing) {
         updated_at = NOW()
     WHERE id = ${article.id} AND image_url IS NULL
   `;
-  results.push({ id: article.id, url: hosted.url, deployNeeded: hosted.deployNeeded, bytes: hosted.bytes });
+  results.push({ id: article.id, url: hosted.url, deployNeeded: false, bytes: hosted.bytes, databaseUpdated: true });
 }
 
 const deployNeeded = results.some((r) => r.deployNeeded);
+const unpersisted = results.filter((r) => r.databaseUpdated === false).length;
 console.log(JSON.stringify({
   ok: true,
   generated: results.length,
+  attached: results.filter((r) => r.databaseUpdated === true).length,
+  unpersisted,
   dryRun,
   deployNeeded,
-  ...(deployNeeded ? { warning: "cards serve only after the next deploy — commit frontend/public/images/heroes/ and deploy now" } : {}),
+  ...(deployNeeded
+    ? {
+      warning:
+        `${unpersisted} card(s) written to frontend/public/images/heroes/ but NOT attached, because the path only resolves after a deploy. `
+        + 'Those articles are still imageless by design. To attach a hero now, run with BLOB_READ_WRITE_TOKEN set so the card is uploaded to durable storage.',
+    }
+    : {}),
   articles: results,
 }, null, 2));

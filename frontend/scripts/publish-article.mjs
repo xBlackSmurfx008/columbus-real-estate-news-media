@@ -223,8 +223,9 @@ if (!row.image_url) {
     console.log(`Hero placeholder attached: ${hosted.url}`);
   } else {
     console.warn(
-      "WARNING: article published without a hero and BLOB_READ_WRITE_TOKEN is not set. "
-      + "Run scripts/generate-placeholder-heroes.mjs with blob credentials (or --allow-deploy-lag plus a deploy) immediately — no live article may stay imageless."
+      "WARNING: article published without a hero and BLOB_READ_WRITE_TOKEN is not set, so no hero can be attached from this session. "
+      + "Do NOT work around this with --allow-deploy-lag: it writes a /images/heroes/ path that 404s until the next deploy, and a broken hero is worse than none. "
+      + "Set BLOB_READ_WRITE_TOKEN in this environment and re-run scripts/generate-placeholder-heroes.mjs, or leave the article imageless for the durable image job to fill."
     );
   }
 }

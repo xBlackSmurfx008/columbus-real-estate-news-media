@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFile } from "node:fs/promises";
 import { articleLiveUrl, buildHeroPrompt, normalizeIllustrationRequest, selectMissingArticles } from "../scripts/image-pipeline-lib.mjs";
 import { buildImageBackfillPlist } from "../scripts/image-launch-agent-lib.mjs";
 import { easternDate } from "../scripts/newsroom-health.mjs";
@@ -62,4 +63,32 @@ test("launch agent includes primary and catch-up attempts", () => {
 
 test("daily health keys use the Columbus calendar date", () => {
   assert.equal(easternDate(new Date("2026-08-10T03:30:00Z")), "2026-08-09");
+});
+
+test("a hero URL that only resolves after a deploy is never attached to a live article", async () => {
+  // Regression guard. In August 2026 the daily cloud routine ran
+  // generate-placeholder-heroes.mjs with --allow-deploy-lag, which wrote
+  // /images/heroes/<slug>.webp into image_url. The routine cannot deploy, so
+  // four live articles pointed at 404s and fell back to one shared stock photo,
+  // making distinct stories look like duplicates.
+  const source = await readFile(
+    new URL("../scripts/generate-placeholder-heroes.mjs", import.meta.url),
+    "utf8",
+  );
+
+  // The DB write must be guarded by the deployNeeded check, and the guard must
+  // come before the UPDATE.
+  const guardIndex = source.indexOf("if (hosted.deployNeeded)");
+  const updateIndex = source.indexOf("UPDATE articles");
+  assert.ok(guardIndex > 0, "expected a deployNeeded guard before persisting a hero URL");
+  assert.ok(updateIndex > guardIndex, "the deployNeeded guard must precede the UPDATE");
+  assert.match(source, /NON_DURABLE_URL_NOT_PERSISTED/);
+
+  // And nothing should still be advertising the escape hatch as a fix.
+  const publish = await readFile(
+    new URL("../scripts/publish-article.mjs", import.meta.url),
+    "utf8",
+  );
+  assert.doesNotMatch(publish, /--allow-deploy-lag plus a deploy/);
+  assert.match(publish, /Do NOT work around this with --allow-deploy-lag/);
 });

@@ -137,6 +137,17 @@ function snapshotArticles(): DbArticle[] {
   return Array.isArray(snapshot.articles) ? snapshot.articles : [];
 }
 
+// List-shaped consumers must never receive article bodies, exactly as their
+// database queries already guarantee with `NULL AS body`. The snapshot keeps
+// full bodies on purpose so getArticleById/getArticleBySlug can still render a
+// real article page during an outage - but /api/public is fetched by the site
+// header on every page load, and shipping 80 bodies through it is the transfer
+// pattern that exhausted the Neon plan quota on 2026-08-24. Without this the
+// fallback path silently undoes the query-level fix.
+function snapshotArticlesWithoutBodies(): DbArticle[] {
+  return snapshotArticles().map((article) => ({ ...article, body: null }));
+}
+
 function logDbFallback(where: string, error: unknown) {
   const message = error instanceof Error ? error.message : String(error);
   console.error(`[public-data] DB unavailable in ${where}; serving snapshot fallback: ${message}`);
@@ -183,7 +194,7 @@ export const getPublicData = cache(async (): Promise<PublicSiteData> => {
   } catch (error) {
     logDbFallback("getPublicData", error);
     return {
-      articles: snapshotArticles(),
+      articles: snapshotArticlesWithoutBodies(),
       ads: snapshot.ads ?? [],
       marketSnapshot: snapshot.marketSnapshot ?? [],
       heroStats: snapshot.heroStats ?? [],
@@ -258,7 +269,7 @@ export const getArticles = cache(async (): Promise<DbArticle[]> => {
     return rows as unknown as DbArticle[];
   } catch (error) {
     logDbFallback("getArticles", error);
-    return snapshotArticles();
+    return snapshotArticlesWithoutBodies();
   }
 });
 

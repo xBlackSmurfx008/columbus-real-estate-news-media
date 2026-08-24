@@ -1,0 +1,15 @@
+{
+  "_meta": {
+    "generated_at": null,
+    "note": "Last-known-good public content, served when the database is unreachable. Refresh with: node scripts/export-content-snapshot.mjs (requires DATABASE_URL). Never edit articles here by hand — this file only ever mirrors what was live in the database."
+  },
+  "articles": [],
+  "ads": [],
+  "marketSnapshot": [],
+  "heroStats": [],
+  "neighborhoods": [],
+  "tickers": [],
+  "interviews": [],
+  "testimonials": [],
+  "settings": {}
+}

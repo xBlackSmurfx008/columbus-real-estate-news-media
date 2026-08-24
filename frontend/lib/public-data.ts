@@ -1,7 +1,24 @@
+import { cache } from "react";
 import { getDb } from "@/lib/db";
+import snapshotJson from "@/content/snapshot/public-data.json";
 
 // ============================================================
 // Server-side data fetching for public pages
+//
+// Two operating rules, learned from the 2026-08-24 outage:
+//
+// 1. Never let a database failure blank the site. Every public
+//    getter falls back to the committed last-known-good snapshot
+//    (content/snapshot/public-data.json, refreshed by
+//    scripts/export-content-snapshot.mjs whenever the DB is
+//    healthy). ISR previously cached the empty error-state as if
+//    it were real content.
+//
+// 2. Never pull article bodies for list views. Bodies are the
+//    bulk of the table; list queries select every column except
+//    body, and slug resolution matches on id+title only before
+//    fetching the single article it needs. This keeps Neon data
+//    transfer inside plan limits.
 // ============================================================
 
 export interface DbArticle {
@@ -114,73 +131,112 @@ export interface PublicSiteData {
   settings: Record<string, string>;
 }
 
-/** Fetch all public content from NeonDB — used in server components */
-export async function getPublicData(): Promise<PublicSiteData> {
-  const sql = getDb();
+const snapshot = snapshotJson as unknown as PublicSiteData;
 
-  const [articles, ads, marketSnapshot, heroStats, neighborhoods, tickers, interviews, testimonials, settingsRows] =
-    await Promise.all([
-      // Card/list views never render the article body; selecting it here meant
-      // every homepage revalidation transferred every live article in full.
-      sql`SELECT id, status, featured, category, category_class, icon, title, excerpt,
-                 author, date, read_time, area_slug, topic_slug, tags, image_url,
-                 image_alt, image_caption, meta_description, fact_checked_at,
-                 created_at, updated_at
-          FROM articles WHERE status = 'live' ORDER BY created_at DESC`,
-      sql`SELECT * FROM ads WHERE status = 'live' ORDER BY created_at DESC`,
-      sql`SELECT * FROM market_snapshot ORDER BY sort_order ASC`,
-      sql`SELECT * FROM hero_stats ORDER BY sort_order ASC`,
-      sql`SELECT * FROM neighborhoods ORDER BY sort_order ASC`,
-      sql`SELECT * FROM ticker_items WHERE active = true ORDER BY sort_order ASC`,
-      sql`SELECT * FROM interviews ORDER BY sort_order ASC`,
-      sql`SELECT * FROM testimonials ORDER BY sort_order ASC`,
-      sql`SELECT key, value FROM settings`,
-    ]);
-
-  const settings: Record<string, string> = {};
-  for (const row of settingsRows) {
-    settings[row.key] = row.value;
-  }
-
-  return {
-    articles: articles as unknown as DbArticle[],
-    ads: ads as unknown as DbAd[],
-    marketSnapshot: marketSnapshot as unknown as DbMarketSnapshot[],
-    heroStats: heroStats as unknown as DbHeroStat[],
-    neighborhoods: neighborhoods as unknown as DbNeighborhood[],
-    tickers: tickers as unknown as DbTicker[],
-    interviews: interviews as unknown as DbInterview[],
-    testimonials: testimonials as unknown as DbTestimonial[],
-    settings,
-  };
+function snapshotArticles(): DbArticle[] {
+  return Array.isArray(snapshot.articles) ? snapshot.articles : [];
 }
+
+function logDbFallback(where: string, error: unknown) {
+  const message = error instanceof Error ? error.message : String(error);
+  console.error(`[public-data] DB unavailable in ${where}; serving snapshot fallback: ${message}`);
+}
+
+/** Fetch all public content from NeonDB — used in server components.
+ *  Article bodies are NOT included (list contexts never render them). */
+export const getPublicData = cache(async (): Promise<PublicSiteData> => {
+  try {
+    const sql = getDb();
+
+    const [articles, ads, marketSnapshot, heroStats, neighborhoods, tickers, interviews, testimonials, settingsRows] =
+      await Promise.all([
+        sql`SELECT id, status, featured, category, category_class, icon, title, excerpt, NULL AS body,
+                   author, date, read_time, area_slug, topic_slug, tags, image_url, image_alt,
+                   image_caption, meta_description, fact_checked_at, created_at, updated_at
+            FROM articles WHERE status = 'live' ORDER BY created_at DESC`,
+        sql`SELECT * FROM ads WHERE status = 'live' ORDER BY created_at DESC`,
+        sql`SELECT * FROM market_snapshot ORDER BY sort_order ASC`,
+        sql`SELECT * FROM hero_stats ORDER BY sort_order ASC`,
+        sql`SELECT * FROM neighborhoods ORDER BY sort_order ASC`,
+        sql`SELECT * FROM ticker_items WHERE active = true ORDER BY sort_order ASC`,
+        sql`SELECT * FROM interviews ORDER BY sort_order ASC`,
+        sql`SELECT * FROM testimonials ORDER BY sort_order ASC`,
+        sql`SELECT key, value FROM settings`,
+      ]);
+
+    const settings: Record<string, string> = {};
+    for (const row of settingsRows) {
+      settings[row.key] = row.value;
+    }
+
+    return {
+      articles: articles as unknown as DbArticle[],
+      ads: ads as unknown as DbAd[],
+      marketSnapshot: marketSnapshot as unknown as DbMarketSnapshot[],
+      heroStats: heroStats as unknown as DbHeroStat[],
+      neighborhoods: neighborhoods as unknown as DbNeighborhood[],
+      tickers: tickers as unknown as DbTicker[],
+      interviews: interviews as unknown as DbInterview[],
+      testimonials: testimonials as unknown as DbTestimonial[],
+      settings,
+    };
+  } catch (error) {
+    logDbFallback("getPublicData", error);
+    return {
+      articles: snapshotArticles(),
+      ads: snapshot.ads ?? [],
+      marketSnapshot: snapshot.marketSnapshot ?? [],
+      heroStats: snapshot.heroStats ?? [],
+      neighborhoods: snapshot.neighborhoods ?? [],
+      tickers: snapshot.tickers ?? [],
+      interviews: snapshot.interviews ?? [],
+      testimonials: snapshot.testimonials ?? [],
+      settings: snapshot.settings ?? {},
+    };
+  }
+});
 
 /** Fetch a single article by ID */
-export async function getArticleById(id: string): Promise<DbArticle | null> {
-  const sql = getDb();
-  const rows = await sql`SELECT * FROM articles WHERE id = ${id} AND status = 'live'`;
-  if (rows.length === 0) return null;
-  return rows[0] as unknown as DbArticle;
-}
+export const getArticleById = cache(async (id: string): Promise<DbArticle | null> => {
+  try {
+    const sql = getDb();
+    const rows = await sql`SELECT * FROM articles WHERE id = ${id} AND status = 'live'`;
+    if (rows.length === 0) return null;
+    return rows[0] as unknown as DbArticle;
+  } catch (error) {
+    logDbFallback("getArticleById", error);
+    return snapshotArticles().find((a) => a.id === id) ?? null;
+  }
+});
 
-/** Fetch a single article by slug (generated from title) */
-export async function getArticleBySlug(slug: string): Promise<DbArticle | null> {
-  const sql = getDb();
-  // First try direct ID match
-  const byId = await sql`SELECT * FROM articles WHERE id = ${slug} AND status = 'live'`;
-  if (byId.length > 0) return byId[0] as unknown as DbArticle;
+/** Fetch a single article by slug (generated from title).
+ *  Resolves the slug against id+title only, then fetches the one
+ *  matching row — never the whole table with bodies. */
+export const getArticleBySlug = cache(async (slug: string): Promise<DbArticle | null> => {
+  try {
+    const sql = getDb();
+    // First try direct ID match
+    const byId = await sql`SELECT * FROM articles WHERE id = ${slug} AND status = 'live'`;
+    if (byId.length > 0) return byId[0] as unknown as DbArticle;
 
-  // Otherwise resolve the slug against titles only. Article ids carry a date
-  // prefix the public URL does not, so the id match above misses on every
-  // normal /blog/<slug> request and this path is the one that actually runs.
-  // Select just id+title here: pulling whole rows meant every article render
-  // transferred every live article's full body out of the database.
-  const candidates = await sql`SELECT id, title FROM articles WHERE status = 'live'`;
-  const match = (candidates as unknown as Pick<DbArticle, "id" | "title">[]).find(
-    (a) => generateSlug(a.title) === slug
-  );
-  return match ? getArticleById(match.id) : null;
-}
+    // Otherwise resolve the slug from titles alone, then fetch that one article
+    const titles = await sql`SELECT id, title FROM articles WHERE status = 'live'`;
+    const match = (titles as unknown as Array<{ id: string; title: string }>).find(
+      (a) => generateSlug(a.title) === slug
+    );
+    if (!match) return null;
+    const rows = await sql`SELECT * FROM articles WHERE id = ${match.id} AND status = 'live'`;
+    return (rows[0] as unknown as DbArticle) ?? null;
+  } catch (error) {
+    logDbFallback("getArticleBySlug", error);
+    const articles = snapshotArticles();
+    return (
+      articles.find((a) => a.id === slug) ??
+      articles.find((a) => generateSlug(a.title) === slug) ??
+      null
+    );
+  }
+});
 
 /** Generate a URL-friendly slug from a title */
 export function generateSlug(title: string): string {
@@ -191,33 +247,41 @@ export function generateSlug(title: string): string {
     .substring(0, 80);
 }
 
-/**
- * Get only articles (for blog pages).
- *
- * Feeds card/list views only, so `body` is deliberately not selected — callers
- * that need the full text go through getArticleById/getArticleBySlug.
- */
-export async function getArticles(): Promise<DbArticle[]> {
-  const sql = getDb();
-  const rows = await sql`SELECT id, status, featured, category, category_class, icon, title, excerpt,
-                                author, date, read_time, area_slug, topic_slug, tags, image_url,
-                                image_alt, image_caption, meta_description, fact_checked_at,
-                                created_at, updated_at
-                         FROM articles WHERE status = 'live' ORDER BY created_at DESC`;
-  return rows as unknown as DbArticle[];
-}
+/** Get only articles (for blog pages) — no bodies */
+export const getArticles = cache(async (): Promise<DbArticle[]> => {
+  try {
+    const sql = getDb();
+    const rows = await sql`SELECT id, status, featured, category, category_class, icon, title, excerpt, NULL AS body,
+                                  author, date, read_time, area_slug, topic_slug, tags, image_url, image_alt,
+                                  image_caption, meta_description, fact_checked_at, created_at, updated_at
+                           FROM articles WHERE status = 'live' ORDER BY created_at DESC`;
+    return rows as unknown as DbArticle[];
+  } catch (error) {
+    logDbFallback("getArticles", error);
+    return snapshotArticles();
+  }
+});
 
 /** Get market data for display */
-export async function getMarketData() {
-  const sql = getDb();
-  const [snapshot, heroStats, neighborhoods] = await Promise.all([
-    sql`SELECT * FROM market_snapshot ORDER BY sort_order ASC`,
-    sql`SELECT * FROM hero_stats ORDER BY sort_order ASC`,
-    sql`SELECT * FROM neighborhoods ORDER BY sort_order ASC`,
-  ]);
-  return {
-    snapshot: snapshot as unknown as DbMarketSnapshot[],
-    heroStats: heroStats as unknown as DbHeroStat[],
-    neighborhoods: neighborhoods as unknown as DbNeighborhood[],
-  };
-}
+export const getMarketData = cache(async () => {
+  try {
+    const sql = getDb();
+    const [snapshotRows, heroStats, neighborhoods] = await Promise.all([
+      sql`SELECT * FROM market_snapshot ORDER BY sort_order ASC`,
+      sql`SELECT * FROM hero_stats ORDER BY sort_order ASC`,
+      sql`SELECT * FROM neighborhoods ORDER BY sort_order ASC`,
+    ]);
+    return {
+      snapshot: snapshotRows as unknown as DbMarketSnapshot[],
+      heroStats: heroStats as unknown as DbHeroStat[],
+      neighborhoods: neighborhoods as unknown as DbNeighborhood[],
+    };
+  } catch (error) {
+    logDbFallback("getMarketData", error);
+    return {
+      snapshot: snapshot.marketSnapshot ?? [],
+      heroStats: snapshot.heroStats ?? [],
+      neighborhoods: snapshot.neighborhoods ?? [],
+    };
+  }
+});

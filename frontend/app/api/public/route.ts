@@ -1,69 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/lib/db";
+import { NextResponse } from "next/server";
+import { getPublicData } from "@/lib/public-data";
 
-export async function GET(request: NextRequest) {
-  try {
-    const sql = getDb();
-
-    // Fetch all public data
-    const articles = await sql`
-      SELECT * FROM articles WHERE status = 'live' ORDER BY created_at DESC
-    `;
-
-    const ads = await sql`
-      SELECT * FROM ads WHERE status = 'live' ORDER BY created_at DESC
-    `;
-
-    const marketSnapshot = await sql`
-      SELECT * FROM market_snapshot ORDER BY sort_order ASC
-    `;
-
-    const heroStats = await sql`
-      SELECT * FROM hero_stats ORDER BY sort_order ASC
-    `;
-
-    const neighborhoods = await sql`
-      SELECT * FROM neighborhoods ORDER BY sort_order ASC
-    `;
-
-    const tickers = await sql`
-      SELECT * FROM ticker_items WHERE active = true ORDER BY sort_order ASC
-    `;
-
-    const interviews = await sql`
-      SELECT * FROM interviews ORDER BY sort_order ASC
-    `;
-
-    const testimonials = await sql`
-      SELECT * FROM testimonials ORDER BY sort_order ASC
-    `;
-
-    const settingsRows = await sql`SELECT key, value FROM settings`;
-    const settings: Record<string, string> = {};
-    for (const row of settingsRows) {
-      settings[row.key] = row.value;
-    }
-
-    return NextResponse.json(
-      {
-        articles,
-        ads,
-        marketSnapshot,
-        heroStats,
-        neighborhoods,
-        tickers,
-        interviews,
-        testimonials,
-        settings,
-      },
-      {
-        headers: {
-          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
-        },
-      }
-    );
-  } catch (error) {
-    const err = error instanceof Error ? error.message : String(error);
-    return NextResponse.json({ error: err }, { status: 500 });
-  }
+// Public content JSON. Served through the resilient data layer:
+// article bodies are omitted (no consumer of this endpoint renders
+// them) and a database outage returns the last-known-good snapshot
+// instead of a 500 — both keep Neon data transfer inside plan limits.
+export async function GET() {
+  const data = await getPublicData();
+  return NextResponse.json(data, {
+    headers: {
+      "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400",
+    },
+  });
 }

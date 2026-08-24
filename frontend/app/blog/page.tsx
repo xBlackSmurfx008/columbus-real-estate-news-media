@@ -109,7 +109,7 @@ export default async function BlogPage() {
           {articles.length === 0 && (
             <div className="cren-surface p-8 text-center">
               <p className="cren-body text-[color:var(--text-muted)]">
-                Articles are being loaded. Check back shortly.
+                Our article feed is temporarily unavailable. Check back soon.
               </p>
             </div>
           )}

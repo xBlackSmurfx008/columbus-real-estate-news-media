@@ -177,6 +177,7 @@ async function publishCandidate(articleId: string): Promise<{ published: boolean
   const [current] = await sql`
     SELECT
       a.*,
+      a.updated_at::text AS updated_at_exact,
       r.status AS review_status,
       r.submission,
       f.image_url AS fingerprint_image_url,
@@ -245,7 +246,7 @@ async function publishCandidate(articleId: string): Promise<{ published: boolean
       updated_at = NOW()
     WHERE id = ${articleId}
       AND status = 'draft'
-      AND updated_at = ${current.updated_at}
+      AND updated_at::text = ${current.updated_at_exact}
       AND image_url = ${imageUrl}
     RETURNING id
   `;

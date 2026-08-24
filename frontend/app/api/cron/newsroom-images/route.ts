@@ -6,8 +6,9 @@ export const dynamic = 'force-dynamic';
 export const maxDuration = 30;
 
 function isAuthorized(request: Request): boolean {
-  const secret = process.env.CRON_SECRET;
-  return Boolean(secret) && request.headers.get('authorization') === `Bearer ${secret}`;
+  const authorization = request.headers.get('authorization');
+  return [process.env.CRON_SECRET, process.env.NEWSROOM_CREN_TRIGGER_SECRET]
+    .some((secret) => Boolean(secret) && authorization === `Bearer ${secret}`);
 }
 
 export async function GET(request: Request) {

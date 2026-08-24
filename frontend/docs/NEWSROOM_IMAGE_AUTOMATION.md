@@ -46,3 +46,8 @@ will keep firing but the workflow exits before claiming a job.
 The existing subscription-backed `npm run newsroom:image-backfill` remains a temporary fallback while cloud billing is
 unavailable. It now uses the same durable URL and exact/perceptual duplicate policy. It must be retired only after the
 cloud path has completed and verified a real production image.
+
+The production schedule currently uses PooledInvestments' active Vercel Cron registry to call the same trigger with a
+separate `NEWSROOM_CREN_TRIGGER_SECRET`. This is a cloud-to-cloud start only; Pooled cannot select candidates, inspect
+CREN data, attach images, or publish. Direct CREN cron configuration remains in `vercel.json` for a future registry
+repair.

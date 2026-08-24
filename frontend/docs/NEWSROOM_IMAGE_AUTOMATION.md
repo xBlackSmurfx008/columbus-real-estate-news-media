@@ -10,7 +10,8 @@ for a non-public draft. An authenticated editor then approves the exact copy and
 2. The workflow selects at most two `draft` articles whose review job is `AWAITING_HUMAN_REVIEW` and whose image is
    missing or still a rejected local `/images/heroes/` path.
 3. AI Gateway generates a story-specific illustration with `openai/gpt-image-2`. Vercel OIDC supplies short-lived
-   authentication, so production does not store an OpenAI API key.
+   authentication. When Gateway billing is unavailable, an explicit `OPENAI_API_KEY` takes precedence over ambient
+   OIDC and uses `gpt-image-1` directly; an explicit `AI_GATEWAY_API_KEY` still has highest precedence.
 4. The workflow normalizes the output to 1600×900 WebP, computes SHA-256 and a 64-bit perceptual dHash, and rejects an
    exact or near duplicate of any stored article hero.
 5. The image is uploaded to public Vercel Blob and verified over HTTPS. The fingerprint is reserved before the draft is
@@ -24,7 +25,7 @@ for a non-public draft. An authenticated editor then approves the exact copy and
 
 The cloud path fails closed unless `CREN_CLOUD_IMAGES_ENABLED=true`. Keep it unset until an authenticated AI Gateway
 generation probe succeeds. Required production values are `DATABASE_URL`, `BLOB_READ_WRITE_TOKEN`, and `CRON_SECRET`;
-`VERCEL_OIDC_TOKEN` is supplied automatically by Vercel.
+`VERCEL_OIDC_TOKEN` is supplied automatically by Vercel. Direct fallback additionally requires `OPENAI_API_KEY`.
 
 Before enabling cloud images, run:
 

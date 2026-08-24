@@ -1,8 +1,13 @@
 import { generateImage } from 'ai';
+import OpenAI from 'openai';
 import { put, del } from '@vercel/blob';
 import { neon } from '@neondatabase/serverless';
 import sharp from 'sharp';
-import { buildCloudHeroPrompt, CREN_IMAGE_MODEL } from '@/lib/cloud-newsroom-image';
+import {
+  buildCloudHeroPrompt,
+  CREN_IMAGE_MODEL,
+  CREN_OPENAI_IMAGE_MODEL,
+} from '@/lib/cloud-newsroom-image';
 import {
   fingerprintArticleImageBytes,
   hammingDistance,
@@ -31,10 +36,46 @@ async function preflight(): Promise<{ ready: boolean; missing: string[] }> {
   'use step';
   const missing = ['DATABASE_URL', 'BLOB_READ_WRITE_TOKEN'].filter((name) => !process.env[name]);
   if (process.env.CREN_CLOUD_IMAGES_ENABLED !== 'true') missing.push('CREN_CLOUD_IMAGES_ENABLED=true');
-  if (!process.env.AI_GATEWAY_API_KEY && !process.env.VERCEL_OIDC_TOKEN) {
-    missing.push('AI_GATEWAY_API_KEY_OR_VERCEL_OIDC_TOKEN');
+  if (!process.env.AI_GATEWAY_API_KEY && !process.env.VERCEL_OIDC_TOKEN && !process.env.OPENAI_API_KEY) {
+    missing.push('AI_GATEWAY_API_KEY_OR_VERCEL_OIDC_TOKEN_OR_OPENAI_API_KEY');
   }
   return { ready: missing.length === 0, missing };
+}
+
+function usesGateway(): boolean {
+  return Boolean(
+    process.env.AI_GATEWAY_API_KEY
+    || (!process.env.OPENAI_API_KEY && process.env.VERCEL_OIDC_TOKEN),
+  );
+}
+
+function selectedImageModel(): string {
+  return usesGateway()
+    ? process.env.CREN_IMAGE_MODEL ?? CREN_IMAGE_MODEL
+    : process.env.CREN_OPENAI_IMAGE_MODEL ?? CREN_OPENAI_IMAGE_MODEL;
+}
+
+async function generateCloudImage(prompt: string): Promise<Uint8Array> {
+  if (usesGateway()) {
+    const generated = await generateImage({
+      model: selectedImageModel(),
+      prompt,
+      size: '1536x1024',
+      n: 1,
+    });
+    return generated.image.uint8Array;
+  }
+
+  if (!process.env.OPENAI_API_KEY) throw new Error('CLOUD_AI_CREDENTIAL_NOT_CONFIGURED');
+  const response = await new OpenAI({ apiKey: process.env.OPENAI_API_KEY }).images.generate({
+    model: selectedImageModel(),
+    prompt,
+    size: '1536x1024',
+    n: 1,
+  });
+  const encoded = response.data?.[0]?.b64_json;
+  if (!encoded) throw new Error('IMAGE_PROVIDER_EMPTY_RESPONSE');
+  return new Uint8Array(Buffer.from(encoded, 'base64'));
 }
 
 async function selectCandidates(): Promise<Candidate[]> {
@@ -103,9 +144,10 @@ async function processCandidate(candidate: Candidate): Promise<{ attached: boole
       areaSlug: current.area_slug,
       imageBrief,
     });
+    const model = selectedImageModel();
     await sql`
       INSERT INTO article_image_jobs (article_id, status, prompt, model, attempts, started_at, updated_at)
-      VALUES (${candidate.articleId}, 'GENERATING', ${prompt}, ${CREN_IMAGE_MODEL}, 1, NOW(), NOW())
+      VALUES (${candidate.articleId}, 'GENERATING', ${prompt}, ${model}, 1, NOW(), NOW())
       ON CONFLICT (article_id) DO UPDATE SET
         status = 'GENERATING',
         prompt = EXCLUDED.prompt,
@@ -116,13 +158,8 @@ async function processCandidate(candidate: Candidate): Promise<{ attached: boole
         updated_at = NOW()
     `;
 
-    const generated = await generateImage({
-      model: CREN_IMAGE_MODEL,
-      prompt,
-      size: '1536x1024',
-      n: 1,
-    });
-    const normalized = await sharp(Buffer.from(generated.image.uint8Array))
+    const generated = await generateCloudImage(prompt);
+    const normalized = await sharp(Buffer.from(generated))
       .rotate()
       .resize(1600, 900, { fit: 'cover', position: 'attention' })
       .webp({ quality: 86, effort: 5 })

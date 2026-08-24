@@ -1,4 +1,5 @@
 export const CREN_IMAGE_MODEL = process.env.CREN_IMAGE_MODEL ?? 'openai/gpt-image-2';
+export const CREN_OPENAI_IMAGE_MODEL = process.env.CREN_OPENAI_IMAGE_MODEL ?? 'gpt-image-1';
 
 type ImageBrief = {
   primary_request?: string;

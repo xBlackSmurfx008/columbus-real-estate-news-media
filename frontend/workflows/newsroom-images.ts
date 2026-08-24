@@ -1,5 +1,6 @@
 import { generateImage } from 'ai';
 import OpenAI from 'openai';
+import { getVercelOidcToken } from '@vercel/oidc';
 import { put, del } from '@vercel/blob';
 import { neon } from '@neondatabase/serverless';
 import sharp from 'sharp';
@@ -36,17 +37,26 @@ async function preflight(): Promise<{ ready: boolean; missing: string[] }> {
   'use step';
   const missing = ['DATABASE_URL', 'BLOB_READ_WRITE_TOKEN'].filter((name) => !process.env[name]);
   if (process.env.CREN_CLOUD_IMAGES_ENABLED !== 'true') missing.push('CREN_CLOUD_IMAGES_ENABLED=true');
-  if (!process.env.AI_GATEWAY_API_KEY && !process.env.VERCEL_OIDC_TOKEN && !process.env.OPENAI_API_KEY) {
+  let hasImageCredential = Boolean(
+    process.env.AI_GATEWAY_API_KEY
+    || process.env.VERCEL_OIDC_TOKEN
+    || process.env.OPENAI_API_KEY,
+  );
+  if (!hasImageCredential) {
+    try {
+      hasImageCredential = Boolean(await getVercelOidcToken());
+    } catch {
+      hasImageCredential = false;
+    }
+  }
+  if (!hasImageCredential) {
     missing.push('AI_GATEWAY_API_KEY_OR_VERCEL_OIDC_TOKEN_OR_OPENAI_API_KEY');
   }
   return { ready: missing.length === 0, missing };
 }
 
 function usesGateway(): boolean {
-  return Boolean(
-    process.env.AI_GATEWAY_API_KEY
-    || (!process.env.OPENAI_API_KEY && process.env.VERCEL_OIDC_TOKEN),
-  );
+  return Boolean(process.env.AI_GATEWAY_API_KEY || !process.env.OPENAI_API_KEY);
 }
 
 function selectedImageModel(): string {
@@ -110,7 +120,8 @@ async function selectCandidates(): Promise<Candidate[]> {
     FROM articles a
     JOIN editorial_review_jobs r ON r.article_id = a.id
     LEFT JOIN article_image_jobs j ON j.article_id = a.id
-    WHERE a.status = 'live'
+    WHERE a.status IN ('draft', 'live')
+      AND r.status = 'AWAITING_HUMAN_REVIEW'
       AND (a.image_url IS NULL OR a.image_url LIKE '/images/heroes/%' OR a.image_url LIKE '%/placeholder-%')
       AND (j.status IS NULL OR j.status IN ('PENDING', 'FAILED', 'READY_FOR_REVIEW'))
     ORDER BY a.created_at ASC
@@ -132,7 +143,9 @@ async function processCandidate(candidate: Candidate): Promise<{ attached: boole
       JOIN editorial_review_jobs r ON r.article_id = a.id
       WHERE a.id = ${candidate.articleId}
     `;
-    if (!current || current.status !== 'live') return { attached: false, reason: 'ARTICLE_NOT_LIVE' };
+    if (!current || !['draft', 'live'].includes(current.status)) {
+      return { attached: false, reason: 'ARTICLE_NOT_ELIGIBLE' };
+    }
     const currentImage = String(current.image_url ?? '');
     if (currentImage && !currentImage.startsWith('/images/heroes/') && !currentImage.includes('/placeholder-')) {
       return { attached: false, reason: 'IMAGE_ALREADY_ATTACHED' };
@@ -207,7 +220,7 @@ async function processCandidate(candidate: Candidate): Promise<{ attached: boole
       UPDATE articles
       SET image_url = ${blob.url}, updated_at = NOW()
       WHERE id = ${candidate.articleId}
-        AND status = 'live'
+        AND status = ${current.status}
         AND (image_url IS NULL OR image_url LIKE '/images/heroes/%' OR image_url LIKE '%/placeholder-%')
       RETURNING id
     `;

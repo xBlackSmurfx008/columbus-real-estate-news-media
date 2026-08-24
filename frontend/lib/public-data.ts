@@ -120,7 +120,13 @@ export async function getPublicData(): Promise<PublicSiteData> {
 
   const [articles, ads, marketSnapshot, heroStats, neighborhoods, tickers, interviews, testimonials, settingsRows] =
     await Promise.all([
-      sql`SELECT * FROM articles WHERE status = 'live' ORDER BY created_at DESC`,
+      // Card/list views never render the article body; selecting it here meant
+      // every homepage revalidation transferred every live article in full.
+      sql`SELECT id, status, featured, category, category_class, icon, title, excerpt,
+                 author, date, read_time, area_slug, topic_slug, tags, image_url,
+                 image_alt, image_caption, meta_description, fact_checked_at,
+                 created_at, updated_at
+          FROM articles WHERE status = 'live' ORDER BY created_at DESC`,
       sql`SELECT * FROM ads WHERE status = 'live' ORDER BY created_at DESC`,
       sql`SELECT * FROM market_snapshot ORDER BY sort_order ASC`,
       sql`SELECT * FROM hero_stats ORDER BY sort_order ASC`,
@@ -164,12 +170,16 @@ export async function getArticleBySlug(slug: string): Promise<DbArticle | null> 
   const byId = await sql`SELECT * FROM articles WHERE id = ${slug} AND status = 'live'`;
   if (byId.length > 0) return byId[0] as unknown as DbArticle;
 
-  // Otherwise fetch all and match slug
-  const all = await sql`SELECT * FROM articles WHERE status = 'live'`;
-  const match = (all as unknown as DbArticle[]).find(
+  // Otherwise resolve the slug against titles only. Article ids carry a date
+  // prefix the public URL does not, so the id match above misses on every
+  // normal /blog/<slug> request and this path is the one that actually runs.
+  // Select just id+title here: pulling whole rows meant every article render
+  // transferred every live article's full body out of the database.
+  const candidates = await sql`SELECT id, title FROM articles WHERE status = 'live'`;
+  const match = (candidates as unknown as Pick<DbArticle, "id" | "title">[]).find(
     (a) => generateSlug(a.title) === slug
   );
-  return match ?? null;
+  return match ? getArticleById(match.id) : null;
 }
 
 /** Generate a URL-friendly slug from a title */
@@ -181,10 +191,19 @@ export function generateSlug(title: string): string {
     .substring(0, 80);
 }
 
-/** Get only articles (for blog pages) */
+/**
+ * Get only articles (for blog pages).
+ *
+ * Feeds card/list views only, so `body` is deliberately not selected — callers
+ * that need the full text go through getArticleById/getArticleBySlug.
+ */
 export async function getArticles(): Promise<DbArticle[]> {
   const sql = getDb();
-  const rows = await sql`SELECT * FROM articles WHERE status = 'live' ORDER BY created_at DESC`;
+  const rows = await sql`SELECT id, status, featured, category, category_class, icon, title, excerpt,
+                                author, date, read_time, area_slug, topic_slug, tags, image_url,
+                                image_alt, image_caption, meta_description, fact_checked_at,
+                                created_at, updated_at
+                         FROM articles WHERE status = 'live' ORDER BY created_at DESC`;
   return rows as unknown as DbArticle[];
 }
 

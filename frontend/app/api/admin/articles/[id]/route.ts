@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { requireAuth } from "@/lib/auth";
-import { validateHumanReview } from "@/lib/editorial-review";
 import { isDurableArticleImageUrl, verifyArticleImageUrl } from "@/lib/article-image";
 import {
   fingerprintArticleImageUrl,
@@ -59,14 +58,13 @@ export async function PUT(
       "image_url", "meta_description", "image_alt", "image_caption", "fact_checked_at",
     ];
     const changesEditorialContent = editorialFields.some((field) => Object.hasOwn(body, field));
-    const requiresReview = (requestedStatus === "live" && existing[0].status !== "live")
+    const requiresPublicationGate = (requestedStatus === "live" && existing[0].status !== "live")
       || (existing[0].status === "live" && changesEditorialContent && requestedStatus !== "draft");
 
-    let humanReview;
     let machineReview;
     let reviewedSubmission;
     let approvedImageFingerprint: ArticleImageFingerprint | null = null;
-    if (requiresReview) {
+    if (requiresPublicationGate) {
       const [review] = await sql`
         SELECT submission
         FROM editorial_review_jobs
@@ -77,18 +75,14 @@ export async function PUT(
       }
       reviewedSubmission = candidateSubmission(review.submission, body);
       machineReview = evaluateArticle(reviewedSubmission);
-      humanReview = validateHumanReview(body.human_scores);
       if (!machineReview.passed) {
         return NextResponse.json({
           error: `The exact publication copy failed the editorial gate: ${machineReview.failedCodes.join(", ")}`,
         }, { status: 409 });
       }
-      if (!humanReview.passed) {
-        return NextResponse.json({ error: "Human review requires 17/20, full marks on accuracy, fairness, originality, and visible evidence, and no zero on blocking criteria" }, { status: 409 });
-      }
       const candidateImageUrl = body.image_url ?? existing[0].image_url;
-      if (!isDurableArticleImageUrl(candidateImageUrl) || body.image_approved !== true) {
-        return NextResponse.json({ error: "Inspect and approve a story-specific hero image before publishing" }, { status: 409 });
+      if (!isDurableArticleImageUrl(candidateImageUrl)) {
+        return NextResponse.json({ error: "A durable story-specific hero image is required before publishing" }, { status: 409 });
       }
       if (!await verifyArticleImageUrl(candidateImageUrl)) {
         return NextResponse.json({ error: "The approved hero image is not reachable" }, { status: 409 });
@@ -122,7 +116,7 @@ export async function PUT(
       }
     }
 
-    if (requiresReview && approvedImageFingerprint) {
+    if (requiresPublicationGate && approvedImageFingerprint) {
       const candidateImageUrl = body.image_url ?? existing[0].image_url;
       await sql`
         INSERT INTO article_image_fingerprints (article_id, image_url, sha256, perceptual_hash, verified_at)
@@ -164,24 +158,24 @@ export async function PUT(
       RETURNING *
     `;
 
-    if (requiresReview && humanReview?.passed && machineReview && reviewedSubmission) {
+    if (requiresPublicationGate && machineReview && reviewedSubmission) {
       await sql`
         UPDATE editorial_review_jobs SET
-          status = 'APPROVED',
+          status = 'AUTO_PUBLISHED',
           machine_score = ${machineReview.score},
           machine_possible = ${machineReview.possible},
           machine_report = ${JSON.stringify(machineReview)}::jsonb,
           submission = ${JSON.stringify(reviewedSubmission)}::jsonb,
-          human_score = ${humanReview.total},
-          human_scores = ${JSON.stringify(humanReview.scores)}::jsonb,
-          human_decision = 'APPROVED',
-          reviewer = 'admin',
+          human_score = NULL,
+          human_scores = NULL,
+          human_decision = 'NOT_REQUIRED',
+          reviewer = 'admin-auto-gate',
           reviewed_at = NOW(),
           updated_at = NOW()
         WHERE article_id = ${id}
       `;
       await sql`
-        UPDATE article_image_jobs SET status = 'APPROVED', updated_at = NOW()
+        UPDATE article_image_jobs SET status = 'PUBLISHED', updated_at = NOW()
         WHERE article_id = ${id}
       `;
     }

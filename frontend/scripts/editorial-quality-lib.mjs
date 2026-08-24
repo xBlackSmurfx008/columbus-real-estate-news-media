@@ -111,7 +111,7 @@ function check(id, passed, message, details = undefined) {
   return { id, passed: Boolean(passed), message, ...(details ? { details } : {}) };
 }
 
-/** Run the deterministic half of CREN's publication gate. Human judgment is always still required. */
+/** Run CREN's deterministic reporting gate before an article can be published. */
 export function evaluateArticle(article) {
   const body = String(article.body ?? '');
   const answer = String(article.answer_summary ?? '');
@@ -258,7 +258,8 @@ export function evaluateArticle(article) {
     possible: checks.length,
     checks,
     failedCodes: failed.map((item) => item.id),
-    humanReviewRequired: true,
+    humanReviewRequired: false,
+    publicationPolicy: 'AUTO_PUBLISH_WHEN_COMPLETE',
   };
 }
 

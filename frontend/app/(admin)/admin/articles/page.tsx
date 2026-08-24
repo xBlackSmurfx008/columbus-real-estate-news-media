@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
-import { HUMAN_REVIEW_ITEMS, HumanReviewScores, validateHumanReview } from '@/lib/editorial-review';
 
 interface Article {
   id: string;
@@ -27,17 +26,12 @@ interface Article {
   fact_checked_at?: string | null;
   machine_score?: number | null;
   machine_possible?: number | null;
-  human_scores?: Partial<HumanReviewScores> | null;
   human_decision?: string | null;
   review_status?: string | null;
   submission?: Partial<Article> & {
     image_provenance?: { caption?: string };
   } | null;
 }
-
-const emptyHumanScores = (): HumanReviewScores => Object.fromEntries(
-  HUMAN_REVIEW_ITEMS.map((item) => [item.id, 0]),
-) as HumanReviewScores;
 
 function BodyPreview({ body }: { body: string }) {
   return body.split(/\n\s*\n/).filter(Boolean).map((paragraph, index) => {
@@ -56,8 +50,6 @@ export default function ArticlesPage() {
   const [showForm, setShowForm] = useState(isNewMode);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
-  const [humanScores, setHumanScores] = useState<HumanReviewScores>(emptyHumanScores);
-  const [imageApproved, setImageApproved] = useState(false);
 
   const [formData, setFormData] = useState<Partial<Article>>({
     title: '',
@@ -99,8 +91,6 @@ export default function ArticlesPage() {
     const payload = {
       ...formData,
       read_time: parseInt(String(formData.read_time || 5)),
-      human_scores: humanScores,
-      image_approved: imageApproved,
     };
 
     try {
@@ -122,8 +112,6 @@ export default function ArticlesPage() {
       await fetchArticles();
       setShowForm(false);
       setEditingId(null);
-      setHumanScores(emptyHumanScores());
-      setImageApproved(false);
       setFormData({
         title: '',
         category: 'Market Analysis',
@@ -161,7 +149,9 @@ export default function ArticlesPage() {
   };
 
   const handleEdit = (article: Article) => {
-    const pending = article.review_status === 'AWAITING_HUMAN_REVIEW' ? article.submission : null;
+    const pending = ['READY_FOR_AUTOMATION', 'AWAITING_HUMAN_REVIEW'].includes(article.review_status ?? '')
+      ? article.submission
+      : null;
     setFormData(pending ? {
       ...article,
       ...pending,
@@ -171,8 +161,6 @@ export default function ArticlesPage() {
       image_caption: pending.image_provenance?.caption ?? article.image_caption,
     } : article);
     setEditingId(article.id);
-    setHumanScores({ ...emptyHumanScores(), ...(article.human_scores || {}) });
-    setImageApproved(false);
     setShowForm(true);
   };
 
@@ -182,7 +170,7 @@ export default function ArticlesPage() {
 
     if (currentStatus === 'draft') {
       handleEdit(article);
-      showToast('Complete the copy and image review before publishing', 'success');
+      showToast('Drafts publish automatically after the copy gate and image checks pass', 'success');
       return;
     }
     if (!confirm('Move this live article back to draft?')) return;
@@ -341,7 +329,7 @@ export default function ArticlesPage() {
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none"
                     >
                       <option value="draft">Draft</option>
-                      <option value="live">Live after approval</option>
+                      <option value="live">Live after automated checks</option>
                     </select>
                   </div>
                 </div>
@@ -396,43 +384,11 @@ export default function ArticlesPage() {
                 </div>
 
                 {editingId && (
-                  <section className="space-y-5 rounded-xl border border-gray-300 bg-gray-50 p-5">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-950">Editorial review</h3>
-                      <p className="mt-1 text-sm text-gray-600">
-                        Machine gate: {formData.machine_score ?? 0}/{formData.machine_possible ?? 0}. Human approval needs 17/20,
-                        full marks on accuracy, fairness, originality, and visible evidence, with no zero on a blocking item.
-                      </p>
-                    </div>
-                    <div className="grid gap-3 md:grid-cols-2">
-                      {HUMAN_REVIEW_ITEMS.map((item) => (
-                        <label key={item.id} className="rounded-lg border border-gray-200 bg-white p-3 text-sm">
-                          <span className="mb-2 block font-medium text-gray-900">
-                            {item.id} · {item.label}{item.blocking ? ' · blocking' : ''}
-                          </span>
-                          <span className="mb-2 block text-xs leading-5 text-gray-600">{item.description}</span>
-                          <select
-                            value={humanScores[item.id]}
-                            onChange={(event) => setHumanScores({ ...humanScores, [item.id]: Number(event.target.value) })}
-                            className="w-full rounded border border-gray-300 px-3 py-2"
-                          >
-                            <option value={0}>0 · fails</option>
-                            <option value={1}>1 · adequate</option>
-                            <option value={2}>2 · publication-ready</option>
-                          </select>
-                        </label>
-                      ))}
-                    </div>
-                    <p className={`text-sm font-semibold ${validateHumanReview(humanScores).passed ? 'text-green-700' : 'text-amber-700'}`}>
-                      Human score: {validateHumanReview(humanScores).total}/20
-                    </p>
-                  </section>
-                )}
-
-                {editingId && (
                   <section className="rounded-xl border border-gray-300 bg-white p-5">
                     <h3 className="text-lg font-semibold text-gray-950">Reader preview</h3>
-                    <p className="mt-1 text-sm text-gray-600">Inspect the actual story and hero together before changing status to live.</p>
+                    <p className="mt-1 text-sm text-gray-600">
+                      Preview only. The cloud newsroom publishes automatically after the exact copy and verified image pass all checks.
+                    </p>
                     <article className="mx-auto mt-5 max-w-3xl overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
                       {formData.image_url ? (
                         <Image
@@ -444,7 +400,7 @@ export default function ArticlesPage() {
                         />
                       ) : (
                         <div className="flex aspect-video items-center justify-center bg-gray-100 text-sm text-gray-500">
-                          No hero image ready for review
+                          No hero image ready
                         </div>
                       )}
                       <div className="p-6">
@@ -456,16 +412,6 @@ export default function ArticlesPage() {
                         <div className="mt-6"><BodyPreview body={formData.body || ''} /></div>
                       </div>
                     </article>
-                    <label className="mt-5 flex items-start gap-3 rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-gray-800">
-                      <input
-                        type="checkbox"
-                        checked={imageApproved}
-                        onChange={(event) => setImageApproved(event.target.checked)}
-                        disabled={!formData.image_url}
-                        className="mt-1 h-4 w-4"
-                      />
-                      <span>I inspected the full-size hero. It is story-specific, locally plausible, non-deceptive, and free of AI-stock clichés.</span>
-                    </label>
                   </section>
                 )}
 

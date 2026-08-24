@@ -1,11 +1,11 @@
 # CREN editorial gate
 
-CREN uses a two-stage publication process. Automation may research, draft, run deterministic checks, and prepare an
-image. Only an authenticated editor can make an article public.
+CREN uses a fail-closed automatic publication process. Automation may research, draft, run deterministic checks, prepare
+an image, and make the finished article public without a separate approval queue.
 
 All automated drafting must follow `prompts/ARTICLE_WRITING.md`. The newsroom sequence is research and source
-classification, evidence mapping, original reporting, drafting, skeptical editing, deterministic validation, human
-review, and authenticated publication. If the reporting is insufficient, the drafting step returns `NEEDS_REPORTING`
+classification, evidence mapping, original reporting, drafting, skeptical editing, deterministic validation, verified
+image attachment, and automatic publication. If the reporting is insufficient, the drafting step returns `NEEDS_REPORTING`
 instead of manufacturing a complete-looking article.
 
 Every submission records `prompt_version: "cren-article-v1.0.0"` so the newsroom can identify which standard produced
@@ -29,17 +29,18 @@ The staging command rejects bodies under 350 words, HTML, raw citation tokens, i
 lead-generation copy, pressure/hype language, untraceable numeric or project-status claims, weak source structure,
 formulaic investor advice, and incomplete metadata. At least two independent ledger sources must appear as reader-visible
 Markdown links in the body. Passing drafts are
-saved with `status='draft'` and a durable machine report in `editorial_review_jobs`.
+saved with `status='draft'` and a durable machine report in `editorial_review_jobs`. Passing drafts use
+`READY_FOR_AUTOMATION`; the legacy `AWAITING_HUMAN_REVIEW` value is accepted only so already-staged work can drain.
 
-## Human decision
+## Automatic publication decision
 
-The authenticated article editor shows the headline, dek, full body, and full-size hero together. The editor scores
-ten criteria from 0–2: accuracy, Columbus news value, usefulness, clarity, educational interest, fairness, original
-reporting value, SEO/AEO fit, voice, and reader-visible evidence. Publication requires 17/20. Accuracy, fairness,
-original reporting value, and reader-visible evidence must each score 2; no blocking criterion may score zero.
+The cloud newsroom re-runs all 18 deterministic checks against the exact staged submission after the final image URL is
+attached. It also requires the database draft to match that submission, a durable HTTPS hero, a successful reachability
+check, and stored SHA-256 and perceptual fingerprints with no exact or near duplicate in the corpus.
 
-The editor must also confirm that the hero is story-specific, locally plausible, non-deceptive, and free from AI-stock
-clichés. The API rejects a transition to `live` when the machine gate, human score, image, or image approval is absent.
+Only that exact article-image pair can transition to `live`. A changed draft, failed source/copy check, missing image,
+unreachable Blob, missing fingerprint, or duplicate image leaves the article non-public. Successful runs record
+`AUTO_PUBLISHED`, `human_decision='NOT_REQUIRED'`, and the automation identity instead of manufacturing human scores.
 
 ## Image policy
 
@@ -47,5 +48,6 @@ Prefer licensed real photography, official plans/renderings, public-record maps,
 image generation is a fallback for explanatory editorial illustration. Generated work uses one consistent CREN house
 style and is never labeled as a photograph or used to imply an unverified property, person, design, or project status.
 
-The local image job processes only machine-passed drafts. Accepted outputs are stored as `READY_FOR_REVIEW`; the job
-cannot attach or replace an image on a live article.
+The cloud image job processes only machine-passed drafts. Its temporary `READY_FOR_REVIEW` state means the durable image
+has been attached and is ready for the final automatic gate; it is not a request for human approval. After publication
+the job records `PUBLISHED`. The workflow cannot attach or replace an image on a live article.

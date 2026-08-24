@@ -4,6 +4,10 @@ Status: **Completed and published**
 Completion date: **August 15, 2026 (America/New_York)**  
 Writing-system version: **`cren-article-v1.0.0`**
 
+> Operational update (August 24, 2026): the owner explicitly replaced the future human-approval queue with fail-closed
+> automatic publication. The historical repair described below still records its original approvals. Current drafts go
+> live automatically only after the exact copy passes all 18 checks and the final image is reachable, fingerprinted, and unique.
+
 ## Final result
 
 - All **73 live CREN articles** were rebuilt, re-reported, or recertified.
@@ -80,21 +84,10 @@ Run commands from `frontend/`.
    node --env-file=.env.local scripts/verify-article-revision-queue.mjs
    ```
 
-7. Have the owner/editor inspect the exact article and story-specific hero image. Publication requires explicit approval.
+7. Let the cloud newsroom attach the final image and revalidate the exact article-image pair. Passing work publishes
+   immediately; failed work remains a draft with a machine-readable error.
 
-8. Run the publication preflight. It must report `ready: true` and no failures:
-
-   ```bash
-   node --env-file=.env.local scripts/publish-approved-revisions.mjs
-   ```
-
-9. Publish only after approval. The confirmation count must equal the current manifest count:
-
-   ```bash
-   node --env-file=.env.local scripts/publish-approved-revisions.mjs --publish --confirm=<manifest-count>
-   ```
-
-10. Verify the live public API, rerun the public-image audit, tests, build, and `git diff --check`.
+8. Verify the live public API, rerun the public-image audit, tests, build, and `git diff --check`.
 
 ## Publication safeguards that must not be bypassed
 
@@ -104,8 +97,8 @@ Run commands from `frontend/`.
 - Do not convert proposals, approvals, forecasts, marketing claims, or tax-credit awards into completed outcomes.
 - Do not infer home-price, rent, demand, traffic, employment, or economic effects without direct evidence.
 - Do not reuse an article image, even through a different URL; compare image fingerprints.
-- Do not approve a changed draft against an earlier machine or human review.
-- Do not run batch publication without a fresh private snapshot and explicit owner approval.
+- Do not publish a changed draft against an earlier machine report.
+- Do not bypass the exact-copy, source, image reachability, fingerprint, or duplicate-image checks.
 
 ## Future fixes and maintenance priorities
 

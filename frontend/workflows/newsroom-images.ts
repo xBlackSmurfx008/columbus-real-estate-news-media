@@ -14,6 +14,8 @@ import {
   hammingDistance,
   NEAR_DUPLICATE_MAX_DISTANCE,
 } from '@/lib/article-image-fingerprint';
+import { verifyArticleImageUrl } from '@/lib/article-image';
+import { validateAutoPublicationCandidate } from '@/lib/auto-publication';
 
 type Candidate = {
   articleId: string;
@@ -24,6 +26,7 @@ export type CrenImageWorkflowOutcome = {
   status: 'COMPLETED' | 'PARTIAL_SUCCESS' | 'FAILED' | 'SKIPPED';
   processed: number;
   attached: number;
+  published: number;
   failed: number;
   reason?: string;
 };
@@ -154,17 +157,130 @@ async function selectCandidates(): Promise<Candidate[]> {
     FROM articles a
     JOIN editorial_review_jobs r ON r.article_id = a.id
     LEFT JOIN article_image_jobs j ON j.article_id = a.id
-    WHERE a.status IN ('draft', 'live')
-      AND r.status = 'AWAITING_HUMAN_REVIEW'
-      AND (a.image_url IS NULL OR a.image_url LIKE '/images/heroes/%' OR a.image_url LIKE '%/placeholder-%')
-      AND (j.status IS NULL OR j.status IN ('PENDING', 'FAILED', 'READY_FOR_REVIEW'))
+    WHERE a.status = 'draft'
+      AND r.status IN ('READY_FOR_AUTOMATION', 'AWAITING_HUMAN_REVIEW')
+      AND (
+        (
+          (a.image_url IS NULL OR a.image_url LIKE '/images/heroes/%' OR a.image_url LIKE '%/placeholder-%')
+          AND (j.status IS NULL OR j.status IN ('PENDING', 'FAILED', 'READY_FOR_REVIEW'))
+        )
+        OR (j.status = 'READY_FOR_REVIEW' AND j.image_url = a.image_url)
+      )
     ORDER BY a.created_at ASC
     LIMIT 2
   `;
   return rows.map((row) => ({ articleId: row.id, title: row.title }));
 }
 
-async function processCandidate(candidate: Candidate): Promise<{ attached: boolean; reason?: string }> {
+async function publishCandidate(articleId: string): Promise<{ published: boolean; reason?: string }> {
+  const sql = db();
+  const [current] = await sql`
+    SELECT
+      a.*,
+      r.status AS review_status,
+      r.submission,
+      f.image_url AS fingerprint_image_url,
+      f.sha256 AS fingerprint_sha256,
+      f.perceptual_hash AS fingerprint_perceptual_hash
+    FROM articles a
+    JOIN editorial_review_jobs r ON r.article_id = a.id
+    LEFT JOIN article_image_fingerprints f ON f.article_id = a.id
+    WHERE a.id = ${articleId}
+  `;
+  if (!current) return { published: false, reason: 'ARTICLE_NOT_FOUND' };
+
+  const fingerprint = current.fingerprint_image_url ? {
+    image_url: current.fingerprint_image_url,
+    sha256: current.fingerprint_sha256,
+    perceptual_hash: current.fingerprint_perceptual_hash,
+  } : null;
+  const validation = validateAutoPublicationCandidate({
+    article: current,
+    reviewStatus: current.review_status,
+    submission: current.submission,
+    fingerprint,
+  });
+  if (!validation.ready || !validation.submission || !validation.machineReport) {
+    return { published: false, reason: validation.reasons.join(',') || 'PUBLICATION_GATE_FAILED' };
+  }
+
+  const submission = validation.submission;
+  const imageUrl = String(submission.image_url);
+  if (!await verifyArticleImageUrl(imageUrl)) {
+    return { published: false, reason: 'IMAGE_NOT_REACHABLE' };
+  }
+  const duplicateRows = await sql`
+    SELECT article_id, sha256, perceptual_hash
+    FROM article_image_fingerprints
+    WHERE article_id <> ${articleId}
+  `;
+  const duplicate = duplicateRows.find((row) =>
+    row.sha256 === fingerprint?.sha256
+    || hammingDistance(row.perceptual_hash, fingerprint?.perceptual_hash ?? '')
+      <= NEAR_DUPLICATE_MAX_DISTANCE);
+  if (duplicate) return { published: false, reason: `IMAGE_DUPLICATE:${duplicate.article_id}` };
+
+  const updated = await sql`
+    UPDATE articles SET
+      status = 'live',
+      title = ${submission.title},
+      category = ${submission.category},
+      excerpt = ${submission.excerpt},
+      body = ${submission.body},
+      author = ${submission.author},
+      date = ${submission.date},
+      read_time = ${submission.read_time ?? null},
+      area_slug = ${submission.area_slug ?? null},
+      topic_slug = ${submission.topic_slug ?? null},
+      tags = ${JSON.stringify(Array.isArray(submission.tags) ? submission.tags : [])}::jsonb,
+      image_url = ${imageUrl},
+      meta_description = ${submission.meta_description},
+      image_alt = ${submission.image_alt},
+      image_caption = ${
+        submission.image_provenance && typeof submission.image_provenance === 'object'
+          ? (submission.image_provenance as Record<string, unknown>).caption ?? null
+          : null
+      },
+      fact_checked_at = ${submission.fact_checked_at ?? null},
+      updated_at = NOW()
+    WHERE id = ${articleId}
+      AND status = 'draft'
+      AND updated_at = ${current.updated_at}
+      AND image_url = ${imageUrl}
+    RETURNING id
+  `;
+  if (updated.length === 0) return { published: false, reason: 'ARTICLE_CHANGED_BEFORE_PUBLICATION' };
+
+  await sql`
+    UPDATE editorial_review_jobs SET
+      status = 'AUTO_PUBLISHED',
+      machine_score = ${validation.machineReport.score},
+      machine_possible = ${validation.machineReport.possible},
+      machine_report = ${JSON.stringify(validation.machineReport)}::jsonb,
+      human_score = NULL,
+      human_scores = NULL,
+      human_decision = 'NOT_REQUIRED',
+      reviewer = 'cloud-newsroom',
+      reviewed_at = NOW(),
+      updated_at = NOW()
+    WHERE article_id = ${articleId}
+  `;
+  await sql`
+    UPDATE article_image_jobs SET
+      status = 'PUBLISHED',
+      last_error_code = NULL,
+      completed_at = COALESCE(completed_at, NOW()),
+      updated_at = NOW()
+    WHERE article_id = ${articleId}
+  `;
+  return { published: true };
+}
+
+async function processCandidate(candidate: Candidate): Promise<{
+  attached: boolean;
+  published: boolean;
+  reason?: string;
+}> {
   'use step';
   const sql = db();
   let blobUrl: string | undefined;
@@ -177,12 +293,13 @@ async function processCandidate(candidate: Candidate): Promise<{ attached: boole
       JOIN editorial_review_jobs r ON r.article_id = a.id
       WHERE a.id = ${candidate.articleId}
     `;
-    if (!current || !['draft', 'live'].includes(current.status)) {
-      return { attached: false, reason: 'ARTICLE_NOT_ELIGIBLE' };
+    if (!current || current.status !== 'draft') {
+      return { attached: false, published: false, reason: 'ARTICLE_NOT_ELIGIBLE' };
     }
     const currentImage = String(current.image_url ?? '');
     if (currentImage && !currentImage.startsWith('/images/heroes/') && !currentImage.includes('/placeholder-')) {
-      return { attached: false, reason: 'IMAGE_ALREADY_ATTACHED' };
+      const publication = await publishCandidate(candidate.articleId);
+      return { attached: false, ...publication };
     }
 
     const imageBrief = current.submission?.image_brief ?? null;
@@ -264,7 +381,7 @@ async function processCandidate(candidate: Candidate): Promise<{ attached: boole
         WHERE article_id = ${candidate.articleId} AND image_url = ${blob.url}
       `;
       await del(blob.url).catch(() => undefined);
-      return { attached: false, reason: 'ARTICLE_CHANGED_DURING_GENERATION' };
+      return { attached: false, published: false, reason: 'ARTICLE_CHANGED_DURING_GENERATION' };
     }
     articleAttached = true;
 
@@ -284,7 +401,9 @@ async function processCandidate(candidate: Candidate): Promise<{ attached: boole
         updated_at = NOW()
       WHERE article_id = ${candidate.articleId}
     `;
-    return { attached: true };
+    const publication = await publishCandidate(candidate.articleId);
+    if (!publication.published) throw new Error(publication.reason ?? 'AUTO_PUBLICATION_FAILED');
+    return { attached: true, published: true };
   } catch (error) {
     const reason = error instanceof Error ? error.message.slice(0, 100) : 'IMAGE_WORKFLOW_FAILED';
     if (blobUrl && !articleAttached) {
@@ -294,11 +413,19 @@ async function processCandidate(candidate: Candidate): Promise<{ attached: boole
       `.catch(() => undefined);
       await del(blobUrl).catch(() => undefined);
     }
-    await sql`
-      UPDATE article_image_jobs
-      SET status = 'FAILED', last_error_code = ${reason}, updated_at = NOW()
-      WHERE article_id = ${candidate.articleId}
-    `.catch(() => undefined);
+    if (articleAttached) {
+      await sql`
+        UPDATE article_image_jobs
+        SET status = 'READY_FOR_REVIEW', last_error_code = ${reason}, updated_at = NOW()
+        WHERE article_id = ${candidate.articleId}
+      `.catch(() => undefined);
+    } else {
+      await sql`
+        UPDATE article_image_jobs
+        SET status = 'FAILED', last_error_code = ${reason}, updated_at = NOW()
+        WHERE article_id = ${candidate.articleId}
+      `.catch(() => undefined);
+    }
     throw error;
   }
 }
@@ -311,29 +438,36 @@ export async function crenNewsroomImagesWorkflow(): Promise<CrenImageWorkflowOut
       status: 'SKIPPED',
       processed: 0,
       attached: 0,
+      published: 0,
       failed: 0,
       reason: `cloud images not configured: missing ${configuration.missing.join(', ')}`,
     };
   }
 
   const candidates = await selectCandidates();
-  if (candidates.length === 0) return { status: 'COMPLETED', processed: 0, attached: 0, failed: 0 };
+  if (candidates.length === 0) {
+    return { status: 'COMPLETED', processed: 0, attached: 0, published: 0, failed: 0 };
+  }
 
   let attached = 0;
+  let published = 0;
   let failed = 0;
   for (const candidate of candidates) {
     try {
       const result = await processCandidate(candidate);
       if (result.attached) attached += 1;
+      if (result.published) published += 1;
+      if (!result.published) failed += 1;
     } catch {
       failed += 1;
     }
   }
   return {
-    status: failed === 0 ? 'COMPLETED' : attached > 0 ? 'PARTIAL_SUCCESS' : 'FAILED',
+    status: failed === 0 ? 'COMPLETED' : published > 0 ? 'PARTIAL_SUCCESS' : 'FAILED',
     processed: candidates.length,
     attached,
+    published,
     failed,
-    ...(failed > 0 ? { reason: `${failed} candidate image job(s) failed` } : {}),
+    ...(failed > 0 ? { reason: `${failed} candidate publication job(s) failed` } : {}),
   };
 }

@@ -4,7 +4,7 @@ Prompt version: `cren-article-v1.0.0`
 
 Use this as the canonical instruction for researching and drafting a CREN article. The article JSON must satisfy
 `docs/article-submission.schema.json` and `scripts/editorial-quality-lib.mjs`. A passing machine report does not replace
-the skeptical editor or human publication decision.
+the skeptical editing stage. Publication policy is defined separately in `docs/EDITORIAL_GATE.md`.
 
 ## Role and standard
 

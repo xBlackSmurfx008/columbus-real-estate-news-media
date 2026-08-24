@@ -55,10 +55,11 @@ function validArticle() {
   };
 }
 
-test('complete, sourced draft passes the deterministic gate but still requires a human', () => {
+test('complete, sourced draft passes the automatic publication gate', () => {
   const report = evaluateArticle(validArticle());
   assert.equal(report.passed, true, report.failedCodes.join(','));
-  assert.equal(report.humanReviewRequired, true);
+  assert.equal(report.humanReviewRequired, false);
+  assert.equal(report.publicationPolicy, 'AUTO_PUBLISH_WHEN_COMPLETE');
 });
 
 test('generic promotional HTML copy is blocked before it reaches the draft queue', () => {

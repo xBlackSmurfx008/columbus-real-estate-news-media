@@ -37,10 +37,14 @@ async function preflight(): Promise<{ ready: boolean; missing: string[] }> {
   'use step';
   const missing = ['DATABASE_URL', 'BLOB_READ_WRITE_TOKEN'].filter((name) => !process.env[name]);
   if (process.env.CREN_CLOUD_IMAGES_ENABLED !== 'true') missing.push('CREN_CLOUD_IMAGES_ENABLED=true');
+  const hasImageService = Boolean(
+    process.env.NEWSROOM_IMAGE_SERVICE_URL && process.env.NEWSROOM_IMAGE_SERVICE_SECRET,
+  );
   let hasImageCredential = Boolean(
     process.env.AI_GATEWAY_API_KEY
     || process.env.VERCEL_OIDC_TOKEN
-    || process.env.OPENAI_API_KEY,
+    || process.env.OPENAI_API_KEY
+    || hasImageService,
   );
   if (!hasImageCredential) {
     try {
@@ -56,16 +60,46 @@ async function preflight(): Promise<{ ready: boolean; missing: string[] }> {
 }
 
 function usesGateway(): boolean {
-  return Boolean(process.env.AI_GATEWAY_API_KEY || !process.env.OPENAI_API_KEY);
+  return Boolean(
+    process.env.AI_GATEWAY_API_KEY
+    || (!process.env.OPENAI_API_KEY && !usesImageService()),
+  );
+}
+
+function usesImageService(): boolean {
+  return Boolean(
+    !process.env.AI_GATEWAY_API_KEY
+    && !process.env.OPENAI_API_KEY
+    && process.env.NEWSROOM_IMAGE_SERVICE_URL
+    && process.env.NEWSROOM_IMAGE_SERVICE_SECRET,
+  );
 }
 
 function selectedImageModel(): string {
+  if (usesImageService()) return 'pooled-openai/gpt-image-1';
   return usesGateway()
     ? process.env.CREN_IMAGE_MODEL ?? CREN_IMAGE_MODEL
     : process.env.CREN_OPENAI_IMAGE_MODEL ?? CREN_OPENAI_IMAGE_MODEL;
 }
 
 async function generateCloudImage(prompt: string): Promise<Uint8Array> {
+  if (usesImageService()) {
+    const response = await fetch(process.env.NEWSROOM_IMAGE_SERVICE_URL!, {
+      method: 'POST',
+      headers: {
+        authorization: `Bearer ${process.env.NEWSROOM_IMAGE_SERVICE_SECRET}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ prompt }),
+      signal: AbortSignal.timeout(110_000),
+    });
+    const contentType = response.headers.get('content-type') ?? '';
+    if (!response.ok) throw new Error(`IMAGE_SERVICE_HTTP_${response.status}`);
+    if (!contentType.startsWith('image/')) throw new Error('IMAGE_SERVICE_INVALID_CONTENT_TYPE');
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    if (bytes.byteLength < 1_000) throw new Error('IMAGE_SERVICE_TRUNCATED_RESPONSE');
+    return bytes;
+  }
   if (usesGateway()) {
     const generated = await generateImage({
       model: selectedImageModel(),

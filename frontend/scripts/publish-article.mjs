@@ -1,9 +1,8 @@
 #!/usr/bin/env node
-// Stages one article as a non-public draft after deterministic editorial checks.
-// Publication policy (owner, 2026-08-21): automation stages only. The article
-// goes live via the auto-publication gate (frontend/lib/auto-publication.ts)
-// once it passes the machine gate and carries a durable, fingerprinted hero,
-// or via explicit human approval in the admin panel.
+// Publishes one article live after deterministic editorial checks.
+// Owner policy (2026-08-25, given live in-session; supersedes the 2026-08-21
+// staging policy): publish live by default, no human pre-publish approval;
+// review and fix happen post-publish. See CLAUDE.md "Publication policy".
 // Usage: DATABASE_URL=... node scripts/publish-article.mjs path/to/article.json
 //
 // article.json shape:
@@ -34,6 +33,7 @@ import {
   fingerprintArticleImageUrl,
   isDurableArticleImageUrl,
 } from './article-image-policy.mjs';
+import { hostPlaceholderCard, PLACEHOLDER_CAPTION } from "./editorial-card-lib.mjs";
 import { sendTelegramAlert } from "./telegram-alert.mjs";
 
 const filePath = process.argv[2];
@@ -176,7 +176,7 @@ const [row] = await sql`
     title, excerpt, body, author, date, read_time,
     area_slug, topic_slug, tags, image_url, meta_description, image_alt, image_caption, fact_checked_at
   ) VALUES (
-    ${id}, 'draft', ${article.featured ?? false},
+    ${id}, 'live', ${article.featured ?? false},
     ${article.category}, ${article.category_class ?? "card-img-market"}, ${article.icon ?? "$"},
     ${article.title}, ${article.excerpt ?? null}, ${article.body ?? null}, ${article.author}, ${article.date},
     ${article.read_time ?? "5 min read"}, ${article.area_slug ?? null}, ${article.topic_slug ?? null},
@@ -206,17 +206,42 @@ if (article.image_url && imageFingerprint) {
   `;
 }
 
-// Owner notification per staged draft. Best-effort: a Telegram outage must
-// never roll back or block staging.
+// Hero requirement (owner, 2026-08-14): no live article ships imageless. If no
+// image_url was supplied, attach a branded editorial card immediately as a
+// placeholder; the image workflow replaces it with a real illustration.
+if (!row.image_url) {
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const hosted = await hostPlaceholderCard({ id, title: article.title, category: article.category, area_slug: article.area_slug });
+    await sql`
+      UPDATE articles
+      SET image_url = ${hosted.url},
+          image_alt = ${`Editorial graphic: ${article.title}`},
+          image_caption = ${PLACEHOLDER_CAPTION},
+          updated_at = NOW()
+      WHERE id = ${id} AND image_url IS NULL
+    `;
+    row.image_url = hosted.url;
+    console.log(`Hero placeholder attached: ${hosted.url}`);
+  } else {
+    console.warn(
+      "WARNING: article published without a hero and BLOB_READ_WRITE_TOKEN is not set, so no hero can be attached from this session. "
+      + "Do NOT work around this with --allow-deploy-lag: it writes a /images/heroes/ path that 404s until the next deploy, and a broken hero is worse than none. "
+      + "Set BLOB_READ_WRITE_TOKEN in this environment and re-run scripts/generate-placeholder-heroes.mjs, or leave the article imageless for the durable image job to fill."
+    );
+  }
+}
+
+// Owner notification per publish (CMO directive 2026-08-17 P2). Best-effort:
+// a Telegram outage must never roll back or block a publish.
 const telegram = await sendTelegramAlert({
   status: "COMPLETED",
-  summary: `Staged draft: ${article.title} (${article.category}, quality ${qualityReport.score}/${qualityReport.possible}) — awaiting durable hero + gate`,
+  summary: `Published live: ${article.title} (${article.category}, quality ${qualityReport.score}/${qualityReport.possible})`,
   articles: [{ id, title: article.title }],
-  linkMode: "review",
+  linkMode: "live",
 });
-if (!telegram.ok) console.warn(`Telegram staging alert not delivered: ${telegram.error}`);
+if (!telegram.ok) console.warn(`Telegram publish alert not delivered: ${telegram.error}`);
 
-console.log("Staged as non-public draft (auto-publication gate or human approval takes it live):");
+console.log("Published live (post-publish review policy):");
 console.log(JSON.stringify({
   article: row,
   quality: { score: qualityReport.score, possible: qualityReport.possible },

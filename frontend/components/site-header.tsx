@@ -5,16 +5,13 @@ import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { JourneyBar } from "@/components/cren/journey-bar";
-import { NewsTicker } from "@/components/cren/news-ticker";
 
 const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/blog", label: "Latest" },
-  { href: "/areas", label: "Neighborhoods" },
-  { href: "/market-data", label: "Market Data" },
-  { href: "/topics", label: "Topics" },
+  { href: "/", label: "Today" },
+  { href: "/areas", label: "Explore Areas" },
+  { href: "/market-data", label: "Market & Housing" },
+  { href: "/topics/events-lifestyle", label: "Things to Do" },
   { href: "/resources", label: "Resources" },
-  { href: "/about", label: "About" },
 ];
 
 function formatTopbarDate() {
@@ -52,8 +49,6 @@ export function SiteHeader() {
         </div>
       </div>
 
-      <NewsTicker />
-
       <nav className="cren-site-nav" aria-label="Primary">
         <div className="nav-inner">
           <Link href="/" className="nav-brand" onClick={() => setMobileOpen(false)}>
@@ -80,7 +75,7 @@ export function SiteHeader() {
           </div>
 
           <div className="nav-right">
-            <Link href="/areas" className="nav-search" aria-label="Search neighborhoods and areas">
+            <Link href="/search" className="nav-search" aria-label="Search CREN">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"

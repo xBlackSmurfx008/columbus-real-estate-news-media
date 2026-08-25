@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { AnalyticsTracker } from "@/components/analytics-tracker";
-import { CrenRevealInit } from "@/components/cren/cren-reveal-init";
 import { HomeSections } from "@/components/cren/home-sections";
 import { getPublicData } from "@/lib/public-data";
 
@@ -23,14 +22,11 @@ export default async function HomePage() {
   return (
     <div className="cren-home">
       <AnalyticsTracker />
-      <CrenRevealInit />
       <HomeSections
         articles={data?.articles ?? []}
         marketSnapshot={data?.marketSnapshot ?? []}
         neighborhoods={data?.neighborhoods ?? []}
         ads={data?.ads ?? []}
-        testimonials={data?.testimonials ?? []}
-        tickers={data?.tickers ?? []}
       />
     </div>
   );

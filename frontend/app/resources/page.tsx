@@ -26,6 +26,21 @@ export default function ResourcesPage() {
 
         <RenterBuyerResources />
 
+        <section className="grid gap-4 md:grid-cols-3">
+          <Link href="/housing-search" className="cren-surface cren-card-link p-5">
+            <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Search, rent, buy, sell or list</h2>
+            <p className="cren-body mt-2 text-sm">Compare major housing portals, request rental help, plan a sale, or submit a rental-listing request.</p>
+          </Link>
+          <Link href="/directory" className="cren-surface cren-card-link p-5">
+            <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Home services and local businesses</h2>
+            <p className="cren-body mt-2 text-sm">Find service categories, food, drink, entertainment, activities, and providers by area.</p>
+          </Link>
+          <Link href="/things-to-do" className="cren-surface cren-card-link p-5">
+            <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Things to do</h2>
+            <p className="cren-body mt-2 text-sm">Plan daytime fun, kids activities, parks, food, arts, entertainment, and current events.</p>
+          </Link>
+        </section>
+
         <AffiliateBlock category="finance" fromPath="/resources" heading="Money tools worth a look" />
 
         <div className="cren-soft rounded-[var(--radius)] border border-[color:var(--border)] p-5 text-sm">

@@ -5,7 +5,9 @@ const coverageLinks = [
   { href: "/blog", label: "Latest Coverage" },
   { href: "/areas", label: "Neighborhoods" },
   { href: "/market-data", label: "Market Data" },
-  { href: "/topics/events-lifestyle", label: "Events & Lifestyle" },
+  { href: "/things-to-do", label: "Things to Do" },
+  { href: "/housing-search", label: "Housing Search" },
+  { href: "/directory", label: "Local Directory" },
   { href: "/topics/local-politics", label: "Local Politics" },
   { href: "/resources", label: "Housing Resources" },
 ];
@@ -18,6 +20,7 @@ const companyLinks = [
   { href: "/advertise", label: "Advertise" },
   { href: "/subscribe", label: "Membership" },
   { href: "/contact", label: "Contact" },
+  { href: "/directory/list-your-business", label: "List Your Business" },
 ];
 
 export function SiteFooter() {

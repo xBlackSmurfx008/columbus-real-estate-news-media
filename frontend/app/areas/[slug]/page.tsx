@@ -1,11 +1,14 @@
 import type { Metadata } from 'next';
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { getAreaBySlug } from "@/lib/data";
 import { CrenPage } from "@/components/cren/cren-page";
 import { getArticles, getAreaMarketObservations, DbArticle, DbMarketObservation } from "@/lib/public-data";
 import { getArticlePath } from "@/lib/article-routing";
 import { CoverImage } from "@/components/cren/cover-image";
+import { GuideCard, RepresentativeImageNote } from "@/components/guide-card";
+import { getAreaGuide, OFFICIAL_ACTIVITY_SOURCES } from "@/lib/area-guides";
 
 export const revalidate = 300;
 
@@ -52,6 +55,7 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
   const { slug } = await params;
   const area = getAreaBySlug(slug);
   if (!area) notFound();
+  const guide = getAreaGuide(area);
 
   let local: DbArticle[] = [];
   let metro: DbArticle[] = [];
@@ -75,7 +79,7 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
     } catch {}
   }
 
-  const heroImage = local.find((a) => a.image_url)?.image_url ?? null;
+  const reportedHeroImage = local.find((a) => a.image_url)?.image_url ?? null;
   const coverageShelves = [
     {
       title: 'Housing, rents & the market',
@@ -96,11 +100,13 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
       <div className="cren-stack-lg">
         {/* Header */}
         <div className="cren-surface overflow-hidden">
-          {heroImage && (
-            <div className="relative aspect-[21/9] w-full overflow-hidden">
-              <CoverImage src={heroImage} alt={`${area.name}, Columbus`} sizes="(max-width: 1024px) 100vw, 900px" priority />
-            </div>
-          )}
+          <div className="relative aspect-[21/9] w-full overflow-hidden bg-[color:var(--green-pale)]">
+            {reportedHeroImage ? (
+              <CoverImage src={reportedHeroImage} alt={`${area.name} local coverage`} sizes="(max-width: 1024px) 100vw, 900px" priority />
+            ) : (
+              <Image src={guide.representativeImage} alt={guide.representativeImageAlt} fill sizes="(max-width: 1024px) 100vw, 900px" priority className="object-cover" />
+            )}
+          </div>
           <div className="p-6 md:p-8">
             <div className="section-eyebrow">Neighborhood Hub</div>
             <h1 className="cren-heading-xl">{area.name}</h1>
@@ -110,8 +116,34 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
                 {area.multiCountyNote}
               </p>
             )}
+            {!reportedHeroImage && <RepresentativeImageNote />}
           </div>
         </div>
+
+        {/* Daily life and things to do */}
+        <section>
+          <div className="mb-5 flex flex-wrap items-end justify-between gap-4">
+            <div className="max-w-3xl">
+              <div className="section-eyebrow">Live here, not just search here</div>
+              <h2 className="cren-heading-lg">Daytime fun, kids, parks, food and entertainment</h2>
+              <p className="cren-body mt-2 text-sm">{guide.dailyLifeAnswer}</p>
+            </div>
+            <Link href="/things-to-do" className="cren-action-chip">Open the Columbus things-to-do guide</Link>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {guide.discoveryCards.map((card) => <GuideCard key={card.title} card={card} />)}
+          </div>
+          <div className="cren-soft mt-4 p-4">
+            <p className="text-sm font-semibold text-[color:var(--text-hero)]">Prefer official calendars?</p>
+            <div className="mt-2 flex flex-wrap gap-x-5 gap-y-2">
+              {OFFICIAL_ACTIVITY_SOURCES.map((source) => (
+                <a key={source.title} href={source.href} target="_blank" rel="noopener noreferrer" className="cren-text-link text-sm">
+                  {source.title} ↗
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* Source-aware Market Data */}
         {observations.length > 0 ? (
@@ -144,28 +176,33 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
           </div>
         )}
 
-        {/* Do something in this neighborhood */}
-        <div>
-          <h2 className="cren-heading-lg mb-4">Buy, sell, or rent in {area.name}</h2>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <Link href="/sell/your-home" className={funnelCardClass}>
-              <h3 className="font-semibold text-[color:var(--text-hero)]">Sell your home</h3>
-              <p className="cren-body mt-1 text-sm">Compare the available selling paths and tradeoffs.</p>
-            </Link>
-            <Link href="/rent/find-a-home" className={funnelCardClass}>
-              <h3 className="font-semibold text-[color:var(--text-hero)]">Find a rental</h3>
-              <p className="cren-body mt-1 text-sm">Start with your budget, timing, and location needs.</p>
-            </Link>
-            <Link href="/invest/deploy-capital" className={funnelCardClass}>
-              <h3 className="font-semibold text-[color:var(--text-hero)]">Invest here</h3>
-              <p className="cren-body mt-1 text-sm">Review local context before evaluating an opportunity.</p>
-            </Link>
-            <Link href="/sell/investment-property" className={funnelCardClass}>
-              <h3 className="font-semibold text-[color:var(--text-hero)]">Sell a rental</h3>
-              <p className="cren-body mt-1 text-sm">Explore considerations for an occupied investment property.</p>
-            </Link>
+        {/* Housing search and listing actions */}
+        <section>
+          <div className="mb-5 max-w-3xl">
+            <div className="section-eyebrow">Housing actions</div>
+            <h2 className="cren-heading-lg">Search, rent, buy, sell or list in {area.name}</h2>
+            <p className="cren-body mt-2 text-sm">
+              CREN provides local context and a portal checklist, not a claim that one listing site has the complete market. Compare sources and verify current status directly.
+            </p>
           </div>
-        </div>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {guide.housingCards.map((card) => <GuideCard key={card.title} card={card} />)}
+          </div>
+        </section>
+
+        {/* Service and local business directory */}
+        <section>
+          <div className="mb-5 max-w-3xl">
+            <div className="section-eyebrow">Local directory</div>
+            <h2 className="cren-heading-lg">Services and businesses serving {area.name}</h2>
+            <p className="cren-body mt-2 text-sm">
+              Find practical home services and local-living categories, or submit a business for review. Directory placement is separate from newsroom coverage.
+            </p>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {guide.serviceCards.map((card) => <GuideCard key={card.title} card={card} />)}
+          </div>
+        </section>
 
         {/* Local coverage */}
         {coverageShelves.length > 0 ? (

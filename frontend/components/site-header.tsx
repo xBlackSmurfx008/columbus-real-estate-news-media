@@ -10,7 +10,7 @@ const navItems = [
   { href: "/", label: "Today" },
   { href: "/areas", label: "Explore Areas" },
   { href: "/market-data", label: "Market & Housing" },
-  { href: "/topics/events-lifestyle", label: "Things to Do" },
+  { href: "/things-to-do", label: "Things to Do" },
   { href: "/resources", label: "Resources" },
 ];
 

@@ -19,7 +19,7 @@ export function LeadForm({
   submitLabel = "Send my request",
   successMessage = "Got it. You'll hear from us within 1 business day.",
 }: {
-  persona: "fsbo_seller" | "investor_seller" | "capital_partner" | "renter";
+  persona: "fsbo_seller" | "investor_seller" | "capital_partner" | "renter" | "rental_listing" | "directory_listing";
   source: string;
   fields: LeadField[];
   submitLabel?: string;

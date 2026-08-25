@@ -1,10 +1,14 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Area, ContentItem, Topic } from "@/lib/types";
 import { SaveButton } from "@/components/save-button";
 import { Badge } from "@/components/ui/badge";
 import { getTopicBySlug } from "@/lib/data";
+import { representativeAreaImage } from "@/lib/area-guides";
 
-export function AreaCard({ area }: { area: Area }) {
+export function AreaCard({ area, imageUrl }: { area: Area; imageUrl?: string | null }) {
+  const resolvedImage = imageUrl ?? representativeAreaImage(area);
+  const isRepresentative = !imageUrl;
   return (
     <article
       className="group cren-surface p-5 transition-shadow duration-300 hover:shadow-[var(--shadow-hover)]"
@@ -13,10 +17,18 @@ export function AreaCard({ area }: { area: Area }) {
     >
       <Link href={`/areas/${area.slug}`} className="block text-inherit no-underline">
         <div className="relative mb-3 aspect-[16/10] overflow-hidden rounded-[var(--radius-sm)] bg-[color:var(--green-pale)]">
-          <div
-            className="h-full w-full bg-gradient-to-br from-[color:var(--green)]/20 via-transparent to-transparent transition-transform duration-300 group-hover:scale-105"
-            aria-hidden
+          <Image
+            src={resolvedImage}
+            alt={isRepresentative ? `Representative editorial image for ${area.name}` : `${area.name} coverage`}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
+          {isRepresentative && (
+            <span className="absolute bottom-2 left-2 rounded-full bg-black/65 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-white">
+              Representative image
+            </span>
+          )}
         </div>
         <h3 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)] transition-colors group-hover:text-[color:var(--green)]">
           {area.name}

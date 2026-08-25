@@ -5,20 +5,20 @@
   "category": "Lifestyle",
   "author": "CREN Newsroom",
   "date": "2026-08-25",
-  "excerpt": "One Hospitality opens Sugar, a Latin-Mediterranean restaurant at 504 Park St., on Aug. 27 with a ticketed Grand Opening Party from 5 to 11 p.m.",
+  "excerpt": "One Hospitality opens the Sugar restaurant at 504 Park St. on Aug. 27 — Latin-Mediterranean dining with a ticketed Grand Opening Party from 5 to 11 p.m.",
   "answer_summary": "One Hospitality opens Sugar, a Latin, Spanish, and Mediterranean restaurant, at 504 Park St. in Columbus on August 27, taking over a former Park Street bar space. The group behind Forno Kitchen + Bar, Astra Rooftop, and Standard Hall will host a ticketed Grand Opening Party from 5 to 11 p.m.",
-  "primary_keyword": "Sugar restaurant Columbus Park Street",
+  "primary_keyword": "sugar restaurant",
   "meta_description": "One Hospitality opens Sugar at 504 Park St. in Columbus on Aug. 27. Latin, Spanish, Mediterranean dining and a ticketed Grand Opening Party from 5 to 11 p.m.",
   "fact_checked_at": "2026-08-25T06:45:00Z",
   "canonical_event_key": "sugar-restaurant-504-park-st-columbus-opens-august-2026",
-  "area_slug": null,
+  "area_slug": "arena-district",
   "topic_slug": "events-lifestyle",
   "tags": [
     "columbus-ohio",
+    "central-ohio-real-estate",
     "arena-district",
     "events-lifestyle",
     "food-drink",
-    "commercial",
     "one-hospitality"
   ],
   "read_time": "4 min",
@@ -79,102 +79,168 @@
       "published_at": "2026-08-01",
       "fetched_at": "2026-08-25T06:35:00Z",
       "http_status": 200
+    },
+    {
+      "id": "S6",
+      "type": "PRIMARY",
+      "publisher": "City of Columbus",
+      "title": "Columbus Introduces Zoning Code Proposal Capable of Creating 88,000 Housing Units",
+      "url": "https://www.columbus.gov/News-articles/Columbus-Introduces-Zoning-Code-Proposal-Capable-of-Creating-88000-Housing-Units",
+      "fetched_at": "2026-08-25T16:24:39Z",
+      "http_status": 200
     }
   ],
   "claim_ledger": [
     {
       "id": "C1",
       "claim": "One Hospitality opens Sugar, a Latin, Spanish, and Mediterranean restaurant, at 504 Park St. in Columbus on August 27.",
-      "source_ids": ["S1", "S2", "S3"],
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3"
+      ],
       "kind": "FACT"
     },
     {
       "id": "C2",
       "claim": "The group behind Forno Kitchen + Bar, Astra Rooftop, and Standard Hall will host a ticketed Grand Opening Party from 5 to 11 p.m.",
-      "source_ids": ["S2", "S3"],
+      "source_ids": [
+        "S2",
+        "S3"
+      ],
       "kind": "FACT"
     },
     {
       "id": "C3",
       "claim": "Sugar Bar — a dance club that operated at 525 N. Park St. from 2005 to 2010 — was a fixture for that stretch of downtown nightlife before closing.",
-      "source_ids": ["S5"],
+      "source_ids": [
+        "S5"
+      ],
       "kind": "FACT"
     },
     {
       "id": "C4",
       "claim": "The 504 Park St. space was previously occupied by Howl at the Moon, the piano-dueling bar chain.",
-      "source_ids": ["S4", "S5"],
+      "source_ids": [
+        "S4",
+        "S5"
+      ],
       "kind": "FACT"
     },
     {
       "id": "C5",
       "claim": "The interior spans two floors connected by a custom staircase, surrounded by custom-drawn wallpaper and lush greenery that leads to the outdoor patio.",
-      "source_ids": ["S3"],
+      "source_ids": [
+        "S3"
+      ],
       "kind": "FACT"
     },
     {
       "id": "C6",
       "claim": "The patio features cabanas, fire pits, lounge seating, and photo booths.",
-      "source_ids": ["S2", "S3"],
+      "source_ids": [
+        "S2",
+        "S3"
+      ],
       "kind": "FACT"
     },
     {
       "id": "C7",
       "claim": "Signature dishes include chipotle chicken tacos, pan-seared salmon, blackened garlic shrimp pasta, and cheese quesadillas.",
-      "source_ids": ["S3"],
+      "source_ids": [
+        "S3"
+      ],
       "kind": "FACT"
     },
     {
       "id": "C8",
       "claim": "One Hospitality will host a ticketed Grand Opening Party at Sugar on Thursday, August 27, from 5 to 11 p.m.",
-      "source_ids": ["S2", "S3", "S4"],
+      "source_ids": [
+        "S2",
+        "S3",
+        "S4"
+      ],
       "kind": "FACT"
     },
     {
       "id": "C9",
       "claim": "The event transforms Park Street into a street party featuring live DJ sets, street food from local vendors, signature cocktails, light bites, and expanded outdoor seating with fire pits and cabanas activated.",
-      "source_ids": ["S2", "S3"],
+      "source_ids": [
+        "S2",
+        "S3"
+      ],
       "kind": "FACT"
     },
     {
       "id": "C10",
       "claim": "One Hospitality, led by Chris Corso, already operates Forno Kitchen + Bar, Astra Rooftop, and Standard Hall.",
-      "source_ids": ["S3"],
+      "source_ids": [
+        "S3"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C11",
+      "claim": "Feedback on the mixed-use corridor zoning that surrounds the Park Street District is open through October 24 at [columbus.gov/zoningupdate](https://www.columbus.gov/zoningupdate) as part of the Zone In Phase 2 public comment period, which opened August 25.",
+      "source_ids": [
+        "S6"
+      ],
       "kind": "FACT"
     }
   ],
   "entity_ledger": [
     {
       "name": "Sugar (restaurant)",
-      "source_ids": ["S1", "S2", "S3"]
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3"
+      ]
     },
     {
       "name": "One Hospitality",
-      "source_ids": ["S2", "S3"]
+      "source_ids": [
+        "S2",
+        "S3"
+      ]
     },
     {
       "name": "Chris Corso",
-      "source_ids": ["S3"]
+      "source_ids": [
+        "S3"
+      ]
     },
     {
       "name": "Forno Kitchen + Bar",
-      "source_ids": ["S3"]
+      "source_ids": [
+        "S3"
+      ]
     },
     {
       "name": "Astra Rooftop",
-      "source_ids": ["S3"]
+      "source_ids": [
+        "S3"
+      ]
     },
     {
       "name": "Standard Hall",
-      "source_ids": ["S2", "S3"]
+      "source_ids": [
+        "S2",
+        "S3"
+      ]
     },
     {
       "name": "Howl at the Moon",
-      "source_ids": ["S4", "S5"]
+      "source_ids": [
+        "S4",
+        "S5"
+      ]
     },
     {
       "name": "Sugar Bar (historical, 525 N. Park St., 2005–2010)",
-      "source_ids": ["S5"]
+      "source_ids": [
+        "S5"
+      ]
     }
   ],
   "image_brief": {

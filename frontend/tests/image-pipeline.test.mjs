@@ -84,11 +84,13 @@ test("a hero URL that only resolves after a deploy is never attached to a live a
   assert.ok(updateIndex > guardIndex, "the deployNeeded guard must precede the UPDATE");
   assert.match(source, /NON_DURABLE_URL_NOT_PERSISTED/);
 
-  // And nothing should still be advertising the escape hatch as a fix.
+  // And publish-article.mjs must not attach heroes at all anymore: it stages a
+  // non-public draft, and only the image workflow attaches (durable) heroes.
   const publish = await readFile(
     new URL("../scripts/publish-article.mjs", import.meta.url),
     "utf8",
   );
   assert.doesNotMatch(publish, /--allow-deploy-lag plus a deploy/);
-  assert.match(publish, /Do NOT work around this with --allow-deploy-lag/);
+  assert.doesNotMatch(publish, /hostPlaceholderCard/);
+  assert.match(publish, /\$\{id\}, 'draft',/);
 });

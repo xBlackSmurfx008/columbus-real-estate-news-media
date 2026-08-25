@@ -1,15 +1,28 @@
+import type { Metadata } from 'next';
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getAreaBySlug } from "@/lib/data";
 import { CrenPage } from "@/components/cren/cren-page";
-import { getArticles, getMarketData, generateSlug, DbArticle, DbNeighborhood } from "@/lib/public-data";
+import { getArticles, getAreaMarketObservations, DbArticle, DbMarketObservation } from "@/lib/public-data";
+import { getArticlePath } from "@/lib/article-routing";
 import { CoverImage } from "@/components/cren/cover-image";
 
 export const revalidate = 300;
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const area = getAreaBySlug(slug);
+  if (!area) return {};
+  return {
+    title: `${area.name} Housing & Local Living Guide`,
+    description: `${area.description} Follow housing, rent, development, schools, restaurants, events, and local decisions affecting ${area.name}.`,
+    alternates: { canonical: `/areas/${area.slug}` },
+  };
+}
+
 function ArticleCard({ article }: { article: DbArticle }) {
   return (
-    <Link href={`/blog/${generateSlug(article.title)}`} className="block no-underline group">
+    <Link href={getArticlePath(article)} className="block no-underline group">
       <div className="cren-surface overflow-hidden transition-shadow duration-300 hover:shadow-[var(--shadow-hover)]">
         {article.image_url && (
           <div className="relative aspect-[16/9] overflow-hidden">
@@ -42,16 +55,13 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
 
   let local: DbArticle[] = [];
   let metro: DbArticle[] = [];
-  let matchingNeighborhood: DbNeighborhood | null = null;
+  let observations: DbMarketObservation[] = [];
 
   try {
-    const [allArticles, marketData] = await Promise.all([getArticles(), getMarketData()]);
+    const [allArticles, areaObservations] = await Promise.all([getArticles(), getAreaMarketObservations(area.slug)]);
     local = allArticles.filter((a) => a.area_slug === area.slug && area.slug !== "columbus-citywide");
     metro = allArticles.filter((a) => a.area_slug === "columbus-citywide").slice(0, 4);
-    matchingNeighborhood =
-      marketData.neighborhoods.find(
-        (n) => n.name.toLowerCase().replace(/[^a-z0-9]/g, "") === area.name.toLowerCase().replace(/[^a-z0-9]/g, "")
-      ) ?? null;
+    observations = areaObservations;
   } catch {
     // Continue with empty data
   }
@@ -66,6 +76,20 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
   }
 
   const heroImage = local.find((a) => a.image_url)?.image_url ?? null;
+  const coverageShelves = [
+    {
+      title: 'Housing, rents & the market',
+      articles: local.filter((article) => !['development', 'local-politics', 'events-lifestyle'].includes(article.topic_slug ?? '')),
+    },
+    {
+      title: 'Development & local decisions',
+      articles: local.filter((article) => ['development', 'local-politics'].includes(article.topic_slug ?? '')),
+    },
+    {
+      title: 'Restaurants, events & local life',
+      articles: local.filter((article) => article.topic_slug === 'events-lifestyle'),
+    },
+  ].filter((shelf) => shelf.articles.length > 0);
 
   return (
     <CrenPage>
@@ -81,9 +105,6 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
             <div className="section-eyebrow">Neighborhood Hub</div>
             <h1 className="cren-heading-xl">{area.name}</h1>
             <p className="cren-body mt-2 max-w-2xl">{area.description}</p>
-            {area.populationSignal && (
-              <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-[color:var(--green)]">{area.populationSignal}</p>
-            )}
             {area.multiCountyNote && (
               <p className="cren-body mt-3 rounded-[var(--radius-sm)] border border-[color:var(--border)] bg-[color:var(--green-pale)] px-3 py-2 text-sm text-[color:var(--text-body)]">
                 {area.multiCountyNote}
@@ -92,40 +113,34 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
           </div>
         </div>
 
-        {/* Market Data */}
-        {matchingNeighborhood && (
+        {/* Source-aware Market Data */}
+        {observations.length > 0 ? (
           <div className="cren-surface p-6 md:p-8">
-            <h2 className="cren-heading-lg mb-4">{area.name} market data</h2>
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
-              {[
-                ["Typical Value", matchingNeighborhood.median],
-                ["YoY Change", matchingNeighborhood.yoy],
-                ["Avg Rent", matchingNeighborhood.rent],
-                ["Days on Market", matchingNeighborhood.dom],
-                ["Inventory", matchingNeighborhood.inventory],
-              ].map(([label, value]) => (
-                <div key={label} className="cren-metric-inner">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">{label}</p>
-                  <p
-                    className={`mt-1 text-xl font-semibold ${
-                      label === "YoY Change"
-                        ? value.startsWith("+")
-                          ? "cren-data-up font-[family-name:var(--mono)]"
-                          : "cren-data-down font-[family-name:var(--mono)]"
-                        : label === "Inventory"
-                          ? "text-[color:var(--text-hero)]"
-                          : "font-[family-name:var(--mono)] text-[color:var(--text-hero)]"
-                    }`}
-                  >
-                    {value}
+            <h2 className="cren-heading-lg mb-2">{area.name} housing and rent snapshot</h2>
+            <p className="cren-body mb-5 text-sm">Each measure keeps its source, geography, property type, and observation period attached.</p>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {observations.map((observation) => (
+                <div key={observation.id} className="cren-metric-inner">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">{observation.label}</p>
+                  <p className="mt-1 font-[family-name:var(--mono)] text-xl font-semibold text-[color:var(--text-hero)]">{observation.value_display}</p>
+                  <p className="mt-2 text-xs text-[color:var(--text-muted)]">
+                    {observation.property_type.replaceAll('-', ' ')} · period ending {observation.period_end}
                   </p>
+                  <a href={observation.source_url} target="_blank" rel="noopener noreferrer" className="cren-text-link mt-2 inline-block text-xs">
+                    Source: {observation.source_name}
+                  </a>
                 </div>
               ))}
             </div>
-            <p className="mt-3 text-xs text-[color:var(--text-muted)]">
-              Snapshot figures. See the{" "}
-              <Link href="/market-data" className="cren-text-link">full metro market data</Link> for methodology and citywide trends.
+          </div>
+        ) : (
+          <div className="cren-surface p-6 md:p-8">
+            <h2 className="cren-heading-lg">{area.name} housing and rent snapshot</h2>
+            <p className="cren-body mt-2 text-sm">
+              A source-complete area series is being assembled. CREN will publish figures here only when the geography, period,
+              property type, observation date, and source link are attached.
             </p>
+            <Link href="/market-data" className="cren-text-link mt-3 inline-block text-sm">View the transitional metro dashboard</Link>
           </div>
         )}
 
@@ -135,30 +150,35 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <Link href="/sell/your-home" className={funnelCardClass}>
               <h3 className="font-semibold text-[color:var(--text-hero)]">Sell your home</h3>
-              <p className="cren-body mt-1 text-sm">Free offer, no commission, no repairs.</p>
+              <p className="cren-body mt-1 text-sm">Compare the available selling paths and tradeoffs.</p>
             </Link>
             <Link href="/rent/find-a-home" className={funnelCardClass}>
               <h3 className="font-semibold text-[color:var(--text-hero)]">Find a rental</h3>
-              <p className="cren-body mt-1 text-sm">Free help matching your budget here.</p>
+              <p className="cren-body mt-1 text-sm">Start with your budget, timing, and location needs.</p>
             </Link>
             <Link href="/invest/deploy-capital" className={funnelCardClass}>
               <h3 className="font-semibold text-[color:var(--text-hero)]">Invest here</h3>
-              <p className="cren-body mt-1 text-sm">Put capital to work in this area.</p>
+              <p className="cren-body mt-1 text-sm">Review local context before evaluating an opportunity.</p>
             </Link>
             <Link href="/sell/investment-property" className={funnelCardClass}>
               <h3 className="font-semibold text-[color:var(--text-hero)]">Sell a rental</h3>
-              <p className="cren-body mt-1 text-sm">Exit off-market, tenants in place.</p>
+              <p className="cren-body mt-1 text-sm">Explore considerations for an occupied investment property.</p>
             </Link>
           </div>
         </div>
 
         {/* Local coverage */}
-        {local.length > 0 ? (
+        {coverageShelves.length > 0 ? (
           <section>
             <h2 className="cren-heading-lg mb-4">{area.slug === "columbus-citywide" ? "Metro coverage" : `${area.name} coverage`}</h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              {local.map((a) => (
-                <ArticleCard key={a.id} article={a} />
+            <div className="space-y-8">
+              {coverageShelves.map((shelf) => (
+                <div key={shelf.title}>
+                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">{shelf.title}</h3>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {shelf.articles.map((article) => <ArticleCard key={article.id} article={article} />)}
+                  </div>
+                </div>
               ))}
             </div>
           </section>
@@ -182,6 +202,29 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
             </div>
           </section>
         )}
+
+        <section className="cren-surface p-6 md:p-8">
+          <h2 className="cren-heading-lg">Verify local information</h2>
+          <p className="cren-body mt-2 text-sm">Use originating records before making a housing or school decision. Boundaries, assessments, schedules, and project status can change.</p>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <a href="https://auditor.franklincountyohio.gov/Auditor/Online-Tools" target="_blank" rel="noopener noreferrer" className={funnelCardClass}>
+              <h3 className="font-semibold text-[color:var(--text-hero)]">Property records</h3>
+              <p className="cren-body mt-1 text-sm">Franklin County Auditor tools</p>
+            </a>
+            <a href="https://reportcard.education.ohio.gov/" target="_blank" rel="noopener noreferrer" className={funnelCardClass}>
+              <h3 className="font-semibold text-[color:var(--text-hero)]">School report cards</h3>
+              <p className="cren-body mt-1 text-sm">Ohio district and building data</p>
+            </a>
+            <a href="https://columbus.legistar.com/Legislation.aspx" target="_blank" rel="noopener noreferrer" className={funnelCardClass}>
+              <h3 className="font-semibold text-[color:var(--text-hero)]">City legislation</h3>
+              <p className="cren-body mt-1 text-sm">Columbus ordinances and records</p>
+            </a>
+            <a href="https://www.experiencecolumbus.com/events/?sort=date&view=list" target="_blank" rel="noopener noreferrer" className={funnelCardClass}>
+              <h3 className="font-semibold text-[color:var(--text-hero)]">Events calendar</h3>
+              <p className="cren-body mt-1 text-sm">Current Columbus-area events</p>
+            </a>
+          </div>
+        </section>
 
         <div className="flex gap-4">
           <Link href="/areas" className="cren-text-link text-sm font-semibold">All neighborhoods</Link>

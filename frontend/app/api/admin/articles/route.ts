@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { requireAuth } from "@/lib/auth";
+import { generateArticleSlug } from "@/lib/article-routing";
 
 // GET: Fetch all articles
 export async function GET(request: NextRequest) {
@@ -68,11 +69,11 @@ export async function POST(request: NextRequest) {
     const sql = getDb();
     const result = await sql`
       INSERT INTO articles (
-        id, status, featured, category, category_class, icon, title, excerpt,
+        id, canonical_slug, status, featured, category, category_class, icon, title, excerpt,
         body, author, date, read_time, area_slug, topic_slug, tags,
         meta_description, image_alt, image_caption, fact_checked_at
       ) VALUES (
-        ${id}, 'draft', ${featured || false}, ${category},
+        ${id}, ${generateArticleSlug(title)}, 'draft', ${featured || false}, ${category},
         ${category_class || "card-img-market"}, ${icon || "$"}, ${title},
         ${excerpt || null}, ${articleBody || null}, ${author}, ${date || new Date().toISOString().split('T')[0]},
         ${read_time || "5 min read"}, ${area_slug || null}, ${topic_slug || null}, ${JSON.stringify(Array.isArray(tags) ? tags : [])}::jsonb,

@@ -8,28 +8,8 @@ import {
   DbAd,
   DbTestimonial,
   DbTicker,
-  generateSlug,
 } from "@/lib/public-data";
-
-// ----- Fallback data (used when DB is unavailable) -----
-const fallbackHoods = [
-  { slug: "short-north", name: "Short North", type: "Urban · Walkable · Arts District", median: "$385K", rent: "$1,650", yoy: "+8.2%", dom: "42" },
-  { slug: "dublin", name: "Dublin", type: "Suburban · Families · Top Schools", median: "$425K", rent: "$1,480", yoy: "+6.1%", dom: "55" },
-  { slug: "german-village", name: "German Village", type: "Historic · Charming · Walkable", median: "$415K", rent: "$1,550", yoy: "+7.4%", dom: "38" },
-  { slug: "westerville", name: "Westerville", type: "Suburban · Community · Growing", median: "$340K", rent: "$1,280", yoy: "+5.3%", dom: "61" },
-  { slug: "grandview-heights", name: "Grandview Heights", type: "Urban · Trendy · Young Professionals", median: "$395K", rent: "$1,520", yoy: "+9.1%", dom: "35" },
-  { slug: "new-albany", name: "New Albany", type: "Luxury · Estates · Intel HQ", median: "$612K", rent: "$1,900", yoy: "+11.3%", dom: "48" },
-  { slug: "franklinton", name: "Franklinton", type: "Emerging · Arts · Best Value", median: "$215K", rent: "$1,100", yoy: "+14.7%", dom: "29" },
-  { slug: "hilliard", name: "Hilliard", type: "Suburban · Families · Affordable", median: "$310K", rent: "$1,220", yoy: "+4.8%", dom: "64" },
-];
-
-const fallbackMarketPulse = [
-  { label: "Median Price", value: "$286,000", change: "+5.9%", direction: "up" },
-  { label: "Active Listings", value: "4,440", change: "+14.2%", direction: "up" },
-  { label: "Days on Market", value: "59", change: "+8", direction: "down" },
-  { label: "Closed Sales (2025)", value: "29,626", change: "+3%", direction: "up" },
-  { label: "30-Year Rate", value: "6.82%", change: "", direction: "neutral" },
-];
+import { getArticlePath } from "@/lib/article-routing";
 
 // Category tag styling
 const categoryTagClass: Record<string, string> = {
@@ -83,10 +63,7 @@ export function HomeSections({
   ads = [],
   testimonials = [],
 }: HomeSectionsProps) {
-  // Use DB data or fallbacks
-  const marketPulse = marketSnapshot.length > 0
-    ? marketSnapshot.map((s) => ({ label: s.label, value: s.value, change: s.change, direction: s.direction }))
-    : fallbackMarketPulse;
+  const marketPulse = marketSnapshot.map((s) => ({ label: s.label, value: s.value, change: s.change, direction: s.direction }));
 
   const hoods = neighborhoods.length > 0
     ? neighborhoods.map((n) => ({
@@ -98,7 +75,7 @@ export function HomeSections({
         yoy: n.yoy,
         dom: n.dom.replace(" days", ""),
       }))
-    : fallbackHoods;
+    : [];
 
   // Featured article = first DB article, or fallback
   const heroArticle = articles.length > 0 ? articles[0] : null;
@@ -145,7 +122,7 @@ export function HomeSections({
                 <span>{heroArticle?.read_time ?? "5 min read"}</span>
               </div>
               {heroArticle && (
-                <Link href={`/blog/${generateSlug(heroArticle.title)}`} className="hero-v5-cta no-underline">
+                <Link href={getArticlePath(heroArticle)} className="hero-v5-cta no-underline">
                   Read the full story
                   <span aria-hidden="true">→</span>
                 </Link>
@@ -154,7 +131,7 @@ export function HomeSections({
 
             {heroArticle && (
               <Link
-                href={`/blog/${generateSlug(heroArticle.title)}`}
+                href={getArticlePath(heroArticle)}
                 className="hero-v5-feature no-underline reveal"
                 aria-label={heroArticle.title}
               >
@@ -175,7 +152,7 @@ export function HomeSections({
               Market Pulse
             </div>
             <div className="hero-v5-pulse-stats">
-              {marketPulse.map((m, i) => (
+              {marketPulse.length > 0 ? marketPulse.map((m, i) => (
                 <div key={i} className="hero-v5-pulse-stat">
                   <div className="hero-v5-pulse-value">{m.value}</div>
                   <div className="hero-v5-pulse-label">{m.label}</div>
@@ -185,7 +162,11 @@ export function HomeSections({
                     </div>
                   )}
                 </div>
-              ))}
+              )) : (
+                <div className="hero-v5-pulse-stat">
+                  <div className="hero-v5-pulse-label">Latest verified snapshot temporarily unavailable</div>
+                </div>
+              )}
             </div>
             <Link href="/market-data" className="hero-v5-pulse-link no-underline">
               Full market data →
@@ -203,7 +184,7 @@ export function HomeSections({
                 {/* Large featured card */}
                 {articles[0] && (
                   <Link
-                    href={`/blog/${generateSlug(articles[0].title)}`}
+                    href={getArticlePath(articles[0])}
                     className="bento-card bento-lg reveal no-underline"
                   >
                     <BentoImg article={articles[0]} bg={bentoBgs[0]} />
@@ -226,7 +207,7 @@ export function HomeSections({
                 {/* Medium card */}
                 {articles[1] && (
                   <Link
-                    href={`/blog/${generateSlug(articles[1].title)}`}
+                    href={getArticlePath(articles[1])}
                     className="bento-card bento-md reveal no-underline"
                   >
                     <BentoImg article={articles[1]} bg={bentoBgs[3]} />
@@ -249,7 +230,7 @@ export function HomeSections({
                 {/* Wide card */}
                 {articles[2] && (
                   <Link
-                    href={`/blog/${generateSlug(articles[2].title)}`}
+                    href={getArticlePath(articles[2])}
                     className="bento-card bento-wide reveal no-underline"
                   >
                     <BentoImg article={articles[2]} bg={bentoBgs[1]} height={150} />
@@ -272,7 +253,7 @@ export function HomeSections({
                 {/* Wide card with image */}
                 {articles[3] && (
                   <Link
-                    href={`/blog/${generateSlug(articles[3].title)}`}
+                    href={getArticlePath(articles[3])}
                     className="bento-card bento-wide reveal no-underline"
                   >
                     <BentoImg article={articles[3]} bg={bentoBgs[2]} height={150} />
@@ -296,7 +277,7 @@ export function HomeSections({
                 {articles.slice(4).map((article, idx) => (
                   <Link
                     key={article.id}
-                    href={`/blog/${generateSlug(article.title)}`}
+                    href={getArticlePath(article)}
                     className="bento-card bento-sm reveal no-underline"
                   >
                     <BentoImg article={article} bg={bentoBgs[(idx + 4) % bentoBgs.length]} height={110} />
@@ -316,27 +297,13 @@ export function HomeSections({
                 ))}
               </>
             ) : (
-              /* Fallback static bento cards */
-              <>
-                <Link href="/blog" className="bento-card bento-lg reveal no-underline">
-                  <div className="bento-img"><div className="bento-img-bg bg-1" /></div>
-                  <div className="bento-body">
-                    <span className="bento-tag tag-market">Market Report</span>
-                    <div className="bento-title">February 2026 Full MLS Report: The Columbus Market Is Shifting — And Buyers Are Winning</div>
-                    <div className="bento-excerpt">29,626 closed sales, rising inventory, and a median price that&apos;s still climbing.</div>
-                    <div className="bento-footer"><div className="bento-author-dot">SA</div>Stephen Adams · Mar 20 · 10 min</div>
-                  </div>
-                </Link>
-                <Link href="/blog" className="bento-card bento-md reveal no-underline">
-                  <div className="bento-img"><div className="bento-img-bg bg-4" /></div>
-                  <div className="bento-body">
-                    <span className="bento-tag tag-development">Development</span>
-                    <div className="bento-title">The $2.1B Short North Corridor: Everything You Need to Know</div>
-                    <div className="bento-excerpt">Columbus&apos;s biggest mixed-use project just got approved.</div>
-                    <div className="bento-footer"><div className="bento-author-dot">JR</div>Jamie Reeves · Mar 18 · 5 min</div>
-                  </div>
-                </Link>
-              </>
+              <div className="bento-card bento-lg reveal">
+                <div className="bento-body">
+                  <span className="bento-tag tag-market">Coverage status</span>
+                  <div className="bento-title">The latest article feed is temporarily unavailable.</div>
+                  <div className="bento-excerpt">Browse neighborhood and topic hubs while the newsroom feed reconnects.</div>
+                </div>
+              </div>
             )}
           </div>
         </div>
@@ -410,14 +377,14 @@ export function HomeSections({
                   The most important Columbus real estate stories, market data, and investment insights — curated for renters,
                   buyers, and investors every Tuesday morning.
                 </div>
-                <div className="nl-proof">Join 10,000+ Columbus locals who skip Zillow and read this instead.</div>
+                <div className="nl-proof">Choose the local topics and areas you want to follow.</div>
               </div>
               <div>
                 <HomeNewsletterForm />
                 <div className="nl-checks">
                   <span className="nl-check">Free forever</span>
                   <span className="nl-check">No spam</span>
-                  <span className="nl-check">58% open rate</span>
+                  <span className="nl-check">Reader-first local coverage</span>
                   <span className="nl-check">Unsubscribe anytime</span>
                 </div>
               </div>
@@ -437,7 +404,7 @@ export function HomeSections({
             Hyper-local market data for every corner of Columbus and its suburbs. Click any area for the full report.
           </div>
           <div className="hood-grid">
-            {hoods.map((h) => (
+            {hoods.length > 0 ? hoods.map((h) => (
               <Link key={h.slug} href={`/areas/${h.slug}`} className="hood-card reveal no-underline">
                 <div className="hood-name">{h.name}</div>
                 <div className="hood-type">{h.type}</div>
@@ -462,7 +429,12 @@ export function HomeSections({
                   </div>
                 </div>
               </Link>
-            ))}
+            )) : (
+              <div className="cren-surface p-6">
+                <p className="cren-body text-sm">The verified neighborhood data snapshot is temporarily unavailable.</p>
+                <Link href="/areas" className="cren-text-link mt-3 inline-block">Browse all area hubs</Link>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -532,31 +504,28 @@ export function HomeSections({
             <div className="reveal" style={{ background: "var(--bg-surface)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: 32 }}>
               <div className="cren-why-mark" aria-hidden />
               <div style={{ fontFamily: "var(--serif)", fontSize: 18, fontWeight: 600, color: "var(--text-hero)", marginBottom: 8 }}>
-                Data You Can&apos;t Find on Zillow
+                Sources You Can Inspect
               </div>
               <div style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.7 }}>
-                ZIP-code level analysis, absorption rates, price-per-sqft trends, and predictive analytics built specifically for
-                Central Ohio&apos;s unique market dynamics.
+                Our reporting links the public records, datasets, and originating announcements used to support material claims.
               </div>
             </div>
             <div className="reveal" style={{ background: "var(--bg-surface)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: 32 }}>
               <div className="cren-why-mark" aria-hidden />
               <div style={{ fontFamily: "var(--serif)", fontSize: 18, fontWeight: 600, color: "var(--text-hero)", marginBottom: 8 }}>
-                50+ Neighborhoods Covered
+                Area-First Local Coverage
               </div>
               <div style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.7 }}>
-                From Franklinton&apos;s emerging art scene to New Albany&apos;s luxury estates — we know every block, every school district,
-                every hidden gem that national platforms miss.
+                Neighborhood and municipality hubs organize housing, development, schools, restaurants, events, and policy in one place.
               </div>
             </div>
             <div className="reveal" style={{ background: "var(--bg-surface)", border: "1px solid var(--border)", borderRadius: "var(--radius)", padding: 32 }}>
               <div className="cren-why-mark" aria-hidden />
               <div style={{ fontFamily: "var(--serif)", fontSize: 18, fontWeight: 600, color: "var(--text-hero)", marginBottom: 8 }}>
-                Built By Columbus, For Columbus
+                Transparent Newsroom Standards
               </div>
               <div style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.7 }}>
-                We&apos;re not a Silicon Valley portal monetizing your data. We&apos;re your neighbors, covering the city we live in,
-                connecting the community we&apos;re part of.
+                Our sourcing, automation, image-integrity checks, and corrections policy are public so readers can evaluate how the work is made.
               </div>
             </div>
           </div>

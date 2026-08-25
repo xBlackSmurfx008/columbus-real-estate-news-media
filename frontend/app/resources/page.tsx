@@ -1,9 +1,16 @@
+import type { Metadata } from 'next';
 import Link from "next/link";
 import { RenterBuyerResources } from "@/components/sections/renter-buyer-resources";
 import { CrenPage } from "@/components/cren/cren-page";
 import { AffiliateBlock } from "@/components/affiliate-block";
 
 export const revalidate = 300;
+
+export const metadata: Metadata = {
+  title: 'Columbus Renting, Buying & Selling Resources',
+  description: 'Practical Columbus housing resources for budgets, move planning, renting, buying, selling, and local market research.',
+  alternates: { canonical: '/resources' },
+};
 
 export default function ResourcesPage() {
   return (

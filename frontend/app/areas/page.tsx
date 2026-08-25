@@ -1,7 +1,14 @@
+import type { Metadata } from 'next';
 import { AreaCard } from "@/components/cards";
 import { AREA_SECTION_ORDER, AREA_SECTION_LABELS } from "@/lib/franklin-areas";
 import { areasGroupedBySection } from "@/lib/data";
 import { CrenPage } from "@/components/cren/cren-page";
+
+export const metadata: Metadata = {
+  title: 'Columbus Neighborhood & Area Guides',
+  description: 'Explore local housing, development, schools, restaurants, events, and market reporting across Columbus and Franklin County.',
+  alternates: { canonical: '/areas' },
+};
 
 export default function AreasPage() {
   const grouped = areasGroupedBySection();

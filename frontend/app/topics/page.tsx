@@ -1,6 +1,13 @@
+import type { Metadata } from 'next';
 import { TopicCard } from "@/components/cards";
 import { priorityTopicHubs, topics } from "@/lib/data";
 import { CrenPage } from "@/components/cren/cren-page";
+
+export const metadata: Metadata = {
+  title: 'Columbus Real Estate & Local Living Topics',
+  description: 'Browse Columbus market trends, schools, development, local politics, events, restaurants, and lifestyle reporting.',
+  alternates: { canonical: '/topics' },
+};
 
 export default function TopicsPage() {
   const prioritized = topics.filter((topic) => priorityTopicHubs.includes(topic.slug));

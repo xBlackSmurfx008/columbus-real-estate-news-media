@@ -9,11 +9,12 @@ import { NewsTicker } from "@/components/cren/news-ticker";
 
 const navItems = [
   { href: "/", label: "Home" },
-  { href: "/blog", label: "Market News" },
-  { href: "/advertise", label: "Advertise" },
-  { href: "/subscribe", label: "Membership" },
+  { href: "/blog", label: "Latest" },
+  { href: "/areas", label: "Neighborhoods" },
+  { href: "/market-data", label: "Market Data" },
+  { href: "/topics", label: "Topics" },
+  { href: "/resources", label: "Resources" },
   { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
 ];
 
 function formatTopbarDate() {
@@ -40,26 +41,12 @@ export function SiteHeader() {
       <div className="topbar">
         <div className="topbar-left">
           <div className="topbar-stat">
-            <span className="label">Columbus Median:</span>
-            <span className="value">$350,000</span>
-            <span className="up">+4.3%</span>
-          </div>
-          <div className="topbar-stat">
-            <span className="label">Active Listings:</span>
-            <span className="value">5,223</span>
-            <span className="up">+8.2%</span>
-          </div>
-          <div className="topbar-stat">
-            <span className="label">Avg. DOM:</span>
-            <span className="value">29 days</span>
-          </div>
-          <div className="topbar-stat">
-            <span className="label">30-Yr Rate:</span>
-            <span className="value">6.43%</span>
+            <span className="label">Columbus housing and local living coverage</span>
           </div>
         </div>
         <div className="topbar-right">
           <span className="topbar-date">{topbarDate}</span>
+          <Link href="/market-data">Market Data</Link>
           <Link href="/advertise">Advertise</Link>
           <Link href="/subscribe">Subscribe</Link>
         </div>

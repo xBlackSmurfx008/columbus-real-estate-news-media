@@ -1,9 +1,16 @@
+import type { Metadata } from 'next';
 import { AnalyticsTracker } from "@/components/analytics-tracker";
 import { CrenRevealInit } from "@/components/cren/cren-reveal-init";
 import { HomeSections } from "@/components/cren/home-sections";
 import { getPublicData } from "@/lib/public-data";
 
 export const revalidate = 300; // ISR: revalidate every 5 minutes
+
+export const metadata: Metadata = {
+  title: 'Columbus Housing, Neighborhoods & Local Living',
+  description: 'Sourced local reporting and housing intelligence for Columbus renters, buyers, sellers, and residents.',
+  alternates: { canonical: '/' },
+};
 
 export default async function HomePage() {
   let data;

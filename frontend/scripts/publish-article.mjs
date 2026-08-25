@@ -171,11 +171,11 @@ if (newTokens.size > 0) {
 
 const [row] = await sql`
   INSERT INTO articles (
-    id, status, featured, category, category_class, icon,
+    id, canonical_slug, status, featured, category, category_class, icon,
     title, excerpt, body, author, date, read_time,
     area_slug, topic_slug, tags, image_url, meta_description, image_alt, image_caption, fact_checked_at
   ) VALUES (
-    ${id}, 'live', ${article.featured ?? false},
+    ${id}, ${slug}, 'live', ${article.featured ?? false},
     ${article.category}, ${article.category_class ?? "card-img-market"}, ${article.icon ?? "$"},
     ${article.title}, ${article.excerpt ?? null}, ${article.body ?? null}, ${article.author}, ${article.date},
     ${article.read_time ?? "5 min read"}, ${article.area_slug ?? null}, ${article.topic_slug ?? null},

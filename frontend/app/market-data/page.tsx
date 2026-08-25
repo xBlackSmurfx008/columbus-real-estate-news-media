@@ -1,8 +1,15 @@
+import type { Metadata } from 'next';
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
 import { getMarketData, DbMarketSnapshot, DbNeighborhood } from "@/lib/public-data";
 
 export const revalidate = 300;
+
+export const metadata: Metadata = {
+  title: 'Columbus Housing Market Data',
+  description: 'Columbus housing and rental indicators with definitions, source context, and links to local analysis.',
+  alternates: { canonical: '/market-data' },
+};
 
 function directionClass(direction: string): string {
   if (direction === "up") return "cren-data-up";
@@ -29,7 +36,7 @@ export default async function MarketDataPage() {
           <div className="section-eyebrow">Market Data</div>
           <h1 className="cren-heading-xl">Columbus Market Data</h1>
           <p className="cren-body mt-2 max-w-2xl">
-            Market indicators for the Columbus metro area, compiled from public real estate data and refreshed regularly.
+            The latest stored Columbus-area housing snapshot. Reporting periods and geographies vary by metric; use the source and methodology notes before comparing figures.
           </p>
         </div>
 
@@ -37,7 +44,7 @@ export default async function MarketDataPage() {
         <section className="cren-surface p-6 md:p-8">
           <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
             <h2 className="cren-heading-lg">Market Snapshot</h2>
-            <p className="text-xs text-[color:var(--text-muted)]">Refreshed regularly | Sources: Columbus REALTORS, Redfin, Freddie Mac</p>
+            <p className="text-xs text-[color:var(--text-muted)]">Latest stored snapshot; individual data periods vary</p>
           </div>
           {snapshot.length > 0 ? (
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -117,9 +124,19 @@ export default async function MarketDataPage() {
         <div className="cren-surface p-6 md:p-8">
           <h2 className="cren-heading-lg">Methodology</h2>
           <p className="cren-body mt-2 text-sm">
-            The Market Snapshot metro figures come from the Columbus REALTORS monthly report (median sale price, listings, days on market) and Freddie Mac (mortgage rate).
-            The Neighborhood Comparison &quot;Typical Value&quot; is Zillow&apos;s smoothed home-value index, which is steadier than single-month median sale prices in small
-            neighborhoods where a few sales can swing the number. Rent and days-on-market columns are directional snapshots. Pair with our neighborhood hubs and analysis articles for deeper interpretation.
+            Columbus REALTORS monthly reports supply local sale-price, listing, sales, and market-time measures. Freddie Mac&apos;s PMMS is a national weekly mortgage-rate average,
+            not a Columbus borrower quote. Zillow&apos;s ZHVI estimates typical home value and is different from a median sale price. Redfin&apos;s downloadable series use their own
+            geography, rolling-period, seasonal-adjustment, and revision rules. CREN does not treat these measures as interchangeable.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-4 text-sm">
+            <a href="https://columbusrealtors.com/" target="_blank" rel="noopener noreferrer" className="cren-text-link">Columbus REALTORS market reports</a>
+            <a href="https://www.freddiemac.com/pmms" target="_blank" rel="noopener noreferrer" className="cren-text-link">Freddie Mac PMMS</a>
+            <a href="https://www.zillow.com/research/tag/zillow-home-value-index/" target="_blank" rel="noopener noreferrer" className="cren-text-link">Zillow ZHVI methodology</a>
+            <a href="https://www.redfin.com/news/data-center/methodology/" target="_blank" rel="noopener noreferrer" className="cren-text-link">Redfin methodology</a>
+          </div>
+          <p className="cren-body mt-4 rounded-[var(--radius-sm)] border border-[color:var(--border)] p-3 text-xs">
+            Provenance upgrade in progress: legacy dashboard rows do not yet expose source URL, observation date, geography, and property type on every individual metric.
+            Do not use an unlabeled row as an appraisal, rent quote, mortgage offer, or prediction.
           </p>
           <Link href="/blog" className="cren-text-link mt-4 inline-block text-sm font-semibold">
             Read latest analysis

@@ -93,7 +93,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
             <div className="mt-4 flex flex-wrap gap-3">
               <Link href="/areas" className="cren-action-chip">Explore areas</Link>
               <Link href="/market-data" className="cren-action-chip">Market and housing</Link>
-              <Link href="/topics/events-lifestyle" className="cren-action-chip">Things to do</Link>
+              <Link href="/things-to-do" className="cren-action-chip">Things to do</Link>
               <Link href="/topics/local-politics" className="cren-action-chip">Local politics</Link>
               <Link href="/resources" className="cren-action-chip">Practical resources</Link>
             </div>

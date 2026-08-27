@@ -82,7 +82,9 @@ export default async function MarketDataPage() {
                 </thead>
                 <tbody>
                   {neighborhoods.map((n, idx) => {
-                    const slug = n.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").replace(/--+/g, "-");
+                    const slug = n.name === "Columbus (city avg)"
+                      ? "columbus-citywide"
+                      : n.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").replace(/--+/g, "-");
                     return (
                       <tr
                         key={n.id}

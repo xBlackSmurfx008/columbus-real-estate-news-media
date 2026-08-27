@@ -17,7 +17,10 @@ export function FooterNewsletterForm() {
 
   return (
     <form className="footer-nl-form" onSubmit={onSubmit}>
-      <input className="footer-nl-input" name="email" type="email" placeholder="Email" required />
+      <label className="sr-only" htmlFor="footer-newsletter-email">
+        Email address
+      </label>
+      <input id="footer-newsletter-email" className="footer-nl-input" name="email" type="email" placeholder="Email" required />
       <button className="footer-nl-btn" type="submit">
         Join
       </button>

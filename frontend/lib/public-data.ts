@@ -2,6 +2,7 @@ import { cache } from "react";
 import { getDb } from "@/lib/db";
 import snapshotJson from "@/content/snapshot/public-data.json";
 import { generateArticleSlug, getArticleSlug } from "@/lib/article-routing";
+import { getBlogPostBySlug } from "@/lib/blog";
 
 // ============================================================
 // Server-side data fetching for public pages
@@ -160,6 +161,9 @@ export interface ArticleSlugResolution {
 }
 
 const snapshot = snapshotJson as unknown as PublicSiteData;
+const legacyArticleSlugRedirects: Record<string, string> = {
+  "columbus-zone-in-phase-2-commercial-industrial-rezoning": "zone-in-adds-capacity-not-88-000-built-columbus-homes",
+};
 
 function snapshotArticles(): DbArticle[] {
   return Array.isArray(snapshot.articles) ? snapshot.articles : [];
@@ -251,6 +255,11 @@ export const getArticleById = cache(async (id: string): Promise<DbArticle | null
 
 /** Resolve a canonical or historical article slug without loading every body. */
 export const resolveArticleSlug = cache(async (slug: string): Promise<ArticleSlugResolution | null> => {
+  const redirectedSlug = legacyArticleSlugRedirects[slug];
+  if (redirectedSlug) {
+    return resolveArticleSlug(redirectedSlug);
+  }
+
   try {
     const sql = getDb();
     const canonicalRows = await sql`
@@ -308,7 +317,39 @@ export const resolveArticleSlug = cache(async (slug: string): Promise<ArticleSlu
 /** Fetch a single article while preserving the legacy public API. */
 export const getArticleBySlug = cache(async (slug: string): Promise<DbArticle | null> => {
   const resolution = await resolveArticleSlug(slug);
-  return resolution?.article ?? null;
+  if (resolution?.article) return resolution.article;
+
+  const blogPost = getBlogPostBySlug(slug);
+  if (!blogPost) return null;
+
+  return {
+    id: blogPost.slug,
+    canonical_slug: blogPost.slug,
+    status: "live",
+    featured: false,
+    category: blogPost.format,
+    category_class: "card-img-market",
+    icon: "●",
+    title: blogPost.title,
+    excerpt: blogPost.excerpt,
+    body: [
+      `## ${blogPost.introHook}`,
+      ...blogPost.whatChanged.map((point) => `- ${point}`),
+    ].join("\n\n"),
+    author: "CREN Newsroom",
+    date: blogPost.date,
+    read_time: `${blogPost.readTimeMinutes} min read`,
+    area_slug: blogPost.areaSlug,
+    topic_slug: blogPost.topicSlug,
+    tags: [blogPost.topicSlug, blogPost.areaSlug].filter(Boolean) as string[],
+    image_url: null,
+    image_alt: null,
+    image_caption: null,
+    meta_description: blogPost.excerpt,
+    fact_checked_at: null,
+    created_at: `${blogPost.date}T00:00:00.000Z`,
+    updated_at: `${blogPost.date}T00:00:00.000Z`,
+  } as DbArticle;
 });
 
 /** @deprecated Import generateArticleSlug from article-routing instead. */

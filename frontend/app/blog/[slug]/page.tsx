@@ -1,10 +1,12 @@
 import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
+import { BlogArticleTemplate } from "@/components/blog-article-template";
 import { CoverImage } from "@/components/cren/cover-image";
 import { getArticles, resolveArticleSlug, DbArticle } from "@/lib/public-data";
 import { getArticlePath } from "@/lib/article-routing";
 import { getAreaBySlug, getTopicBySlug } from "@/lib/data";
+import { getBlogPostBySlug } from "@/lib/blog";
 import { absoluteUrl, safeJsonLd } from '@/lib/site';
 
 export const revalidate = 300;
@@ -85,10 +87,18 @@ export async function generateMetadata({
 }) {
   const { slug } = await params;
   let article: DbArticle | null = null;
+  const blogPost = getBlogPostBySlug(slug);
   try {
     article = (await resolveArticleSlug(slug))?.article ?? null;
   } catch {
     article = null;
+  }
+  if (!article && blogPost) {
+    return {
+      title: blogPost.title,
+      description: blogPost.excerpt,
+      alternates: { canonical: `/blog/${blogPost.slug}` },
+    };
   }
   if (!article) return {};
   const description = article.meta_description ?? article.excerpt ?? undefined;
@@ -125,6 +135,7 @@ export default async function BlogPostPage({
   let article: DbArticle | null = null;
   let canonicalSlug = slug;
   let relatedArticles: DbArticle[] = [];
+  const blogPost = getBlogPostBySlug(slug);
 
   try {
     const resolution = await resolveArticleSlug(slug);
@@ -138,6 +149,14 @@ export default async function BlogPostPage({
     }
   } catch {
     article = null;
+  }
+
+  if (!article && blogPost) {
+    return (
+      <CrenPage wide>
+        <BlogArticleTemplate post={blogPost} />
+      </CrenPage>
+    );
   }
 
   if (!article) notFound();

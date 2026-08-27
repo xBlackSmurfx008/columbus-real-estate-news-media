@@ -34,20 +34,6 @@ export function SiteFooter() {
               Central Ohio&apos;s boutique real estate media platform. Hyper-local data, trusted journalism, and community
               intelligence for renters, buyers, and investors.
             </div>
-            <div className="footer-social">
-              <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" title="LinkedIn">
-                in
-              </a>
-              <a href="https://x.com" target="_blank" rel="noopener noreferrer" title="X">
-                X
-              </a>
-              <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" title="Instagram">
-                IG
-              </a>
-              <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" title="YouTube">
-                YT
-              </a>
-            </div>
           </div>
           <div>
             <div className="footer-col-title">Coverage</div>
@@ -79,7 +65,7 @@ export function SiteFooter() {
           <span>© {new Date().getFullYear()} Columbus Real Estate News LLC</span>
           <div className="footer-bottom-links">
             <Link href="/privacy">Privacy</Link>
-            <Link href="/contact">Terms</Link>
+            <Link href="/terms">Terms</Link>
           </div>
         </div>
       </div>

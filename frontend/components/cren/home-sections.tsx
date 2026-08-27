@@ -234,7 +234,7 @@ export function HomeSections({ articles = [], marketSnapshot = [], neighborhoods
                 <h2 className="section-heading">Local living, made <em>useful</em></h2>
                 <p className="section-desc">Restaurants, events, annual traditions, parks, and community life near home.</p>
               </div>
-              <Link href="/topics/events-lifestyle" className="cren-text-link">Explore things to do →</Link>
+              <Link href="/things-to-do" className="cren-text-link">Explore things to do →</Link>
             </div>
             <div className="local-living-grid">
               {localLiving.map((article, index) => (

@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 
+function isPlaceholderAffiliateUrl(url: string) {
+  return /example\.com/i.test(url);
+}
+
 // GET /go/<slug>?from=<path> — affiliate redirect with click logging.
 export async function GET(
   request: NextRequest,
@@ -14,6 +18,10 @@ export async function GET(
       SELECT url FROM affiliate_partners WHERE slug = ${slug} AND active = true LIMIT 1
     `;
     if (rows.length === 0) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    if (isPlaceholderAffiliateUrl(rows[0].url as string)) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 

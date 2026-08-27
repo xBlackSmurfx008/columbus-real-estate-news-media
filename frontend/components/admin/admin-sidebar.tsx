@@ -120,7 +120,7 @@ export function AdminSidebar() {
         ))}
 
         <div className="pt-4 border-t border-gray-800 mt-4">
-          <a
+          <Link
             href="/"
             className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800 hover:text-white transition"
             title={!isExpanded ? 'View Live Site' : undefined}
@@ -129,7 +129,7 @@ export function AdminSidebar() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
             {isExpanded && <span className="text-sm font-medium">View Live Site</span>}
-          </a>
+          </Link>
         </div>
       </nav>
 

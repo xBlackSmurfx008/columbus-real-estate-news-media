@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 
 type Lead = {
@@ -52,11 +52,12 @@ export default function AdminLeadsPage() {
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [noteDraft, setNoteDraft] = useState('');
 
-  useEffect(() => {
-    fetchAll();
+  const showToast = useCallback((message: string) => {
+    setToast(message);
+    setTimeout(() => setToast(null), 3000);
   }, []);
 
-  async function fetchAll() {
+  const fetchAll = useCallback(async () => {
     try {
       const res = await fetch('/api/admin/leads', { credentials: 'include' });
       const data = await res.json();
@@ -69,12 +70,13 @@ export default function AdminLeadsPage() {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [showToast]);
 
-  function showToast(message: string) {
-    setToast(message);
-    setTimeout(() => setToast(null), 3000);
-  }
+  useEffect(() => {
+    // This effect synchronizes the client admin view with the remote API.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void fetchAll();
+  }, [fetchAll]);
 
   async function updateLead(id: number, patch: { status?: string; notes?: string }) {
     try {

@@ -2,11 +2,13 @@
   "name": "columbus-real-estate-media-frontend",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "release:audit-local": "node --experimental-strip-types scripts/release-local-audit.mjs",
+    "lint": "eslint . --max-warnings 0",
     "test:e2e": "playwright test",
     "test:image-pipeline": "node --experimental-strip-types --test tests/*.test.mjs tests/*.test.ts",
     "newsroom:image-backfill": "node scripts/run-image-backfill.mjs",
@@ -48,6 +50,8 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "autoprefixer": "latest",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.0",
     "postcss": "latest",
     "tailwindcss": "latest",
     "typescript": "latest"

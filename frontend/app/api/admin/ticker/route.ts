@@ -5,6 +5,9 @@ import { requireAuth } from "@/lib/auth";
 // GET: Fetch all ticker items
 export async function GET(request: NextRequest) {
   try {
+    const auth = await requireAuth(request);
+    if (auth instanceof NextResponse) return auth;
+
     const sql = getDb();
     const items = await sql`SELECT * FROM ticker_items ORDER BY sort_order ASC`;
     return NextResponse.json({ items });

@@ -7,7 +7,6 @@ export function AdminAuthWrapper({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -20,7 +19,6 @@ export function AdminAuthWrapper({ children }: { children: React.ReactNode }) {
         const data = await res.json();
 
         if (data.authenticated) {
-          setIsAuthenticated(true);
           setIsLoading(false);
         } else {
           // If not authenticated and not on login page, redirect to login

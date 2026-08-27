@@ -5,6 +5,9 @@ import { requireAuth } from "@/lib/auth";
 // GET: Fetch all neighborhoods
 export async function GET(request: NextRequest) {
   try {
+    const auth = await requireAuth(request);
+    if (auth instanceof NextResponse) return auth;
+
     const sql = getDb();
     const neighborhoods = await sql`SELECT * FROM neighborhoods ORDER BY sort_order ASC`;
     return NextResponse.json(neighborhoods);

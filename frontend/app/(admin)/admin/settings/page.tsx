@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 
 interface Settings {
@@ -26,23 +26,30 @@ export default function SettingsPage() {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [isDirty, setIsDirty] = useState(false);
 
-  useEffect(() => {
-    fetchSettings();
+  const showToast = useCallback((message: string, type: 'success' | 'error') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
   }, []);
 
-  const fetchSettings = async () => {
+  const fetchSettings = useCallback(async () => {
     try {
       const res = await fetch('/api/admin/settings', { credentials: 'include' });
       const data = await res.json();
       if (data.settings) {
         setSettings(data.settings);
       }
-    } catch (error) {
+    } catch {
       showToast('Failed to load settings', 'error');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [showToast]);
+
+  useEffect(() => {
+    // This effect synchronizes the client admin view with the remote API.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void fetchSettings();
+  }, [fetchSettings]);
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -57,7 +64,7 @@ export default function SettingsPage() {
       if (!res.ok) throw new Error('Failed to save settings');
       showToast('Settings saved successfully', 'success');
       setIsDirty(false);
-    } catch (error) {
+    } catch {
       showToast('Failed to save settings', 'error');
     } finally {
       setIsSaving(false);
@@ -67,11 +74,6 @@ export default function SettingsPage() {
   const handleChange = (field: string, value: string) => {
     setSettings({ ...settings, [field]: value });
     setIsDirty(true);
-  };
-
-  const showToast = (message: string, type: 'success' | 'error') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
   };
 
   if (isLoading) {

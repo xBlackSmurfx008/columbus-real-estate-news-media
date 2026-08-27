@@ -5,6 +5,9 @@ import { requireAuth } from "@/lib/auth";
 // GET: Fetch all settings as key-value object
 export async function GET(request: NextRequest) {
   try {
+    const auth = await requireAuth(request);
+    if (auth instanceof NextResponse) return auth;
+
     const sql = getDb();
     const rows = await sql`SELECT key, value FROM settings`;
 

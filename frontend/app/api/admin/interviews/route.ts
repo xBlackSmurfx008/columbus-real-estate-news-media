@@ -5,6 +5,9 @@ import { requireAuth } from "@/lib/auth";
 // GET: Fetch all interviews
 export async function GET(request: NextRequest) {
   try {
+    const auth = await requireAuth(request);
+    if (auth instanceof NextResponse) return auth;
+
     const sql = getDb();
     const interviews = await sql`SELECT * FROM interviews ORDER BY sort_order ASC`;
     return NextResponse.json({ interviews });
@@ -56,7 +59,7 @@ export async function POST(request: NextRequest) {
         RETURNING *
       `;
       return NextResponse.json(result[0], { status: 201 });
-    } catch (e) {
+    } catch {
       // Fallback to legacy schema
       const result = await sql`
         INSERT INTO interviews (id, name, initials, role, topic, status, date, sort_order)

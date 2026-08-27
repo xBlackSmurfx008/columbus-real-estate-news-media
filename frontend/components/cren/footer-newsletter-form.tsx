@@ -1,15 +1,18 @@
 "use client";
 
 import type { FormEvent } from "react";
+import { useRouter } from "next/navigation";
 
 export function FooterNewsletterForm() {
+  const router = useRouter();
+
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const email = fd.get("email");
     const q = new URLSearchParams({ source: "footer" });
     if (email) q.set("email", String(email));
-    window.location.href = `/subscribe?${q.toString()}`;
+    router.push(`/subscribe?${q.toString()}`);
   }
 
   return (

@@ -2,8 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb, initSchema, seedData } from "@/lib/db";
 import { ensureAdminUser } from "@/lib/auth";
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
+    const initToken = process.env.ADMIN_INIT_TOKEN;
+    const authorization = request.headers.get("authorization");
+    if (!initToken) {
+      return NextResponse.json(
+        { error: "Admin initialization is disabled" },
+        { status: 503 }
+      );
+    }
+    if (authorization !== `Bearer ${initToken}`) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const sql = getDb();
 
     // Check if schema already exists (safe to call multiple times)

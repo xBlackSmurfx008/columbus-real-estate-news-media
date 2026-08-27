@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { useSearchParams } from 'next/navigation';
 
@@ -39,21 +39,28 @@ export default function InterviewsPage() {
     read_time: 5,
   });
 
-  useEffect(() => {
-    fetchInterviews();
+  const showToast = useCallback((message: string, type: 'success' | 'error') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
   }, []);
 
-  const fetchInterviews = async () => {
+  const fetchInterviews = useCallback(async () => {
     try {
       const res = await fetch('/api/admin/interviews', { credentials: 'include' });
       const data = await res.json();
       setInterviews(data.interviews || []);
-    } catch (error) {
+    } catch {
       showToast('Failed to load interviews', 'error');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [showToast]);
+
+  useEffect(() => {
+    // This effect synchronizes the client admin view with the remote API.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void fetchInterviews();
+  }, [fetchInterviews]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,7 +99,7 @@ export default function InterviewsPage() {
       });
 
       showToast(editingId ? 'Interview updated successfully' : 'Interview created successfully', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to save interview', 'error');
     }
   };
@@ -110,7 +117,7 @@ export default function InterviewsPage() {
 
       await fetchInterviews();
       showToast('Interview deleted successfully', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to delete interview', 'error');
     }
   };
@@ -137,7 +144,7 @@ export default function InterviewsPage() {
       if (!res.ok) throw new Error('Failed to update status');
       await fetchInterviews();
       showToast('Interview status updated', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to update status', 'error');
     }
   };
@@ -157,14 +164,9 @@ export default function InterviewsPage() {
       if (!res.ok) throw new Error('Failed to update featured');
       await fetchInterviews();
       showToast('Featured status updated', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to update featured status', 'error');
     }
-  };
-
-  const showToast = (message: string, type: 'success' | 'error') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
   };
 
   return (

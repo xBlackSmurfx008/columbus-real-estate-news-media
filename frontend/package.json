@@ -59,5 +59,11 @@
   "overrides": {
     "nanoid": "^5.1.16",
     "undici": "^7.29.0"
+  },
+  "allowScripts": {
+    "@swc/core@1.15.3": true,
+    "cbor-extract@2.2.2": true,
+    "esbuild@0.28.2": true,
+    "unrs-resolver@1.12.2": true
   }
 }

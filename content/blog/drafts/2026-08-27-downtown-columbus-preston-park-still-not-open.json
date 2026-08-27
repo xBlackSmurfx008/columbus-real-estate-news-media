@@ -1,0 +1,152 @@
+{
+  "prompt_version": "cren-article-v1.0.0",
+  "title": "Downtown Columbus's Preston Park Still Isn't Open, Developer Says",
+  "category": "Neighborhoods",
+  "author": "CRE Newsroom",
+  "date": "Aug 27, 2026",
+  "excerpt": "Edwards Companies promised Downtown Columbus's Preston Park would open to the public by October 2025. Ten months later, the gate still needs a key card.",
+  "answer_summary": "Edwards Companies' Preston Park, an elevated public walkway planned above Fourth Street in Downtown Columbus, was supposed to open to the public in October 2025, Columbus Underground reported. Ten months later, the walkway remains locked behind a key-card gate while an extension to Third Street is still under construction.",
+  "body": "Edwards Companies' Preston Park, an elevated public walkway planned above Fourth Street in Downtown Columbus, was supposed to open to the public in October 2025, [Columbus Underground reported](https://columbusunderground.com/promised-public-greenspace-still-not-open-to-the-public-bw1/). Ten months later, the walkway remains locked behind a key-card gate while an extension to Third Street is still under construction.\n\n## What the Project Was Supposed to Be\n\nThe project reuses an enclosed skywalk built in the 1970s that spans Fourth Street, connecting two Edwards Companies properties on East Broad Street: the Pembroke at 195 East Broad Street and Preston Centre, the former PNC Tower, at 155 East Broad Street. [KEPHART](https://kephart.com/the-pembroke-a-journey-of-historic-preservation/), the architecture firm that worked on the Pembroke with Edwards Urban, describes the plan as removing the walkway's roof and glass walls and adding landscaping to create an open-air greenspace, with a further extension planned to Third Street. Columbus Underground has described the finished concept as similar in spirit to New York City's High Line, an elevated park built on a disused rail line.\n\n## The Third Street Extension Isn't Finished\n\nColumbus Underground reported that work continued through the summer of 2026 on extending the walkway to South Third Street, where a stairway and elevator are being built to serve as the project's main public entrance. Pedestrians who try to walk the existing pathway are met by a gate that requires a key card, according to that reporting. An Edwards Companies spokesperson told Columbus Underground, \"We anticipate the elevated walkway to be open this fall,\" but declined to explain the delay. The spokesperson said the walkway would be open to the public daily from 8 a.m. to 8 p.m. once it opens.\n\n## Two Buildings That Already Opened\n\nThe buildings the project is meant to connect are both further along than the walkway itself. KEPHART's own account of the Pembroke, published June 24, 2025, says leasing was already underway there with final construction details wrapping up. [Preston Centre](https://en.wikipedia.org/wiki/Preston_Centre) has an even longer track record: Edwards Companies acquired the 27-story former PNC Bank Building in February 2024 and converted it into 105 residential apartments that year, according to Wikipedia's sourced entry on the building. Both private components of the project were delivered and generating rent well before the shared public amenity meant to link them.\n\n## The Math on the Delay\n\nIf the park's public opening was originally promised for October 2025, as Columbus Underground reported, then as of August 27, 2026, roughly ten months have passed since that date without public access. Edwards Companies' new target of \"this fall\" would put the opening close to the one-year mark past the original promise.\n\n## What CREN Could Not Confirm\n\nCREN could not independently confirm the Downtown Commission's original review timeline for this concept; public references to that history vary across outlets, and Edwards Companies did not explain the reason for the delay. This account is limited to the walkway's current public-access status and the developer's stated timeline, not the full project history.\n\n## What to Watch Next\n\nThe next verifiable checkpoint is whether the Third Street stairway and elevator are finished and whether Edwards Companies opens the walkway on its stated 8 a.m. to 8 p.m. daily schedule before the end of fall 2026. Until then, Preston Park remains a private amenity for tenants of the Pembroke and Preston Centre rather than the public greenspace it was promised to be. For more on how [Downtown Columbus](/areas/downtown-columbus) development projects have delivered on their public commitments, CREN is tracking related [development](/topics/development) coverage.",
+  "primary_keyword": "Preston Park",
+  "meta_description": "Edwards Companies promised Downtown Columbus's Preston Park would open to the public in October 2025. Ten months later it's still gated, developer says.",
+  "fact_checked_at": "2026-08-27T16:13:47Z",
+  "canonical_event_key": "preston-park-downtown-columbus-still-not-open-2026",
+  "area_slug": "downtown-columbus",
+  "topic_slug": "development",
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "downtown-columbus",
+    "development",
+    "neighborhood",
+    "edwards-companies"
+  ],
+  "read_time": "5 min",
+  "featured": false,
+  "image_url": null,
+  "location": {
+    "name": "Columbus, OH",
+    "state": "OH"
+  },
+  "source_ledger": [
+    {
+      "id": "src-1",
+      "type": "PRIMARY",
+      "url": "https://kephart.com/the-pembroke-a-journey-of-historic-preservation/",
+      "publisher": "KEPHART",
+      "title": "The Pembroke: A Journey of Historic Preservation",
+      "published_at": "2025-06-24",
+      "fetched_at": "2026-08-27T16:00:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "src-2",
+      "type": "SECONDARY",
+      "url": "https://en.wikipedia.org/wiki/Preston_Centre",
+      "publisher": "Wikipedia",
+      "title": "Preston Centre",
+      "published_at": null,
+      "fetched_at": "2026-08-27T16:02:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "src-3",
+      "type": "SECONDARY",
+      "url": "https://columbusunderground.com/promised-public-greenspace-still-not-open-to-the-public-bw1/",
+      "publisher": "Columbus Underground",
+      "title": "Promised Public Greenspace Still Not Open to the Public",
+      "published_at": "2026-08-20",
+      "fetched_at": "2026-08-27T16:05:00Z",
+      "http_status": 200
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "cl-1",
+      "claim": "Edwards Companies' Preston Park, an elevated public walkway planned above Fourth Street in Downtown Columbus, was supposed to open to the public in October 2025, Columbus Underground reported.",
+      "source_ids": ["src-3"],
+      "kind": "FACT"
+    },
+    {
+      "id": "cl-2",
+      "claim": "Ten months later, the walkway remains locked behind a key-card gate while an extension to Third Street is still under construction.",
+      "source_ids": ["src-3"],
+      "kind": "FACT"
+    },
+    {
+      "id": "cl-3",
+      "claim": "The project reuses an enclosed skywalk built in the 1970s that spans Fourth Street, connecting two Edwards Companies properties on East Broad Street: the Pembroke at 195 East Broad Street and Preston Centre, the former PNC Tower, at 155 East Broad Street.",
+      "source_ids": ["src-1", "src-2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "cl-4",
+      "claim": "Columbus Underground reported that work continued through the summer of 2026 on extending the walkway to South Third Street, where a stairway and elevator are being built to serve as the project's main public entrance.",
+      "source_ids": ["src-3"],
+      "kind": "FACT"
+    },
+    {
+      "id": "cl-5",
+      "claim": "An Edwards Companies spokesperson told Columbus Underground, \"We anticipate the elevated walkway to be open this fall,\" but declined to explain the delay.",
+      "source_ids": ["src-3"],
+      "kind": "QUOTE",
+      "exact_support": "We anticipate the elevated walkway to be open this fall"
+    },
+    {
+      "id": "cl-6",
+      "claim": "The spokesperson said the walkway would be open to the public daily from 8 a.m. to 8 p.m. once it opens.",
+      "source_ids": ["src-3"],
+      "kind": "FACT"
+    },
+    {
+      "id": "cl-7",
+      "claim": "KEPHART's own account of the Pembroke, published June 24, 2025, says leasing was already underway there with final construction details wrapping up.",
+      "source_ids": ["src-1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "cl-8",
+      "claim": "Edwards Companies acquired the 27-story former PNC Bank Building in February 2024 and converted it into 105 residential apartments that year, according to Wikipedia's sourced entry on the building.",
+      "source_ids": ["src-2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "cl-9",
+      "claim": "If the park's public opening was originally promised for October 2025, as Columbus Underground reported, then as of August 27, 2026, roughly ten months have passed since that date without public access.",
+      "source_ids": ["src-3"],
+      "kind": "CALCULATION"
+    },
+    {
+      "id": "cl-10",
+      "claim": "The next verifiable checkpoint is whether the Third Street stairway and elevator are finished and whether Edwards Companies opens the walkway on its stated 8 a.m. to 8 p.m. daily schedule before the end of fall 2026.",
+      "source_ids": ["src-3"],
+      "kind": "FACT"
+    }
+  ],
+  "entity_ledger": [
+    { "name": "Edwards Companies", "source_ids": ["src-1", "src-2", "src-3"] },
+    { "name": "Preston Park", "source_ids": ["src-1", "src-3"] },
+    { "name": "The Pembroke", "source_ids": ["src-1"] },
+    { "name": "Preston Centre", "source_ids": ["src-2"] },
+    { "name": "KEPHART", "source_ids": ["src-1"] },
+    { "name": "Columbus Underground", "source_ids": ["src-3"] }
+  ],
+  "image_brief": {
+    "primary_request": "A CREN house-style illustrated graphic of an elevated garden walkway between two office/residential towers, with a simple locked gate motif suggesting restricted public access.",
+    "editorial_idea": "Show the gap between a lush, finished-looking elevated walkway and a plain locked gate — a promised public space that still isn't open.",
+    "story_anchors": [
+      "An elevated, planted walkway or skybridge connecting two mid-rise Downtown buildings",
+      "A simple gate or turnstile with a card-reader detail suggesting key-card-only access"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "No licensed photo of Preston Park was available to CREN; an illustrative CREN-style graphic was requested instead of a fabricated documentary photo of the actual site.",
+    "avoid": "No handshakes, keys, money, arrows, glowing buildings, hardhat-and-blueprint still lifes, skyline montages, or invented renderings of the actual Pembroke or Preston Centre buildings."
+  },
+  "image_alt": "Illustrated graphic of an elevated planted walkway between two Downtown buildings with a locked gate, representing Preston Park's delayed public opening in Columbus.",
+  "image_provenance": {
+    "type": "AI_GENERATED",
+    "caption": "AI-generated illustration",
+    "source": "CREN editorial graphic",
+    "license": "N/A"
+  }
+}

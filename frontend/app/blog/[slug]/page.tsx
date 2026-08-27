@@ -1,10 +1,13 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
+import { BlogArticleTemplate } from "@/components/blog-article-template";
 import { CoverImage } from "@/components/cren/cover-image";
-import { getArticleBySlug, getArticles, generateSlug, DbArticle } from "@/lib/public-data";
+import { getArticles, resolveArticleSlug, DbArticle } from "@/lib/public-data";
+import { getArticlePath } from "@/lib/article-routing";
 import { getAreaBySlug, getTopicBySlug } from "@/lib/data";
-import Script from "next/script";
+import { getBlogPostBySlug } from "@/lib/blog";
+import { absoluteUrl, safeJsonLd } from '@/lib/site';
 
 export const revalidate = 300;
 
@@ -84,16 +87,24 @@ export async function generateMetadata({
 }) {
   const { slug } = await params;
   let article: DbArticle | null = null;
+  const blogPost = getBlogPostBySlug(slug);
   try {
-    article = await getArticleBySlug(slug);
+    article = (await resolveArticleSlug(slug))?.article ?? null;
   } catch {
     article = null;
   }
+  if (!article && blogPost) {
+    return {
+      title: blogPost.title,
+      description: blogPost.excerpt,
+      alternates: { canonical: `/blog/${blogPost.slug}` },
+    };
+  }
   if (!article) return {};
   const description = article.meta_description ?? article.excerpt ?? undefined;
-  const canonicalUrl = `https://columbusrealestatenews.com/blog/${slug}`;
+  const canonicalUrl = `https://columbusrealestatenews.com${getArticlePath(article)}`;
   return {
-    title: `${article.title} — Columbus Real Estate News`,
+    title: article.title,
     description,
     alternates: { canonical: canonicalUrl },
     openGraph: {
@@ -101,6 +112,9 @@ export async function generateMetadata({
       description,
       url: canonicalUrl,
       type: "article",
+      publishedTime: article.created_at,
+      modifiedTime: article.updated_at,
+      authors: [article.author],
       ...(article.image_url ? { images: [article.image_url] } : {}),
     },
     twitter: {
@@ -119,10 +133,14 @@ export default async function BlogPostPage({
   const { slug } = await params;
 
   let article: DbArticle | null = null;
+  let canonicalSlug = slug;
   let relatedArticles: DbArticle[] = [];
+  const blogPost = getBlogPostBySlug(slug);
 
   try {
-    article = await getArticleBySlug(slug);
+    const resolution = await resolveArticleSlug(slug);
+    article = resolution?.article ?? null;
+    canonicalSlug = resolution?.canonicalSlug ?? slug;
     if (article) {
       const all = await getArticles();
       relatedArticles = all
@@ -133,9 +151,18 @@ export default async function BlogPostPage({
     article = null;
   }
 
-  if (!article) notFound();
+  if (!article && blogPost) {
+    return (
+      <CrenPage wide>
+        <BlogArticleTemplate post={blogPost} />
+      </CrenPage>
+    );
+  }
 
-  const canonicalUrl = `https://columbusrealestatenews.com/blog/${slug}`;
+  if (!article) notFound();
+  if (canonicalSlug !== slug) permanentRedirect(`/blog/${canonicalSlug}`);
+
+  const canonicalUrl = `https://columbusrealestatenews.com${getArticlePath(article)}`;
   const initials = article.author.split(" ").map((n) => n[0]).join("");
   const topic = article.topic_slug ? getTopicBySlug(article.topic_slug) : null;
   const area = article.area_slug ? getAreaBySlug(article.area_slug) : null;
@@ -143,17 +170,25 @@ export default async function BlogPostPage({
     (tag) => tag !== article.topic_slug && tag !== article.area_slug,
   );
 
-  const jsonLdBlogPosting = {
+  const jsonLdNewsArticle = {
     "@context": "https://schema.org",
-    "@type": "BlogPosting",
-    "@id": `${canonicalUrl}#blogposting`,
+    "@type": "NewsArticle",
+    "@id": `${canonicalUrl}#newsarticle`,
     headline: article.title,
     description: article.meta_description ?? article.excerpt ?? "",
-    datePublished: article.date,
+    datePublished: article.created_at,
     dateModified: article.updated_at,
     mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
-    author: { "@type": "Person", name: article.author },
-    publisher: { "@type": "Organization", name: "Columbus Real Estate News" },
+    author: { "@type": "Organization", name: article.author, url: absoluteUrl('/newsroom') },
+    publisher: {
+      "@type": "Organization",
+      name: "Columbus Real Estate News",
+      url: absoluteUrl('/'),
+      logo: { "@type": "ImageObject", url: absoluteUrl('/icon.svg') },
+    },
+    articleSection: article.category,
+    keywords: Array.isArray(article.tags) ? article.tags.join(', ') : undefined,
+    isAccessibleForFree: true,
     ...(article.image_url ? { image: [article.image_url] } : {}),
   };
 
@@ -169,12 +204,14 @@ export default async function BlogPostPage({
 
   return (
     <>
-      <Script id={`blogposting-${slug}`} type="application/ld+json" strategy="afterInteractive">
-        {JSON.stringify(jsonLdBlogPosting)}
-      </Script>
-      <Script id={`breadcrumb-${slug}`} type="application/ld+json" strategy="afterInteractive">
-        {JSON.stringify(breadcrumb)}
-      </Script>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLdNewsArticle) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(breadcrumb) }}
+      />
       <CrenPage wide>
         <article className="grid gap-6 lg:grid-cols-[1fr_280px]">
           <div className="cren-stack">
@@ -212,8 +249,13 @@ export default async function BlogPostPage({
                   {initials}
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-[color:var(--text-hero)]">{article.author}</div>
-                  <div className="text-xs text-[color:var(--text-muted)]">{article.date}</div>
+                  <Link href="/newsroom" className="text-sm font-semibold text-[color:var(--text-hero)] no-underline hover:text-[color:var(--green)]">
+                    {article.author}
+                  </Link>
+                  <div className="text-xs text-[color:var(--text-muted)]">
+                    Published {article.date}
+                    {article.fact_checked_at ? ` · Fact checked ${article.fact_checked_at}` : ''}
+                  </div>
                 </div>
               </div>
             </header>
@@ -262,7 +304,7 @@ export default async function BlogPostPage({
               {relatedArticles.map((item) => (
                 <li key={item.id}>
                   <Link
-                    href={`/blog/${generateSlug(item.title)}`}
+                    href={getArticlePath(item)}
                     className="cren-text-link block font-medium transition hover:opacity-90"
                   >
                     {item.title}

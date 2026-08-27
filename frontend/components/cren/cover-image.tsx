@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { displayArticleImageUrl } from "@/lib/article-image";
 
 function placeholderHue(value: string) {
@@ -24,11 +24,30 @@ export function CoverImage({
   sizes?: string;
   priority?: boolean;
 }) {
-  const [currentSrc, setCurrentSrc] = useState(() => displayArticleImageUrl(src));
+  const displaySrc = displayArticleImageUrl(src);
+  return (
+    <ResolvedCoverImage
+      key={`${src}:${displaySrc ?? "unavailable"}`}
+      initialSrc={displaySrc}
+      alt={alt}
+      sizes={sizes}
+      priority={priority}
+    />
+  );
+}
 
-  useEffect(() => {
-    setCurrentSrc(displayArticleImageUrl(src));
-  }, [src]);
+function ResolvedCoverImage({
+  initialSrc,
+  alt,
+  sizes,
+  priority,
+}: {
+  initialSrc: string | null;
+  alt: string;
+  sizes: string;
+  priority: boolean;
+}) {
+  const [currentSrc, setCurrentSrc] = useState(initialSrc);
 
   if (!currentSrc) {
     const hue = placeholderHue(alt);

@@ -1,5 +1,12 @@
+import type { Metadata } from 'next';
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
+
+export const metadata: Metadata = {
+  title: 'About',
+  description: 'About Columbus Real Estate News, its newsroom, coverage mission, sourcing, corrections, and publishing standards.',
+  alternates: { canonical: '/about' },
+};
 
 export default function AboutPage() {
   return (
@@ -29,20 +36,18 @@ export default function AboutPage() {
             <ul className="cren-body mt-3 list-inside list-disc space-y-2 text-sm">
               <li>Area-first taxonomy: each neighborhood hub collects related reporting</li>
               <li>Topic hubs for cross-cutting themes (market, schools, development, politics, lifestyle)</li>
-              <li>Repeatable story structure so you can scan fast and trust the methodology</li>
+              <li>Automated research and production with deterministic evidence and image-integrity gates</li>
+              <li>Repeatable story structure so readers can scan quickly and inspect the evidence</li>
             </ul>
           </div>
         </div>
 
         <div className="cren-soft rounded-[var(--radius)] border border-[color:var(--border)] p-6">
-          <h2 className="cren-heading-lg text-[length:1.25rem]">Editorial standards</h2>
+          <h2 className="cren-heading-lg text-[length:1.25rem]">Editorial accountability</h2>
           <p className="cren-body mt-2 text-sm">
-            We prioritize accuracy on schools, data, and policy. Sponsored placements are labeled; news and guides are written for
-            readers first. Questions or corrections? Use{" "}
-            <Link href="/contact" className="cren-text-link">
-              Contact
-            </Link>
-            .
+            Read our <Link href="/editorial-standards" className="cren-text-link">editorial standards</Link>, learn how the{' '}
+            <Link href="/newsroom" className="cren-text-link">CREN Newsroom</Link> works, or submit a factual challenge under our{' '}
+            <Link href="/corrections" className="cren-text-link">corrections policy</Link>.
           </p>
         </div>
 

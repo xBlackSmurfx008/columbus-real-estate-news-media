@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 
 interface MarketSnapshot {
@@ -35,11 +35,12 @@ export default function MarketDataPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
-  useEffect(() => {
-    fetchMarketData();
+  const showToast = useCallback((message: string, type: 'success' | 'error') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
   }, []);
 
-  const fetchMarketData = async () => {
+  const fetchMarketData = useCallback(async () => {
     try {
       const res = await fetch('/api/admin/market', { credentials: 'include' });
       const data = await res.json();
@@ -47,12 +48,18 @@ export default function MarketDataPage() {
       if (data.snapshot) setSnapshot(data.snapshot);
       if (data.heroStats) setHeroStats(data.heroStats);
       if (data.neighborhoods) setNeighborhoods(data.neighborhoods);
-    } catch (error) {
+    } catch {
       showToast('Failed to load market data', 'error');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [showToast]);
+
+  useEffect(() => {
+    // This effect synchronizes the client admin view with the remote API.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void fetchMarketData();
+  }, [fetchMarketData]);
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -70,16 +77,11 @@ export default function MarketDataPage() {
 
       if (!res.ok) throw new Error('Failed to save market data');
       showToast('Market data saved successfully', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to save market data', 'error');
     } finally {
       setIsSaving(false);
     }
-  };
-
-  const showToast = (message: string, type: 'success' | 'error') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
   };
 
   const addSnapshotItem = () => {

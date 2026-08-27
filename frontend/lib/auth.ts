@@ -3,22 +3,27 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "./db";
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.ADMIN_JWT_SECRET || "cren-default-secret-change-me-in-production"
-);
 const COOKIE_NAME = "cren_admin_token";
+
+function getJwtSecret(): Uint8Array {
+  const secret = process.env.ADMIN_JWT_SECRET;
+  if (!secret) {
+    throw new Error("ADMIN_JWT_SECRET is required");
+  }
+  return new TextEncoder().encode(secret);
+}
 
 export async function signToken(payload: { userId: number; email: string; role: string }) {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("7d")
-    .sign(JWT_SECRET);
+    .sign(getJwtSecret());
 }
 
 export async function verifyToken(token: string) {
   try {
-    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const { payload } = await jwtVerify(token, getJwtSecret());
     return payload as { userId: number; email: string; role: string };
   } catch {
     return null;
@@ -51,7 +56,11 @@ export async function clearSessionCookie() {
 // Simple password hashing using Web Crypto (no bcrypt needed in edge)
 async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder();
-  const data = encoder.encode(password + (process.env.ADMIN_JWT_SECRET || "cren-salt"));
+  const secret = process.env.ADMIN_JWT_SECRET;
+  if (!secret) {
+    throw new Error("ADMIN_JWT_SECRET is required");
+  }
+  const data = encoder.encode(password + secret);
   const hashBuffer = await crypto.subtle.digest("SHA-256", data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
@@ -84,7 +93,10 @@ export async function ensureAdminUser() {
   const sql = getDb();
   const users = await sql`SELECT COUNT(*) as count FROM admin_users`;
   if (Number(users[0].count) === 0) {
-    const defaultPassword = process.env.ADMIN_DEFAULT_PASSWORD || "cren2026admin";
+    const defaultPassword = process.env.ADMIN_DEFAULT_PASSWORD;
+    if (!defaultPassword) {
+      throw new Error("ADMIN_DEFAULT_PASSWORD is required to create the initial admin user");
+    }
     const hash = await createPasswordHash(defaultPassword);
     await sql`INSERT INTO admin_users (email, password_hash, name, role)
       VALUES ('admin@columbusrealestatenews.com', ${hash}, 'Admin', 'admin')`;

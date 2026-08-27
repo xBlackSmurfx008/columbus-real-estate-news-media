@@ -6,7 +6,12 @@ type Partner = {
   name: string;
   blurb: string | null;
   cta_text: string | null;
+  url: string;
 };
+
+function isPlaceholderAffiliateUrl(url: string) {
+  return /example\.com/i.test(url);
+}
 
 // Server component: renders active affiliate partners for a category with
 // the FTC disclosure above them. Renders nothing if the category is empty
@@ -24,7 +29,7 @@ export async function AffiliateBlock({
   try {
     const sql = getDb();
     partners = (await sql`
-      SELECT slug, name, blurb, cta_text FROM affiliate_partners
+      SELECT slug, name, blurb, cta_text, url FROM affiliate_partners
       WHERE category = ${category} AND active = true
       ORDER BY sort_order ASC
       LIMIT 6
@@ -32,6 +37,7 @@ export async function AffiliateBlock({
   } catch {
     return null;
   }
+  partners = partners.filter((partner) => !isPlaceholderAffiliateUrl(partner.url));
   if (partners.length === 0) return null;
 
   return (

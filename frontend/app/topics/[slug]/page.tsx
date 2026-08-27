@@ -1,11 +1,24 @@
+import type { Metadata } from 'next';
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getTopicBySlug } from "@/lib/data";
 import { CrenPage } from "@/components/cren/cren-page";
-import { getArticles, generateSlug, DbArticle } from "@/lib/public-data";
+import { getArticles, DbArticle } from "@/lib/public-data";
+import { getArticlePath } from "@/lib/article-routing";
 import { CoverImage } from "@/components/cren/cover-image";
 
 export const revalidate = 300;
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const topic = getTopicBySlug(slug);
+  if (!topic) return {};
+  return {
+    title: `${topic.name} in Columbus`,
+    description: `${topic.description} Sourced Columbus and Central Ohio coverage for residents and housing decisions.`,
+    alternates: { canonical: `/topics/${topic.slug}` },
+  };
+}
 
 export default async function TopicDetailPage({
   params,
@@ -38,7 +51,7 @@ export default async function TopicDetailPage({
             {articles.map((article) => (
               <Link
                 key={article.id}
-                href={`/blog/${generateSlug(article.title)}`}
+                href={getArticlePath(article)}
                 className="block no-underline group"
               >
                 <div className="cren-surface overflow-hidden transition-shadow duration-300 hover:shadow-[var(--shadow-hover)]">

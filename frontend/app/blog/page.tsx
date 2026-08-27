@@ -1,16 +1,23 @@
+import type { Metadata } from 'next';
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
 import { CoverImage } from "@/components/cren/cover-image";
-import { getArticles, generateSlug, DbArticle } from "@/lib/public-data";
+import { getArticles, DbArticle } from "@/lib/public-data";
+import { getArticlePath } from "@/lib/article-routing";
 
 export const revalidate = 300;
 
+export const metadata: Metadata = {
+  title: 'Columbus Real Estate News & Analysis',
+  description: 'Latest sourced reporting on Columbus housing, rent, development, local policy, restaurants, events, and neighborhood life.',
+  alternates: { canonical: '/blog' },
+};
+
 function ArticleCard({ article, featured = false }: { article: DbArticle; featured?: boolean }) {
-  const slug = generateSlug(article.title);
   const initials = article.author.split(" ").map((n) => n[0]).join("");
 
   return (
-    <Link href={`/blog/${slug}`} className="block no-underline group">
+    <Link href={getArticlePath(article)} className="block no-underline group">
       <article
         className="cren-surface p-6 transition-shadow duration-300 hover:shadow-[var(--shadow-hover)]"
         data-item-type="article"

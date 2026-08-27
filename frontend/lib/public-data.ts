@@ -1,6 +1,8 @@
 import { cache } from "react";
 import { getDb } from "@/lib/db";
 import snapshotJson from "@/content/snapshot/public-data.json";
+import { generateArticleSlug, getArticleSlug } from "@/lib/article-routing";
+import { getBlogPostBySlug } from "@/lib/blog";
 
 // ============================================================
 // Server-side data fetching for public pages
@@ -23,6 +25,7 @@ import snapshotJson from "@/content/snapshot/public-data.json";
 
 export interface DbArticle {
   id: string;
+  canonical_slug?: string | null;
   status: string;
   featured: boolean;
   category: string;
@@ -71,6 +74,26 @@ export interface DbNeighborhood {
   dom: string;
   inventory: string;
   sort_order: number;
+}
+
+export interface DbMarketObservation {
+  id: number;
+  metric_key: string;
+  label: string;
+  value_display: string;
+  value_numeric: string | null;
+  unit: string | null;
+  geography_type: string;
+  geography_slug: string;
+  geography_label: string;
+  property_type: string;
+  period_start: string | null;
+  period_end: string;
+  as_of_date: string;
+  source_name: string;
+  source_url: string;
+  methodology_url: string | null;
+  notes: string | null;
 }
 
 export interface DbAd {
@@ -131,7 +154,16 @@ export interface PublicSiteData {
   settings: Record<string, string>;
 }
 
+export interface ArticleSlugResolution {
+  article: DbArticle;
+  canonicalSlug: string;
+  shouldRedirect: boolean;
+}
+
 const snapshot = snapshotJson as unknown as PublicSiteData;
+const legacyArticleSlugRedirects: Record<string, string> = {
+  "columbus-zone-in-phase-2-commercial-industrial-rezoning": "zone-in-adds-capacity-not-88-000-built-columbus-homes",
+};
 
 function snapshotArticles(): DbArticle[] {
   return Array.isArray(snapshot.articles) ? snapshot.articles : [];
@@ -162,6 +194,7 @@ export const getPublicData = cache(async (): Promise<PublicSiteData> => {
     const [articles, ads, marketSnapshot, heroStats, neighborhoods, tickers, interviews, testimonials, settingsRows] =
       await Promise.all([
         sql`SELECT id, status, featured, category, category_class, icon, title, excerpt, NULL AS body,
+                   canonical_slug,
                    author, date, read_time, area_slug, topic_slug, tags, image_url, image_alt,
                    image_caption, meta_description, fact_checked_at, created_at, updated_at
             FROM articles WHERE status = 'live' ORDER BY created_at DESC`,
@@ -220,49 +253,114 @@ export const getArticleById = cache(async (id: string): Promise<DbArticle | null
   }
 });
 
-/** Fetch a single article by slug (generated from title).
- *  Resolves the slug against id+title only, then fetches the one
- *  matching row — never the whole table with bodies. */
-export const getArticleBySlug = cache(async (slug: string): Promise<DbArticle | null> => {
+/** Resolve a canonical or historical article slug without loading every body. */
+export const resolveArticleSlug = cache(async (slug: string): Promise<ArticleSlugResolution | null> => {
+  const redirectedSlug = legacyArticleSlugRedirects[slug];
+  if (redirectedSlug) {
+    return resolveArticleSlug(redirectedSlug);
+  }
+
   try {
     const sql = getDb();
-    // First try direct ID match
-    const byId = await sql`SELECT * FROM articles WHERE id = ${slug} AND status = 'live'`;
-    if (byId.length > 0) return byId[0] as unknown as DbArticle;
+    const canonicalRows = await sql`
+      SELECT * FROM articles
+      WHERE canonical_slug = ${slug} AND status = 'live'
+      LIMIT 1
+    `;
+    if (canonicalRows.length > 0) {
+      const article = canonicalRows[0] as unknown as DbArticle;
+      return { article, canonicalSlug: getArticleSlug(article), shouldRedirect: false };
+    }
 
-    // Otherwise resolve the slug from titles alone, then fetch that one article
-    const titles = await sql`SELECT id, title FROM articles WHERE status = 'live'`;
-    const match = (titles as unknown as Array<{ id: string; title: string }>).find(
-      (a) => generateSlug(a.title) === slug
+    const redirectRows = await sql`
+      SELECT articles.*
+      FROM article_slug_redirects
+      JOIN articles ON articles.id = article_slug_redirects.article_id
+      WHERE article_slug_redirects.slug = ${slug} AND articles.status = 'live'
+      LIMIT 1
+    `;
+    if (redirectRows.length > 0) {
+      const article = redirectRows[0] as unknown as DbArticle;
+      return { article, canonicalSlug: getArticleSlug(article), shouldRedirect: true };
+    }
+
+    // Retain ID/title compatibility until every historical link is backfilled.
+    const byId = await sql`SELECT * FROM articles WHERE id = ${slug} AND status = 'live'`;
+    if (byId.length > 0) {
+      const article = byId[0] as unknown as DbArticle;
+      return { article, canonicalSlug: getArticleSlug(article), shouldRedirect: true };
+    }
+
+    const titles = await sql`SELECT id, title, canonical_slug FROM articles WHERE status = 'live'`;
+    const match = (titles as unknown as Array<Pick<DbArticle, 'id' | 'title' | 'canonical_slug'>>).find(
+      (article) => generateArticleSlug(article.title) === slug,
     );
     if (!match) return null;
     const rows = await sql`SELECT * FROM articles WHERE id = ${match.id} AND status = 'live'`;
-    return (rows[0] as unknown as DbArticle) ?? null;
+    const article = (rows[0] as unknown as DbArticle) ?? null;
+    if (!article) return null;
+    const canonicalSlug = getArticleSlug(article);
+    return { article, canonicalSlug, shouldRedirect: canonicalSlug !== slug };
   } catch (error) {
-    logDbFallback("getArticleBySlug", error);
+    logDbFallback("resolveArticleSlug", error);
     const articles = snapshotArticles();
-    return (
-      articles.find((a) => a.id === slug) ??
-      articles.find((a) => generateSlug(a.title) === slug) ??
-      null
-    );
+    const article = articles.find((a) => a.id === slug)
+      ?? articles.find((a) => getArticleSlug(a) === slug)
+      ?? articles.find((a) => generateArticleSlug(a.title) === slug)
+      ?? null;
+    if (!article) return null;
+    const canonicalSlug = getArticleSlug(article);
+    return { article, canonicalSlug, shouldRedirect: canonicalSlug !== slug };
   }
 });
 
-/** Generate a URL-friendly slug from a title */
-export function generateSlug(title: string): string {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-    .substring(0, 80);
-}
+/** Fetch a single article while preserving the legacy public API. */
+export const getArticleBySlug = cache(async (slug: string): Promise<DbArticle | null> => {
+  const resolution = await resolveArticleSlug(slug);
+  if (resolution?.article) return resolution.article;
+
+  const blogPost = getBlogPostBySlug(slug);
+  if (!blogPost) return null;
+
+  return {
+    id: blogPost.slug,
+    canonical_slug: blogPost.slug,
+    status: "live",
+    featured: false,
+    category: blogPost.format,
+    category_class: "card-img-market",
+    icon: "●",
+    title: blogPost.title,
+    excerpt: blogPost.excerpt,
+    body: [
+      `## ${blogPost.introHook}`,
+      ...blogPost.whatChanged.map((point) => `- ${point}`),
+    ].join("\n\n"),
+    author: "CREN Newsroom",
+    date: blogPost.date,
+    read_time: `${blogPost.readTimeMinutes} min read`,
+    area_slug: blogPost.areaSlug,
+    topic_slug: blogPost.topicSlug,
+    tags: [blogPost.topicSlug, blogPost.areaSlug].filter(Boolean) as string[],
+    image_url: null,
+    image_alt: null,
+    image_caption: null,
+    meta_description: blogPost.excerpt,
+    fact_checked_at: null,
+    created_at: `${blogPost.date}T00:00:00.000Z`,
+    updated_at: `${blogPost.date}T00:00:00.000Z`,
+  } as DbArticle;
+});
+
+/** @deprecated Import generateArticleSlug from article-routing instead. */
+export const generateSlug = generateArticleSlug;
 
 /** Get only articles (for blog pages) — no bodies */
 export const getArticles = cache(async (): Promise<DbArticle[]> => {
   try {
     const sql = getDb();
     const rows = await sql`SELECT id, status, featured, category, category_class, icon, title, excerpt, NULL AS body,
+                                  canonical_slug,
                                   author, date, read_time, area_slug, topic_slug, tags, image_url, image_alt,
                                   image_caption, meta_description, fact_checked_at, created_at, updated_at
                            FROM articles WHERE status = 'live' ORDER BY created_at DESC`;
@@ -294,5 +392,46 @@ export const getMarketData = cache(async () => {
       heroStats: snapshot.heroStats ?? [],
       neighborhoods: snapshot.neighborhoods ?? [],
     };
+  }
+});
+
+/** Return the latest verified, source-aware metric rows for one area. */
+export const getAreaMarketObservations = cache(async (areaSlug: string): Promise<DbMarketObservation[]> => {
+  try {
+    const sql = getDb();
+    const rows = await sql`
+      SELECT DISTINCT ON (market_observations.metric_key, market_observations.property_type)
+        market_observations.id,
+        market_observations.metric_key,
+        market_observations.label,
+        market_observations.value_display,
+        market_observations.value_numeric,
+        market_observations.unit,
+        market_observations.geography_type,
+        market_observations.geography_slug,
+        market_observations.geography_label,
+        market_observations.property_type,
+        market_observations.period_start,
+        market_observations.period_end,
+        market_observations.as_of_date,
+        market_sources.name AS source_name,
+        market_observations.source_url,
+        COALESCE(market_observations.methodology_url, market_sources.methodology_url) AS methodology_url,
+        market_observations.notes
+      FROM market_observations
+      JOIN market_sources ON market_sources.slug = market_observations.source_slug
+      WHERE market_observations.geography_slug = ${areaSlug}
+        AND market_observations.quality_status = 'verified'
+      ORDER BY
+        market_observations.metric_key,
+        market_observations.property_type,
+        market_observations.period_end DESC,
+        market_observations.updated_at DESC
+    `;
+    return rows as unknown as DbMarketObservation[];
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`[public-data] DB unavailable in getAreaMarketObservations; hiding unverified area metrics: ${message}`);
+    return [];
   }
 });

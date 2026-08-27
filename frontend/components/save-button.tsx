@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import { trackEvent } from "@/lib/analytics-client";
 
 type SaveButtonProps = {
@@ -10,28 +10,40 @@ type SaveButtonProps = {
 };
 
 const STORAGE_KEY = "crem_saved_items";
+const SAVED_ITEMS_EVENT = "crem-saved-items-change";
+
+function readSavedItems(): string[] {
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function subscribeToSavedItems(callback: () => void) {
+  window.addEventListener("storage", callback);
+  window.addEventListener(SAVED_ITEMS_EVENT, callback);
+  return () => {
+    window.removeEventListener("storage", callback);
+    window.removeEventListener(SAVED_ITEMS_EVENT, callback);
+  };
+}
 
 export function SaveButton({ itemId, itemType, label = "Save" }: SaveButtonProps) {
   const key = useMemo(() => `${itemType}:${itemId}`, [itemType, itemId]);
-  const [saved, setSaved] = useState(false);
-
-  useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      const parsed: string[] = raw ? JSON.parse(raw) : [];
-      setSaved(parsed.includes(key));
-    } catch {
-      setSaved(false);
-    }
-  }, [key]);
+  const saved = useSyncExternalStore(
+    subscribeToSavedItems,
+    () => readSavedItems().includes(key),
+    () => false
+  );
 
   function toggleSaved() {
     try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      const parsed: string[] = raw ? JSON.parse(raw) : [];
+      const parsed = readSavedItems();
       const next = saved ? parsed.filter((entry) => entry !== key) : [...new Set([...parsed, key])];
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      setSaved(!saved);
+      window.dispatchEvent(new Event(SAVED_ITEMS_EVENT));
       trackEvent("add_to_wishlist", { item_id: itemId, item_category: itemType, saved: !saved });
     } catch {
       // Non-blocking interaction

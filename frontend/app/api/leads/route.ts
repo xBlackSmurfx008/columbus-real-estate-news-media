@@ -3,7 +3,7 @@ import { getDb } from "@/lib/db";
 import { requireAuth } from "@/lib/auth";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PERSONAS = ["fsbo_seller", "investor_seller", "capital_partner", "renter"] as const;
+const PERSONAS = ["fsbo_seller", "investor_seller", "capital_partner", "renter", "rental_listing", "directory_listing"] as const;
 const MAX_BODY_BYTES = 16_384;
 
 // POST: public lead intake from the funnel pages

@@ -39,6 +39,7 @@ export const invoicesStore = new Map<string, Invoice>();
 let idCounter = 0;
 let hydrated = false;
 const STORE_PATH = process.env.AGENT_STORE_PATH || join(process.cwd(), ".runtime", "agent-store.json");
+const SHOULD_PERSIST = process.env.NODE_ENV !== "production" || Boolean(process.env.AGENT_STORE_PATH);
 
 type SerializedStore = {
   idCounter: number;
@@ -88,19 +89,26 @@ function toSerializedStore(): SerializedStore {
 }
 
 function persistStore(): void {
+  if (!SHOULD_PERSIST) return;
   const dir = dirname(STORE_PATH);
-  if (!existsSync(dir)) {
-    mkdirSync(dir, { recursive: true });
+  if (!existsSync(/* turbopackIgnore: true */ dir)) {
+    mkdirSync(/* turbopackIgnore: true */ dir, { recursive: true });
   }
-  writeFileSync(STORE_PATH, JSON.stringify(toSerializedStore(), null, 2), "utf8");
+  writeFileSync(
+    /* turbopackIgnore: true */ STORE_PATH,
+    JSON.stringify(toSerializedStore(), null, 2),
+    "utf8"
+  );
 }
 
 export function hydrateStore(): void {
   if (hydrated) return;
   hydrated = true;
-  if (!existsSync(STORE_PATH)) return;
+  if (!SHOULD_PERSIST || !existsSync(/* turbopackIgnore: true */ STORE_PATH)) return;
   try {
-    const data = JSON.parse(readFileSync(STORE_PATH, "utf8")) as Partial<SerializedStore>;
+    const data = JSON.parse(
+      readFileSync(/* turbopackIgnore: true */ STORE_PATH, "utf8")
+    ) as Partial<SerializedStore>;
     idCounter = data.idCounter || 0;
     setStoreValues(companiesStore, data.companiesStore || []);
     setStoreValues(contactsStore, data.contactsStore || []);

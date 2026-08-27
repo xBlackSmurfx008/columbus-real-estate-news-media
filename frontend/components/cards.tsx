@@ -4,10 +4,11 @@ import { Area, ContentItem, Topic } from "@/lib/types";
 import { SaveButton } from "@/components/save-button";
 import { Badge } from "@/components/ui/badge";
 import { getTopicBySlug } from "@/lib/data";
-const STORY_PLACEHOLDER =
-  "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=640&q=70&auto=format&fit=crop";
+import { representativeAreaImage } from "@/lib/area-guides";
 
-export function AreaCard({ area }: { area: Area }) {
+export function AreaCard({ area, imageUrl }: { area: Area; imageUrl?: string | null }) {
+  const resolvedImage = imageUrl ?? representativeAreaImage(area);
+  const isRepresentative = !imageUrl;
   return (
     <article
       className="group cren-surface p-5 transition-shadow duration-300 hover:shadow-[var(--shadow-hover)]"
@@ -16,16 +17,23 @@ export function AreaCard({ area }: { area: Area }) {
     >
       <Link href={`/areas/${area.slug}`} className="block text-inherit no-underline">
         <div className="relative mb-3 aspect-[16/10] overflow-hidden rounded-[var(--radius-sm)] bg-[color:var(--green-pale)]">
-          <div
-            className="h-full w-full bg-gradient-to-br from-[color:var(--green)]/20 via-transparent to-transparent transition-transform duration-300 group-hover:scale-105"
-            aria-hidden
+          <Image
+            src={resolvedImage}
+            alt={isRepresentative ? `Representative editorial image for ${area.name}` : `${area.name} coverage`}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
+          {isRepresentative && (
+            <span className="absolute bottom-2 left-2 rounded-full bg-black/65 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-white">
+              Representative image
+            </span>
+          )}
         </div>
         <h3 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)] transition-colors group-hover:text-[color:var(--green)]">
           {area.name}
         </h3>
         <p className="mt-2 text-sm text-[color:var(--text-secondary)]">{area.description}</p>
-        <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-[color:var(--green)]">{area.populationSignal}</p>
       </Link>
       <div className="mt-3">
         <SaveButton itemId={area.slug} itemType="area" />
@@ -76,12 +84,9 @@ export function StoryCard({ item }: { item: ContentItem }) {
     >
       <Link href={`/blog/${item.slug}`} className="block text-inherit no-underline">
         <div className="relative mb-3 aspect-[16/10] overflow-hidden rounded-[var(--radius-sm)] bg-[color:var(--green-pale)]">
-          <Image
-            src={STORY_PLACEHOLDER}
-            alt=""
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+          <div
+            className="h-full w-full bg-gradient-to-br from-[color:var(--green)]/20 via-[color:var(--gold)]/10 to-transparent transition-transform duration-300 group-hover:scale-105"
+            aria-hidden
           />
         </div>
         <div className="mb-2 flex flex-wrap items-center gap-2">

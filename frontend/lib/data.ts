@@ -56,6 +56,7 @@ export const topics: Topic[] = [
   { slug: "market-trends", name: "Market Trends", description: "Pricing, inventory, and demand changes." },
   { slug: "schools", name: "Schools", description: "School updates and district-level context for housing decisions." },
   { slug: "development", name: "Development", description: "Projects, permits, and construction pipeline movement." },
+  { slug: "affordable-housing", name: "Affordable Housing", description: "Income-restricted housing, public financing, and housing access." },
   { slug: "local-politics", name: "Local Politics", description: "Policy shifts affecting housing and neighborhoods." },
   { slug: "events-lifestyle", name: "Events & Lifestyle", description: "Events, dining, and entertainment shaping local demand." },
 ];
@@ -95,4 +96,4 @@ export function areasGroupedBySection(): Record<string, Area[]> {
 }
 
 export const priorityAreaHubs = areas.map((area) => area.slug);
-export const priorityTopicHubs = ["market-trends", "development", "schools"];
+export const priorityTopicHubs = ["market-trends", "development", "schools", "affordable-housing"];

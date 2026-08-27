@@ -2,21 +2,25 @@ import Link from "next/link";
 import { FooterNewsletterForm } from "@/components/cren/footer-newsletter-form";
 
 const coverageLinks = [
-  { href: "/blog", label: "Market Reports" },
-  { href: "/sell/your-home", label: "Get an Offer on Your Home" },
-  { href: "/sell/investment-property", label: "Sell a Rental" },
-  { href: "/rent/find-a-home", label: "Find a Rental" },
-  { href: "/invest/deploy-capital", label: "Deploy Capital" },
+  { href: "/blog", label: "Latest Coverage" },
   { href: "/areas", label: "Neighborhoods" },
+  { href: "/market-data", label: "Market Data" },
+  { href: "/things-to-do", label: "Things to Do" },
+  { href: "/housing-search", label: "Housing Search" },
+  { href: "/directory", label: "Local Directory" },
+  { href: "/topics/local-politics", label: "Local Politics" },
+  { href: "/resources", label: "Housing Resources" },
 ];
 
 const companyLinks = [
   { href: "/about", label: "About" },
+  { href: "/newsroom", label: "Newsroom" },
+  { href: "/editorial-standards", label: "Editorial Standards" },
+  { href: "/corrections", label: "Corrections" },
   { href: "/advertise", label: "Advertise" },
   { href: "/subscribe", label: "Membership" },
   { href: "/contact", label: "Contact" },
-  { href: "/contact", label: "Write for Us" },
-  { href: "/advertise", label: "Media Kit" },
+  { href: "/directory/list-your-business", label: "List Your Business" },
 ];
 
 export function SiteFooter() {
@@ -29,20 +33,6 @@ export function SiteFooter() {
             <div className="footer-desc">
               Central Ohio&apos;s boutique real estate media platform. Hyper-local data, trusted journalism, and community
               intelligence for renters, buyers, and investors.
-            </div>
-            <div className="footer-social">
-              <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" title="LinkedIn">
-                in
-              </a>
-              <a href="https://x.com" target="_blank" rel="noopener noreferrer" title="X">
-                X
-              </a>
-              <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" title="Instagram">
-                IG
-              </a>
-              <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" title="YouTube">
-                YT
-              </a>
             </div>
           </div>
           <div>
@@ -75,7 +65,7 @@ export function SiteFooter() {
           <span>© {new Date().getFullYear()} Columbus Real Estate News LLC</span>
           <div className="footer-bottom-links">
             <Link href="/privacy">Privacy</Link>
-            <Link href="/contact">Terms</Link>
+            <Link href="/terms">Terms</Link>
           </div>
         </div>
       </div>

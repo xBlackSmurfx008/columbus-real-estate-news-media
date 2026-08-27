@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 
 interface TickerItem {
@@ -15,21 +15,28 @@ export default function TickerPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
-  useEffect(() => {
-    fetchTickerItems();
+  const showToast = useCallback((message: string, type: 'success' | 'error') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
   }, []);
 
-  const fetchTickerItems = async () => {
+  const fetchTickerItems = useCallback(async () => {
     try {
       const res = await fetch('/api/admin/ticker', { credentials: 'include' });
       const data = await res.json();
       setItems(data.items || []);
-    } catch (error) {
+    } catch {
       showToast('Failed to load ticker items', 'error');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [showToast]);
+
+  useEffect(() => {
+    // This effect synchronizes the client admin view with the remote API.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void fetchTickerItems();
+  }, [fetchTickerItems]);
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -43,16 +50,11 @@ export default function TickerPage() {
 
       if (!res.ok) throw new Error('Failed to save ticker items');
       showToast('Ticker items saved successfully', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to save ticker items', 'error');
     } finally {
       setIsSaving(false);
     }
-  };
-
-  const showToast = (message: string, type: 'success' | 'error') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
   };
 
   const addItem = () => {
@@ -63,7 +65,7 @@ export default function TickerPage() {
     setItems(items.filter((_, i) => i !== index));
   };
 
-  const updateItem = (index: number, field: string, value: any) => {
+  const updateItem = (index: number, field: keyof TickerItem, value: string | boolean) => {
     const updated = [...items];
     updated[index] = { ...updated[index], [field]: value };
     setItems(updated);

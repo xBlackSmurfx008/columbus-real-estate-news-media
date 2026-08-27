@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { useSearchParams } from 'next/navigation';
 
@@ -52,21 +52,28 @@ export default function AdsPage() {
   const placements = ['sidebar', 'header', 'footer', 'inline', 'modal'];
   const displaySizes = ['300x250', '728x90', '160x600', '320x50', '970x90'];
 
-  useEffect(() => {
-    fetchAds();
+  const showToast = useCallback((message: string, type: 'success' | 'error') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
   }, []);
 
-  const fetchAds = async () => {
+  const fetchAds = useCallback(async () => {
     try {
       const res = await fetch('/api/admin/ads', { credentials: 'include' });
       const data = await res.json();
       setAds(data.ads || []);
-    } catch (error) {
+    } catch {
       showToast('Failed to load ads', 'error');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [showToast]);
+
+  useEffect(() => {
+    // This effect synchronizes the client admin view with the remote API.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void fetchAds();
+  }, [fetchAds]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,7 +112,7 @@ export default function AdsPage() {
       });
 
       showToast(editingId ? 'Ad updated successfully' : 'Ad created successfully', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to save ad', 'error');
     }
   };
@@ -123,7 +130,7 @@ export default function AdsPage() {
 
       await fetchAds();
       showToast('Ad deleted successfully', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to delete ad', 'error');
     }
   };
@@ -150,14 +157,9 @@ export default function AdsPage() {
       if (!res.ok) throw new Error('Failed to update status');
       await fetchAds();
       showToast('Ad status updated', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to update status', 'error');
     }
-  };
-
-  const showToast = (message: string, type: 'success' | 'error') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
   };
 
   return (

@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useMemo, useRef, useState } from "react";
 import { trackEvent } from "@/lib/analytics-client";
 
-type SearchSuggestion = {
+export type SearchSuggestion = {
   id: string;
   label: string;
   href: string;
@@ -23,9 +23,10 @@ export function GlobalSearchCombobox({
   id,
   placeholder,
   suggestions,
-  submitHref = "/areas",
+  submitHref = "/search",
   submitLabel = "Search",
 }: GlobalSearchComboboxProps) {
+  const router = useRouter();
   const listboxId = `${id}-listbox`;
   const [query, setQuery] = useState("");
   const [expanded, setExpanded] = useState(false);
@@ -42,6 +43,12 @@ export function GlobalSearchCombobox({
 
   function commitSearch(searchTerm: string) {
     trackEvent("search", { search_term: searchTerm, content_type: "mixed" });
+  }
+
+  function submitSearch() {
+    const searchTerm = query.trim();
+    commitSearch(searchTerm);
+    router.push(searchTerm ? `${submitHref}?q=${encodeURIComponent(searchTerm)}` : submitHref);
   }
 
   function onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -80,6 +87,10 @@ export function GlobalSearchCombobox({
         return;
       }
       commitSearch(query);
+      if (query.trim()) {
+        event.preventDefault();
+        submitSearch();
+      }
     }
   }
 
@@ -147,13 +158,13 @@ export function GlobalSearchCombobox({
         </ul>
       </div>
 
-      <Link
-        href={submitHref}
+      <button
+        type="button"
         className="focus-ring btn-primary inline-flex min-h-[44px] items-center justify-center rounded-xl px-5 py-3 text-sm font-semibold"
-        onClick={() => commitSearch(query)}
+        onClick={submitSearch}
       >
         {submitLabel}
-      </Link>
+      </button>
     </div>
   );
 }

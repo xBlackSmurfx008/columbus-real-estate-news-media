@@ -5,6 +5,9 @@ import { requireAuth } from "@/lib/auth";
 // GET: Fetch market_snapshot, hero_stats, and neighborhoods
 export async function GET(request: NextRequest) {
   try {
+    const auth = await requireAuth(request);
+    if (auth instanceof NextResponse) return auth;
+
     const sql = getDb();
     const snapshot = await sql`SELECT * FROM market_snapshot ORDER BY sort_order ASC`;
     const heroStats = await sql`SELECT * FROM hero_stats ORDER BY sort_order ASC`;
@@ -12,7 +15,7 @@ export async function GET(request: NextRequest) {
 
     try {
       neighborhoods = await sql`SELECT * FROM neighborhoods ORDER BY name ASC`;
-    } catch (e) {
+    } catch {
       // neighborhoods table might not exist yet
       neighborhoods = [];
     }
@@ -78,7 +81,7 @@ export async function PUT(request: NextRequest) {
             `;
           }
         }
-      } catch (e) {
+      } catch {
         // neighborhoods table might not exist yet, continue without error
       }
     }
@@ -89,7 +92,7 @@ export async function PUT(request: NextRequest) {
     let updatedNeighborhoods: Record<string, unknown>[] = [];
     try {
       updatedNeighborhoods = await sql`SELECT * FROM neighborhoods ORDER BY name ASC`;
-    } catch (e) {
+    } catch {
       // neighborhoods table might not exist yet
     }
 

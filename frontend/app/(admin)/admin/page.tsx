@@ -11,6 +11,24 @@ interface DashboardStats {
   totalInterviews: number;
 }
 
+type StatusRecord = { status?: string };
+
+function StatCard({ label, value, icon, color }: { label: string; value: number | string; icon: React.ReactNode; color: string }) {
+  return (
+    <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition">
+      <div className="flex items-start justify-between">
+        <div>
+          <p className="text-sm text-gray-600 mb-1">{label}</p>
+          <p className={`text-3xl font-bold ${color}`}>{value}</p>
+        </div>
+        <div className={`p-3 rounded-lg ${color === 'text-blue-600' ? 'bg-blue-100' : color === 'text-green-600' ? 'bg-green-100' : color === 'text-orange-600' ? 'bg-orange-100' : 'bg-purple-100'}`}>
+          {icon}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminDashboard() {
   const [stats, setStats] = useState<DashboardStats>({
     totalArticles: 0,
@@ -33,14 +51,14 @@ export default function AdminDashboard() {
         const adsData = await adsRes.json();
         const interviewsData = await interviewsRes.json();
 
-        const articles = articlesData.articles || [];
-        const ads = adsData.ads || [];
+        const articles: StatusRecord[] = articlesData.articles || [];
+        const ads: StatusRecord[] = adsData.ads || [];
         const interviews = interviewsData.interviews || [];
 
         setStats({
           totalArticles: articles.length,
-          liveArticles: articles.filter((a: any) => a.status === 'published').length,
-          activeAds: ads.filter((a: any) => a.status === 'active').length,
+          liveArticles: articles.filter((article) => article.status === 'live').length,
+          activeAds: ads.filter((ad) => ad.status === 'active').length,
           totalInterviews: interviews.length,
         });
       } catch (error) {
@@ -52,20 +70,6 @@ export default function AdminDashboard() {
 
     fetchStats();
   }, []);
-
-  const StatCard = ({ label, value, icon, color }: { label: string; value: number; icon: React.ReactNode; color: string }) => (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition">
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-sm text-gray-600 mb-1">{label}</p>
-          <p className={`text-3xl font-bold ${color}`}>{isLoading ? '...' : value}</p>
-        </div>
-        <div className={`p-3 rounded-lg ${color === 'text-blue-600' ? 'bg-blue-100' : color === 'text-green-600' ? 'bg-green-100' : color === 'text-orange-600' ? 'bg-orange-100' : 'bg-purple-100'}`}>
-          {icon}
-        </div>
-      </div>
-    </div>
-  );
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -88,25 +92,25 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <StatCard
               label="Total Articles"
-              value={stats.totalArticles}
+              value={isLoading ? '...' : stats.totalArticles}
               icon={<svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>}
               color="text-blue-600"
             />
             <StatCard
               label="Live Articles"
-              value={stats.liveArticles}
+              value={isLoading ? '...' : stats.liveArticles}
               icon={<svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>}
               color="text-green-600"
             />
             <StatCard
               label="Active Ads"
-              value={stats.activeAds}
+              value={isLoading ? '...' : stats.activeAds}
               icon={<svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>}
               color="text-orange-600"
             />
             <StatCard
               label="Total Interviews"
-              value={stats.totalInterviews}
+              value={isLoading ? '...' : stats.totalInterviews}
               icon={<svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4" /></svg>}
               color="text-purple-600"
             />

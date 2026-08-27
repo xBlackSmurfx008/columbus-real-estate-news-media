@@ -156,17 +156,17 @@ if (partnerCount[0].n > 0) {
   console.log(`skip: affiliate_partners already has ${partnerCount[0].n} rows`);
 } else {
   const seed = [
-    ["home-warranty", "Home Warranty Coverage", "home-services", "https://www.example.com/home-warranty", "Protect the big systems — HVAC, plumbing, electric — before they protect themselves out of your budget.", "Compare plans", 0],
-    ["moving-services", "Columbus Moving Help", "home-services", "https://www.example.com/moving", "Vetted local movers for apartments and whole houses.", "Get moving quotes", 1],
-    ["renters-insurance", "Renters Insurance", "finance", "https://www.example.com/renters-insurance", "Most Columbus landlords require it. Takes minutes to set up.", "Get a quote", 2],
-    ["mortgage-rates", "Mortgage Rate Check", "finance", "https://www.example.com/mortgage", "See today's rates from multiple lenders before you commit to one.", "Check rates", 3],
-    ["diy-tools", "Home Improvement Supplies", "home-services", "https://www.example.com/tools", "Order project supplies and pick up locally.", "Shop supplies", 4],
+    ["home-warranty", "Home Warranty Coverage", "home-services", "https://www.example.com/home-warranty", "Protect the big systems — HVAC, plumbing, electric — before they protect themselves out of your budget.", "Compare plans", 0, false],
+    ["moving-services", "Columbus Moving Help", "home-services", "https://www.example.com/moving", "Vetted local movers for apartments and whole houses.", "Get moving quotes", 1, false],
+    ["renters-insurance", "Renters Insurance", "finance", "https://www.example.com/renters-insurance", "Most Columbus landlords require it. Takes minutes to set up.", "Get a quote", 2, false],
+    ["mortgage-rates", "Mortgage Rate Check", "finance", "https://www.example.com/mortgage", "See today's rates from multiple lenders before you commit to one.", "Check rates", 3, false],
+    ["diy-tools", "Home Improvement Supplies", "home-services", "https://www.example.com/tools", "Order project supplies and pick up locally.", "Shop supplies", 4, false],
   ];
-  for (const [slug, name, category, url, blurb, cta, sort] of seed) {
+  for (const [slug, name, category, url, blurb, cta, sort, active] of seed) {
     await sql`INSERT INTO affiliate_partners (slug, name, category, url, blurb, cta_text, active, sort_order)
-      VALUES (${slug}, ${name}, ${category}, ${url}, ${blurb}, ${cta}, true, ${sort})`;
+      VALUES (${slug}, ${name}, ${category}, ${url}, ${blurb}, ${cta}, ${active}, ${sort})`;
   }
-  console.log("seeded: 5 placeholder affiliate partners (replace URLs when programs are live)");
+  console.log("seeded: 5 placeholder affiliate partners as inactive rows (replace URLs when programs are live)");
 }
 
 console.log("migration complete");

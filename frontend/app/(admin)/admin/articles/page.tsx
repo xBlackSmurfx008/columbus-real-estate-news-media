@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
@@ -65,11 +65,28 @@ export default function ArticlesPage() {
 
   const categories = ['Market Analysis', 'Development', 'Neighborhoods', 'Economic Impact', 'Rental Market', 'Commercial', 'Local Politics', 'Lifestyle', 'Policy'];
 
-  useEffect(() => {
-    fetchArticles();
+  const showToast = useCallback((message: string, type: 'success' | 'error') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
   }, []);
 
-  const fetchArticles = async () => {
+  const handleEdit = useCallback((article: Article) => {
+    const pending = ['READY_FOR_AUTOMATION', 'AWAITING_HUMAN_REVIEW'].includes(article.review_status ?? '')
+      ? article.submission
+      : null;
+    setFormData(pending ? {
+      ...article,
+      ...pending,
+      id: article.id,
+      status: article.status,
+      image_url: pending.image_url ?? article.image_url,
+      image_caption: pending.image_provenance?.caption ?? article.image_caption,
+    } : article);
+    setEditingId(article.id);
+    setShowForm(true);
+  }, []);
+
+  const fetchArticles = useCallback(async () => {
     try {
       const res = await fetch('/api/admin/articles', { credentials: 'include' });
       const data = await res.json();
@@ -78,12 +95,18 @@ export default function ArticlesPage() {
       const editId = searchParams.get('edit');
       const requested = editId ? nextArticles.find((article: Article) => article.id === editId) : undefined;
       if (requested) handleEdit(requested);
-    } catch (error) {
+    } catch {
       showToast('Failed to load articles', 'error');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [handleEdit, searchParams, showToast]);
+
+  useEffect(() => {
+    // This effect synchronizes the client admin view with the remote API.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void fetchArticles();
+  }, [fetchArticles]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,25 +166,9 @@ export default function ArticlesPage() {
 
       await fetchArticles();
       showToast('Article deleted successfully', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to delete article', 'error');
     }
-  };
-
-  const handleEdit = (article: Article) => {
-    const pending = ['READY_FOR_AUTOMATION', 'AWAITING_HUMAN_REVIEW'].includes(article.review_status ?? '')
-      ? article.submission
-      : null;
-    setFormData(pending ? {
-      ...article,
-      ...pending,
-      id: article.id,
-      status: article.status,
-      image_url: pending.image_url ?? article.image_url,
-      image_caption: pending.image_provenance?.caption ?? article.image_caption,
-    } : article);
-    setEditingId(article.id);
-    setShowForm(true);
   };
 
   const handleStatusToggle = async (id: string, currentStatus: string) => {
@@ -186,7 +193,7 @@ export default function ArticlesPage() {
       if (!res.ok) throw new Error('Failed to update status');
       await fetchArticles();
       showToast('Article status updated', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to update status', 'error');
     }
   };
@@ -206,14 +213,9 @@ export default function ArticlesPage() {
       if (!res.ok) throw new Error('Failed to update featured');
       await fetchArticles();
       showToast('Featured status updated', 'success');
-    } catch (error) {
+    } catch {
       showToast('Failed to update featured status', 'error');
     }
-  };
-
-  const showToast = (message: string, type: 'success' | 'error') => {
-    setToast({ message, type });
-    setTimeout(() => setToast(null), 3000);
   };
 
   return (

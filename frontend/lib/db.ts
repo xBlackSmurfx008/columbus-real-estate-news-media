@@ -1,4 +1,5 @@
 import { neon } from "@neondatabase/serverless";
+import { generateArticleSlug } from '@/lib/article-routing';
 
 export function getDb() {
   const databaseUrl = process.env.DATABASE_URL;
@@ -42,6 +43,7 @@ export async function initSchema() {
       category_class TEXT NOT NULL DEFAULT 'card-img-market',
       icon TEXT NOT NULL DEFAULT '$',
       title TEXT NOT NULL,
+      canonical_slug TEXT,
       excerpt TEXT,
       body TEXT,
       author TEXT NOT NULL,
@@ -52,6 +54,21 @@ export async function initSchema() {
       created_at TIMESTAMPTZ DEFAULT NOW(),
       updated_at TIMESTAMPTZ DEFAULT NOW()
     )
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS article_slug_redirects (
+      slug TEXT PRIMARY KEY,
+      article_id TEXT NOT NULL REFERENCES articles(id) ON DELETE CASCADE,
+      reason TEXT NOT NULL DEFAULT 'headline-change',
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+
+  await sql`
+    CREATE UNIQUE INDEX IF NOT EXISTS articles_canonical_slug_unique
+    ON articles (canonical_slug)
+    WHERE canonical_slug IS NOT NULL
   `;
 
   await sql`
@@ -85,6 +102,45 @@ export async function initSchema() {
       change TEXT NOT NULL,
       direction TEXT NOT NULL DEFAULT 'up',
       sort_order INT NOT NULL DEFAULT 0
+    )
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS market_sources (
+      slug TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      source_url TEXT NOT NULL,
+      methodology_url TEXT,
+      source_type TEXT NOT NULL,
+      update_cadence TEXT,
+      active BOOLEAN NOT NULL DEFAULT true,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS market_observations (
+      id BIGSERIAL PRIMARY KEY,
+      metric_key TEXT NOT NULL,
+      label TEXT NOT NULL,
+      value_display TEXT NOT NULL,
+      value_numeric NUMERIC,
+      unit TEXT,
+      geography_type TEXT NOT NULL,
+      geography_slug TEXT NOT NULL,
+      geography_label TEXT NOT NULL,
+      property_type TEXT NOT NULL DEFAULT 'all-residential',
+      period_start DATE,
+      period_end DATE NOT NULL,
+      as_of_date DATE NOT NULL,
+      source_slug TEXT NOT NULL REFERENCES market_sources(slug),
+      source_url TEXT NOT NULL,
+      methodology_url TEXT,
+      notes TEXT,
+      quality_status TEXT NOT NULL DEFAULT 'verified',
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
   `;
 
@@ -273,8 +329,8 @@ export async function seedData() {
   ];
 
   for (const a of articles) {
-    await sql`INSERT INTO articles (id,status,featured,category,category_class,icon,title,excerpt,body,author,date,read_time,area_slug,topic_slug)
-      VALUES (${a.id},${a.status},${a.featured},${a.category},${a.category_class},${a.icon},${a.title},${a.excerpt},${a.body},${a.author},${a.date},${a.read_time},${a.area_slug},${a.topic_slug})
+    await sql`INSERT INTO articles (id,canonical_slug,status,featured,category,category_class,icon,title,excerpt,body,author,date,read_time,area_slug,topic_slug)
+      VALUES (${a.id},${generateArticleSlug(a.title)},'draft',${a.featured},${a.category},${a.category_class},${a.icon},${a.title},${a.excerpt},${a.body},${a.author},${a.date},${a.read_time},${a.area_slug},${a.topic_slug})
       ON CONFLICT (id) DO NOTHING`;
   }
 

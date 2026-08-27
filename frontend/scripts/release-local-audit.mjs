@@ -76,7 +76,7 @@ async function revealLazyContent(page) {
     .waitForFunction(
       () => [...document.images].every((image) => image.complete && image.naturalWidth > 0),
       undefined,
-      { timeout: 15_000 }
+      { timeout: 45_000 }
     )
     .catch(() => {});
   await page.waitForTimeout(250);

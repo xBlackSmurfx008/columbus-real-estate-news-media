@@ -20,6 +20,7 @@ function formatTopbarDate() {
     month: "long",
     day: "numeric",
     year: "numeric",
+    timeZone: "America/New_York",
   }).format(new Date());
 }
 
@@ -42,7 +43,7 @@ export function SiteHeader() {
           </div>
         </div>
         <div className="topbar-right">
-          <span className="topbar-date">{topbarDate}</span>
+          <span className="topbar-date" suppressHydrationWarning>{topbarDate}</span>
           <Link href="/market-data">Market Data</Link>
           <Link href="/advertise">Advertise</Link>
           <Link href="/subscribe">Subscribe</Link>

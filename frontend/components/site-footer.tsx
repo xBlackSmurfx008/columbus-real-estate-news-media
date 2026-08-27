@@ -64,6 +64,7 @@ export function SiteFooter() {
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} Columbus Real Estate News LLC</span>
           <div className="footer-bottom-links">
+            <Link href="/site-map">Site Map</Link>
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
           </div>

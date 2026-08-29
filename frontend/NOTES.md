@@ -37,6 +37,9 @@ Not claimed:
 - User request coverage matrix: `docs/USER_REQUEST_COVERAGE_MATRIX_2026-08-29.md`.
 - Verified audience/media-kit baseline: `docs/CREN_VERIFIED_AUDIENCE_AND_MEDIA_KIT_BASELINE_2026-08-29.md`.
 - First 50 advertiser prospect list: `docs/FIRST_ADVERTISER_TARGET_LIST_2026-08-29.md`.
+- Advertiser outreach package: `docs/CREN_ADVERTISER_OUTREACH_PACKAGE_2026-08-29.md`.
+- Advertiser outreach tracker: `docs/CREN_ADVERTISER_OUTREACH_TRACKER_2026-08-29.csv`.
+- Post-launch monitoring log: `docs/POST_LAUNCH_MONITORING_LOG_2026-08-29.md`.
 - Standalone owner-execution insertion-order template: `docs/CREN_INSERTION_ORDER_OWNER_EXECUTION_TEMPLATE_2026-08-29.md`.
 
 ## Product Work Completed
@@ -85,6 +88,14 @@ Not claimed:
 - Post-smoke cleanup deleted 10 controlled rows: 1 contact, 2 subscribers, 1 lead, 1 member, and 5 consent events.
 - Final post-deploy production readiness audit on 2026-08-29 at 14:41:37 UTC returned `ok: true`, `findings: []`, 87 live articles, and zero smoke rows.
 - Full production release audit passed against `https://columbusrealestatenews.com`: 150 checked pages, 86 area hubs, 36 screenshots, zero failures.
+- Launch package committed as `f1d6a30 feat: launch CREN commercial readiness package`.
+- Launch package pushed to `origin/feat/site-map`.
+- Immediate post-launch monitoring at 2026-08-29 16:12 UTC caught alias drift: `columbusrealestatenews.com` pointed to `dpl_5eiL97PTfp4iGWsEQ9DhgZApoxWv`, where new launch routes returned 404.
+- Apex and `www` aliases were corrected back to verified deployment `dpl_AFrXs6nu7Un6v18W9LV3wiH319c2`.
+- Post-correction route checks returned 200 for `/advertise/media-kit`, `/advertise/self-service`, and `/profiles/claim`.
+- Post-correction production readiness audit at 2026-08-29 16:12:58 UTC returned `ok: true`, `findings: []`, and zero smoke rows.
+- Recent Vercel production error-log commands returned no error entries.
+- First-wave advertiser outreach package and tracker are ready, but no external outreach was sent because no connected sending account/CRM was available in this session.
 
 ## Verification Already Passed
 
@@ -105,4 +116,4 @@ Not claimed:
 
 ## Next Action
 
-Post-launch owner/vendor tasks remain only where code cannot make the fact true: attorney review, final published company contact details if desired, payment/refund/tax configuration, SMS/calling vendor configuration, first sales outreach using the 50-prospect list, and the first 48 hours of elapsed monitoring after launch.
+Post-launch owner/vendor tasks remain only where code cannot make the fact true: attorney review, final published company contact details if desired, payment/refund/tax configuration, SMS/calling vendor configuration, actual outbound sales sends from the approved email/CRM account, and the first 48 hours of elapsed monitoring after launch.

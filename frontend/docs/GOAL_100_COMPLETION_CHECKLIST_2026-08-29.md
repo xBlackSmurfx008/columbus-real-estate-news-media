@@ -136,6 +136,8 @@ This `/goal` is complete when the user request has been turned into a working CR
 - [x] Sales and insertion-order plan: `docs/ADVERTISING_SALES_AND_INSERTION_ORDER_PLAN_2026-08-29.md`.
 - [x] Verified audience/media-kit baseline: `docs/CREN_VERIFIED_AUDIENCE_AND_MEDIA_KIT_BASELINE_2026-08-29.md`.
 - [x] First 50 advertiser prospect list: `docs/FIRST_ADVERTISER_TARGET_LIST_2026-08-29.md`.
+- [x] Advertiser outreach package: `docs/CREN_ADVERTISER_OUTREACH_PACKAGE_2026-08-29.md`.
+- [x] Advertiser outreach tracker: `docs/CREN_ADVERTISER_OUTREACH_TRACKER_2026-08-29.csv`.
 - [x] Standalone owner-execution insertion-order template: `docs/CREN_INSERTION_ORDER_OWNER_EXECUTION_TEMPLATE_2026-08-29.md`.
 - [x] Public pilot media kit avoids unverified "10,000+ subscribers" or "58% open rate" claims.
 - [x] Public ad packages cover newsletter placements, sponsored content, apartment/property spotlights, directory/profile upgrades, report/event sponsorship, and custom programs.
@@ -230,6 +232,14 @@ This `/goal` is complete when the user request has been turned into a working CR
 - [x] Post-smoke cleanup deleted 10 controlled rows: 1 contact, 2 subscribers, 1 lead, 1 member, and 5 consent events.
 - [x] Final production readiness audit passed on 2026-08-29 at 14:41:37 UTC with `ok: true`, `findings: []`, and zero smoke rows.
 - [x] Full production release audit passed against `https://columbusrealestatenews.com` with 150 checked pages, 86 area hubs, 36 screenshots, and zero failures.
+- [x] Launch package committed as `f1d6a30 feat: launch CREN commercial readiness package`.
+- [x] Launch package pushed to `origin/feat/site-map`.
+- [x] Immediate post-launch monitoring log created: `docs/POST_LAUNCH_MONITORING_LOG_2026-08-29.md`.
+- [x] Immediate post-launch monitoring caught alias drift to `dpl_5eiL97PTfp4iGWsEQ9DhgZApoxWv`, where new launch routes returned 404.
+- [x] Apex and `www` aliases were corrected back to verified deployment `dpl_AFrXs6nu7Un6v18W9LV3wiH319c2`.
+- [x] Post-correction route checks returned 200 for `/advertise/media-kit`, `/advertise/self-service`, and `/profiles/claim`.
+- [x] Post-correction readiness audit passed on 2026-08-29 at 16:12:58 UTC with `ok: true`, `findings: []`, and zero smoke rows.
+- [x] Recent Vercel production error-log checks returned no error entries.
 
 ## Production Launch Checklist
 
@@ -251,7 +261,8 @@ These are not blockers to the owner-execution launch package above. They are the
 - [ ] Configure payment processor only after price, refund, tax, dispute, invoice, and support decisions are final.
 - [ ] Configure SMS/calling only after consent language, sender identity, opt-out process, vendor, and record-retention process are selected.
 - [ ] Complete the first 48 hours of post-launch monitoring after deployment; this cannot truthfully be completed before 48 hours has elapsed.
-- [ ] Have CREN staff use the first 50-prospect list to begin sales outreach and record dispositions.
+- [x] Prepare first-wave outreach package, scripts, cadence, and tracker from the first 50-prospect list.
+- [ ] Have CREN staff send outreach from the approved email/CRM account and record real dispositions.
 - [ ] Have editorial leadership approve any ranking, score, forecast, sponsored research, or investigative story before publication.
 
 ## Done/Not Done Truth Table

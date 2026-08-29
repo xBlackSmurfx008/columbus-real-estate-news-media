@@ -7,10 +7,12 @@ hubs have their baseline image, local-living, housing-action, directory, and
 official-source states. Follow-on discovery work also shipped intent-aware
 search/resource results, saved items, and area-scoped housing links.
 
-Sprint B is not complete. No hub should be labeled fully reported until the
-source-aware market tables/data, documentary-image review, local source
-coverage, and usefulness gate are complete. The production readiness audit
-currently confirms that the market-observation layer is still missing.
+Sprint B is not complete. The source-aware market tables are installed and
+contain 20 verified observations across 11 geographies, including city-level
+home values and rents, one neighborhood home-value row, and the national
+mortgage series. No hub should be labeled fully reported until documentary-image
+review, local source coverage, and the remaining usefulness-gate checks are
+complete. Areas without a verified observation remain in pending-data mode.
 
 ## What is complete in this sprint
 

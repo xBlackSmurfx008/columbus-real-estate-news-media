@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
-import { getMarketData, DbMarketSnapshot, DbNeighborhood } from "@/lib/public-data";
+import { getLatestMarketObservations, getMarketData, DbMarketObservation, DbMarketSnapshot, DbNeighborhood } from "@/lib/public-data";
 
 export const revalidate = 300;
 
@@ -18,13 +18,15 @@ function directionClass(direction: string): string {
 }
 
 export default async function MarketDataPage() {
+  let observations: DbMarketObservation[] = [];
   let snapshot: DbMarketSnapshot[] = [];
   let neighborhoods: DbNeighborhood[] = [];
 
   try {
-    const data = await getMarketData();
+    const [data, latestObservations] = await Promise.all([getMarketData(), getLatestMarketObservations()]);
     snapshot = data.snapshot;
     neighborhoods = data.neighborhoods;
+    observations = latestObservations;
   } catch {
     // Will show empty state
   }
@@ -40,10 +42,64 @@ export default async function MarketDataPage() {
           </p>
         </div>
 
-        {/* Market Snapshot */}
-        <section className="cren-surface p-6 md:p-8">
+        {observations.length > 0 ? (
+          <section className="cren-surface p-6 md:p-8">
+            <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+              <h2 className="cren-heading-lg">Source-aware measures</h2>
+              <p className="text-xs text-[color:var(--text-muted)]">Latest verified observation by area and measure</p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[720px] text-sm">
+                <thead>
+                  <tr className="border-b border-[color:var(--border)]">
+                    <th className="pb-3 pr-4 text-left text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">Measure</th>
+                    <th className="pb-3 px-4 text-left text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">Area</th>
+                    <th className="pb-3 px-4 text-right text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">Value</th>
+                    <th className="pb-3 px-4 text-right text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">Period ending</th>
+                    <th className="pb-3 pl-4 text-left text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">Source</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {observations.map((observation, index) => {
+                    const areaHref = observation.geography_type === "national"
+                      ? null
+                      : `/areas/${observation.geography_slug}`;
+                    return (
+                      <tr key={observation.id} className={`border-b border-[color:var(--border)]/50 ${index % 2 === 0 ? "" : "bg-[color:var(--bg-surface)]"}`}>
+                        <td className="py-3 pr-4">
+                          <p className="font-semibold text-[color:var(--text-hero)]">{observation.label}</p>
+                          <p className="text-xs text-[color:var(--text-muted)]">{observation.property_type}</p>
+                        </td>
+                        <td className="px-4 py-3">
+                          {areaHref ? (
+                            <Link href={areaHref} className="cren-text-link font-semibold">{observation.geography_label}</Link>
+                          ) : (
+                            <span className="text-[color:var(--text-secondary)]">{observation.geography_label}</span>
+                          )}
+                          <p className="text-xs text-[color:var(--text-muted)]">{observation.geography_type}</p>
+                        </td>
+                        <td className="px-4 py-3 text-right font-[family-name:var(--mono)] font-semibold text-[color:var(--text-hero)]">{observation.value_display}</td>
+                        <td className="px-4 py-3 text-right text-[color:var(--text-secondary)]">
+                          <p>{observation.period_end}</p>
+                          <p className="text-xs text-[color:var(--text-muted)]">as of {observation.as_of_date}</p>
+                        </td>
+                        <td className="pl-4 py-3">
+                          <a href={observation.source_url} target="_blank" rel="noopener noreferrer" className="cren-text-link">{observation.source_name}</a>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+            <p className="cren-body mt-4 text-xs text-[color:var(--text-muted)]">Measures are published with their geography, property type, reporting period, and source. They are not appraisals, rent quotes, or mortgage offers.</p>
+          </section>
+        ) : null}
+
+        {/* Legacy supplemental snapshot */}
+        {snapshot.length > 0 && <section className="cren-surface p-6 md:p-8">
           <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-            <h2 className="cren-heading-lg">Market Snapshot</h2>
+            <h2 className="cren-heading-lg">{observations.length > 0 ? "Legacy supplemental snapshot" : "Market Snapshot"}</h2>
             <p className="text-xs text-[color:var(--text-muted)]">Latest stored snapshot; individual data periods vary</p>
           </div>
           {snapshot.length > 0 ? (
@@ -59,12 +115,12 @@ export default async function MarketDataPage() {
           ) : (
             <p className="cren-body text-[color:var(--text-muted)]">Market data loading...</p>
           )}
-        </section>
+        </section>}
 
         {/* Neighborhood Comparison */}
         {neighborhoods.length > 0 && (
           <section className="cren-surface p-6 md:p-8">
-            <h2 className="cren-heading-lg mb-4">Neighborhood Comparison</h2>
+            <h2 className="cren-heading-lg mb-4">{observations.length > 0 ? "Legacy neighborhood comparison" : "Neighborhood Comparison"}</h2>
             <p className="cren-body mb-6 text-sm text-[color:var(--text-secondary)]">
               Side-by-side data for {neighborhoods.length} Columbus neighborhoods. Click any row for the full area report.
             </p>
@@ -137,8 +193,9 @@ export default async function MarketDataPage() {
             <a href="https://www.redfin.com/news/data-center/methodology/" target="_blank" rel="noopener noreferrer" className="cren-text-link">Redfin methodology</a>
           </div>
           <p className="cren-body mt-4 rounded-[var(--radius-sm)] border border-[color:var(--border)] p-3 text-xs">
-            Provenance upgrade in progress: legacy dashboard rows do not yet expose source URL, observation date, geography, and property type on every individual metric.
-            Do not use an unlabeled row as an appraisal, rent quote, mortgage offer, or prediction.
+            {observations.length > 0
+              ? "Source-aware observations are the primary display. Individual measures remain subject to each source's definitions, revisions, and geographic limitations."
+              : "Legacy dashboard rows do not yet expose source URL, observation date, geography, and property type on every individual metric. Do not use an unlabeled row as an appraisal, rent quote, mortgage offer, or prediction."}
           </p>
           <Link href="/blog" className="cren-text-link mt-4 inline-block text-sm font-semibold">
             Read latest analysis

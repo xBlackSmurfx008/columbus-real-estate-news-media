@@ -140,7 +140,9 @@ export async function initSchema() {
       notes TEXT,
       quality_status TEXT NOT NULL DEFAULT 'verified',
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      CONSTRAINT market_observations_quality_check
+        CHECK (quality_status IN ('draft', 'verified', 'superseded', 'rejected'))
     )
   `;
 

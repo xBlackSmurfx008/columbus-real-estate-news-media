@@ -11,9 +11,10 @@ saved items, area-scoped housing search links, and Neon-backed member signup,
 login, and profile persistence. Production uptime passes and all 87 live
 images are reachable.
 
-Production is not readiness-green yet. The market observation tables are still
-missing, one live article lacks a canonical slug, six live images lack reserved
-fingerprint/job records, and 13 live articles retain queued editorial statuses.
+Production is not readiness-green yet. The source-aware market tables are
+installed with 20 verified observations across 11 geographies. One live article
+lacks a canonical slug, six live images lack reserved fingerprint/job records,
+and 13 live articles retain queued editorial statuses.
 
 ## Outcome
 
@@ -67,9 +68,10 @@ The application now selects `articles.canonical_slug`. Run the database migratio
 
 6. Deploy a preview, verify the checklist below, then promote the same build to production.
 
-The article-routing migration and member-profile migration are installed in
-production. The source-aware market migration remains pending and must happen
-before area hubs can leave pending-data mode.
+The article-routing, member-profile, and source-aware market migrations are
+installed in production. The source-aware refresh has populated verified rows
+for the currently matched public Zillow and Freddie Mac series. Area hubs still
+remain in pending-data mode when their geography has no verified observation.
 
 ## Preview verification
 

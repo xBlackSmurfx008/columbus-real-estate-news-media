@@ -14,8 +14,9 @@ Neon-backed member profiles are deployed. Production uptime passes and the
 public image audit reports 87/87 reachable live images.
 
 The growth plan remains strategically open, not technically forgotten. The
-source-aware market layer is not installed, reference hubs are not yet fully
-reported, owned-audience delivery is not implemented, and production still
+source-aware market layer is installed with 20 verified observations across 11
+geographies, but reference hubs are not yet fully reported, owned-audience
+delivery is not implemented, and production still
 needs one canonical-slug repair plus six image fingerprint/job reconciliations.
 This audit's older 72-hub target is superseded by the current area plan's 86
 declared hubs.
@@ -508,7 +509,7 @@ The first build should not be a broad visual overhaul. It should complete this s
 1. stable slugs and redirect recovery — implemented in code and mostly migrated; one live canonical-slug gap remains;
 2. robots, sitemap, news sitemap, canonical metadata, and corrected structured data — implemented;
 3. removal of unsupported proof and hard-coded market statistics — implemented;
-4. normalized market observation/source schema — implemented in code, production tables still pending;
+4. normalized market observation/source schema — implemented, migrated, and populated with verified public-series rows;
 5. production analytics plus Search Console baseline — activation analytics is live; Search Console verification remains open;
 6. one complete reference hub—recommended German Village or Dublin—containing market history, apartment-versus-house
    rents, local politics/development, restaurants, events, transit/parks, sourcing, and follow-area conversion;

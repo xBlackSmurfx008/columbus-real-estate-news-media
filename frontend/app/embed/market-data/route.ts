@@ -1,4 +1,4 @@
-import { getMarketData } from "@/lib/public-data";
+import { getLatestMarketObservations, getMarketData } from "@/lib/public-data";
 
 export const revalidate = 300;
 
@@ -22,13 +22,23 @@ function changeColor(direction: string): string {
 export async function GET() {
   let cards: { label: string; value: string; change: string; direction: string }[] = [];
   try {
-    const { snapshot } = await getMarketData();
-    cards = snapshot.map((m) => ({
-      label: m.label,
-      value: m.value,
-      change: m.change,
-      direction: m.direction,
-    }));
+    const [data, observations] = await Promise.all([getMarketData(), getLatestMarketObservations()]);
+    const cityObservations = observations.filter((observation) =>
+      observation.geography_slug === "columbus-citywide" || observation.geography_slug === "united-states"
+    );
+    cards = cityObservations.length > 0
+      ? cityObservations.map((observation) => ({
+        label: `${observation.label} · ${observation.period_end}`,
+        value: `${observation.geography_label}: ${observation.value_display}`,
+        change: observation.source_name,
+        direction: "neutral",
+      }))
+      : data.snapshot.map((m) => ({
+        label: m.label,
+        value: m.value,
+        change: m.change,
+        direction: m.direction,
+      }));
   } catch {
     cards = [];
   }

@@ -422,6 +422,7 @@ export const getAreaMarketObservations = cache(async (areaSlug: string): Promise
       JOIN market_sources ON market_sources.slug = market_observations.source_slug
       WHERE market_observations.geography_slug = ${areaSlug}
         AND market_observations.quality_status = 'verified'
+        AND market_sources.active = true
       ORDER BY
         market_observations.metric_key,
         market_observations.property_type,
@@ -432,6 +433,52 @@ export const getAreaMarketObservations = cache(async (areaSlug: string): Promise
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error(`[public-data] DB unavailable in getAreaMarketObservations; hiding unverified area metrics: ${message}`);
+    return [];
+  }
+});
+
+/** Return the latest verified, source-aware metric row for each metric, area, and property type. */
+export const getLatestMarketObservations = cache(async (): Promise<DbMarketObservation[]> => {
+  try {
+    const sql = getDb();
+    const rows = await sql`
+      SELECT DISTINCT ON (
+        market_observations.metric_key,
+        market_observations.geography_slug,
+        market_observations.property_type
+      )
+        market_observations.id,
+        market_observations.metric_key,
+        market_observations.label,
+        market_observations.value_display,
+        market_observations.value_numeric,
+        market_observations.unit,
+        market_observations.geography_type,
+        market_observations.geography_slug,
+        market_observations.geography_label,
+        market_observations.property_type,
+        market_observations.period_start,
+        market_observations.period_end,
+        market_observations.as_of_date,
+        market_sources.name AS source_name,
+        market_observations.source_url,
+        COALESCE(market_observations.methodology_url, market_sources.methodology_url) AS methodology_url,
+        market_observations.notes
+      FROM market_observations
+      JOIN market_sources ON market_sources.slug = market_observations.source_slug
+      WHERE market_observations.quality_status = 'verified'
+        AND market_sources.active = true
+      ORDER BY
+        market_observations.metric_key,
+        market_observations.geography_slug,
+        market_observations.property_type,
+        market_observations.period_end DESC,
+        market_observations.updated_at DESC
+    `;
+    return rows as unknown as DbMarketObservation[];
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error(`[public-data] DB unavailable in getLatestMarketObservations; hiding unverified market metrics: ${message}`);
     return [];
   }
 });

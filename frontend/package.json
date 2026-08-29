@@ -21,6 +21,7 @@
     "newsroom:migrate-activation-events": "node scripts/migrate-activation-events.mjs",
     "newsroom:migrate-article-routing": "node scripts/migrate-article-routing.mjs",
     "newsroom:migrate-market-data": "node scripts/migrate-market-observations.mjs",
+    "newsroom:refresh-source-market-data": "node scripts/refresh-source-aware-market-data.mjs",
     "newsroom:import-market-data": "node scripts/import-market-observations.mjs",
     "newsroom:kpi": "node scripts/kpi-report.mjs",
     "newsroom:alert-failure": "node scripts/alert-failure.mjs",

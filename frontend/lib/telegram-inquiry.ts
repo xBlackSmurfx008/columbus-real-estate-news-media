@@ -30,6 +30,19 @@ function clean(value: string | null | undefined, limit = 500) {
   return String(value ?? '').replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, limit);
 }
 
+function logDelivery(inquiry: TelegramInquiry, delivery: TelegramDelivery) {
+  const payload = {
+    kind: inquiry.kind,
+    recordId: clean(String(inquiry.recordId), 80),
+    status: delivery.ok ? 'delivered' : delivery.error,
+  };
+  if (delivery.ok) {
+    console.info('CREN_TELEGRAM_INQUIRY_DELIVERED', payload);
+  } else {
+    console.warn('CREN_TELEGRAM_INQUIRY_FAILED', payload);
+  }
+}
+
 /** Format a plain-text owner notification without Telegram markup or user-controlled URLs. */
 export function formatTelegramInquiry(inquiry: TelegramInquiry) {
   const labels: Record<InquiryKind, string> = {
@@ -70,7 +83,11 @@ export async function sendTelegramInquiry(
 ): Promise<TelegramDelivery> {
   const token = process.env.TELEGRAM_BOT_TOKEN?.trim();
   const chatId = process.env.TELEGRAM_CHAT_ID?.trim();
-  if (!token || !chatId) return { ok: false, error: 'TELEGRAM_NOT_CONFIGURED' };
+  if (!token || !chatId) {
+    const delivery = { ok: false, error: 'TELEGRAM_NOT_CONFIGURED' } as const;
+    logDelivery(inquiry, delivery);
+    return delivery;
+  }
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 8_000);
@@ -85,9 +102,13 @@ export async function sendTelegramInquiry(
       }),
       signal: controller.signal,
     });
-    return response.ok ? { ok: true } : { ok: false, error: 'TELEGRAM_REJECTED' };
+    const delivery = response.ok ? { ok: true } : ({ ok: false, error: 'TELEGRAM_REJECTED' } as const);
+    logDelivery(inquiry, delivery);
+    return delivery;
   } catch {
-    return { ok: false, error: 'TELEGRAM_DELIVERY_FAILED' };
+    const delivery = { ok: false, error: 'TELEGRAM_DELIVERY_FAILED' } as const;
+    logDelivery(inquiry, delivery);
+    return delivery;
   } finally {
     clearTimeout(timer);
   }

@@ -9,13 +9,14 @@ type SaveButtonProps = {
   label?: string;
 };
 
-const STORAGE_KEY = "crem_saved_items";
-const SAVED_ITEMS_EVENT = "crem-saved-items-change";
+export const SAVED_ITEMS_STORAGE_KEY = "crem_saved_items";
+export const SAVED_ITEMS_EVENT = "crem-saved-items-change";
 
 function readSavedItems(): string[] {
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
+    const raw = window.localStorage.getItem(SAVED_ITEMS_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed.filter((entry): entry is string => typeof entry === "string") : [];
   } catch {
     return [];
   }
@@ -42,7 +43,7 @@ export function SaveButton({ itemId, itemType, label = "Save" }: SaveButtonProps
     try {
       const parsed = readSavedItems();
       const next = saved ? parsed.filter((entry) => entry !== key) : [...new Set([...parsed, key])];
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      window.localStorage.setItem(SAVED_ITEMS_STORAGE_KEY, JSON.stringify(next));
       window.dispatchEvent(new Event(SAVED_ITEMS_EVENT));
       trackEvent("add_to_wishlist", { item_id: itemId, item_category: itemType, saved: !saved });
     } catch {

@@ -6,6 +6,14 @@ import { ZeroResultRecovery } from '@/components/zero-result-recovery';
 import { getArticlePath } from '@/lib/article-routing';
 import { areas, topics } from '@/lib/data';
 import { getPublicData } from '@/lib/public-data';
+import {
+  RESOURCE_SEARCH_SUGGESTIONS,
+  areaSearchText,
+  articleSearchText,
+  normalizeSearchText,
+  searchTextMatches,
+  topicSearchText,
+} from '@/lib/search-index';
 
 export const metadata: Metadata = {
   title: 'Search Columbus Areas, Stories & Resources',
@@ -21,7 +29,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
   const rawQuery = Array.isArray(params.q) ? params.q[0] : params.q;
   const query = rawQuery?.trim() ?? '';
-  const normalized = query.toLowerCase();
+  const normalized = normalizeSearchText(query);
   const data = await getPublicData();
 
   const suggestions: SearchSuggestion[] = [
@@ -30,44 +38,41 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       label: area.name,
       href: `/areas/${area.slug}`,
       type: 'area' as const,
+      description: area.description,
+      searchText: areaSearchText(area),
     })),
     ...topics.map((topic) => ({
       id: `topic-${topic.slug}`,
       label: topic.name,
       href: `/topics/${topic.slug}`,
       type: 'topic' as const,
+      description: topic.description,
+      searchText: topicSearchText(topic),
     })),
+    ...RESOURCE_SEARCH_SUGGESTIONS,
     ...data.articles.map((article) => ({
       id: `article-${article.id}`,
       label: article.title,
       href: getArticlePath(article),
       type: 'article' as const,
+      description: article.excerpt ?? undefined,
+      searchText: articleSearchText(article),
     })),
   ];
 
   const matchingAreas = normalized
-    ? areas.filter((area) => `${area.name} ${area.description}`.toLowerCase().includes(normalized)).slice(0, 12)
+    ? areas.filter((area) => searchTextMatches(areaSearchText(area), normalized)).slice(0, 12)
     : [];
   const matchingTopics = normalized
-    ? topics.filter((topic) => `${topic.name} ${topic.description}`.toLowerCase().includes(normalized)).slice(0, 8)
+    ? topics.filter((topic) => searchTextMatches(topicSearchText(topic), normalized)).slice(0, 8)
+    : [];
+  const matchingResources = normalized
+    ? RESOURCE_SEARCH_SUGGESTIONS.filter((resource) => searchTextMatches(resource.searchText, normalized)).slice(0, 8)
     : [];
   const matchingArticles = normalized
-    ? data.articles.filter((article) => {
-        const searchable = [
-          article.title,
-          article.excerpt,
-          article.category,
-          article.area_slug,
-          article.topic_slug,
-          ...(article.tags ?? []),
-        ]
-          .filter(Boolean)
-          .join(' ')
-          .toLowerCase();
-        return searchable.includes(normalized);
-      }).slice(0, 24)
+    ? data.articles.filter((article) => searchTextMatches(articleSearchText(article), normalized)).slice(0, 24)
     : [];
-  const hasResults = matchingAreas.length + matchingTopics.length + matchingArticles.length > 0;
+  const hasResults = matchingAreas.length + matchingTopics.length + matchingResources.length + matchingArticles.length > 0;
 
   return (
     <CrenPage>
@@ -134,6 +139,22 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               </section>
             )}
 
+            {matchingResources.length > 0 && (
+              <section>
+                <h3 className="cren-heading-md">Resources and tools</h3>
+                <div className="mt-3 grid gap-3 md:grid-cols-2">
+                  {matchingResources.map((resource) => (
+                    <Link key={resource.id} href={resource.href} className="cren-surface block p-5 no-underline">
+                      <span className="font-semibold text-[color:var(--text-hero)]">{resource.label}</span>
+                      {resource.description && (
+                        <span className="mt-1 block text-sm text-[color:var(--text-secondary)]">{resource.description}</span>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            )}
+
             {matchingArticles.length > 0 && (
               <section>
                 <h3 className="cren-heading-md">Stories and guides</h3>
@@ -151,6 +172,20 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                       )}
                     </Link>
                   ))}
+                </div>
+              </section>
+            )}
+
+            {hasResults && (
+              <section className="cren-soft p-5">
+                <div className="grid gap-3 md:grid-cols-[1fr_auto] md:items-center">
+                  <div>
+                    <h3 className="font-semibold text-[color:var(--text-hero)]">Follow this search</h3>
+                    <p className="cren-body mt-1 text-sm">Save a preference so CREN can prioritize updates around this question or place.</p>
+                  </div>
+                  <Link href={`/subscribe?source=search-results&topic=${encodeURIComponent(query)}`} className="cren-btn cren-btn-outline">
+                    Follow updates
+                  </Link>
                 </div>
               </section>
             )}

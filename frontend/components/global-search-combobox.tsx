@@ -1,14 +1,18 @@
 "use client";
 
+import type { SearchResultKind } from "@/lib/search-index";
 import { useRouter } from "next/navigation";
 import { useMemo, useRef, useState } from "react";
 import { trackEvent } from "@/lib/analytics-client";
+import { normalizeSearchText, searchTextMatches } from "@/lib/search-index";
 
 export type SearchSuggestion = {
   id: string;
   label: string;
   href: string;
-  type: "area" | "topic" | "article";
+  type: SearchResultKind;
+  description?: string;
+  searchText?: string;
 };
 
 type GlobalSearchComboboxProps = {
@@ -34,9 +38,9 @@ export function GlobalSearchCombobox({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    const q = normalizeSearchText(query);
     if (!q) return suggestions.slice(0, 6);
-    return suggestions.filter((item) => item.label.toLowerCase().includes(q)).slice(0, 6);
+    return suggestions.filter((item) => searchTextMatches(item.searchText ?? item.label, q)).slice(0, 6);
   }, [query, suggestions]);
 
   const activeDescendant = activeIndex >= 0 && filtered[activeIndex] ? `${listboxId}-${filtered[activeIndex].id}` : undefined;
@@ -153,6 +157,7 @@ export function GlobalSearchCombobox({
             >
               <span className="font-medium">{item.label}</span>
               <span className="ml-2 text-xs uppercase tracking-wide text-muted-foreground">{item.type}</span>
+              {item.description && <span className="mt-1 block text-xs text-muted-foreground">{item.description}</span>}
             </li>
           ))}
         </ul>

@@ -6,6 +6,7 @@ import { getArticlePath } from '@/lib/article-routing';
 import { CONSUMER_INTENT_CARDS, PROOF_COHORT_AREA_SLUGS, getAreaFollowPromise } from '@/lib/consumer-insights';
 import { areas, topics } from '@/lib/data';
 import { isLocalLivingArticle, prepareHomeArticles } from '@/lib/home-feed';
+import { RESOURCE_SEARCH_SUGGESTIONS, areaSearchText, articleSearchText, topicSearchText } from '@/lib/search-index';
 import type { DbAd, DbArticle, DbMarketSnapshot, DbNeighborhood } from '@/lib/public-data';
 import type { Area } from '@/lib/types';
 
@@ -93,18 +94,25 @@ export function HomeSections({ articles = [], marketSnapshot = [], neighborhoods
       label: area.name,
       href: `/areas/${area.slug}`,
       type: 'area' as const,
+      description: area.description,
+      searchText: areaSearchText(area),
     })),
     ...topics.map((topic) => ({
       id: `topic-${topic.slug}`,
       label: topic.name,
       href: `/topics/${topic.slug}`,
       type: 'topic' as const,
+      description: topic.description,
+      searchText: topicSearchText(topic),
     })),
+    ...RESOURCE_SEARCH_SUGGESTIONS,
     ...preparedArticles.map((article) => ({
       id: `article-${article.id}`,
       label: article.title,
       href: getArticlePath(article),
       type: 'article' as const,
+      description: article.excerpt ?? undefined,
+      searchText: articleSearchText(article),
     })),
   ];
 

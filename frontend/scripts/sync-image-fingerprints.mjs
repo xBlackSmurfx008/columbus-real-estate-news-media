@@ -10,13 +10,17 @@ import {
 
 try { process.loadEnvFile?.('.env.local'); } catch { /* environment may already be loaded */ }
 
+const dryRun = process.argv.includes('--dry-run');
+
 if (!process.env.DATABASE_URL) {
   console.error('DATABASE_URL environment variable is not set');
   process.exit(1);
 }
 
 const sql = neon(process.env.DATABASE_URL);
-await ensureArticleImageFingerprintTable(sql);
+if (!dryRun) {
+  await ensureArticleImageFingerprintTable(sql);
+}
 const articles = await sql`
   SELECT id, title, status, image_url
   FROM articles
@@ -41,19 +45,21 @@ for (const article of articles) {
   }
   const duplicate = findDuplicateImageFingerprint(known, fingerprint, article.id);
   if (duplicate) {
-    duplicates.push({ articleId: article.id, duplicateOf: duplicate.articleId, ...duplicate });
+    duplicates.push({ ...duplicate, articleId: article.id, duplicateOf: duplicate.articleId });
     continue;
   }
 
-  await sql`
-    INSERT INTO article_image_fingerprints (article_id, image_url, sha256, perceptual_hash, verified_at)
-    VALUES (${article.id}, ${article.image_url}, ${fingerprint.sha256}, ${fingerprint.perceptualHash}, NOW())
-    ON CONFLICT (article_id) DO UPDATE SET
-      image_url = EXCLUDED.image_url,
-      sha256 = EXCLUDED.sha256,
-      perceptual_hash = EXCLUDED.perceptual_hash,
-      verified_at = NOW()
-  `;
+  if (!dryRun) {
+    await sql`
+      INSERT INTO article_image_fingerprints (article_id, image_url, sha256, perceptual_hash, verified_at)
+      VALUES (${article.id}, ${article.image_url}, ${fingerprint.sha256}, ${fingerprint.perceptualHash}, NOW())
+      ON CONFLICT (article_id) DO UPDATE SET
+        image_url = EXCLUDED.image_url,
+        sha256 = EXCLUDED.sha256,
+        perceptual_hash = EXCLUDED.perceptual_hash,
+        verified_at = NOW()
+    `;
+  }
   known.push({
     article_id: article.id,
     sha256: fingerprint.sha256,
@@ -64,8 +70,9 @@ for (const article of articles) {
 
 process.stdout.write(`${JSON.stringify({
   ok: duplicates.length === 0 && invalid.length === 0,
+  mode: dryRun ? 'dry-run' : 'write',
   scanned: articles.length,
-  synced: synced.length,
+  [dryRun ? 'wouldSync' : 'synced']: synced.length,
   duplicates,
   invalid,
 }, null, 2)}\n`);

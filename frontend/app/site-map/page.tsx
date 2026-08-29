@@ -58,6 +58,7 @@ const primarySections = [
       ["Advertise", "/advertise"],
       ["Join", "/join"],
       ["Subscribe", "/subscribe"],
+      ["Saved Items", "/saved"],
       ["Contact", "/contact"],
       ["Privacy", "/privacy"],
       ["Terms of Use", "/terms"],

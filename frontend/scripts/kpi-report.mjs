@@ -13,6 +13,7 @@
 
 import { neon } from "@neondatabase/serverless";
 import { sendTelegramAlert } from "./telegram-alert.mjs";
+import { nonSmokeWhere, smokeCountQuery } from "./smoke-records-lib.mjs";
 
 const args = process.argv.slice(2);
 const wIdx = args.indexOf("--window");
@@ -32,23 +33,37 @@ function maskEmail(email) {
 }
 
 async function counts(table) {
-  const total = await sql.query(`SELECT COUNT(*)::int AS n FROM ${table}`);
+  const where = nonSmokeWhere(table);
+  const total = await sql.query(`SELECT COUNT(*)::int AS n FROM ${table} WHERE ${where}`);
   const recent = await sql.query(
-    `SELECT COUNT(*)::int AS n FROM ${table} WHERE created_at >= NOW() - ($1 || ' days')::interval`,
+    `SELECT COUNT(*)::int AS n FROM ${table} WHERE ${where} AND created_at >= NOW() - ($1 || ' days')::interval`,
     [windowDays]
   );
   return { total: total[0].n, recent: recent[0].n };
 }
 
-const [subs, members, contacts, leads] = await Promise.all([
+async function smokeCounts() {
+  const entries = await Promise.all(
+    ["contacts", "subscribers", "leads", "members"].map(async (table) => {
+      const rows = await sql.query(smokeCountQuery(table));
+      return [table, rows[0].n];
+    })
+  );
+  return Object.fromEntries(entries);
+}
+
+const [subs, members, contacts, leads, smoke] = await Promise.all([
   counts("subscribers"),
   counts("members"),
   counts("contacts"),
   counts("leads"),
+  smokeCounts(),
 ]);
 
 const leadsByPersona = await sql`
   SELECT persona, status, COUNT(*)::int AS n FROM leads
+  WHERE COALESCE(source, '') NOT LIKE 'codex-smoke:%'
+    AND COALESCE(email, '') NOT LIKE 'codex.smoke+%@example.com'
   GROUP BY persona, status ORDER BY persona, status
 `;
 
@@ -66,10 +81,13 @@ const articles = await sql`
 const newestLeads = await sql`
   SELECT persona, name, email, area, status, created_at FROM leads
   WHERE created_at >= NOW() - (${windowDays} || ' days')::interval
+    AND COALESCE(source, '') NOT LIKE 'codex-smoke:%'
+    AND COALESCE(email, '') NOT LIKE 'codex.smoke+%@example.com'
   ORDER BY created_at DESC LIMIT 15
 `;
 
 console.log(`## KPI snapshot — last ${windowDays} day(s)\n`);
+console.log(`Controlled codex-smoke records are excluded from audience and lead totals.\n`);
 console.log(`| Metric | Total | New in window |`);
 console.log(`|---|---|---|`);
 console.log(`| Subscribers | ${subs.total} | +${subs.recent} |`);
@@ -77,6 +95,11 @@ console.log(`| Members (free) | ${members.total} | +${members.recent} |`);
 console.log(`| Contact messages | ${contacts.total} | +${contacts.recent} |`);
 console.log(`| Leads (all personas) | ${leads.total} | +${leads.recent} |`);
 console.log(`| Articles published in window | — | ${articles[0].n} |`);
+
+const smokeTotal = Object.values(smoke).reduce((sum, n) => sum + n, 0);
+if (smokeTotal > 0) {
+  console.log(`\nControlled smoke records currently stored but excluded: ${smokeTotal} (${Object.entries(smoke).map(([table, n]) => `${table}: ${n}`).join(", ")}).`);
+}
 
 if (leadsByPersona.length > 0) {
   console.log(`\n### Leads by persona & status\n`);
@@ -291,7 +314,8 @@ if (toTelegram) {
     activation
       ? `Activation: ${activation.areaFollows} follows | ${activation.preferencesSaved} preferences | ${activation.formSubmissions} forms | ${activation.zeroResultSearches} zero searches`
       : `Activation: not instrumented`,
-  ].join("\n");
+    smokeTotal > 0 ? `Smoke records excluded: ${smokeTotal}` : null,
+  ].filter(Boolean).join("\n");
   const result = await sendTelegramAlert({ status: "COMPLETED", summary });
   console.log(result.ok ? `\nTelegram: delivered.` : `\nTelegram: NOT delivered (${result.error}).`);
 }

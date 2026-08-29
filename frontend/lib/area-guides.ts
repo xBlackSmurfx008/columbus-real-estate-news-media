@@ -220,6 +220,51 @@ export const HOUSING_SEARCH_SOURCES = {
   ],
 } as const;
 
+export type HousingSearchMode = keyof typeof HOUSING_SEARCH_SOURCES;
+
+function slugifyExternalPlace(value: string): string {
+  return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+}
+
+export function housingSearchSourcesForArea(
+  mode: HousingSearchMode,
+  area: string,
+): ReadonlyArray<{ title: string; href: string; note: string }> {
+  const selectedArea = area.trim();
+  if (!selectedArea || /^columbus(?: and central ohio)?$/i.test(selectedArea)) return HOUSING_SEARCH_SOURCES[mode];
+
+  const encodedQuery = encodeURIComponent(`${selectedArea}, OH`);
+  const slug = slugifyExternalPlace(`${selectedArea} OH`);
+
+  return HOUSING_SEARCH_SOURCES[mode].map((source) => {
+    if (source.title === "Realtor.com") {
+      return { ...source, href: `https://www.realtor.com/realestateandhomes-search/${slug}` };
+    }
+    if (source.title === "Realtor.com Rentals") {
+      return { ...source, href: `https://www.realtor.com/apartments/${slug}` };
+    }
+    if (source.title === "Zillow") {
+      return { ...source, href: `https://www.zillow.com/homes/${encodedQuery}_rb/` };
+    }
+    if (source.title === "Zillow Rentals") {
+      return { ...source, href: `https://www.zillow.com/${slug}/rentals/` };
+    }
+    if (source.title === "Redfin") {
+      return { ...source, href: `https://www.redfin.com/city?q=${encodedQuery}` };
+    }
+    if (source.title === "Homes.com") {
+      return { ...source, href: `https://www.homes.com/${slug}/` };
+    }
+    if (source.title === "Apartments.com") {
+      return { ...source, href: `https://www.apartments.com/${slug}/` };
+    }
+    if (source.title === "AffordableHousing.com") {
+      return { ...source, href: `https://www.affordablehousing.com/${slug}/` };
+    }
+    return source;
+  });
+}
+
 export const SERVICE_CATEGORIES = [
   "HVAC and indoor air",
   "Plumbing and drains",

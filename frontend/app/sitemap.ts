@@ -13,6 +13,7 @@ const staticPaths = [
   '/areas',
   '/topics',
   '/site-map',
+  '/saved',
   '/market-data',
   '/resources',
   '/things-to-do',

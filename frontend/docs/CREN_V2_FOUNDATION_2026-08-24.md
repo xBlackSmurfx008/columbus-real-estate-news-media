@@ -14,8 +14,8 @@ images are reachable.
 Production is not readiness-green yet. The source-aware market tables are
 installed with 20 verified observations across 11 geographies, and canonical
 routing is reconciled. Four live images are near-duplicates without reserved
-fingerprints, six live images lack job records, and 13 live articles retain
-queued editorial statuses.
+fingerprints and have explicit failed replacement jobs, while 13 live articles
+retain queued editorial statuses.
 
 ## Outcome
 

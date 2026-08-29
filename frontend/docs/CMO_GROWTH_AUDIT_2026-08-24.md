@@ -17,7 +17,8 @@ The growth plan remains strategically open, not technically forgotten. The
 source-aware market layer is installed with 20 verified observations across 11
 geographies, but reference hubs are not yet fully reported, owned-audience
 delivery is not implemented, and production still needs four near-duplicate
-image replacements, six image-job reconciliations, and queued-review cleanup.
+image replacements and queued-review cleanup; image-job rows are now explicit
+for all six formerly orphaned live images.
 This audit's older 72-hub target is superseded by the current area plan's 86
 declared hubs.
 

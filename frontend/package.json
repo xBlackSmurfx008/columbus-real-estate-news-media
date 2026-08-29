@@ -17,6 +17,7 @@
     "newsroom:migrate-tags": "node scripts/migrate-article-tags.mjs",
     "newsroom:audit-public-images": "node scripts/public-image-audit.mjs",
     "newsroom:sync-image-fingerprints": "node scripts/sync-image-fingerprints.mjs",
+    "newsroom:reconcile-image-jobs": "node scripts/reconcile-live-image-jobs.mjs",
     "newsroom:migrate-page-views": "node scripts/migrate-page-views.mjs",
     "newsroom:migrate-activation-events": "node scripts/migrate-activation-events.mjs",
     "newsroom:migrate-article-routing": "node scripts/migrate-article-routing.mjs",

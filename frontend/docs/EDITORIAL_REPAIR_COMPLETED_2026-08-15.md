@@ -11,7 +11,7 @@ Writing-system version: **`cren-article-v1.0.0`**
 > Current status (August 29, 2026): the historical 73-article repair remains complete. Production now has 87 live
 > articles; uptime passes and the public image audit reports 87/87 live images reachable with no missing or broken
 > images. Canonical routing is reconciled. The remaining readiness reconciliation is four near-duplicate image assets,
-> six missing image-job rows, 13 live rows with queued review statuses. The source-aware market layer is installed and
+> four failed near-duplicate image replacement jobs and 13 live rows with queued review statuses. The source-aware market layer is installed and
 > Current deployed code is `b21ef92` on `feat/site-map`.
 
 ## Final result

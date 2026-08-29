@@ -75,9 +75,10 @@ Production uptime and public-image reachability pass. The source-aware market
 tables are installed and contain 20 verified observations across 11
 geographies. Canonical routing is reconciled. The readiness audit still has
 two operational follow-ups: replace four near-duplicate live image assets and
-create or complete six image-job records, plus resolve 13 live rows with
-queued editorial statuses. Seventeen controlled audience smoke rows remain
-excluded from KPI totals.
+resolve 13 live rows with queued editorial statuses. Their image-job rows are
+now explicit: two reconciled as published and four marked failed pending
+replacement. Seventeen controlled audience smoke rows remain excluded from
+KPI totals.
 
 ## Operational checks
 
@@ -121,7 +122,7 @@ unless `--dry-run` is present.
 
 ## Next phases
 
-1. Replace four near-duplicate live image assets, complete six image-job records, and resolve 13 queued review rows before expanding automation.
+1. Replace four near-duplicate live image assets and resolve 13 queued review rows before expanding automation.
 2. Complete the first fully reported reference hubs from `docs/AREA_HUB_COMPLETION_PLAN_2026-08-25.md`.
 3. Add append-only editorial review history and resumable publication-run tracking.
 4. Build owned-audience delivery, sponsor insertion, and campaign reporting around verified subscriber data.

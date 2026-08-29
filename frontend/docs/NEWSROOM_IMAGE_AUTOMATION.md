@@ -7,10 +7,11 @@ at `3fc9ba8`. Production uptime passes, and the public-image audit confirms
 87/87 live images are reachable with no missing or broken public assets.
 
 Readiness reconciliation remains open: four live articles have near-duplicate
-image URLs without reserved fingerprints, six live articles have no image-job
-rows, and 13 live articles still have queued editorial statuses. The next
-operational job is to replace those duplicate assets and reconcile workflow
-records before increasing publication volume.
+image URLs without reserved fingerprints and explicit failed replacement jobs,
+and 13 live articles still have queued editorial statuses. The two other
+formerly orphaned live image jobs are now recorded as published. The next
+operational job is to replace the duplicate assets before increasing
+publication volume.
 
 The cloud newsroom publishes a completed article and its durable, unique hero without a separate approval queue. It
 fails closed unless the exact staged copy and final image pass every publication check together.

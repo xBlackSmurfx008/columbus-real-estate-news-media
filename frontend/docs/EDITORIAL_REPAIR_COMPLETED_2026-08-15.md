@@ -8,11 +8,11 @@ Writing-system version: **`cren-article-v1.0.0`**
 > automatic publication. The historical repair described below still records its original approvals. Current drafts go
 > live automatically only after the exact copy passes all 18 checks and the final image is reachable, fingerprinted, and unique.
 
-> Current status (August 28, 2026): the historical 73-article repair remains complete. Production now has 87 live
+> Current status (August 29, 2026): the historical 73-article repair remains complete. Production now has 87 live
 > articles; uptime passes and the public image audit reports 87/87 live images reachable with no missing or broken
-> images. The remaining readiness reconciliation is one missing canonical slug, six missing image fingerprints/jobs,
-> 13 live rows with queued review statuses, and the uninstalled market-observation layer. Current deployed code is
-> `3fc9ba8` on `feat/site-map`.
+> images. Canonical routing is reconciled. The remaining readiness reconciliation is four near-duplicate image assets,
+> six missing image-job rows, 13 live rows with queued review statuses. The source-aware market layer is installed and
+> Current deployed code is `b21ef92` on `feat/site-map`.
 
 ## Final result
 

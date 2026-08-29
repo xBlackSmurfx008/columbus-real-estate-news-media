@@ -1,6 +1,6 @@
 # CREN area-hub completion plan — 2026-08-25
 
-## Current status — August 28, 2026
+## Current status — August 29, 2026
 
 Sprint A baseline is implemented and deployed at `3fc9ba8`. The 86 declared
 hubs have their baseline image, local-living, housing-action, directory, and

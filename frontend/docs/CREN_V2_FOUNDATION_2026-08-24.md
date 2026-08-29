@@ -3,7 +3,7 @@
 Status: implemented, extended, and deployed on `feat/site-map` at `3fc9ba8`
 Date: August 24, 2026 (America/New_York)
 
-## Current status — August 28, 2026
+## Current status — August 29, 2026
 
 The v2 foundation and the follow-on discovery tranche are live. Completed
 follow-ons include the public site map, intent-aware search/resource results,
@@ -12,9 +12,10 @@ login, and profile persistence. Production uptime passes and all 87 live
 images are reachable.
 
 Production is not readiness-green yet. The source-aware market tables are
-installed with 20 verified observations across 11 geographies. One live article
-lacks a canonical slug, six live images lack reserved fingerprint/job records,
-and 13 live articles retain queued editorial statuses.
+installed with 20 verified observations across 11 geographies, and canonical
+routing is reconciled. Four live images are near-duplicates without reserved
+fingerprints, six live images lack job records, and 13 live articles retain
+queued editorial statuses.
 
 ## Outcome
 

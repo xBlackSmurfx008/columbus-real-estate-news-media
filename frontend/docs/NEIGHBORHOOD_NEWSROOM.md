@@ -1,6 +1,6 @@
 # CREN neighborhood coverage process
 
-## Current status — August 28, 2026
+## Current status — August 29, 2026
 
 The weekly lane is operating within policy. The production coverage report for
 the week beginning August 24 shows one Neighborhoods story live, zero stories

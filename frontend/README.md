@@ -63,7 +63,7 @@ npm run dev
 
 Then open `http://localhost:3000`.
 
-## Current status — August 28, 2026
+## Current status — August 29, 2026
 
 The current deployed branch is `feat/site-map` at `3fc9ba8`. The completed
 product tranche includes the public site map, intent-aware search and resource
@@ -73,10 +73,11 @@ production deployment and the controlled test account was removed afterward.
 
 Production uptime and public-image reachability pass. The source-aware market
 tables are installed and contain 20 verified observations across 11
-geographies. The readiness audit still has three follow-ups: reconcile one
-live article without a canonical slug, reserve fingerprints/jobs for six live
-images, and resolve 13 live rows with queued editorial statuses. Seventeen
-controlled audience smoke rows remain excluded from KPI totals.
+geographies. Canonical routing is reconciled. The readiness audit still has
+two operational follow-ups: replace four near-duplicate live image assets and
+create or complete six image-job records, plus resolve 13 live rows with
+queued editorial statuses. Seventeen controlled audience smoke rows remain
+excluded from KPI totals.
 
 ## Operational checks
 
@@ -120,7 +121,7 @@ unless `--dry-run` is present.
 
 ## Next phases
 
-1. Reconcile the one canonical-slug gap, six image fingerprint/job gaps, and 13 queued review rows before expanding automation.
+1. Replace four near-duplicate live image assets, complete six image-job records, and resolve 13 queued review rows before expanding automation.
 2. Complete the first fully reported reference hubs from `docs/AREA_HUB_COMPLETION_PLAN_2026-08-25.md`.
 3. Add append-only editorial review history and resumable publication-run tracking.
 4. Build owned-audience delivery, sponsor insertion, and campaign reporting around verified subscriber data.

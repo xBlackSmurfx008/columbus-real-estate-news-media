@@ -5,7 +5,7 @@ Scope: `columbusrealestatenews.com`, the production content/data system, competi
 250,000 daily pageviews
 Status: Strategy baseline reconciled with the deployed product; current implementation is on `feat/site-map` at `3fc9ba8`
 
-## Current status — August 28, 2026
+## Current status — August 29, 2026
 
 The first implementation tranche is complete: source-led editorial foundations,
 area baseline pages, search/resource discovery, saved items, area-scoped housing
@@ -16,8 +16,8 @@ public image audit reports 87/87 reachable live images.
 The growth plan remains strategically open, not technically forgotten. The
 source-aware market layer is installed with 20 verified observations across 11
 geographies, but reference hubs are not yet fully reported, owned-audience
-delivery is not implemented, and production still
-needs one canonical-slug repair plus six image fingerprint/job reconciliations.
+delivery is not implemented, and production still needs four near-duplicate
+image replacements, six image-job reconciliations, and queued-review cleanup.
 This audit's older 72-hub target is superseded by the current area plan's 86
 declared hubs.
 

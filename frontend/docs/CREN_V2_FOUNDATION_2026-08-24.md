@@ -1,7 +1,19 @@
 # CREN Living Intelligence v2 — Foundation Handoff
 
-Status: implemented and verified on `feat/cren-living-intelligence-v2`
+Status: implemented, extended, and deployed on `feat/site-map` at `3fc9ba8`
 Date: August 24, 2026 (America/New_York)
+
+## Current status — August 28, 2026
+
+The v2 foundation and the follow-on discovery tranche are live. Completed
+follow-ons include the public site map, intent-aware search/resource results,
+saved items, area-scoped housing search links, and Neon-backed member signup,
+login, and profile persistence. Production uptime passes and all 87 live
+images are reachable.
+
+Production is not readiness-green yet. The market observation tables are still
+missing, one live article lacks a canonical slug, six live images lack reserved
+fingerprint/job records, and 13 live articles retain queued editorial statuses.
 
 ## Outcome
 
@@ -54,6 +66,10 @@ The application now selects `articles.canonical_slug`. Run the database migratio
    ```
 
 6. Deploy a preview, verify the checklist below, then promote the same build to production.
+
+The article-routing migration and member-profile migration are installed in
+production. The source-aware market migration remains pending and must happen
+before area hubs can leave pending-data mode.
 
 ## Preview verification
 

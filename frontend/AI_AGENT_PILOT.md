@@ -1,5 +1,12 @@
 # AI Comms Agent Pilot Runbook
 
+## Current status — August 28, 2026
+
+The agent routes and admin-session protection are implemented in the deployed
+branch `feat/site-map` at `3fc9ba8`. This pilot has not been included in the
+current production member/profile verification, so the UAT checks below remain
+open evidence requirements. Keep high-risk outbound actions approval-gated.
+
 ## Start
 1. `npm install`
 2. `npm run dev`

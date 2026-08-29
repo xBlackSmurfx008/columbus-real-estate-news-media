@@ -8,6 +8,12 @@ Writing-system version: **`cren-article-v1.0.0`**
 > automatic publication. The historical repair described below still records its original approvals. Current drafts go
 > live automatically only after the exact copy passes all 18 checks and the final image is reachable, fingerprinted, and unique.
 
+> Current status (August 28, 2026): the historical 73-article repair remains complete. Production now has 87 live
+> articles; uptime passes and the public image audit reports 87/87 live images reachable with no missing or broken
+> images. The remaining readiness reconciliation is one missing canonical slug, six missing image fingerprints/jobs,
+> 13 live rows with queued review statuses, and the uninstalled market-observation layer. Current deployed code is
+> `3fc9ba8` on `feat/site-map`.
+
 ## Final result
 
 - All **73 live CREN articles** were rebuilt, re-reported, or recertified.
@@ -102,9 +108,11 @@ Run commands from `frontend/`.
 
 ## Future fixes and maintenance priorities
 
-### Priority 0 — stable article URLs
+### Priority 0 — production reconciliation for stable article URLs
 
-Article paths are currently derived from the current headline. Changing a headline can therefore change the public URL and break old links. Add a stored immutable `slug` or `canonical_slug` column, migrate existing paths, and maintain redirects from prior title-derived URLs before the next large headline rewrite.
+The immutable `canonical_slug` column, redirect table, canonical routing, and redirect recovery are implemented. Production
+still has one live article without a populated canonical slug; repair that row and rerun the readiness audit before the
+next large headline rewrite.
 
 ### Priority 1 — editorial review history
 

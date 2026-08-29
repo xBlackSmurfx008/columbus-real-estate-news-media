@@ -1,5 +1,17 @@
 # CREN area-hub completion plan — 2026-08-25
 
+## Current status — August 28, 2026
+
+Sprint A baseline is implemented and deployed at `3fc9ba8`. The 86 declared
+hubs have their baseline image, local-living, housing-action, directory, and
+official-source states. Follow-on discovery work also shipped intent-aware
+search/resource results, saved items, and area-scoped housing links.
+
+Sprint B is not complete. No hub should be labeled fully reported until the
+source-aware market tables/data, documentary-image review, local source
+coverage, and usefulness gate are complete. The production readiness audit
+currently confirms that the market-observation layer is still missing.
+
 ## What is complete in this sprint
 
 All 86 declared area hubs now have the same useful baseline instead of an empty-card state:
@@ -122,16 +134,17 @@ The `First deep-dive` column defines the first distinctive reporting package. Ev
 
 ## Delivery sequence
 
-### Sprint A — implemented baseline
+### Sprint A — implemented baseline and discovery follow-ons
 
 - All 86 hubs receive complete photo and action-card states.
 - Launch things-to-do, housing-search, directory, and list-your-business pages.
 - Add rental-listing and directory-review lead types without auto-publication.
 - Put all new permanent routes in the sitemap and primary/footer navigation.
+- Add intent-aware search/resource results, saved items, and area-scoped housing links.
 
 ### Sprint B — reference hubs
 
-Complete Columbus Citywide, Dublin, German Village, Clintonville, Downtown, Short North, Easton, and Polaris first. These exercise the region, city, neighborhood, and corridor models. Each must pass the usefulness gate before replication.
+**Open.** Complete Columbus Citywide, Dublin, German Village, Clintonville, Downtown, Short North, Easton, and Polaris first. These exercise the region, city, neighborhood, and corridor models. Each must pass the usefulness gate before replication.
 
 ### Sprint C — cities and high-use neighborhoods
 

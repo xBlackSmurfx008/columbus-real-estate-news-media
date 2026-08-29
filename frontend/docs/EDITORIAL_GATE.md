@@ -1,5 +1,13 @@
 # CREN editorial gate
 
+## Current status — August 28, 2026
+
+The fail-closed automatic gate is deployed at `3fc9ba8`. Production currently
+has 87 live articles, including 73 historically approved repair rows and one
+recorded automatic publication. The gate remains the publication authority.
+Readiness is still being reconciled for one canonical slug, six image
+fingerprint/job records, and 13 live rows with legacy queued review statuses.
+
 CREN uses a fail-closed automatic publication process. Automation may research, draft, run deterministic checks, prepare
 an image, and make the finished article public without a separate approval queue.
 

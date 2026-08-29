@@ -1,5 +1,16 @@
 # CREN newsroom image automation
 
+## Current status — August 28, 2026
+
+The cloud image workflow and guarded automatic-publication path are deployed
+at `3fc9ba8`. Production uptime passes, and the public-image audit confirms
+87/87 live images are reachable with no missing or broken public assets.
+
+Readiness reconciliation remains open: six live articles have image URLs but
+no reserved fingerprint/job rows, and 13 live articles still have queued
+editorial statuses. The next operational job is to reconcile those records and
+confirm the scheduled workflow's coverage before increasing publication volume.
+
 The cloud newsroom publishes a completed article and its durable, unique hero without a separate approval queue. It
 fails closed unless the exact staged copy and final image pass every publication check together.
 

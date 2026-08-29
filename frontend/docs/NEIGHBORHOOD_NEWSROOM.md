@@ -1,5 +1,14 @@
 # CREN neighborhood coverage process
 
+## Current status — August 28, 2026
+
+The weekly lane is operating within policy. The production coverage report for
+the week beginning August 24 shows one Neighborhoods story live, zero stories
+needed to meet the weekly minimum, and room for one additional story. The
+suggested next area is Columbus city average. Continue using the two-source,
+primary-record workflow below; do not fill the remaining slot without a strong
+record.
+
 CREN targets one strong `Neighborhoods` article each week and may publish a second when the records support a distinct,
 useful story. This is a site-wide weekly lane, not a quota of one or two articles for every neighborhood. Every article
 must map to one specific `area_slug`, carry the `neighborhood` tag, and appear on that area's hub.

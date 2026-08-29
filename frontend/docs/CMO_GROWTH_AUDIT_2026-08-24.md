@@ -3,7 +3,22 @@
 Date: August 24, 2026
 Scope: `columbusrealestatenews.com`, the production content/data system, competitive positioning, and the path toward
 250,000 daily pageviews
-Status: Strategy and evidence baseline; no redesign or production behavior changed in this phase
+Status: Strategy baseline reconciled with the deployed product; current implementation is on `feat/site-map` at `3fc9ba8`
+
+## Current status — August 28, 2026
+
+The first implementation tranche is complete: source-led editorial foundations,
+area baseline pages, search/resource discovery, saved items, area-scoped housing
+links, sitemap/navigation coverage, activation instrumentation, and
+Neon-backed member profiles are deployed. Production uptime passes and the
+public image audit reports 87/87 reachable live images.
+
+The growth plan remains strategically open, not technically forgotten. The
+source-aware market layer is not installed, reference hubs are not yet fully
+reported, owned-audience delivery is not implemented, and production still
+needs one canonical-slug repair plus six image fingerprint/job reconciliations.
+This audit's older 72-hub target is superseded by the current area plan's 86
+declared hubs.
 
 ## Executive decision
 
@@ -486,19 +501,19 @@ reader dissatisfaction rise.
 - sponsor renewal, ad viewability, and revenue per thousand pageviews;
 - lead conversions reported separately from editorial engagement.
 
-## Recommended first implementation sprint
+## Recommended first implementation sprint — reconciled
 
 The first build should not be a broad visual overhaul. It should complete this sequence:
 
-1. stable slugs and redirect recovery;
-2. robots, sitemap, news sitemap, canonical metadata, and corrected structured data;
-3. removal of unsupported proof and hard-coded market statistics;
-4. normalized market observation/source schema;
-5. production analytics plus Search Console baseline;
+1. stable slugs and redirect recovery — implemented in code and mostly migrated; one live canonical-slug gap remains;
+2. robots, sitemap, news sitemap, canonical metadata, and corrected structured data — implemented;
+3. removal of unsupported proof and hard-coded market statistics — implemented;
+4. normalized market observation/source schema — implemented in code, production tables still pending;
+5. production analytics plus Search Console baseline — activation analytics is live; Search Console verification remains open;
 6. one complete reference hub—recommended German Village or Dublin—containing market history, apartment-versus-house
    rents, local politics/development, restaurants, events, transit/parks, sourcing, and follow-area conversion;
-7. redesign the home, area, article, market, events, and tracker templates around that working data product;
-8. replicate only after the reference hub passes accuracy, speed, accessibility, engagement, and indexation checks.
+7. redesign the home, area, article, market, events, and tracker templates around that working data product — partial baseline shipped;
+8. replicate only after the reference hub passes accuracy, speed, accessibility, engagement, and indexation checks — open.
 
 ## Sources consulted
 

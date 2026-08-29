@@ -1,0 +1,146 @@
+{
+  "prompt_version": "cren-article-v1.0.0",
+  "title": "Columbus Buyer Price Bands Need Monthly-Cost Checks",
+  "category": "Market Analysis",
+  "author": "CREN Newsroom",
+  "date": "Aug 28, 2026",
+  "excerpt": "Use Columbus buyer price bands as a due-diligence tool, not a promise of available homes, by checking payment, records, permits, and substitutes.",
+  "body": "Columbus buyer price bands are useful only when they are tied to payment, property records, permits, condition, and nearby substitutes. The safer CREN framing is to show buyers what to verify before touring, not to imply that a budget guarantees access to a neighborhood.\n\n## Why The Band Is Only A Starting Point\n\nA list price is a search filter, not the full housing decision. The same budget can describe a smaller renovated home, a larger property with repair exposure, a condo with association dues, or a location tradeoff that changes the daily routine.\n\n[Columbus REALTORS Housing Reports](https://columbusrealtors.com/housing-reports) publishes monthly residential statistics with regional, county, city, and school-district report paths. That makes the reports useful for market direction, but a buyer still needs address-level checks before treating a band as realistic.\n\nThe better consumer product is not a generic affordability table. It is a pressure test: payment fit, cash to close, taxes, insurance, condition, permits, commute, school-context checks, and the closest substitute areas.\n\n## Payment Comes Before The Search Map\n\nThe [Consumer Financial Protection Bureau Loan Estimate Explainer](https://www.consumerfinance.gov/owning-a-home/loan-estimate/) tells borrowers to compare the form with the loan terms they discussed with the lender. It also points buyers to the estimated monthly payment, closing costs, cash to close, and escrow or insurance items.\n\nThat is why CREN should keep the buyer page focused on monthly cost before neighborhood preference. A home can appear to fit a list-price range and still fail the buyer's budget once taxes, insurance, mortgage insurance, association dues, repairs, or closing costs are included.\n\nA useful page should make room for uncertainty. Rates, inventory, lender terms, property condition, and seller concessions can change the real answer. The page should push readers to verify the current deal structure rather than treating any band as fixed guidance.\n\n## Records Change The Meaning Of A Listing\n\nThe [Franklin County property page](https://www.franklincountyohio.gov/Resident-Services/Property) routes residents to property, auditor, recorder, and tax resources. Those records can help a buyer compare parcel details, tax context, transfer history, and other public information before relying on listing copy.\n\nThe [City of Columbus permit page](https://www.columbus.gov/Business-Development/Get-a-Permit/Get-or-Track-a-Building-Permit?oc_lang=en-US) says the permitting process begins with an application and any plans required for review. It also says that after a record is created, application status can be tracked through the Citizen Access Portal.\n\nThose checks do not replace inspection or professional advice. They help a buyer ask sharper questions when a listing claims major updates, converted space, additions, or recent work.\n\n## Substitutes Are Part Of The Product\n\nA buyer who cannot make one area work still may have a workable Columbus-area search. German Village might lead to Merion Village or the Brewery District. Dublin might lead to Hilliard, Worthington, or Westerville. A starter-home search might compare Grove City, Whitehall, Hilltop, and South Linden.\n\nThose comparisons should not be framed as rankings. They should answer a practical consumer question: what changes when the buyer protects the payment, changes the commute, accepts an older home, or shifts the daily-life routine.\n\nThe next checkpoint is a monthly refresh tied to the latest regional housing report, current payment inputs, and spot checks that show whether the listed bands still describe realistic buyer tradeoffs.",
+  "read_time": "4 min read",
+  "area_slug": "columbus-citywide",
+  "topic_slug": "market-trends",
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "market-trends",
+    "buyer-guide",
+    "price-bands",
+    "due-diligence"
+  ],
+  "featured": false,
+  "image_url": null,
+  "answer_summary": "Columbus buyer price bands are useful only when they are tied to payment, property records, permits, condition, and nearby substitutes. The safer CREN framing is to show buyers what to verify before touring, not to imply that a budget guarantees access to a neighborhood.",
+  "primary_keyword": "Columbus buyer price bands",
+  "meta_description": "Columbus buyer price bands are useful only when payment, records, permits, condition, and nearby substitutes are checked before touring homes.",
+  "fact_checked_at": "2026-08-28T21:22:30Z",
+  "canonical_event_key": "columbus-buyer-price-band-checks-2026-08-28",
+  "location": {
+    "name": "Columbus",
+    "state": "OH"
+  },
+  "source_ledger": [
+    {
+      "id": "columbus-realtors-housing-reports",
+      "type": "PRIMARY",
+      "url": "https://columbusrealtors.com/housing-reports",
+      "publisher": "Columbus REALTORS",
+      "title": "Housing Reports",
+      "published_at": null,
+      "fetched_at": "2026-08-28T21:22:30Z",
+      "http_status": 200
+    },
+    {
+      "id": "cfpb-loan-estimate",
+      "type": "PRIMARY",
+      "url": "https://www.consumerfinance.gov/owning-a-home/loan-estimate/",
+      "publisher": "Consumer Financial Protection Bureau",
+      "title": "Loan Estimate Explainer",
+      "published_at": null,
+      "fetched_at": "2026-08-28T21:22:30Z",
+      "http_status": 200
+    },
+    {
+      "id": "franklin-county-property",
+      "type": "PRIMARY",
+      "url": "https://www.franklincountyohio.gov/Resident-Services/Property",
+      "publisher": "Franklin County, Ohio",
+      "title": "Property",
+      "published_at": null,
+      "fetched_at": "2026-08-28T21:22:30Z",
+      "http_status": 200
+    },
+    {
+      "id": "columbus-permit-page",
+      "type": "PRIMARY",
+      "url": "https://www.columbus.gov/Business-Development/Get-a-Permit/Get-or-Track-a-Building-Permit?oc_lang=en-US",
+      "publisher": "City of Columbus",
+      "title": "Get or Track a Building Permit",
+      "published_at": null,
+      "fetched_at": "2026-08-28T21:22:30Z",
+      "http_status": 200
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "c1",
+      "claim": "Columbus REALTORS Housing Reports publishes monthly residential statistics with regional, county, city, and school-district report paths.",
+      "source_ids": ["columbus-realtors-housing-reports"],
+      "kind": "FACT"
+    },
+    {
+      "id": "c2",
+      "claim": "The Consumer Financial Protection Bureau Loan Estimate Explainer tells borrowers to compare the form with the loan terms they discussed with the lender.",
+      "source_ids": ["cfpb-loan-estimate"],
+      "kind": "FACT"
+    },
+    {
+      "id": "c3",
+      "claim": "It also points buyers to the estimated monthly payment, closing costs, cash to close, and escrow or insurance items.",
+      "source_ids": ["cfpb-loan-estimate"],
+      "kind": "FACT"
+    },
+    {
+      "id": "c4",
+      "claim": "The Franklin County property page routes residents to property, auditor, recorder, and tax resources.",
+      "source_ids": ["franklin-county-property"],
+      "kind": "FACT"
+    },
+    {
+      "id": "c5",
+      "claim": "The City of Columbus permit page says the permitting process begins with an application and any plans required for review.",
+      "source_ids": ["columbus-permit-page"],
+      "kind": "FACT"
+    },
+    {
+      "id": "c6",
+      "claim": "It also says that after a record is created, application status can be tracked through the Citizen Access Portal.",
+      "source_ids": ["columbus-permit-page"],
+      "kind": "FACT"
+    }
+  ],
+  "entity_ledger": [
+    {
+      "name": "Columbus REALTORS",
+      "source_ids": ["columbus-realtors-housing-reports"]
+    },
+    {
+      "name": "Consumer Financial Protection Bureau",
+      "source_ids": ["cfpb-loan-estimate"]
+    },
+    {
+      "name": "Franklin County, Ohio",
+      "source_ids": ["franklin-county-property"]
+    },
+    {
+      "name": "City of Columbus",
+      "source_ids": ["columbus-permit-page"]
+    }
+  ],
+  "image_brief": {
+    "primary_request": "Create a restrained CREN editorial card showing a buyer checklist, a simple map grid, and a payment worksheet on a desk.",
+    "editorial_idea": "A consumer decision desk that shows price bands as verification prompts rather than promises.",
+    "story_anchors": [
+      "buyer budget worksheet",
+      "Columbus-area map grid",
+      "public-record checklist"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "Official sources are records and guidance pages, not usable documentary photos.",
+    "avoid": "No house-price promises, no luxury-home glamor, no neighborhood ranking, no real address."
+  },
+  "image_alt": "Editorial graphic of a Columbus buyer checklist with payment and public-record prompts.",
+  "image_provenance": {
+    "type": "CREN_GRAPHIC",
+    "caption": "CREN editorial graphic based on source-backed buyer verification steps."
+  }
+}

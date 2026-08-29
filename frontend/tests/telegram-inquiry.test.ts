@@ -17,6 +17,45 @@ test('membership inquiry formatting includes a durable record and contact detail
   assert.match(text, /Admin: https:\/\/columbusrealestatenews\.com\/admin\/leads/);
 });
 
+test('newsletter inquiry formatting includes subscription preferences', () => {
+  const text = formatTelegramInquiry({
+    kind: 'newsletter',
+    recordId: 77,
+    email: 'reader@example.com',
+    area: 'Dublin',
+    role: 'buyer',
+    cadence: 'weekly',
+    timeline: '3-6 months',
+    budget: '$400k-$600k',
+    topic: 'Market data | schools',
+    source: 'area-follow | role=buyer',
+  });
+  assert.match(text, /CREN inquiry: NEWSLETTER/);
+  assert.match(text, /Area: Dublin/);
+  assert.match(text, /Role: buyer/);
+  assert.match(text, /Cadence: weekly/);
+  assert.match(text, /Budget: \$400k-\$600k/);
+});
+
+test('lead inquiry formatting includes persona and fielded details', () => {
+  const text = formatTelegramInquiry({
+    kind: 'lead',
+    recordId: 88,
+    persona: 'fsbo_seller',
+    name: 'Sam Seller',
+    email: 'sam@example.com',
+    phone: '614-555-0100',
+    area: 'German Village',
+    message: 'timeline: soon | property type: duplex',
+    source: 'sell-your-home',
+  });
+  assert.match(text, /CREN inquiry: LEAD/);
+  assert.match(text, /Persona: fsbo_seller/);
+  assert.match(text, /Phone: 614-555-0100/);
+  assert.match(text, /Area: German Village/);
+  assert.match(text, /timeline: soon/);
+});
+
 test('notification is a safe no-op when Telegram is not configured', async () => {
   const oldToken = process.env.TELEGRAM_BOT_TOKEN;
   const oldChat = process.env.TELEGRAM_CHAT_ID;

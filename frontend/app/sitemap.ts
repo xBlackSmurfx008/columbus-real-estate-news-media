@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { areas, topics } from '@/lib/data';
 import { getArticlePath } from '@/lib/article-routing';
+import { getAreaReleasePolicy } from '@/lib/consumer-insights';
 import { getArticles } from '@/lib/public-data';
 import { absoluteUrl } from '@/lib/site';
 
@@ -18,8 +19,11 @@ const staticPaths = [
   '/housing-search',
   '/directory',
   '/directory/list-your-business',
+  '/directory/sponsor-rules',
   '/buy',
+  '/buy/price-band-reality',
   '/rent',
+  '/rent/before-you-sign',
   '/rent/find-a-home',
   '/sell',
   '/sell/your-home',
@@ -46,11 +50,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: path === '/' || path === '/blog' ? 'daily' as const : 'weekly' as const,
       priority: path === '/' ? 1 : 0.7,
     })),
-    ...areas.map((area) => ({
-      url: absoluteUrl(`/areas/${area.slug}`),
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    })),
+    ...areas
+      .map((area) => ({ area, policy: getAreaReleasePolicy(area) }))
+      .filter(({ policy }) => policy.indexable)
+      .map(({ area, policy }) => ({
+        url: absoluteUrl(`/areas/${area.slug}`),
+        changeFrequency: policy.changeFrequency,
+        priority: policy.sitemapPriority,
+      })),
     ...topics.map((topic) => ({
       url: absoluteUrl(`/topics/${topic.slug}`),
       changeFrequency: 'daily' as const,

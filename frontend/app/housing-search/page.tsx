@@ -42,6 +42,7 @@ export default async function HousingSearchPage({ searchParams }: { searchParams
               <div className="cren-btn-row mt-6">
                 <Link href="/areas" className="cren-btn cren-btn-primary">Research an area</Link>
                 <Link href="/rent/find-a-home" className="cren-btn cren-btn-outline">Request rental help</Link>
+                <Link href="/rent/before-you-sign" className="cren-btn cren-btn-outline">Before you sign</Link>
               </div>
             </div>
             <div className="relative min-h-[260px] bg-[color:var(--green-pale)]">
@@ -65,6 +66,9 @@ export default async function HousingSearchPage({ searchParams }: { searchParams
           <h2 className="cren-heading-lg">Compare rentals and total monthly cost</h2>
           <p className="cren-body mt-2 max-w-3xl text-sm">Compare advertised rent plus required fees, utilities, parking, deposits, pet costs, application criteria, lease term, and renewal terms.</p>
           <SourceGrid sources={HOUSING_SEARCH_SOURCES.rent} />
+          <Link href="/rent/before-you-sign" className="cren-text-link mt-4 inline-block text-sm font-semibold">
+            Run the Before You Sign checklist
+          </Link>
         </section>
 
         <section className="cren-surface p-6 md:p-8">
@@ -74,6 +78,10 @@ export default async function HousingSearchPage({ searchParams }: { searchParams
             <Link href="/sell/your-home" className="cren-soft cren-card-link p-5">
               <h3 className="font-semibold text-[color:var(--text-hero)]">Sell an owner-occupied home</h3>
               <p className="cren-body mt-2 text-sm">Compare preparation, pricing evidence, representation, likely costs, timing, and offer terms.</p>
+            </Link>
+            <Link href="/buy/price-band-reality" className="cren-soft cren-card-link p-5">
+              <h3 className="font-semibold text-[color:var(--text-hero)]">Review buyer price bands</h3>
+              <p className="cren-body mt-2 text-sm">Use budget-band tradeoffs and nearby substitutes before committing to one search area.</p>
             </Link>
             <Link href="/sell/investment-property" className="cren-soft cren-card-link p-5">
               <h3 className="font-semibold text-[color:var(--text-hero)]">Sell an investment property</h3>
@@ -119,6 +127,9 @@ export default async function HousingSearchPage({ searchParams }: { searchParams
             <li className="cren-surface p-4 text-sm">Compare the same address across portals for copied photos, conflicting prices, and inconsistent contacts.</li>
             <li className="cren-surface p-4 text-sm">Owners and advertisers must follow fair-housing, advertising, screening, disclosure, and local registration requirements.</li>
           </ul>
+          <Link href="/rent/before-you-sign" className="cren-text-link mt-4 inline-block text-sm font-semibold">
+            Open renter due diligence
+          </Link>
         </section>
       </div>
     </CrenPage>

@@ -6,6 +6,10 @@
 // Usage: DATABASE_URL=... node scripts/kpi-report.mjs [--window 7] [--telegram]
 // --telegram additionally posts the headline numbers to the owner's Telegram
 // (no-ops with a warning when TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID are unset).
+// Activation metrics require the Vercel production DATABASE_URL plus:
+//   npm run newsroom:migrate-activation-events
+//   npm run newsroom:migrate-page-views
+// Add the command to Vercel Cron only after those tables exist in production.
 
 import { neon } from "@neondatabase/serverless";
 import { sendTelegramAlert } from "./telegram-alert.mjs";
@@ -137,9 +141,141 @@ try {
   }
   const rate = funnelTotal > 0 ? ((leads.recent / funnelTotal) * 100).toFixed(1) + "%" : "n/a (no funnel views)";
   console.log(`\nView-to-lead rate (leads in window / funnel-page views): ${rate}`);
-} catch (error) {
+} catch {
   console.log(`\n### Traffic\n`);
-  console.log(`Traffic table unavailable (${error?.message ?? "unknown error"}). Run scripts/migrate-page-views.mjs.`);
+  console.log(`Traffic table unavailable or not migrated. Run scripts/migrate-page-views.mjs.`);
+}
+
+// --- Activation analytics ---------------------------------------------------
+let activation = null;
+try {
+  const activationCounts = await sql`
+    SELECT event_name, COUNT(*)::int AS n
+    FROM activation_events
+    WHERE created_at >= NOW() - (${windowDays} || ' days')::interval
+    GROUP BY event_name
+  `;
+  const countByName = Object.fromEntries(activationCounts.map((row) => [row.event_name, row.n]));
+  const checklistStarts = countByName.renter_checklist_start ?? 0;
+  const checklistCompletions = countByName.renter_checklist_complete ?? 0;
+  const formSubmissions = (countByName.generate_lead ?? 0) + (countByName.contact_request ?? 0);
+  const checklistCompletionRate = checklistStarts > 0 ? Math.round((checklistCompletions / checklistStarts) * 100) : null;
+
+  const formSources = await sql`
+    SELECT COALESCE(NULLIF(payload->>'method', ''), NULLIF(payload->>'source', ''), NULLIF(payload->>'section_id', ''), 'unknown') AS label,
+           COUNT(*)::int AS n
+    FROM activation_events
+    WHERE created_at >= NOW() - (${windowDays} || ' days')::interval
+      AND event_name = ANY(${['generate_lead', 'contact_request']})
+    GROUP BY label
+    ORDER BY n DESC, label ASC
+    LIMIT 8
+  `;
+
+  const formPersonas = await sql`
+    SELECT COALESCE(NULLIF(payload->>'persona', ''), NULLIF(payload->>'role', ''), NULLIF(payload->>'inquiry_type', ''), 'unknown') AS label,
+           COUNT(*)::int AS n
+    FROM activation_events
+    WHERE created_at >= NOW() - (${windowDays} || ' days')::interval
+      AND event_name = ANY(${['generate_lead', 'contact_request']})
+    GROUP BY label
+    ORDER BY n DESC, label ASC
+    LIMIT 8
+  `;
+
+  const zeroSearches = await sql`
+    SELECT COALESCE(NULLIF(payload->>'search_term', ''), 'unknown') AS label,
+           COUNT(*)::int AS n
+    FROM activation_events
+    WHERE created_at >= NOW() - (${windowDays} || ' days')::interval
+      AND event_name = 'search_no_results'
+    GROUP BY label
+    ORDER BY n DESC, label ASC
+    LIMIT 8
+  `;
+
+  const areaHubs = await sql`
+    WITH area_views AS (
+      SELECT replace(trim(trailing '/' from path), '/areas/', '') AS area_slug,
+             COUNT(*)::int AS views,
+             COUNT(DISTINCT visitor_hash)::int AS visitors
+      FROM page_views
+      WHERE created_at >= NOW() - (${windowDays} || ' days')::interval
+        AND path LIKE '/areas/%'
+      GROUP BY area_slug
+    ),
+    area_events AS (
+      SELECT COALESCE(
+               NULLIF(payload->>'area_slug', ''),
+               NULLIF(regexp_replace(path, '^/areas/([^/]+)/?$', '\\1'), path),
+               NULLIF(regexp_replace(COALESCE(payload->>'method', payload->>'source', ''), '-area-hub$', ''), '')
+             ) AS area_slug,
+             COUNT(*) FILTER (WHERE event_name = 'area_follow_start')::int AS follows,
+             COUNT(*) FILTER (WHERE event_name = 'preference_saved')::int AS preferences
+      FROM activation_events
+      WHERE created_at >= NOW() - (${windowDays} || ' days')::interval
+        AND (
+          path LIKE '/areas/%'
+          OR payload ? 'area_slug'
+          OR COALESCE(payload->>'method', payload->>'source', '') LIKE '%-area-hub'
+        )
+      GROUP BY area_slug
+    )
+    SELECT COALESCE(area_views.area_slug, area_events.area_slug) AS area_slug,
+           COALESCE(area_views.views, 0)::int AS views,
+           COALESCE(area_views.visitors, 0)::int AS visitors,
+           COALESCE(area_events.follows, 0)::int AS follows,
+           COALESCE(area_events.preferences, 0)::int AS preferences
+    FROM area_views
+    FULL OUTER JOIN area_events USING (area_slug)
+    WHERE COALESCE(area_views.area_slug, area_events.area_slug) IS NOT NULL
+    ORDER BY views DESC, preferences DESC, follows DESC, area_slug ASC
+    LIMIT 10
+  `;
+
+  activation = {
+    areaFollows: countByName.area_follow_start ?? 0,
+    preferencesSaved: countByName.preference_saved ?? 0,
+    zeroResultSearches: countByName.search_no_results ?? 0,
+    checklistStarts,
+    checklistCompletions,
+    checklistCompletionRate,
+    formSubmissions,
+    formSources,
+    formPersonas,
+    zeroSearches,
+    areaHubs,
+  };
+
+  console.log(`\n### Activation analytics (last ${windowDays} day(s))\n`);
+  console.log(`- Area follows started: ${activation.areaFollows}`);
+  console.log(`- Preferences saved: ${activation.preferencesSaved}`);
+  console.log(`- Form submissions: ${activation.formSubmissions}`);
+  console.log(`- Zero-result searches: ${activation.zeroResultSearches}`);
+  console.log(`- Renter checklist: ${checklistCompletions}/${checklistStarts} complete (${checklistCompletionRate === null ? "n/a" : checklistCompletionRate + "%"})`);
+
+  if (formSources.length > 0) {
+    console.log(`\nForm submissions by source:\n`);
+    for (const source of formSources) console.log(`- ${source.label}: ${source.n}`);
+  }
+  if (formPersonas.length > 0) {
+    console.log(`\nForm submissions by persona:\n`);
+    for (const persona of formPersonas) console.log(`- ${persona.label}: ${persona.n}`);
+  }
+  if (zeroSearches.length > 0) {
+    console.log(`\nZero-result search terms:\n`);
+    for (const search of zeroSearches) console.log(`- ${search.label}: ${search.n}`);
+  }
+  if (areaHubs.length > 0) {
+    console.log(`\nArea hub performance:\n`);
+    for (const hub of areaHubs) {
+      const followRate = hub.views > 0 ? ((hub.follows / hub.views) * 100).toFixed(1) + "%" : "n/a";
+      console.log(`- ${hub.area_slug}: ${hub.views} views / ${hub.visitors} visitors / ${hub.follows} follows / ${hub.preferences} preferences (${followRate} follow rate)`);
+    }
+  }
+} catch {
+  console.log(`\n### Activation analytics\n`);
+  console.log(`Activation analytics unavailable or not migrated. Run scripts/migrate-activation-events.mjs and scripts/migrate-page-views.mjs.`);
 }
 
 // --- Optional Telegram delivery ---------------------------------------------
@@ -152,6 +288,9 @@ if (toTelegram) {
     traffic
       ? `Traffic: ${traffic.views} views / ${traffic.visitors} visitors; funnel views ${traffic.funnelTotal}`
       : `Traffic: not instrumented`,
+    activation
+      ? `Activation: ${activation.areaFollows} follows | ${activation.preferencesSaved} preferences | ${activation.formSubmissions} forms | ${activation.zeroResultSearches} zero searches`
+      : `Activation: not instrumented`,
   ].join("\n");
   const result = await sendTelegramAlert({ status: "COMPLETED", summary });
   console.log(result.ok ? `\nTelegram: delivered.` : `\nTelegram: NOT delivered (${result.error}).`);

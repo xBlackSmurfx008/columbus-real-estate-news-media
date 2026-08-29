@@ -2,8 +2,25 @@ import Link from "next/link";
 import { SubscribeForm } from "@/components/subscribe-form";
 import { CrenPage } from "@/components/cren/cren-page";
 
-export default function SubscribePage({ searchParams }: { searchParams?: { source?: string } }) {
-  const source = searchParams?.source ?? "direct";
+type SubscribePageProps = {
+  searchParams: Promise<{
+    source?: string | string[];
+    email?: string | string[];
+    area?: string | string[];
+    topic?: string | string[];
+  }>;
+};
+
+function firstParam(value?: string | string[]): string {
+  return Array.isArray(value) ? value[0] ?? "" : value ?? "";
+}
+
+export default async function SubscribePage({ searchParams }: SubscribePageProps) {
+  const params = await searchParams;
+  const source = firstParam(params.source) || "direct";
+  const initialEmail = firstParam(params.email);
+  const initialArea = firstParam(params.area);
+  const initialTopic = firstParam(params.topic) || "Area Alerts";
 
   return (
     <CrenPage narrow>
@@ -15,7 +32,7 @@ export default function SubscribePage({ searchParams }: { searchParams?: { sourc
           neighborhood notes, and practical next steps—tailored to your picks.
         </p>
 
-        <SubscribeForm source={source} />
+        <SubscribeForm source={source} initialEmail={initialEmail} initialArea={initialArea} initialTopic={initialTopic} />
 
         <p className="cren-body mt-8 text-xs">
           We use your preferences to personalize email only. See{" "}

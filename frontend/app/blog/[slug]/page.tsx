@@ -80,6 +80,47 @@ function renderBody(body: string) {
   });
 }
 
+function toIsoDateTime(value: unknown): string | undefined {
+  if (!value) return undefined;
+  if (value instanceof Date) return value.toISOString();
+
+  if (typeof value === "string") {
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? value : parsed.toISOString();
+  }
+
+  if (
+    typeof value === "object" &&
+    value !== null &&
+    "toISOString" in value &&
+    typeof (value as { toISOString?: unknown }).toISOString === "function"
+  ) {
+    try {
+      return (value as { toISOString: () => string }).toISOString();
+    } catch {
+      return undefined;
+    }
+  }
+
+  const parsed = new Date(String(value));
+  return Number.isNaN(parsed.getTime()) ? undefined : parsed.toISOString();
+}
+
+function formatDisplayDate(value: unknown): string | undefined {
+  const iso = toIsoDateTime(value);
+  if (!iso) return undefined;
+
+  const parsed = new Date(iso);
+  if (Number.isNaN(parsed.getTime())) return undefined;
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "America/New_York",
+  }).format(parsed);
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -103,6 +144,8 @@ export async function generateMetadata({
   if (!article) return {};
   const description = article.meta_description ?? article.excerpt ?? undefined;
   const canonicalUrl = `https://columbusrealestatenews.com${getArticlePath(article)}`;
+  const publishedTime = toIsoDateTime(article.created_at);
+  const modifiedTime = toIsoDateTime(article.updated_at) ?? publishedTime;
   return {
     title: article.title,
     description,
@@ -112,8 +155,8 @@ export async function generateMetadata({
       description,
       url: canonicalUrl,
       type: "article",
-      publishedTime: article.created_at,
-      modifiedTime: article.updated_at,
+      ...(publishedTime ? { publishedTime } : {}),
+      ...(modifiedTime ? { modifiedTime } : {}),
       authors: [article.author],
       ...(article.image_url ? { images: [article.image_url] } : {}),
     },
@@ -169,6 +212,9 @@ export default async function BlogPostPage({
   const visibleTags = (Array.isArray(article.tags) ? article.tags : []).filter(
     (tag) => tag !== article.topic_slug && tag !== article.area_slug,
   );
+  const publishedTime = toIsoDateTime(article.created_at);
+  const modifiedTime = toIsoDateTime(article.updated_at) ?? publishedTime;
+  const factCheckedDisplay = formatDisplayDate(article.fact_checked_at);
 
   const jsonLdNewsArticle = {
     "@context": "https://schema.org",
@@ -176,8 +222,8 @@ export default async function BlogPostPage({
     "@id": `${canonicalUrl}#newsarticle`,
     headline: article.title,
     description: article.meta_description ?? article.excerpt ?? "",
-    datePublished: article.created_at,
-    dateModified: article.updated_at,
+    ...(publishedTime ? { datePublished: publishedTime } : {}),
+    ...(modifiedTime ? { dateModified: modifiedTime } : {}),
     mainEntityOfPage: { "@type": "WebPage", "@id": canonicalUrl },
     author: { "@type": "Organization", name: article.author, url: absoluteUrl('/newsroom') },
     publisher: {
@@ -254,7 +300,7 @@ export default async function BlogPostPage({
                   </Link>
                   <div className="text-xs text-[color:var(--text-muted)]">
                     Published {article.date}
-                    {article.fact_checked_at ? ` · Fact checked ${article.fact_checked_at}` : ''}
+                    {factCheckedDisplay ? ` · Fact checked ${factCheckedDisplay}` : ''}
                   </div>
                 </div>
               </div>

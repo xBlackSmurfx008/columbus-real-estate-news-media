@@ -122,7 +122,10 @@ const smokeRoutes = [
   ["/areas", "Neighborhood hubs"],
   ["/things-to-do", "Fun things to do"],
   ["/housing-search?area=Dublin", "Search, rent, buy, sell or list in Dublin"],
+  ["/buy/price-band-reality", "Columbus buyer price-band reality"],
+  ["/rent/before-you-sign", "Before you sign a Columbus lease"],
   ["/directory?area=Clintonville", "Find services and local hot spots serving Clintonville"],
+  ["/directory/sponsor-rules", "Sponsor-safe service guide rules"],
   ["/directory/list-your-business?area=Dublin", "List a business serving Dublin"],
 ];
 
@@ -169,6 +172,11 @@ const visualRoutes = [
   ["things-to-do", "/things-to-do"],
   ["german-village", "/areas/german-village"],
   ["dublin", "/areas/dublin"],
+  ["price-band-reality", "/buy/price-band-reality"],
+  ["before-you-sign", "/rent/before-you-sign"],
+  ["search-zero-results", "/search?q=lease%20fee%20nonsense%20query"],
+  ["subscribe-preferences", "/subscribe?source=audit&topic=Area%20Alerts&area=Dublin"],
+  ["sponsor-rules", "/directory/sponsor-rules"],
   ["galloway", "/areas/galloway"],
   ["easton-area", "/areas/easton-area"],
   ["housing-dublin", "/housing-search?area=Dublin"],

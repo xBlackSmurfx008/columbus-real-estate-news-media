@@ -1,10 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { requireAuth } from "@/lib/auth";
+import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PERSONAS = ["fsbo_seller", "investor_seller", "capital_partner", "renter", "rental_listing", "directory_listing"] as const;
 const MAX_BODY_BYTES = 16_384;
+
+function cleanString(value: unknown, max = 500): string | null {
+  if (typeof value !== "string") return null;
+  const cleaned = value.trim().replace(/\s+/g, " ");
+  if (!cleaned) return null;
+  return cleaned.slice(0, max);
+}
+
+function summarizeDetails(value: unknown): string | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+
+  const parts = Object.entries(value)
+    .slice(0, 12)
+    .map(([key, item]) => {
+      const label = key.replace(/[_-]+/g, " ").slice(0, 60);
+      if (Array.isArray(item)) {
+        const list = item.map((entry) => cleanString(entry, 80)).filter(Boolean).join(", ");
+        return list ? `${label}: ${list}` : null;
+      }
+      if (typeof item === "string" || typeof item === "number" || typeof item === "boolean") {
+        return `${label}: ${cleanString(String(item), 160) ?? String(item).slice(0, 160)}`;
+      }
+      return null;
+    })
+    .filter((part): part is string => Boolean(part));
+
+  return parts.join(" | ").slice(0, 900) || null;
+}
 
 // POST: public lead intake from the funnel pages
 export async function POST(request: NextRequest) {
@@ -35,7 +64,7 @@ export async function POST(request: NextRequest) {
     }
 
     const sql = getDb();
-    await sql`
+    const [lead] = await sql`
       INSERT INTO leads (persona, name, email, phone, area, details, source, status, consent)
       VALUES (
         ${persona}, ${name.trim()}, ${email}, ${typeof phone === "string" ? phone.slice(0, 40) : null},
@@ -43,7 +72,20 @@ export async function POST(request: NextRequest) {
         ${JSON.stringify(details && typeof details === "object" ? details : {})}::jsonb,
         ${typeof source === "string" ? source.slice(0, 120) : null}, 'new', true
       )
+      RETURNING id
     `;
+
+    await sendTelegramInquiry({
+      kind: 'lead',
+      recordId: lead.id,
+      persona,
+      name: name.trim(),
+      email,
+      phone: typeof phone === "string" ? phone.slice(0, 40) : null,
+      area: typeof area === "string" ? area.slice(0, 120) : null,
+      source: typeof source === "string" ? source.slice(0, 120) : null,
+      message: summarizeDetails(details),
+    });
 
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch (error) {

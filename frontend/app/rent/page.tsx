@@ -13,11 +13,19 @@ export default function RentPage() {
           <p className="cren-body mt-2 max-w-2xl">
             Discover neighborhoods, rental pricing shifts, and practical renter guidance in one workflow.
           </p>
+          <div className="cren-btn-row mt-6">
+            <Link href="/rent/before-you-sign" className="cren-btn cren-btn-primary">Before you sign</Link>
+            <Link href="/rent/find-a-home" className="cren-btn cren-btn-outline">Request rental help</Link>
+          </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+          <Link href="/rent/before-you-sign" className={cardClass}>
+            <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Before You Sign checklist</h2>
+            <p className="cren-body mt-2 text-sm">Check fees, utilities, management proof, maintenance, parking, reviews, records, and lease terms before paying.</p>
+          </Link>
           <Link href="/rent/find-a-home" className={cardClass}>
-            <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Find a rental — free help</h2>
+            <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Find a rental - free help</h2>
             <p className="cren-body mt-2 text-sm">Tell us your budget and must-haves. We&apos;ll match you with Columbus rentals that fit. No fees to you.</p>
           </Link>
           <Link href="/blog/columbus-rent-trends-march-2026" className={cardClass}>

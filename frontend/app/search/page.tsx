@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CrenPage } from '@/components/cren/cren-page';
 import { GlobalSearchCombobox, type SearchSuggestion } from '@/components/global-search-combobox';
+import { ZeroResultRecovery } from '@/components/zero-result-recovery';
 import { getArticlePath } from '@/lib/article-routing';
 import { areas, topics } from '@/lib/data';
 import { getPublicData } from '@/lib/public-data';
@@ -154,13 +155,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
               </section>
             )}
 
-            {!hasResults && (
-              <section className="cren-surface p-8 text-center">
-                <h3 className="cren-heading-md">No exact match yet</h3>
-                <p className="cren-body mt-2">Try an area name, a shorter phrase, or browse all Columbus area hubs.</p>
-                <Link href="/areas" className="cren-text-link mt-4 inline-block">Browse all areas</Link>
-              </section>
-            )}
+            {!hasResults && <ZeroResultRecovery query={query} />}
           </div>
         )}
       </div>

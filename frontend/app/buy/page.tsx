@@ -13,9 +13,17 @@ export default function BuyPage() {
           <p className="cren-body mt-2 max-w-2xl">
             Track neighborhood trends, school context, and active-market timing to make stronger buying decisions.
           </p>
+          <div className="cren-btn-row mt-6">
+            <Link href="/buy/price-band-reality" className="cren-btn cren-btn-primary">Price-band reality</Link>
+            <Link href="/areas" className="cren-btn cren-btn-outline">Compare areas</Link>
+          </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <Link href="/buy/price-band-reality" className={cardClass}>
+            <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Buyer price-band reality</h2>
+            <p className="cren-body mt-2 text-sm">Compare budget bands, tradeoffs, nearby substitutes, and what to verify before you tour.</p>
+          </Link>
           <Link href="/topics/market-trends" className={cardClass}>
             <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Market movement</h2>
             <p className="cren-body mt-2 text-sm">Read citywide and neighborhood-level pricing and inventory briefs.</p>

@@ -1,0 +1,168 @@
+{
+  "prompt_version": "cren-article-v1.0.0",
+  "title": "Columbus Rental Due Diligence Starts Before The Tour",
+  "category": "Lifestyle",
+  "author": "CREN Newsroom",
+  "date": "Aug 28, 2026",
+  "excerpt": "Use Columbus rental due diligence before paying fees or signing a lease by checking ownership, code context, lease terms, campus rules, and maintenance.",
+  "body": "Columbus rental due diligence should begin before a renter pays a fee, tours from photos, or signs a lease. The useful consumer checklist connects owner verification, code context, written terms, maintenance questions, and campus-area resources without turning public records into legal advice.\n\n## Start With Who Controls The Unit\n\nA renter should confirm that the person collecting money is the owner, the manager, or another authorized representative. That step matters because screenshots, portal listings, and payment requests can circulate separately from the actual owner record.\n\nThe [Franklin County property page](https://www.franklincountyohio.gov/Resident-Services/Property) gives residents a starting point for property, auditor, recorder, and tax resources. Those tools can help a renter compare the address and owner context with the name on the listing or lease materials.\n\nThis is not a claim that every mismatch is fraud. It is a practical way to slow down before sending money, especially when a listing asks for a fast deposit, an unusual payment method, or a decision before written terms are available.\n\n## Public Records Are A Prompt, Not A Verdict\n\nThe [City of Columbus Code Enforcement page](https://www.columbus.gov/Business-Development/Building-Zoning-Services/Code-Enforcement) says code enforcement officers enforce housing, zoning, nuisance, health, sanitation, safety, and graphics codes. It also points users toward request, report, portal, and frequently asked question paths.\n\nA code record should be handled carefully. It can raise a question about condition, timing, or management response, but it does not by itself prove what a renter will experience in a specific unit.\n\nThe stronger checklist asks the renter to document the tour, ask about maintenance response, compare recurring review patterns, and save written answers. That keeps the article useful without making unsupported allegations about a landlord or building.\n\n## Ohio Law Sets A Baseline For Questions\n\nThe [Ohio landlord-obligation statute](https://codes.ohio.gov/ohio-revised-code/section-5321.04) says a landlord must comply with applicable building, housing, health, and safety codes that materially affect health and safety. It also says a landlord must make repairs that are reasonably necessary to put and keep the premises fit and habitable.\n\nThe [Ohio tenant-remedy statute](https://codes.ohio.gov/ohio-revised-code/section-5321.07) describes written notice to the landlord and several possible court paths for qualifying tenants. The same remedies page says that section does not apply to a dwelling unit occupied by a student tenant.\n\nThose sources are a starting point for consumer questions, not a substitute for a lawyer. A renter with a live dispute should get advice from a qualified source before withholding rent, ending a lease, or relying on a court process.\n\n## Campus Renters Need A Separate Path\n\nThe [Ohio State Off-Campus Housing Network](https://offcampus.osu.edu/) is maintained for off-campus and commuter student engagement. Campus-area renters and parents often need a more specific checklist because lease timing, roommate rules, guarantors, packages, parking, utilities, and emergency maintenance can matter as much as advertised rent.\n\nThat is why CREN's OSU-area content should connect the rental checklist to area pages, not bury it in a generic apartment article. The campus version should separate legal questions, safety questions, daily routine, and payment obligations so students and parents can see what still needs verification.\n\nThe next checkpoint is to refresh the checklist when city record paths, Ohio tenant resources, or campus housing guidance changes, and to keep allegations out of the copy unless they are backed by records and fair response handling.",
+  "read_time": "4 min read",
+  "area_slug": "columbus-citywide",
+  "topic_slug": "events-lifestyle",
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "events-lifestyle",
+    "rentals",
+    "renters",
+    "due-diligence"
+  ],
+  "featured": false,
+  "image_url": null,
+  "answer_summary": "Columbus rental due diligence should begin before a renter pays a fee, tours from photos, or signs a lease. The useful consumer checklist connects owner verification, code context, written terms, maintenance questions, and campus-area resources without turning public records into legal advice.",
+  "primary_keyword": "Columbus rental due diligence",
+  "meta_description": "Columbus rental due diligence should start before a fee, tour, or lease by checking ownership, code context, terms, campus paths, and maintenance.",
+  "fact_checked_at": "2026-08-28T21:22:30Z",
+  "canonical_event_key": "columbus-rental-due-diligence-2026-08-28",
+  "location": {
+    "name": "Columbus",
+    "state": "OH"
+  },
+  "source_ledger": [
+    {
+      "id": "franklin-county-property",
+      "type": "PRIMARY",
+      "url": "https://www.franklincountyohio.gov/Resident-Services/Property",
+      "publisher": "Franklin County, Ohio",
+      "title": "Property",
+      "published_at": null,
+      "fetched_at": "2026-08-28T21:22:30Z",
+      "http_status": 200
+    },
+    {
+      "id": "columbus-code-enforcement",
+      "type": "PRIMARY",
+      "url": "https://www.columbus.gov/Business-Development/Building-Zoning-Services/Code-Enforcement",
+      "publisher": "City of Columbus",
+      "title": "Code Enforcement",
+      "published_at": null,
+      "fetched_at": "2026-08-28T21:22:30Z",
+      "http_status": 200
+    },
+    {
+      "id": "ohio-landlord-obligations",
+      "type": "PRIMARY",
+      "url": "https://codes.ohio.gov/ohio-revised-code/section-5321.04",
+      "publisher": "Ohio Laws",
+      "title": "Section 5321.04 - Landlord obligations",
+      "published_at": null,
+      "fetched_at": "2026-08-28T21:22:30Z",
+      "http_status": 200
+    },
+    {
+      "id": "ohio-tenant-remedies",
+      "type": "PRIMARY",
+      "url": "https://codes.ohio.gov/ohio-revised-code/section-5321.07",
+      "publisher": "Ohio Laws",
+      "title": "Section 5321.07 - Failure of landlord to fulfill obligations - remedies of tenant",
+      "published_at": null,
+      "fetched_at": "2026-08-28T21:22:30Z",
+      "http_status": 200
+    },
+    {
+      "id": "osu-off-campus-housing",
+      "type": "PRIMARY",
+      "url": "https://offcampus.osu.edu/",
+      "publisher": "The Ohio State University",
+      "title": "Off-Campus and Commuter Student Engagement",
+      "published_at": null,
+      "fetched_at": "2026-08-28T21:22:30Z",
+      "http_status": 200
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "c1",
+      "claim": "The Franklin County property page gives residents a starting point for property, auditor, recorder, and tax resources.",
+      "source_ids": ["franklin-county-property"],
+      "kind": "FACT"
+    },
+    {
+      "id": "c2",
+      "claim": "The City of Columbus Code Enforcement page says code enforcement officers enforce housing, zoning, nuisance, health, sanitation, safety, and graphics codes.",
+      "source_ids": ["columbus-code-enforcement"],
+      "kind": "FACT"
+    },
+    {
+      "id": "c3",
+      "claim": "It also points users toward request, report, portal, and frequently asked question paths.",
+      "source_ids": ["columbus-code-enforcement"],
+      "kind": "FACT"
+    },
+    {
+      "id": "c4",
+      "claim": "The Ohio landlord-obligation statute says a landlord must comply with applicable building, housing, health, and safety codes that materially affect health and safety.",
+      "source_ids": ["ohio-landlord-obligations"],
+      "kind": "FACT"
+    },
+    {
+      "id": "c5",
+      "claim": "It also says a landlord must make repairs that are reasonably necessary to put and keep the premises fit and habitable.",
+      "source_ids": ["ohio-landlord-obligations"],
+      "kind": "FACT"
+    },
+    {
+      "id": "c6",
+      "claim": "The Ohio tenant-remedy statute describes written notice to the landlord and several possible court paths for qualifying tenants.",
+      "source_ids": ["ohio-tenant-remedies"],
+      "kind": "FACT"
+    },
+    {
+      "id": "c7",
+      "claim": "The same remedies page says that section does not apply to a dwelling unit occupied by a student tenant.",
+      "source_ids": ["ohio-tenant-remedies"],
+      "kind": "FACT"
+    },
+    {
+      "id": "c8",
+      "claim": "The Ohio State Off-Campus Housing Network is maintained for off-campus and commuter student engagement.",
+      "source_ids": ["osu-off-campus-housing"],
+      "kind": "FACT"
+    }
+  ],
+  "entity_ledger": [
+    {
+      "name": "Franklin County, Ohio",
+      "source_ids": ["franklin-county-property"]
+    },
+    {
+      "name": "City of Columbus",
+      "source_ids": ["columbus-code-enforcement"]
+    },
+    {
+      "name": "Ohio Laws",
+      "source_ids": ["ohio-landlord-obligations", "ohio-tenant-remedies"]
+    },
+    {
+      "name": "The Ohio State University",
+      "source_ids": ["osu-off-campus-housing"]
+    }
+  ],
+  "image_brief": {
+    "primary_request": "Create a restrained CREN editorial card showing a lease checklist, an address lookup screen, and a key on a simple desk.",
+    "editorial_idea": "A renter decision checklist that treats official records as prompts before a lease is signed.",
+    "story_anchors": [
+      "lease checklist",
+      "address verification",
+      "maintenance questions"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "Official source pages are guidance and record paths, not documentary images for a specific rental.",
+    "avoid": "No named landlord, no distressed tenant scene, no legal outcome claim, no real address."
+  },
+  "image_alt": "Editorial graphic of a Columbus rental checklist with lease, maintenance, and address checks.",
+  "image_provenance": {
+    "type": "CREN_GRAPHIC",
+    "caption": "CREN editorial graphic based on source-backed rental due-diligence steps."
+  }
+}

@@ -1,4 +1,4 @@
-export type InquiryKind = 'membership' | 'advertising' | 'general';
+export type InquiryKind = 'membership' | 'advertising' | 'general' | 'newsletter' | 'lead';
 
 export interface TelegramInquiry {
   kind: InquiryKind;
@@ -6,10 +6,18 @@ export interface TelegramInquiry {
   name?: string | null;
   email: string;
   source?: string | null;
+  persona?: string | null;
+  phone?: string | null;
+  area?: string | null;
+  role?: string | null;
+  topic?: string | null;
+  cadence?: string | null;
+  timeline?: string | null;
   interests?: string | null;
   company?: string | null;
   packageInterest?: string | null;
   budget?: string | null;
+  commuteAnchor?: string | null;
   message?: string | null;
 }
 
@@ -28,6 +36,8 @@ export function formatTelegramInquiry(inquiry: TelegramInquiry) {
     membership: 'MEMBERSHIP',
     advertising: 'ADVERTISING',
     general: 'GENERAL',
+    newsletter: 'NEWSLETTER',
+    lead: 'LEAD',
   };
   const lines = [
     `📬 CREN inquiry: ${labels[inquiry.kind]}`,
@@ -35,9 +45,17 @@ export function formatTelegramInquiry(inquiry: TelegramInquiry) {
     `Name: ${clean(inquiry.name, 200) || 'Not provided'}`,
     `Email: ${clean(inquiry.email, 320)}`,
   ];
+  if (inquiry.persona) lines.push(`Persona: ${clean(inquiry.persona, 120)}`);
+  if (inquiry.phone) lines.push(`Phone: ${clean(inquiry.phone, 80)}`);
+  if (inquiry.area) lines.push(`Area: ${clean(inquiry.area, 120)}`);
+  if (inquiry.role) lines.push(`Role: ${clean(inquiry.role, 80)}`);
+  if (inquiry.topic) lines.push(`Topic: ${clean(inquiry.topic, 500)}`);
+  if (inquiry.cadence) lines.push(`Cadence: ${clean(inquiry.cadence, 80)}`);
+  if (inquiry.timeline) lines.push(`Timeline: ${clean(inquiry.timeline, 80)}`);
   if (inquiry.company) lines.push(`Company: ${clean(inquiry.company, 200)}`);
   if (inquiry.packageInterest) lines.push(`Package: ${clean(inquiry.packageInterest, 120)}`);
   if (inquiry.budget) lines.push(`Budget: ${clean(inquiry.budget, 120)}`);
+  if (inquiry.commuteAnchor) lines.push(`Commute: ${clean(inquiry.commuteAnchor, 120)}`);
   if (inquiry.interests) lines.push(`Interests: ${clean(inquiry.interests, 500)}`);
   if (inquiry.message) lines.push(`Message: ${clean(inquiry.message, 900)}`);
   if (inquiry.source) lines.push(`Source: ${clean(inquiry.source, 120)}`);

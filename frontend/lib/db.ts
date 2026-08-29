@@ -245,6 +245,17 @@ export async function initSchema() {
   `;
 
   await sql`
+    CREATE TABLE IF NOT EXISTS activation_events (
+      id BIGSERIAL PRIMARY KEY,
+      event_name TEXT NOT NULL,
+      path TEXT NOT NULL,
+      payload JSONB NOT NULL DEFAULT '{}'::jsonb,
+      visitor_hash TEXT,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+
+  await sql`
     CREATE TABLE IF NOT EXISTS testimonials (
       id SERIAL PRIMARY KEY,
       initials TEXT NOT NULL,

@@ -9,6 +9,13 @@ import { getArticlePath } from "@/lib/article-routing";
 import { CoverImage } from "@/components/cren/cover-image";
 import { GuideCard, RepresentativeImageNote } from "@/components/guide-card";
 import { getAreaGuide, OFFICIAL_ACTIVITY_SOURCES } from "@/lib/area-guides";
+import { AreaFollowForm } from "@/components/area-follow-form";
+import {
+  getAreaFollowPromise,
+  getAreaRealityCheck,
+  getAreaReleasePolicy,
+  getProofCohortContentPackage,
+} from "@/lib/consumer-insights";
 
 export const revalidate = 300;
 
@@ -16,10 +23,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const area = getAreaBySlug(slug);
   if (!area) return {};
+  const releasePolicy = getAreaReleasePolicy(area);
+  const realityCheck = getAreaRealityCheck(area);
   return {
-    title: `${area.name} Housing & Local Living Guide`,
-    description: `${area.description} Follow housing, rent, development, schools, restaurants, events, and local decisions affecting ${area.name}.`,
+    title: realityCheck ? `${area.name} Area Reality Check` : `${area.name} Housing & Local Living Guide`,
+    description: realityCheck
+      ? realityCheck.shortAnswer
+      : `${area.description} Follow housing, rent, development, schools, restaurants, events, and local decisions affecting ${area.name}.`,
     alternates: { canonical: `/areas/${area.slug}` },
+    robots: { index: releasePolicy.indexable, follow: true },
   };
 }
 
@@ -56,6 +68,9 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
   const area = getAreaBySlug(slug);
   if (!area) notFound();
   const guide = getAreaGuide(area);
+  const realityCheck = getAreaRealityCheck(area);
+  const contentPackage = getProofCohortContentPackage(area);
+  const followPromise = getAreaFollowPromise(area);
 
   let local: DbArticle[] = [];
   let metro: DbArticle[] = [];
@@ -119,6 +134,97 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
             {!reportedHeroImage && <RepresentativeImageNote />}
           </div>
         </div>
+
+        {realityCheck && (
+          <section data-section-id="area-reality-check">
+            <div className="grid gap-4 lg:grid-cols-[1.2fr_.8fr]">
+              <div className="cren-surface p-6 md:p-8">
+                <div className="section-eyebrow">{realityCheck.label} Area Reality Check</div>
+                <h2 className="cren-heading-lg">{realityCheck.primaryQuestion}</h2>
+                <p className="cren-body mt-3">{realityCheck.shortAnswer}</p>
+                <p className="cren-body mt-4 text-sm">{realityCheck.budgetReality}</p>
+                <div className="cren-btn-row mt-5">
+                  <Link href={realityCheck.primaryCta.href} className="cren-btn cren-btn-primary">{realityCheck.primaryCta.label}</Link>
+                  <Link href={realityCheck.secondaryCta.href} className="cren-btn cren-btn-outline">{realityCheck.secondaryCta.label}</Link>
+                </div>
+              </div>
+              <div className="cren-surface p-5">
+                <h3 className="font-semibold text-[color:var(--text-hero)]">Verify first</h3>
+                <ul className="mt-3 grid gap-2 text-sm text-[color:var(--text-secondary)]">
+                  {realityCheck.whatToVerify.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <div className="cren-soft p-5">
+                <h3 className="font-semibold text-[color:var(--text-hero)]">Best for</h3>
+                <ul className="mt-3 grid gap-2 text-sm text-[color:var(--text-secondary)]">
+                  {realityCheck.bestFor.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              </div>
+              <div className="cren-soft p-5">
+                <h3 className="font-semibold text-[color:var(--text-hero)]">Not best for</h3>
+                <ul className="mt-3 grid gap-2 text-sm text-[color:var(--text-secondary)]">
+                  {realityCheck.notBestFor.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              </div>
+              <div className="cren-soft p-5">
+                <h3 className="font-semibold text-[color:var(--text-hero)]">Local-life stack</h3>
+                <ul className="mt-3 grid gap-2 text-sm text-[color:var(--text-secondary)]">
+                  {realityCheck.localLifeStack.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              </div>
+              <div className="cren-soft p-5">
+                <h3 className="font-semibold text-[color:var(--text-hero)]">What changed</h3>
+                <ul className="mt-3 grid gap-2 text-sm text-[color:var(--text-secondary)]">
+                  {realityCheck.whatChanged.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              </div>
+            </div>
+
+            <div className="mt-5">
+              <h3 className="font-semibold text-[color:var(--text-hero)]">Nearby substitutes to compare</h3>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {realityCheck.nearbySubstitutes.map((substitute) => (
+                  <Link key={substitute.href} href={substitute.href} className="cren-action-chip">
+                    {substitute.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {contentPackage && (
+          <section className="cren-surface p-6 md:p-8" data-section-id="area-content-package">
+            <div className="mb-5 max-w-3xl">
+              <div className="section-eyebrow">Content package</div>
+              <h2 className="cren-heading-lg">{contentPackage.title}</h2>
+              <p className="cren-body mt-2 text-sm">{contentPackage.primaryJob}</p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+              {contentPackage.leadPieces.map((piece) => (
+                <Link key={piece.title} href={piece.href} className="cren-soft cren-card-link p-5 no-underline">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-[color:var(--green)]">{piece.format}</span>
+                  <h3 className="mt-2 font-semibold text-[color:var(--text-hero)]">{piece.title}</h3>
+                  <p className="mt-2 text-sm text-[color:var(--text-secondary)]">{piece.audience}</p>
+                  <span className="cren-text-link mt-3 inline-block text-sm">{piece.cta}</span>
+                </Link>
+              ))}
+            </div>
+            <div className="cren-soft mt-5 p-4">
+              <p className="text-sm font-semibold text-[color:var(--text-hero)]">Evidence requirements</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {contentPackage.evidenceRequirements.map((requirement) => (
+                  <span key={requirement} className="cren-action-chip">{requirement}</span>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        <AreaFollowForm areaName={area.name} areaSlug={area.slug} followPromise={followPromise} source={`${area.slug}-area-hub`} />
 
         {/* Daily life and things to do */}
         <section>

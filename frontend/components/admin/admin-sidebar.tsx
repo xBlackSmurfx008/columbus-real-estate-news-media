@@ -11,6 +11,7 @@ export function AdminSidebar() {
 
   const navItems = [
     { name: 'Dashboard', href: '/admin', icon: 'LayoutDashboard' },
+    { name: 'Activation', href: '/admin/activation', icon: 'Activity' },
     { name: 'Leads', href: '/admin/leads', icon: 'Users' },
     { name: 'Articles', href: '/admin/articles', icon: 'FileText' },
     { name: 'Advertisements', href: '/admin/ads', icon: 'Image' },
@@ -69,6 +70,11 @@ export function AdminSidebar() {
       Zap: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      ),
+      Activity: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12h4l3 8 4-16 3 8h4" />
         </svg>
       ),
       Mic2: (

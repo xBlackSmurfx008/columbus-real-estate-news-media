@@ -2,8 +2,9 @@
 
 import { FormEvent, useState } from "react";
 import { trackEvent } from "@/lib/analytics-client";
+import { ADVERTISING_PACKAGE_OPTIONS } from "@/lib/directory-sponsorship";
 
-const PACKAGE_OPTIONS = ["Starter Visibility", "Growth Partner", "Category Leader", "Not sure yet"];
+const PACKAGE_OPTIONS = ADVERTISING_PACKAGE_OPTIONS;
 
 export function AdvertisingInquiryForm() {
   const [submitted, setSubmitted] = useState(false);

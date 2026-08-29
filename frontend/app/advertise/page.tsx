@@ -3,36 +3,7 @@ import { SponsorSpotlight } from "@/components/sections/sponsor-spotlight";
 import { topics } from "@/lib/data";
 import { CrenPage } from "@/components/cren/cren-page";
 import { AdvertisingInquiryForm } from "@/components/advertising-inquiry-form";
-
-const packages = [
-  {
-    name: "Starter Visibility",
-    price: "$1,500",
-    priceSuffix: "/ month",
-    details: ["Area hub placement", "2 newsletter mentions", "Performance snapshot"],
-    cta: "Inquire",
-    href: "#advertising-inquiry",
-    featured: false,
-  },
-  {
-    name: "Growth Partner",
-    price: "$3,500",
-    priceSuffix: "/ 90 days",
-    details: ["Area + topic targeting", "Sponsored story", "Featured directory profile"],
-    cta: "Book package",
-    href: "#advertising-inquiry",
-    featured: true,
-  },
-  {
-    name: "Category Leader",
-    price: "Custom",
-    priceSuffix: "",
-    details: ["Exclusive topic sponsorship", "Co-branded campaign series", "Quarterly strategy review"],
-    cta: "Contact sales",
-    href: "#advertising-inquiry",
-    featured: false,
-  },
-];
+import { FIRST_DIRECTORY_PILOT_PACKAGE, SPONSOR_PACKAGE_DEFINITIONS } from "@/lib/directory-sponsorship";
 
 export default function AdvertisePage() {
   const spotlightTopics = topics.slice(0, 3);
@@ -44,12 +15,16 @@ export default function AdvertisePage() {
           <div className="section-eyebrow">Media Kit</div>
           <h1 className="cren-heading-xl">Advertise with precision in Columbus</h1>
           <p className="cren-body mt-2 max-w-2xl">
-            Reach readers through neighborhood and topic-aligned placements built for measurable outcomes.
+            Reach readers through labeled neighborhood, newsletter, service-guide, and directory placements built for measurable outcomes.
           </p>
           <p className="cren-body mt-3 text-sm">
             Editorial or general questions?{" "}
             <Link href="/contact?source=advertise-page" className="cren-text-link">
               Contact
+            </Link>
+            . Advertising can buy labeled distribution and directory visibility; it cannot buy newsroom coverage, rankings, conclusions, or editorial recommendations. Directory and service-guide packages follow{" "}
+            <Link href="/directory/sponsor-rules" className="cren-text-link">
+              sponsor-safe rules
             </Link>
             .
           </p>
@@ -75,29 +50,45 @@ export default function AdvertisePage() {
         </div>
 
         <div className="ad-grid">
-          {packages.map((item) => (
-            <div key={item.name} className={`ad-card ${item.featured ? "is-featured" : ""}`}>
+          {SPONSOR_PACKAGE_DEFINITIONS.map((item) => (
+            <div key={item.name} className={`ad-card ${item.name === "Category Service Guide Pilot" ? "is-featured" : ""}`}>
               <div className="ad-card-header">
                 <div>
                   <div className="ad-card-name">{item.name}</div>
-                  <div className="text-[13px] text-[color:var(--text-muted)] mt-0.5">Columbus RE News placements</div>
+                  <div className="text-[13px] text-[color:var(--text-muted)] mt-0.5">{item.bestFor}</div>
                 </div>
                 <div className="ad-card-price">
                   {item.price}
-                  {item.priceSuffix ? <small>{item.priceSuffix}</small> : null}
+                  <small>{item.term}</small>
                 </div>
               </div>
               <ul className="ad-features">
-                {item.details.map((detail) => (
+                {item.deliverables.slice(0, 4).map((detail) => (
                   <li key={detail}>{detail}</li>
                 ))}
               </ul>
-              <Link href={item.href} className={`price-btn w-full text-center ${item.featured ? "price-btn-primary" : "price-btn-outline"}`}>
-                {item.cta}
+              <p className="mt-4 text-xs text-[color:var(--text-muted)]">Labels: {item.labels.join(", ")}</p>
+              <Link href="#advertising-inquiry" className={`price-btn w-full text-center ${item.name === "Category Service Guide Pilot" ? "price-btn-primary" : "price-btn-outline"}`}>
+                Inquire
               </Link>
             </div>
           ))}
         </div>
+
+        <section className="cren-surface p-6 md:p-8">
+          <div className="section-eyebrow">First pilot</div>
+          <h2 className="cren-heading-lg">{FIRST_DIRECTORY_PILOT_PACKAGE.name}</h2>
+          <p className="cren-body mt-2 max-w-3xl text-sm">{FIRST_DIRECTORY_PILOT_PACKAGE.readerJob}</p>
+          <div className="mt-4 grid gap-4 md:grid-cols-4">
+            <div className="cren-soft p-4 text-sm"><strong>Category:</strong><span className="mt-1 block text-[color:var(--text-secondary)]">{FIRST_DIRECTORY_PILOT_PACKAGE.category}</span></div>
+            <div className="cren-soft p-4 text-sm"><strong>Area:</strong><span className="mt-1 block text-[color:var(--text-secondary)]">{FIRST_DIRECTORY_PILOT_PACKAGE.area}</span></div>
+            <div className="cren-soft p-4 text-sm"><strong>Term:</strong><span className="mt-1 block text-[color:var(--text-secondary)]">{FIRST_DIRECTORY_PILOT_PACKAGE.term}</span></div>
+            <div className="cren-soft p-4 text-sm"><strong>Rate:</strong><span className="mt-1 block text-[color:var(--text-secondary)]">{FIRST_DIRECTORY_PILOT_PACKAGE.rate}</span></div>
+          </div>
+          <Link href="/directory/sponsor-rules" className="cren-text-link mt-4 inline-block text-sm font-semibold">
+            Review pilot rules and reporting example
+          </Link>
+        </section>
 
         <SponsorSpotlight topics={spotlightTopics} />
 

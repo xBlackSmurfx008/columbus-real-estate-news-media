@@ -148,6 +148,15 @@ export default function AdminDashboard() {
               </Link>
 
               <Link
+                href="/admin/activation"
+                className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-red-200 transition text-center"
+              >
+                <div className="text-2xl mb-2">↗</div>
+                <h3 className="font-semibold text-gray-900">Activation</h3>
+                <p className="text-sm text-gray-600">Review follows and searches</p>
+              </Link>
+
+              <Link
                 href="/admin/interviews?new=true"
                 className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-red-200 transition text-center"
               >

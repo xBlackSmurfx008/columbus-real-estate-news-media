@@ -16,7 +16,9 @@ const primarySections = [
     links: [
       ["Housing Search", "/housing-search"],
       ["Buy a Home", "/buy"],
+      ["Buyer Price-Band Reality", "/buy/price-band-reality"],
       ["Rent a Home", "/rent"],
+      ["Before You Sign Checklist", "/rent/before-you-sign"],
       ["Find a Rental", "/rent/find-a-home"],
       ["Sell Your Home", "/sell/your-home"],
       ["Sell an Investment Property", "/sell/investment-property"],
@@ -33,6 +35,7 @@ const primarySections = [
       ["Neighborhood and Area Guides", "/areas"],
       ["Local Business Directory", "/directory"],
       ["List Your Business", "/directory/list-your-business"],
+      ["Sponsor-Safe Directory Rules", "/directory/sponsor-rules"],
       ["Events and Lifestyle", "/topics/events-lifestyle"],
       ["Schools", "/topics/schools"],
       ["Local Politics", "/topics/local-politics"],

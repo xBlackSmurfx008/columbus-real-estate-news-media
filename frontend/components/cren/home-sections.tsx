@@ -3,9 +3,11 @@ import { CoverImage } from '@/components/cren/cover-image';
 import { HomeNewsletterForm } from '@/components/cren/home-newsletter-form';
 import { GlobalSearchCombobox, type SearchSuggestion } from '@/components/global-search-combobox';
 import { getArticlePath } from '@/lib/article-routing';
+import { CONSUMER_INTENT_CARDS, PROOF_COHORT_AREA_SLUGS, getAreaFollowPromise } from '@/lib/consumer-insights';
 import { areas, topics } from '@/lib/data';
 import { isLocalLivingArticle, prepareHomeArticles } from '@/lib/home-feed';
 import type { DbAd, DbArticle, DbMarketSnapshot, DbNeighborhood } from '@/lib/public-data';
+import type { Area } from '@/lib/types';
 
 const categoryTagClass: Record<string, string> = {
   'Market Analysis': 'tag-market',
@@ -82,6 +84,9 @@ export function HomeSections({ articles = [], marketSnapshot = [], neighborhoods
     ...neighborhood,
     slug: neighborhood.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
   }));
+  const proofCohortAreas = PROOF_COHORT_AREA_SLUGS
+    .map((slug) => areas.find((area) => area.slug === slug))
+    .filter((area): area is Area => Boolean(area));
   const searchSuggestions: SearchSuggestion[] = [
     ...areas.map((area) => ({
       id: `area-${area.slug}`,
@@ -193,6 +198,48 @@ export function HomeSections({ articles = [], marketSnapshot = [], neighborhoods
               )}
             </div>
             <Link href="/market-data" className="market-brief-link no-underline">See sources and data →</Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="home-section-tight">
+        <div className="cren-container-wide">
+          <div className="home-section-heading">
+            <div>
+              <p className="section-eyebrow">Decision tools</p>
+              <h2 className="section-heading">Start with the questions Columbus movers already ask</h2>
+              <p className="section-desc">Area fit, renter due diligence, buyer budget reality, and local change get a direct path.</p>
+            </div>
+            <Link href="/rent/before-you-sign" className="cren-text-link">Open renter checklist</Link>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            {CONSUMER_INTENT_CARDS.map((card) => (
+              <Link key={card.href} href={card.href} className="cren-surface cren-card-link p-5 no-underline">
+                <span className="text-xs font-semibold uppercase tracking-wide text-[color:var(--green)]">{card.cta}</span>
+                <h3 className="mt-2 font-[family-name:var(--serif)] text-xl font-semibold text-[color:var(--text-hero)]">{card.title}</h3>
+                <p className="cren-body mt-2 text-sm">{card.description}</p>
+              </Link>
+            ))}
+          </div>
+
+          <div className="mt-8">
+            <div className="home-section-heading">
+              <div>
+                <p className="section-eyebrow">Area Reality Checks</p>
+                <h2 className="section-heading">Proof-cohort hubs</h2>
+                <p className="section-desc">Use these first for concrete tradeoffs, verification prompts, nearby substitutes, and area alerts.</p>
+              </div>
+              <Link href="/areas" className="cren-text-link">Compare all areas</Link>
+            </div>
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+              {proofCohortAreas.map((area) => (
+                <Link key={area.slug} href={`/areas/${area.slug}`} className="cren-soft cren-card-link p-4 no-underline">
+                  <span className="font-semibold text-[color:var(--text-hero)]">{area.name}</span>
+                  <span className="mt-2 block text-sm text-[color:var(--text-secondary)]">{getAreaFollowPromise(area)}</span>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>

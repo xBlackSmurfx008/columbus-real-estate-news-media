@@ -10,6 +10,7 @@
 
 # Local subscription image-generation artifacts and logs.
 /var/cren-images/
+/var/cren-cloud-canary-backups/
 
 # TypeScript incremental build cache
 *.tsbuildinfo

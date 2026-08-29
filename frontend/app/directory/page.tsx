@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
 import { GUIDE_IMAGES, LOCAL_LIVING_CATEGORIES, SERVICE_CATEGORIES } from "@/lib/area-guides";
+import { DIRECTORY_VERIFICATION_LABELS, FIRST_DIRECTORY_PILOT_PACKAGE } from "@/lib/directory-sponsorship";
 
 export const metadata: Metadata = {
   title: "Columbus Local Business & Home Services Directory",
@@ -46,6 +47,7 @@ export default async function DirectoryPage({ searchParams }: { searchParams: Pr
               <div className="cren-btn-row mt-6">
                 <Link href={`/directory/list-your-business?area=${encodeURIComponent(selectedArea)}`} className="cren-btn cren-btn-primary">List your business</Link>
                 <Link href="/areas" className="cren-btn cren-btn-outline">Choose another area</Link>
+                <Link href="/directory/sponsor-rules" className="cren-btn cren-btn-outline">Sponsor rules</Link>
               </div>
             </div>
             <div className="relative min-h-[260px] bg-[color:var(--green-pale)]">
@@ -79,6 +81,45 @@ export default async function DirectoryPage({ searchParams }: { searchParams: Pr
               </p>
             </div>
             <Link href={`/directory/list-your-business?area=${encodeURIComponent(selectedArea)}`} className="cren-btn cren-btn-primary">Start a listing</Link>
+          </div>
+        </section>
+
+        <section className="cren-surface p-6 md:p-8">
+          <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
+            <div>
+              <div className="section-eyebrow">Sponsor-safe directory</div>
+              <h2 className="cren-heading-lg">Rules before monetized placement</h2>
+              <p className="cren-body mt-2 max-w-3xl text-sm">
+                CREN labels paid placement, verifies objective claims, keeps editorial coverage separate, and avoids housing-related language or targeting that creates fair-housing risk.
+              </p>
+            </div>
+            <Link href="/directory/sponsor-rules" className="cren-btn cren-btn-outline">Review rules</Link>
+          </div>
+        </section>
+
+        <section className="cren-surface p-6 md:p-8">
+          <div className="section-eyebrow">Verification labels</div>
+          <h2 className="cren-heading-lg">Directory labels are not endorsements</h2>
+          <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+            {DIRECTORY_VERIFICATION_LABELS.map((item) => (
+              <article key={item.label} className="cren-soft p-4">
+                <h3 className="font-semibold text-[color:var(--text-hero)]">{item.label}</h3>
+                <p className="cren-body mt-2 text-sm">{item.doesNotMean}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="cren-surface p-6 md:p-8">
+          <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
+            <div>
+              <div className="section-eyebrow">Pilot package</div>
+              <h2 className="cren-heading-lg">{FIRST_DIRECTORY_PILOT_PACKAGE.name}</h2>
+              <p className="cren-body mt-2 max-w-3xl text-sm">
+                {FIRST_DIRECTORY_PILOT_PACKAGE.category} sponsorship can be tested for {FIRST_DIRECTORY_PILOT_PACKAGE.area}. It must stay labeled, proof-backed, and separate from CREN editorial judgment.
+              </p>
+            </div>
+            <Link href="/advertise" className="cren-btn cren-btn-outline">Ask about pilot</Link>
           </div>
         </section>
 

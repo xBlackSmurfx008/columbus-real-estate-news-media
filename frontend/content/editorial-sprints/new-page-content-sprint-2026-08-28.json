@@ -1,0 +1,855 @@
+{
+  "id": "new-page-content-sprint-2026-08-28",
+  "created_at": "2026-08-28T12:00:00-04:00",
+  "updated_at": "2026-08-28T21:15:34-04:00",
+  "status": "ready_for_reporting",
+  "publication_policy": "Assignments may be drafted locally, but each article must pass the CREN article gate with current fetched sources before publication.",
+  "source_refresh_required": true,
+  "package_requirements": [
+    "Every package needs reader job, search intent, source records, claim/source notes, reporting tasks, CTA, analytics event, image/source-label guidance, update cadence, and publish gate status.",
+    "No package is approved for publication from this sprint artifact alone.",
+    "Market, rent, inventory, event, and project-status data must be refreshed at publish time."
+  ],
+  "assignments": [
+    {
+      "id": "dublin-reality-check-2026-08",
+      "priority": 1,
+      "title": "Dublin Reality Check",
+      "format": "area-reality-check",
+      "target_routes": ["/areas/dublin", "/buy/price-band-reality"],
+      "reader_job": "Help relocators and move-up buyers decide whether Dublin fits budget, school/context needs, commute, taxes, and family routine.",
+      "search_intents": [
+        "living in Dublin Ohio",
+        "Dublin Ohio home prices",
+        "Dublin vs Hilliard Worthington Westerville",
+        "Dublin Ohio taxes commute schools"
+      ],
+      "angle": "Dublin is a premium-suburb decision; the useful consumer question is total household fit versus nearby substitutes, not a generic best-suburb claim.",
+      "source_records": [
+        {
+          "id": "dublin-community-plan",
+          "type": "PRIMARY",
+          "publisher": "City of Dublin",
+          "title": "Community Plan",
+          "url": "https://dublinohiousa.gov/community-plan/",
+          "use_for": "Adopted growth, land-use, housing, transportation, and fiscal-planning context."
+        },
+        {
+          "id": "dublin-taxation",
+          "type": "PRIMARY",
+          "publisher": "City of Dublin",
+          "title": "Taxation",
+          "url": "https://dublinohiousa.gov/taxation/",
+          "use_for": "Local income-tax context and taxpayer caveats."
+        },
+        {
+          "id": "dublin-schools-boundaries",
+          "type": "PRIMARY",
+          "publisher": "Dublin City Schools",
+          "title": "Maps and Boundaries",
+          "url": "https://www.dublinschools.net/about/district-maps",
+          "use_for": "School-assignment verification caveat and boundary-check path."
+        },
+        {
+          "id": "columbus-realtors-housing-reports",
+          "type": "PRIMARY",
+          "publisher": "Columbus REALTORS",
+          "title": "Housing Reports",
+          "url": "https://columbusrealtors.com/housing-reports",
+          "use_for": "Current market direction and area comparison context, refreshed at publish time."
+        }
+      ],
+      "original_reporting_tasks": [
+        "Verify current Dublin city, township, and school-attendance caveats before publication.",
+        "Compare Dublin against Hilliard, Worthington, Westerville, Powell, and New Albany without ranking them.",
+        "Spot-check current housing examples by price band and label them as temporary reporting notes.",
+        "Identify one current planning, roadway, or development issue only if dated city documentation supports it."
+      ],
+      "claim_source_notes": [
+        "Use the city plan for policy direction only; do not turn planning goals into proof of future value or demand.",
+        "Use Dublin City Schools only for boundary and verification language; do not make school-quality recommendations.",
+        "Use Columbus REALTORS for dated market context only after refreshing the latest monthly report.",
+        "Any commute claim needs a dated map check or reader-framed commute anchor rather than a universal travel-time promise."
+      ],
+      "data_refresh_notes": [
+        "DATA_REFRESH_REQUIRED before publication: latest monthly housing report, current active-listing examples, tax page status, and school-boundary lookup language."
+      ],
+      "primary_cta": {
+        "label": "Follow Dublin",
+        "href": "/subscribe?source=dublin-reality-check&topic=Area%20Alerts&area=Dublin"
+      },
+      "analytics_events": ["area_follow_start", "preference_saved", "activation_step"],
+      "primary_analytics_event": "area_follow_start",
+      "publish_blocks": [
+        "Do not make school-quality conclusions without source labeling.",
+        "Do not make address-level boundary claims without exact parcel and school-locator verification.",
+        "Do not present premium-suburb demand as a guaranteed seller outcome.",
+        "Do not publish live price statements without a dated market refresh."
+      ],
+      "image_source_guidance": {
+        "source_label": "CREN editorial graphic with city/source labels; use documentary photos only with durable rights and captioned source.",
+        "primary_request": "Show a restrained suburban decision worksheet with Dublin, Hilliard, Worthington, and Westerville comparison rows.",
+        "caption_guidance": "Label as a CREN decision graphic and mention that market and boundary checks must be refreshed before publication.",
+        "avoid": [
+          "No school-ranking imagery",
+          "No luxury-home promise",
+          "No real address",
+          "No unlicensed official seal"
+        ]
+      },
+      "publish_gate": {
+        "status": "HELD_FOR_SOURCE_REFRESH_AND_EDITORIAL_REVIEW",
+        "required_before_publish": [
+          "Refresh each source URL and archive the fetched source ledger.",
+          "Add current market examples or remove market-specific language.",
+          "Complete sponsor-conflict and schools/taxes language review.",
+          "Verify the final image URL, rights, label, and caption."
+        ]
+      },
+      "freshness": {
+        "owner": "CREN area editor",
+        "cadence": "weekly-or-biweekly",
+        "refresh_trigger": "Monthly market report, city planning update, school-boundary update, or area-alert demand."
+      }
+    },
+    {
+      "id": "german-village-reality-check-2026-08",
+      "priority": 2,
+      "title": "German Village Reality Check",
+      "format": "area-reality-check",
+      "target_routes": ["/areas/german-village", "/buy/price-band-reality"],
+      "reader_job": "Help buyers, renters, and sellers understand historic-home tradeoffs, parking, walkability, preservation, and nearby substitutes.",
+      "search_intents": [
+        "living in German Village Columbus",
+        "German Village historic homes rules",
+        "German Village parking permits",
+        "German Village alternatives Columbus"
+      ],
+      "angle": "German Village is not only a price decision; it is a preservation, parking, home-condition, and daily-routine decision.",
+      "source_records": [
+        {
+          "id": "german-village-commission",
+          "type": "PRIMARY",
+          "publisher": "City of Columbus",
+          "title": "German Village Commission",
+          "url": "https://www.columbus.gov/Business-Development/Building-Zoning-Services/Boards-and-Commissions/Historic-Preservation-Design-Review-Boards-Commissions-Panels/German-Village-Commission",
+          "use_for": "Commission authority, Certificate of Appropriateness process, meeting context, and preservation caveats."
+        },
+        {
+          "id": "columbus-residential-permit-parking",
+          "type": "PRIMARY",
+          "publisher": "City of Columbus",
+          "title": "Residential Permit Parking Program",
+          "url": "https://www.columbus.gov/Services/Parking-Street-Services/Mobility-Parking-Services/Residential-Permit-Parking-Program",
+          "use_for": "Residential permit parking rules, eligibility documents, and visitor parking caveats."
+        },
+        {
+          "id": "columbus-strategic-parking",
+          "type": "PRIMARY",
+          "publisher": "City of Columbus",
+          "title": "Strategic Parking Plan",
+          "url": "https://www.columbus.gov/Business-Development/Design-Construction/Contractor-Information/Strategic-Parking-Plan",
+          "use_for": "Urban-core parking-management context without promising easy parking."
+        },
+        {
+          "id": "german-village-society",
+          "type": "SECONDARY",
+          "publisher": "German Village Society",
+          "title": "German Village Society",
+          "url": "https://germanvillage.com/",
+          "use_for": "Local preservation organization, events, and community context."
+        }
+      ],
+      "original_reporting_tasks": [
+        "Check the current German Village Commission agenda or recent meeting materials before publication.",
+        "Verify current permit-parking language against Columbus parking pages.",
+        "Compare Merion Village, Brewery District, Olde Towne East, and Downtown as substitutes.",
+        "Add home-condition and permit-history verification prompts without implying a property defect."
+      ],
+      "claim_source_notes": [
+        "Use the commission page for process and jurisdiction; do not summarize design rules without checking current guidelines.",
+        "Use parking pages for permit and visitor caveats; do not promise availability or convenience.",
+        "Use German Village Society as community context, not as proof of housing-market direction.",
+        "Any walkability or routine language should be descriptive and tied to verifiable anchors, not lifestyle ranking."
+      ],
+      "data_refresh_notes": [
+        "DATA_REFRESH_REQUIRED before publication: latest commission calendar or agenda, current parking program rules, current listing examples, and substitute-area link checks."
+      ],
+      "primary_cta": {
+        "label": "Compare nearby substitutes",
+        "href": "/search?q=German%20Village%20alternatives"
+      },
+      "analytics_events": ["area_follow_start", "preference_saved", "search_no_results"],
+      "primary_analytics_event": "search_no_results",
+      "publish_blocks": [
+        "Do not rank restaurants, blocks, or streets without current reporting.",
+        "Do not describe preservation requirements without linking the commission or code path.",
+        "Do not promise easy parking without distinguishing resident, guest, business, and visitor rules.",
+        "Do not publish claims about home condition without address-specific support."
+      ],
+      "image_source_guidance": {
+        "source_label": "CREN editorial graphic or licensed neighborhood photo with visible preservation and parking context labeled.",
+        "primary_request": "Show a historic-home verification card with parking, exterior-work, and substitute-area prompts.",
+        "caption_guidance": "Caption should state whether the image is an editorial graphic or a licensed neighborhood photo and avoid implying a specific property issue.",
+        "avoid": [
+          "No real-house defect implication",
+          "No restaurant ranking visual",
+          "No unsupported parking claim",
+          "No unlicensed society or city marks"
+        ]
+      },
+      "publish_gate": {
+        "status": "HELD_FOR_SOURCE_REFRESH_AND_EDITORIAL_REVIEW",
+        "required_before_publish": [
+          "Refresh commission, parking, and society/event source pages.",
+          "Add current substitute-area source notes or remove substitute specifics.",
+          "Complete preservation and parking language review.",
+          "Verify image rights, caption, and source label."
+        ]
+      },
+      "freshness": {
+        "owner": "CREN area editor",
+        "cadence": "biweekly",
+        "refresh_trigger": "Commission agenda, parking rule update, buyer-search demand, or substitute-area follow demand."
+      }
+    },
+    {
+      "id": "franklinton-what-changed-here-2026-08",
+      "priority": 3,
+      "title": "Franklinton What Changed Here",
+      "format": "development-change-brief",
+      "target_routes": ["/areas/franklinton", "/topics/development"],
+      "reader_job": "Help renters, residents, investors, and civic watchers separate confirmed Franklinton change from proposed change.",
+      "search_intents": [
+        "Franklinton development Columbus",
+        "East Franklinton Review Board",
+        "Franklinton apartments development",
+        "Franklinton neighborhood change"
+      ],
+      "angle": "Franklinton needs a change brief, not a booster guide; the draft must distinguish adopted plans, review-board jurisdiction, proposed work, approvals, and public-realm priorities.",
+      "source_records": [
+        {
+          "id": "east-franklinton-review-board",
+          "type": "PRIMARY",
+          "publisher": "City of Columbus",
+          "title": "East Franklinton Review Board",
+          "url": "https://www.columbus.gov/Business-Development/Building-Zoning-Services/Boards-and-Commissions/Historic-Preservation-Design-Review-Boards-Commissions-Panels/East-Franklinton-Review-Board",
+          "use_for": "Review-board role, Certificate of Approval process, meeting cadence, and resources."
+        },
+        {
+          "id": "columbus-document-archive",
+          "type": "PRIMARY",
+          "publisher": "City of Columbus",
+          "title": "Document Archive",
+          "url": "https://www.columbus.gov/Business-Development/Building-Zoning-Services/Boards-and-Commissions/Document-Archive",
+          "use_for": "Adopted planning documents, including East and West Franklinton plans."
+        },
+        {
+          "id": "east-franklinton-code",
+          "type": "PRIMARY",
+          "publisher": "Municode Library",
+          "title": "Chapter 3323 - East Franklinton District",
+          "url": "https://library.municode.com/oh/columbus/codes/code_of_ordinances?nodeId=TIT33ZOCO_CH3323EAFRDI",
+          "use_for": "Zoning district purposes, review-board duties, and design-review authority."
+        },
+        {
+          "id": "franklinton-public-realm-action-plan",
+          "type": "SECONDARY",
+          "publisher": "Neighborhood Design Center",
+          "title": "Franklinton Public Realm Action Plan",
+          "url": "https://www.columbusndc.org/fprap-home",
+          "use_for": "Public-realm planning process and community-engagement context."
+        }
+      ],
+      "original_reporting_tasks": [
+        "Classify at least three current or recent Franklinton project statuses before publication.",
+        "Separate adopted plan language from active project approval language.",
+        "Add renter-impact and resident-impact limitations without overstating causality.",
+        "Check permit, review-board, and floodplain context only when the article makes a property-specific statement."
+      ],
+      "claim_source_notes": [
+        "Use review-board materials for process and status only; do not infer construction start or completion.",
+        "Use adopted plans as historical and policy context; do not claim promised outcomes.",
+        "Use public-realm sources for priorities and engagement context, not proof of market impact.",
+        "Investment, rent, and displacement language must be cautious and current-source backed."
+      ],
+      "data_refresh_notes": [
+        "DATA_REFRESH_REQUIRED before publication: latest review-board agenda/minutes, permit or project-status checks, and any current opening/closing confirmation."
+      ],
+      "primary_cta": {
+        "label": "Follow Development Watch",
+        "href": "/subscribe?source=franklinton-what-changed&topic=Development%20Watch&area=Franklinton"
+      },
+      "analytics_events": ["area_follow_start", "preference_saved", "activation_step"],
+      "primary_analytics_event": "area_follow_start",
+      "publish_blocks": [
+        "Do not make investment-return claims.",
+        "Do not call a project approved, under construction, or complete without dated evidence.",
+        "Do not present community impact as settled when the source record is limited.",
+        "Do not use openings, closings, or tenant names without current confirmation."
+      ],
+      "image_source_guidance": {
+        "source_label": "CREN development-watch graphic or licensed streetscape photo labeled with date and source.",
+        "primary_request": "Show a development-status board with confirmed, proposed, and watch-next columns for Franklinton.",
+        "caption_guidance": "Caption should distinguish confirmed records from pending or proposed items and state the image date/source.",
+        "avoid": [
+          "No skyline hype visual",
+          "No construction-status implication",
+          "No named business unless verified",
+          "No investment-return framing"
+        ]
+      },
+      "publish_gate": {
+        "status": "HELD_FOR_SOURCE_REFRESH_AND_EDITORIAL_REVIEW",
+        "required_before_publish": [
+          "Refresh review-board, document archive, code, and public-realm sources.",
+          "Verify each current project status with dated records.",
+          "Complete renter, investor, and sponsor-conflict language review.",
+          "Verify image date, source, rights, and caption."
+        ]
+      },
+      "freshness": {
+        "owner": "CREN development editor",
+        "cadence": "weekly",
+        "refresh_trigger": "Review-board agenda, planning update, permit record, public-realm update, or high zero-result demand."
+      }
+    },
+    {
+      "id": "osu-student-rental-due-diligence-2026-08",
+      "priority": 4,
+      "title": "OSU Student Rental Due Diligence",
+      "format": "student-renter-guide",
+      "target_routes": ["/areas/ohio-state-university-area", "/rent/before-you-sign"],
+      "reader_job": "Help Ohio State students and parents verify lease timing, fees, roommates, packages, repairs, management authority, and campus resources before signing.",
+      "search_intents": [
+        "OSU off campus housing lease review",
+        "Ohio State student rental checklist",
+        "OSU parents apartment due diligence",
+        "campus housing lease timing Columbus"
+      ],
+      "angle": "Campus-area renting is seasonal and documentation-heavy; the package should turn anxiety into verifiable steps rather than allegations about landlords or buildings.",
+      "source_records": [
+        {
+          "id": "osu-off-campus-housing-network",
+          "type": "PRIMARY",
+          "publisher": "The Ohio State University",
+          "title": "Off-Campus Housing Network",
+          "url": "https://offcampus.osu.edu/off-campus-housing-network",
+          "use_for": "University off-campus housing network criteria, resource framing, and city-partner context."
+        },
+        {
+          "id": "osu-usg-renters-guide",
+          "type": "PRIMARY",
+          "publisher": "The Ohio State University",
+          "title": "USG Renter's Guide",
+          "url": "https://offcampus.osu.edu/resources/usg-renters-guide/",
+          "use_for": "Lease-review recommendation and legal-advice limitation."
+        },
+        {
+          "id": "osu-student-legal-housing",
+          "type": "PRIMARY",
+          "publisher": "The Ohio State University Student Legal Services",
+          "title": "Off-Campus Housing Resources",
+          "url": "https://studentlegal.osu.edu/legal-issues/campus-housing",
+          "use_for": "Lease review, repairs, deposits, renter insurance, roommate, and sublease guidance."
+        },
+        {
+          "id": "osu-registrar-academic-calendar",
+          "type": "PRIMARY",
+          "publisher": "The Ohio State University Registrar",
+          "title": "Academic Calendar",
+          "url": "https://registrar.osu.edu/academic-calendar/",
+          "use_for": "Campus timing anchors with subject-to-change caveat."
+        },
+        {
+          "id": "columbus-code-enforcement",
+          "type": "PRIMARY",
+          "publisher": "City of Columbus",
+          "title": "Code Enforcement",
+          "url": "https://www.columbus.gov/Business-Development/Building-Zoning-Services/Code-Enforcement",
+          "use_for": "Housing-code and service-request paths where city jurisdiction applies."
+        }
+      ],
+      "original_reporting_tasks": [
+        "Refresh OSU off-campus and Student Legal Services pages before publication.",
+        "Build a month-by-month rental decision calendar without claiming exact market availability.",
+        "Add parent/guarantor verification prompts without giving legal advice.",
+        "Check package security, utilities, parking, roommate, and emergency-maintenance questions against current campus and city resources."
+      ],
+      "claim_source_notes": [
+        "Use OSU sources for process and referral language, not for claims about any specific landlord or property.",
+        "Use academic-calendar dates as timing anchors and label them subject to change.",
+        "Use code-enforcement sources to explain where to check records; do not treat records as a verdict on a unit.",
+        "Legal language must route to Student Legal Services or qualified counsel rather than advising a remedy."
+      ],
+      "data_refresh_notes": [
+        "DATA_REFRESH_REQUIRED before publication: current OSU calendar dates, current off-campus resources, current listing examples if mentioned, and current city code-resource links."
+      ],
+      "primary_cta": {
+        "label": "Start Before You Sign",
+        "href": "/rent/before-you-sign"
+      },
+      "analytics_events": ["renter_checklist_start", "renter_checklist_complete", "preference_saved"],
+      "primary_analytics_event": "renter_checklist_start",
+      "publish_blocks": [
+        "Do not provide legal conclusions beyond official-source guidance.",
+        "Do not publish bad-landlord lists from anecdotes.",
+        "Do not make safety claims about blocks, buildings, or people.",
+        "Do not use live rent examples without a dated refresh and caveat."
+      ],
+      "image_source_guidance": {
+        "source_label": "CREN renter-checklist graphic or licensed campus-area photo labeled with source and date.",
+        "primary_request": "Show a student lease checklist with timing, roommates, packages, parking, and repairs as verification rows.",
+        "caption_guidance": "Caption should state that the image is a checklist graphic and direct readers to current OSU and city resources.",
+        "avoid": [
+          "No named landlord",
+          "No unsafe-block implication",
+          "No legal-outcome promise",
+          "No real lease document"
+        ]
+      },
+      "publish_gate": {
+        "status": "HELD_FOR_SOURCE_REFRESH_AND_EDITORIAL_REVIEW",
+        "required_before_publish": [
+          "Refresh OSU, Student Legal Services, academic-calendar, and city code URLs.",
+          "Confirm any date-specific or listing-specific statement.",
+          "Complete legal, safety, and landlord-language review.",
+          "Verify image rights, caption, and campus/source label."
+        ]
+      },
+      "freshness": {
+        "owner": "CREN renter editor",
+        "cadence": "weekly-during-rental-season",
+        "refresh_trigger": "OSU housing-resource update, academic-calendar update, leasing-season shift, or checklist demand."
+      }
+    },
+    {
+      "id": "columbus-market-pulse-starter-2026-08",
+      "priority": 5,
+      "title": "Columbus Market Pulse Starter Issue",
+      "format": "market-pulse-newsletter-starter",
+      "target_routes": ["/subscribe", "/buy/price-band-reality", "/housing-search"],
+      "reader_job": "Help buyers, sellers, renters, investors, and local operators understand what changed this month and what still needs verification before acting.",
+      "search_intents": [
+        "Columbus housing market this month",
+        "Central Ohio housing report inventory prices",
+        "Columbus mortgage rates market update",
+        "Franklin County property market records"
+      ],
+      "angle": "The starter issue should be a disciplined source ledger and verification workflow, not a stats roundup with stale or unsourced numbers.",
+      "source_records": [
+        {
+          "id": "columbus-realtors-housing-reports",
+          "type": "PRIMARY",
+          "publisher": "Columbus REALTORS",
+          "title": "Housing Reports",
+          "url": "https://columbusrealtors.com/housing-reports",
+          "use_for": "Monthly regional housing data and local-market trend links."
+        },
+        {
+          "id": "freddie-mac-pmms",
+          "type": "PRIMARY",
+          "publisher": "Freddie Mac",
+          "title": "Mortgage Rates",
+          "url": "https://www.freddiemac.com/pmms",
+          "use_for": "Weekly mortgage-rate context with release-date caveat."
+        },
+        {
+          "id": "fred-mortgage30us",
+          "type": "PRIMARY",
+          "publisher": "Federal Reserve Bank of St. Louis",
+          "title": "30-Year Fixed Rate Mortgage Average in the United States",
+          "url": "https://fred.stlouisfed.org/series/MORTGAGE30US",
+          "use_for": "Historical rate series and citation path for trend context."
+        },
+        {
+          "id": "franklin-county-property",
+          "type": "PRIMARY",
+          "publisher": "Franklin County, Ohio",
+          "title": "Property",
+          "url": "https://www.franklincountyohio.gov/Resident-Services/Property",
+          "use_for": "Property, auditor, recorder, tax, and public-record lookup paths."
+        }
+      ],
+      "original_reporting_tasks": [
+        "Fetch the latest Columbus REALTORS monthly report and record its publication period.",
+        "Refresh weekly mortgage-rate source and avoid quoting rates unless the issue date is shown.",
+        "Add three reader-facing verification prompts: price, payment, and local record check.",
+        "Create a reusable issue template with sections for what changed, what is uncertain, and what to watch next."
+      ],
+      "claim_source_notes": [
+        "Use market data only with period labels and source links; no evergreen numeric claims.",
+        "Use mortgage-rate data to explain payment pressure, not to predict buyer behavior.",
+        "Use county property links as due-diligence paths, not as interpreted legal or tax advice.",
+        "Distinguish monthly market direction from address-level fit and individual affordability."
+      ],
+      "data_refresh_notes": [
+        "DATA_REFRESH_REQUIRED before each issue: latest monthly housing report, latest weekly mortgage-rate source, and any cited property-record or permit workflow links."
+      ],
+      "primary_cta": {
+        "label": "Follow Market Pulse",
+        "href": "/subscribe?source=market-pulse-starter&topic=Market%20Pulse"
+      },
+      "analytics_events": ["preference_saved", "sign_up", "activation_step"],
+      "primary_analytics_event": "preference_saved",
+      "publish_blocks": [
+        "Do not fabricate market stats or copy old numbers forward.",
+        "Do not forecast appreciation, rent, or inventory without sourced analyst framing.",
+        "Do not make financial advice claims about buying, selling, refinancing, or timing.",
+        "Do not omit source period, fetch date, and limitations."
+      ],
+      "image_source_guidance": {
+        "source_label": "CREN data-card graphic with source period, fetched date, and no unsupported trend arrows.",
+        "primary_request": "Show a compact market-pulse dashboard with source cards for housing report, rate context, and public records.",
+        "caption_guidance": "Caption should identify data as a starter issue framework and state that live numbers refresh before each send.",
+        "avoid": [
+          "No unrefreshed numbers",
+          "No up-or-down promise",
+          "No investment advice",
+          "No sponsor branding"
+        ]
+      },
+      "publish_gate": {
+        "status": "HELD_FOR_SOURCE_REFRESH_AND_EDITORIAL_REVIEW",
+        "required_before_publish": [
+          "Fetch and attach current source ledger for the issue date.",
+          "Verify every numeric market statement against the refreshed source.",
+          "Complete financial-advice and sponsor-conflict review.",
+          "Verify chart/image labels include period and source."
+        ]
+      },
+      "freshness": {
+        "owner": "CREN market editor",
+        "cadence": "weekly",
+        "refresh_trigger": "New Columbus REALTORS report, Freddie Mac weekly release, major rate/payment context change, or subscriber demand."
+      }
+    },
+    {
+      "id": "weekend-by-area-proof-hub-insert-2026-08",
+      "priority": 6,
+      "title": "Weekend By Area Proof-Hub Insert",
+      "format": "newsletter-insert",
+      "target_routes": ["/subscribe", "/areas/dublin", "/areas/german-village", "/areas/franklinton", "/areas/ohio-state-university-area"],
+      "reader_job": "Help residents and local explorers compare weekend choices by proof hub without turning CREN into a broad events calendar.",
+      "search_intents": [
+        "things to do this weekend Columbus by neighborhood",
+        "Dublin Ohio weekend events",
+        "German Village events Columbus",
+        "Franklinton Fridays events"
+      ],
+      "angle": "The insert should be a proof-hub retention product: a short area-labeled set of current event checks, free or low-cost cues, and practical parking/transit notes.",
+      "source_records": [
+        {
+          "id": "experience-columbus-events",
+          "type": "PRIMARY",
+          "publisher": "Experience Columbus",
+          "title": "Columbus Events",
+          "url": "https://www.experiencecolumbus.com/events/",
+          "use_for": "Citywide current event discovery and event-detail change caveat."
+        },
+        {
+          "id": "dublin-community-events",
+          "type": "PRIMARY",
+          "publisher": "City of Dublin",
+          "title": "Community Events",
+          "url": "https://dublinohiousa.gov/community-events/",
+          "use_for": "Dublin area event checks and official city event details."
+        },
+        {
+          "id": "german-village-events",
+          "type": "SECONDARY",
+          "publisher": "German Village Society",
+          "title": "German Village Events",
+          "url": "https://germanvillage.com/events/",
+          "use_for": "German Village local event discovery and society-hosted event context."
+        },
+        {
+          "id": "franklinton-fridays",
+          "type": "SECONDARY",
+          "publisher": "Franklinton Arts District",
+          "title": "Franklinton Fridays",
+          "url": "https://www.franklintonartsdistrict.com/events/franklinton-fridays",
+          "use_for": "Franklinton arts-walk and recurring local-event context."
+        },
+        {
+          "id": "osu-events",
+          "type": "PRIMARY",
+          "publisher": "The Ohio State University",
+          "title": "Ohio State Events",
+          "url": "https://artsandsciences.osu.edu/events",
+          "use_for": "Campus-area event discovery with date-specific refresh."
+        }
+      ],
+      "original_reporting_tasks": [
+        "Refresh all event URLs the same day the insert is prepared.",
+        "Include only events with current source pages, dates, times, location, and change caveat.",
+        "Group by Dublin, German Village, Franklinton, OSU area, and citywide spillover.",
+        "Add a practical note for cost, parking, transit, family fit, or weather only when source-backed or clearly framed as a check."
+      ],
+      "claim_source_notes": [
+        "Event dates and times are highly perishable and must be refreshed the day of production.",
+        "Use Experience Columbus for discovery, but confirm ticket, cost, age, and cancellation details at the event source where possible.",
+        "Do not describe an event as family-friendly, free, accessible, or recurring unless the source supports it.",
+        "Use area labels as navigation, not as endorsement or ranking."
+      ],
+      "data_refresh_notes": [
+        "DATA_REFRESH_REQUIRED on every publication day: event dates, times, cost, ticket status, venue, weather-sensitive notes, and parking or transit changes."
+      ],
+      "primary_cta": {
+        "label": "Save Weekend Planner",
+        "href": "/subscribe?source=weekend-by-area&topic=Weekend%20Planner"
+      },
+      "analytics_events": ["preference_saved", "sign_up", "area_follow_start"],
+      "primary_analytics_event": "preference_saved",
+      "publish_blocks": [
+        "Do not publish stale event dates or times.",
+        "Do not copy event descriptions beyond short source-labeled summaries.",
+        "Do not sell sponsored event priority without visible paid labeling.",
+        "Do not imply safety, parking ease, accessibility, or cost without source support."
+      ],
+      "image_source_guidance": {
+        "source_label": "CREN weekend insert graphic or licensed event image with event/source/date label.",
+        "primary_request": "Show an area-grid weekend planner with Dublin, German Village, Franklinton, OSU area, and citywide rows.",
+        "caption_guidance": "Caption should include source/date labels and state readers should confirm event details before traveling.",
+        "avoid": [
+          "No stale event poster",
+          "No unlicensed venue photo",
+          "No paid placement without label",
+          "No crowd-size claim"
+        ]
+      },
+      "publish_gate": {
+        "status": "HELD_FOR_SOURCE_REFRESH_AND_EDITORIAL_REVIEW",
+        "required_before_publish": [
+          "Refresh all event pages on the production date.",
+          "Verify dates, times, locations, cost, and ticket links.",
+          "Complete sponsor-label review for any promoted event.",
+          "Verify every image has rights, date, caption, and source label."
+        ]
+      },
+      "freshness": {
+        "owner": "CREN audience editor",
+        "cadence": "weekly-thursday-insert",
+        "refresh_trigger": "Weekly send cycle, event cancellation/change, sponsor placement request, or Weekend Planner preference demand."
+      }
+    },
+    {
+      "id": "buyer-substitution-guide-columbus-2026-08",
+      "priority": 7,
+      "title": "Columbus Buyer Substitution Guide",
+      "format": "buyer-area-substitution-guide",
+      "target_routes": ["/buy/price-band-reality", "/search", "/housing-search"],
+      "reader_job": "Help buyers who are priced out of or uncertain about a preferred Columbus area compare realistic substitutes without treating them as rankings.",
+      "search_intents": [
+        "Columbus neighborhood alternatives for buyers",
+        "Dublin alternatives Hilliard Worthington Westerville",
+        "German Village alternatives Merion Village Brewery District",
+        "Columbus first time buyer substitute areas"
+      ],
+      "angle": "The guide should say if you like one area, compare these tradeoffs next: budget, housing stock, commute, walkability, school/tax caveat, and what to verify.",
+      "source_records": [
+        {
+          "id": "columbus-realtors-housing-reports",
+          "type": "PRIMARY",
+          "publisher": "Columbus REALTORS",
+          "title": "Housing Reports",
+          "url": "https://columbusrealtors.com/housing-reports",
+          "use_for": "Current market and area comparison context."
+        },
+        {
+          "id": "cfpb-loan-estimate",
+          "type": "PRIMARY",
+          "publisher": "Consumer Financial Protection Bureau",
+          "title": "Loan Estimate Explainer",
+          "url": "https://www.consumerfinance.gov/owning-a-home/loan-estimate/",
+          "use_for": "Monthly payment, cash-to-close, escrow, mortgage insurance, and fee-review framework."
+        },
+        {
+          "id": "franklin-county-property",
+          "type": "PRIMARY",
+          "publisher": "Franklin County, Ohio",
+          "title": "Property",
+          "url": "https://www.franklincountyohio.gov/Resident-Services/Property",
+          "use_for": "Property, auditor, recorder, tax, and public-record lookup paths."
+        },
+        {
+          "id": "cota-system-map",
+          "type": "PRIMARY",
+          "publisher": "Central Ohio Transit Authority",
+          "title": "COTA System Map",
+          "url": "https://www.cota.com/timetables/cota-system-map.pdf",
+          "use_for": "Transit route context and commute-anchor checks."
+        },
+        {
+          "id": "dublin-schools-boundaries",
+          "type": "PRIMARY",
+          "publisher": "Dublin City Schools",
+          "title": "Maps and Boundaries",
+          "url": "https://www.dublinschools.net/about/district-maps",
+          "use_for": "School-boundary caveat example for suburban comparisons."
+        }
+      ],
+      "original_reporting_tasks": [
+        "Build substitution rows for Dublin, German Village, Franklinton, OSU area, and starter-buyer searches.",
+        "Spot-check current listings and remove any area claim that cannot be supported at publish time.",
+        "Add commute, transit, school/tax, housing-stock, and condition prompts for each substitute set.",
+        "Route zero-result searches into the guide with a clear next comparison rather than a dead end."
+      ],
+      "claim_source_notes": [
+        "Substitutes are not rankings and should not imply equivalent schools, amenities, price, or appreciation.",
+        "Market examples must be current and clearly dated; evergreen copy should use verification prompts.",
+        "Payment guidance must refer readers to lender documents and CFPB resources, not CREN affordability advice.",
+        "Transit and commute notes should be route-context checks, not universal travel-time claims."
+      ],
+      "data_refresh_notes": [
+        "DATA_REFRESH_REQUIRED before publication: latest housing report, current listing examples, active route/commute checks, and area page/source links."
+      ],
+      "primary_cta": {
+        "label": "Compare areas",
+        "href": "/search?q=compare%20areas"
+      },
+      "analytics_events": ["search_no_results", "activation_step", "preference_saved"],
+      "primary_analytics_event": "search_no_results",
+      "publish_blocks": [
+        "Do not publish best-area rankings.",
+        "Do not imply one suburb or neighborhood is a direct replacement for another.",
+        "Do not publish affordability guidance without current payment and source caveats.",
+        "Do not use commute or school claims without refreshed verification paths."
+      ],
+      "image_source_guidance": {
+        "source_label": "CREN comparison-table graphic with source labels for market, payment, and transit checks.",
+        "primary_request": "Show a clean substitution matrix with preferred area, compare next, tradeoff, and verify columns.",
+        "caption_guidance": "Caption should state substitutions are comparison prompts, not recommendations or rankings.",
+        "avoid": [
+          "No winner badges",
+          "No affordability promise",
+          "No school ranking",
+          "No unsupported commute time"
+        ]
+      },
+      "publish_gate": {
+        "status": "HELD_FOR_SOURCE_REFRESH_AND_EDITORIAL_REVIEW",
+        "required_before_publish": [
+          "Refresh market, payment, property, transit, and school-boundary source links.",
+          "Check every substitution row against current source support.",
+          "Complete financial-advice, schools/taxes, and sponsor-conflict review.",
+          "Verify image labels avoid ranking language."
+        ]
+      },
+      "freshness": {
+        "owner": "CREN buyer editor",
+        "cadence": "biweekly",
+        "refresh_trigger": "New housing report, zero-result search cluster, area-follow demand, or changed transit/school-boundary source."
+      }
+    },
+    {
+      "id": "sponsor-safe-service-guide-2026-08",
+      "priority": 8,
+      "title": "Sponsor-Safe Service Guide",
+      "format": "directory-sponsor-safety-guide",
+      "target_routes": ["/directory/sponsor-rules", "/directory/list-your-business", "/advertise"],
+      "reader_job": "Help readers and sponsors understand how CREN labels paid service-guide visibility, verifies claims, separates editorial work, and handles complaints.",
+      "search_intents": [
+        "sponsored service guide disclosure",
+        "home service provider verification Columbus",
+        "paid review disclosure rules",
+        "how to choose home improvement contractor Ohio"
+      ],
+      "angle": "CREN can sell visibility only if sponsor labels, editorial independence, claim proof, review integrity, and complaint paths are visible before directory scale.",
+      "source_records": [
+        {
+          "id": "ftc-endorsements-reviews",
+          "type": "PRIMARY",
+          "publisher": "Federal Trade Commission",
+          "title": "Endorsements, Influencers, and Reviews",
+          "url": "https://www.ftc.gov/business-guidance/advertising-marketing/endorsements-influencers-reviews",
+          "use_for": "Endorsement, review, material connection, and native-ad guidance."
+        },
+        {
+          "id": "ftc-consumer-review-rule-qa",
+          "type": "PRIMARY",
+          "publisher": "Federal Trade Commission",
+          "title": "The Consumer Reviews and Testimonials Rule: Questions and Answers",
+          "url": "https://www.ftc.gov/business-guidance/resources/consumer-reviews-testimonials-rule-questions-answers",
+          "use_for": "Consumer review and testimonial rule context."
+        },
+        {
+          "id": "ohio-ag-home-improvement",
+          "type": "PRIMARY",
+          "publisher": "Ohio Attorney General",
+          "title": "Consumer Tips Home Improvement",
+          "url": "https://www.ohioattorneygeneral.gov/Individuals-and-Families/Consumers/Consumer-Tips/Consumer-Tips-Home-Improvement",
+          "use_for": "Home-service due-diligence and contractor verification guidance."
+        },
+        {
+          "id": "columbus-permit-tracker",
+          "type": "PRIMARY",
+          "publisher": "City of Columbus",
+          "title": "Get or Track a Building Permit",
+          "url": "https://www.columbus.gov/Business-Development/Get-a-Permit/Get-or-Track-a-Building-Permit",
+          "use_for": "Permit verification path for service categories where permits matter."
+        },
+        {
+          "id": "ohio-secretary-business-search",
+          "type": "PRIMARY",
+          "publisher": "Ohio Secretary of State",
+          "title": "Business Search",
+          "url": "https://businesssearch.ohiosos.gov/",
+          "use_for": "Business-entity lookup path when CREN defines verification checks."
+        }
+      ],
+      "original_reporting_tasks": [
+        "Map each sponsor label to exact placement copy before any paid service-guide pilot.",
+        "Define what CREN will verify before showing a provider as verified or remove the verified label.",
+        "Create conflict rules for sponsors near renter, buyer, investor, and due-diligence content.",
+        "Add complaint, correction, dispute, and removal paths before paid directory scale."
+      ],
+      "claim_source_notes": [
+        "FTC sources guide disclosure and review handling; CREN still needs its own stored sponsor-label standard.",
+        "Ohio Attorney General guidance supports consumer due-diligence prompts, not endorsement of listed providers.",
+        "Permit and business-entity lookups verify limited facts only and should not become quality guarantees.",
+        "Sponsored placement must be labeled before click and on page, with editorial separation preserved."
+      ],
+      "data_refresh_notes": [
+        "DATA_REFRESH_REQUIRED before publication: FTC guidance pages, Ohio Attorney General consumer page, permit tracker, business-search path, and current CREN sponsor-label copy."
+      ],
+      "primary_cta": {
+        "label": "Submit a business",
+        "href": "/directory/list-your-business"
+      },
+      "analytics_events": ["activation_step", "sign_up", "preference_saved"],
+      "primary_analytics_event": "activation_step",
+      "publish_blocks": [
+        "Do not publish sponsored rankings that look editorial.",
+        "Do not use verified badges without stored proof and a visible standard.",
+        "Do not publish testimonials without consent and material-connection review.",
+        "Do not sell category exclusivity that conflicts with due-diligence coverage."
+      ],
+      "image_source_guidance": {
+        "source_label": "CREN trust-rules graphic with visible paid-label examples and no sponsor logos unless approved.",
+        "primary_request": "Show a service-guide rules board with paid label, verified facts, reviews, complaints, and editorial separation columns.",
+        "caption_guidance": "Caption should state this is a sponsor-safety framework and not an endorsement of any provider.",
+        "avoid": [
+          "No sponsor logo without approval",
+          "No review stars",
+          "No verified badge without standard",
+          "No recommendation ranking"
+        ]
+      },
+      "publish_gate": {
+        "status": "HELD_FOR_SOURCE_REFRESH_AND_EDITORIAL_REVIEW",
+        "required_before_publish": [
+          "Refresh FTC, Ohio Attorney General, Columbus permit, and business-search URLs.",
+          "Approve exact paid-label and verification-standard copy.",
+          "Complete legal, sponsor-conflict, complaint-path, and review-integrity checks.",
+          "Verify image contains no unapproved logos, badges, or rankings."
+        ]
+      },
+      "freshness": {
+        "owner": "CREN business and editorial",
+        "cadence": "quarterly",
+        "refresh_trigger": "Sponsor pilot launch, FTC guidance update, directory complaint, or new category approval."
+      }
+    }
+  ]
+}

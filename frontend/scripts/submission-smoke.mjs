@@ -122,6 +122,7 @@ export function buildSmokeRequests({ runId = createRunId(), routes = ROUTE_ORDER
       payload: {
         email: invalidPayload ? invalidEmail("members") : smokeEmail(cleanRunId, "members"),
         name: "Codex Smoke Member",
+        password: "CodexSmokePassword!123",
         interests: `Submission smoke test | ${sourceMarker(cleanRunId, "members")}`,
         source: sourceMarker(cleanRunId, "members"),
       },

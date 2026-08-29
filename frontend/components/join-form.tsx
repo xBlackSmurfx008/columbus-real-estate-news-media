@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 import { trackEvent } from "@/lib/analytics-client";
 
 const INTEREST_OPTIONS = [
@@ -12,7 +13,7 @@ const INTEREST_OPTIONS = [
 ];
 
 export function JoinForm({ source }: { source: string }) {
-  const [submitted, setSubmitted] = useState(false);
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
   const [picked, setPicked] = useState<string[]>([]);
@@ -34,6 +35,7 @@ export function JoinForm({ source }: { source: string }) {
         body: JSON.stringify({
           email: data.get("email"),
           name: data.get("name"),
+          password: data.get("password"),
           interests: picked.join(", "),
           source,
         }),
@@ -44,21 +46,12 @@ export function JoinForm({ source }: { source: string }) {
         return;
       }
       trackEvent("sign_up", { method: source, membership: true, conversion: true });
-      setSubmitted(true);
+      router.push("/profile?welcome=1");
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
       setSending(false);
     }
-  }
-
-  if (submitted) {
-    return (
-      <div className="mt-8 rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--green-pale)] p-5 text-sm text-[color:var(--text-secondary)]">
-        <p className="font-semibold text-[color:var(--text-hero)]">Welcome to the club. You&apos;re a member.</p>
-        <p className="mt-2">Watch your inbox for the weekly Columbus market brief and member updates.</p>
-      </div>
-    );
   }
 
   return (
@@ -67,11 +60,15 @@ export function JoinForm({ source }: { source: string }) {
         <div className="grid gap-4 md:grid-cols-2">
           <label className="grid gap-1 text-sm text-[color:var(--text-secondary)]">
             Name
-            <input className="form-input" name="name" type="text" autoComplete="name" placeholder="Your name" />
+            <input className="form-input" name="name" type="text" autoComplete="name" placeholder="Your name" required />
           </label>
           <label className="grid gap-1 text-sm text-[color:var(--text-secondary)]">
             Email
             <input className="form-input" name="email" type="email" autoComplete="email" placeholder="you@email.com" required />
+          </label>
+          <label className="grid gap-1 text-sm text-[color:var(--text-secondary)] md:col-span-2">
+            Password
+            <input className="form-input" name="password" type="password" autoComplete="new-password" minLength={10} placeholder="At least 10 characters" required />
           </label>
         </div>
 

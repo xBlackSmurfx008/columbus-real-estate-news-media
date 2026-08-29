@@ -84,6 +84,19 @@ vercel env run -e production -- npm run newsroom:cleanup-smoke-records
 vercel env run -e production -- npm run newsroom:sync-image-fingerprints -- --dry-run
 ```
 
+Member accounts
+
+Member signup and profile preferences use the Neon `members` table. Apply the
+additive account columns before deploying the member UI:
+
+```bash
+vercel env run -e production -- npm run newsroom:migrate-member-profiles
+```
+
+The public flow is `/join` -> `/profile`. Existing members are not overwritten
+by signup; an existing account must sign in. `MEMBER_JWT_SECRET` may be set in
+Vercel, otherwise the existing `ADMIN_JWT_SECRET` is used for the member cookie.
+
 Valid public submission smoke tests intentionally leave `codex-smoke` records
 until an approved cleanup. Run smoke only at the end of a release cycle.
 Cleanup requires `--delete --confirm=codex-smoke`; fingerprint sync writes

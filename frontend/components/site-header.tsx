@@ -47,6 +47,7 @@ export function SiteHeader() {
           <Link href="/market-data">Market Data</Link>
           <Link href="/advertise">Advertise</Link>
           <Link href="/subscribe">Subscribe</Link>
+          <Link href="/profile">Profile</Link>
         </div>
       </div>
 
@@ -95,6 +96,7 @@ export function SiteHeader() {
             <Link href="/subscribe" className="btn-subscribe inline-flex items-center justify-center">
               Subscribe
             </Link>
+            <Link href="/profile" className="nav-pill hidden md:inline-flex">Profile</Link>
             <button
               type="button"
               className="mobile-menu-btn"

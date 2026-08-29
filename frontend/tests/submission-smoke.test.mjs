@@ -26,6 +26,8 @@ test("submission smoke builds controlled requests for all public paths", () => {
   const lead = requests.find((request) => request.route === "leads");
   assert.equal(lead.payload.consent, true);
   assert.equal(lead.payload.company, undefined);
+  const member = requests.find((request) => request.route === "members");
+  assert.equal(member.payload.password, "CodexSmokePassword!123");
 });
 
 test("submission smoke defaults to a local dry-run", () => {

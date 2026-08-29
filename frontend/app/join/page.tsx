@@ -39,6 +39,7 @@ export default function JoinPage() {
 
         <div className="cren-surface p-8">
           <h2 className="cren-heading-lg">Become a member</h2>
+          <p className="cren-body mt-2 text-sm">Create a password so you can return to your profile and update your preferences.</p>
           <JoinForm source="join-page" />
         </div>
       </div>

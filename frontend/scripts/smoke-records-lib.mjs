@@ -26,6 +26,12 @@ export const SMOKE_TABLES = {
     where: "COALESCE(interests, '') LIKE '%codex-smoke:%' OR COALESCE(email, '') LIKE 'codex.smoke+%@example.com'",
     nonSmokeWhere: "COALESCE(interests, '') NOT LIKE '%codex-smoke:%' AND COALESCE(email, '') NOT LIKE 'codex.smoke+%@example.com'",
   },
+  consent_events: {
+    label: "Consent events",
+    marker: "source_route",
+    where: "COALESCE(source_route, '') LIKE '%codex-smoke%' OR COALESCE(email, '') LIKE 'codex.smoke+%@example.com'",
+    nonSmokeWhere: "COALESCE(source_route, '') NOT LIKE '%codex-smoke%' AND COALESCE(email, '') NOT LIKE 'codex.smoke+%@example.com'",
+  },
 };
 
 export function smokeTableDefinition(table) {

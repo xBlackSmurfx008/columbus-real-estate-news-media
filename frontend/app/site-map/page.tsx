@@ -59,6 +59,10 @@ const primarySections: { title: string; links: SiteMapLink[] }[] = [
     links: [
       ["About", "/about"],
       ["Advertise", "/advertise"],
+      ["Media Kit and Rate Card", "/advertise/media-kit"],
+      ["Self-Service Advertising Intake", "/advertise/self-service"],
+      ["Claim or Update a Profile", "/profiles"],
+      ["Profile Claim Dashboard", "/profiles/claim"],
       ["Join", "/join"],
       ["Subscribe", "/subscribe"],
       ["Saved Items", "/saved"],

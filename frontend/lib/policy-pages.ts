@@ -27,8 +27,8 @@ export const POLICY_PAGES = {
     eyebrow: "Legal terms",
     description:
       "Rules for using Columbus Real Estate News, including accounts, submissions, directory profiles, ads, lead routing, data, and informational disclaimers.",
-    effectiveDate: "Draft for review - 2026-08-29",
-    reviewStatus: "Draft for counsel review before production use.",
+    effectiveDate: "2026-08-29",
+    reviewStatus: "Owner execution version. Contact CREN for notices; not attorney approval.",
     sections: [
       {
         title: "CREN's role",
@@ -100,8 +100,8 @@ export const POLICY_PAGES = {
     eyebrow: "Privacy and consent",
     description:
       "How CREN collects, uses, shares, protects, and retains information from readers, members, advertisers, profile owners, and public forms.",
-    effectiveDate: "Draft for review - 2026-08-29",
-    reviewStatus: "Draft for counsel review before production use.",
+    effectiveDate: "2026-08-29",
+    reviewStatus: "Owner execution version. Contact CREN for notices; not attorney approval.",
     sections: [
       {
         title: "Data CREN collects",
@@ -135,7 +135,7 @@ export const POLICY_PAGES = {
         title: "Sharing and disclosure",
         body: [
           "CREN may share information with service providers that help operate hosting, database, email, analytics, payment, notification, security, and customer-support functions. CREN may share lead details with a provider, sponsor, advertiser, or profile owner only when the user request and site disclosure support that routing.",
-          "Campaign reporting should be aggregate unless a user has submitted a lead intended for a specific recipient. CREN should not sell raw contact lists. Whether any advertising or analytics activity is a sale or share under state privacy laws is counsel-review pending.",
+          "Campaign reporting should be aggregate unless a user has submitted a lead intended for a specific recipient. CREN should not sell raw contact lists. Whether any advertising or analytics activity is a sale or share under state privacy laws should be confirmed before public use.",
         ],
       },
       {
@@ -168,8 +168,8 @@ export const POLICY_PAGES = {
     eyebrow: "Tracking controls",
     description:
       "Draft inventory and rules for cookies, session storage, analytics, affiliate redirects, pixels, and newsletter tracking.",
-    effectiveDate: "Draft for review - 2026-08-29",
-    reviewStatus: "Draft for counsel and technical review before production use.",
+    effectiveDate: "2026-08-29",
+    reviewStatus: "Owner execution version. Contact CREN for notices; not attorney approval.",
     sections: [
       {
         title: "Current known tracking",
@@ -203,8 +203,8 @@ export const POLICY_PAGES = {
     eyebrow: "Advertiser rules",
     description:
       "Draft terms for advertiser inquiries, sponsor packages, insertion orders, claims, labels, cancellations, refunds, and reporting.",
-    effectiveDate: "Draft for review - 2026-08-29",
-    reviewStatus: "Draft for counsel review before paid self-service or signed insertion orders.",
+    effectiveDate: "2026-08-29",
+    reviewStatus: "Owner execution version. Contact CREN for notices; not attorney approval.",
     sections: [
       {
         title: "Orders and deliverables",
@@ -245,8 +245,8 @@ export const POLICY_PAGES = {
     eyebrow: "Commercial disclosure",
     description:
       "How CREN labels and reviews sponsor messages, sponsored articles, paid profiles, affiliate placements, and native advertising.",
-    effectiveDate: "Draft for review - 2026-08-29",
-    reviewStatus: "Draft for counsel/editorial review before production use.",
+    effectiveDate: "2026-08-29",
+    reviewStatus: "Owner execution version. Contact CREN for notices; not attorney approval.",
     sections: [
       {
         title: "Core rule",
@@ -291,8 +291,8 @@ export const POLICY_PAGES = {
     eyebrow: "Housing compliance",
     description:
       "Draft rules for housing-related ads, listings, profiles, recommendations, routing, targeting, and neighborhood content.",
-    effectiveDate: "Draft for review - 2026-08-29",
-    reviewStatus: "Draft for counsel review before housing ads, listings, profile routing, or apartment products scale.",
+    effectiveDate: "2026-08-29",
+    reviewStatus: "Owner execution version. Contact CREN for notices; not attorney approval.",
     sections: [
       {
         title: "Protected classes and local scope",
@@ -336,8 +336,8 @@ export const POLICY_PAGES = {
     eyebrow: "Profile quality",
     description:
       "Draft rules for business, apartment, vendor, service, and real estate professional listings and directory profiles.",
-    effectiveDate: "Draft for review - 2026-08-29",
-    reviewStatus: "Draft for counsel and operations review before public self-service profile launch.",
+    effectiveDate: "2026-08-29",
+    reviewStatus: "Owner execution version. Contact CREN for notices; not attorney approval.",
     sections: [
       {
         title: "Who may submit or claim",
@@ -377,8 +377,8 @@ export const POLICY_PAGES = {
     eyebrow: "Business self-service",
     description:
       "Draft workflow for claiming, updating, disputing, and auditing CREN business, apartment, advertiser, and professional profiles.",
-    effectiveDate: "Draft for review - 2026-08-29",
-    reviewStatus: "Draft for counsel, operations, and security review before self-service release.",
+    effectiveDate: "2026-08-29",
+    reviewStatus: "Owner execution version. Contact CREN for notices; not attorney approval.",
     sections: [
       {
         title: "Claim proof",
@@ -412,8 +412,8 @@ export const POLICY_PAGES = {
     eyebrow: "Lead routing",
     description:
       "How CREN should explain and record form submissions, lead routing, paid relationships, and consumer expectations.",
-    effectiveDate: "Draft for review - 2026-08-29",
-    reviewStatus: "Draft for counsel review before expanded lead routing, referral fees, or partner dashboards.",
+    effectiveDate: "2026-08-29",
+    reviewStatus: "Owner execution version. Contact CREN for notices; not attorney approval.",
     sections: [
       {
         title: "When CREN routes a request",
@@ -451,18 +451,18 @@ export const POLICY_PAGES = {
     eyebrow: "Automation governance",
     description:
       "Draft rules for AI-assisted research, writing, images, checks, routing, data refreshes, and autonomous workflows.",
-    effectiveDate: "Draft for review - 2026-08-29",
-    reviewStatus: "Draft for editorial, legal, and technical review before public reliance.",
+    effectiveDate: "2026-08-29",
+    reviewStatus: "Owner execution version. Contact CREN for notices; not attorney approval.",
     sections: [
       {
         title: "Allowed automation",
         bullets: [
           "Topic discovery, public-record monitoring, source collection, draft structuring, link checks, image-generation assistance, duplicate checks, data refreshes, queue triage, and internal reporting.",
-          "Deterministic publication gates, image integrity checks, market-data quality status, broken-link audits, and policy scanners.",
+          "Deterministic publication checks, image integrity checks, market-data quality status, broken-link audits, and policy scanners.",
         ],
       },
       {
-        title: "Human gates",
+        title: "Human approval points",
         bullets: [
           "Do not autonomously publish high-risk accusations, legal pages, corrections decisions, sponsored claims, rankings, investment language, fair-housing-sensitive recommendations, or final ad approvals.",
           "Material legal, financial, tax, lending, insurance, real estate, securities, safety, or reputation-sensitive claims need qualified human review.",
@@ -485,8 +485,8 @@ export const POLICY_PAGES = {
     eyebrow: "Access and usability",
     description:
       "CREN's draft accessibility commitment, contact path, and audit targets for public pages and forms.",
-    effectiveDate: "Draft for review - 2026-08-29",
-    reviewStatus: "Draft for accessibility and legal review before production use.",
+    effectiveDate: "2026-08-29",
+    reviewStatus: "Owner execution version. Contact CREN for notices; not attorney approval.",
     sections: [
       {
         title: "Commitment",
@@ -519,8 +519,8 @@ export const POLICY_PAGES = {
     eyebrow: "Copyright and reuse",
     description:
       "Draft rules for CREN content ownership, excerpting, advertiser assets, user submissions, copyright complaints, and DMCA-style takedowns.",
-    effectiveDate: "Draft for review - 2026-08-29",
-    reviewStatus: "Draft for counsel review before accepting broad user or advertiser media uploads.",
+    effectiveDate: "2026-08-29",
+    reviewStatus: "Owner execution version. Contact CREN for notices; not attorney approval.",
     sections: [
       {
         title: "CREN content",
@@ -539,7 +539,7 @@ export const POLICY_PAGES = {
       {
         title: "Copyright complaints",
         body: [
-          "CREN should publish a copyright contact path and required notice elements before broad user-upload or advertiser-upload workflows scale. A repeat-infringer and counter-notice process should be reviewed by counsel before production use.",
+          "CREN should publish a copyright contact path and required notice elements before broad user-upload or advertiser-upload workflows scale. A repeat-infringer and counter-notice process should be reviewed before public use.",
         ],
       },
     ],
@@ -550,8 +550,8 @@ export const POLICY_PAGES = {
     eyebrow: "Reader and business submissions",
     description:
       "Draft rules for tips, corrections, photos, profile updates, listing requests, event submissions, and confidential-source limits.",
-    effectiveDate: "Draft for review - 2026-08-29",
-    reviewStatus: "Draft for newsroom, legal, and operations review before public expansion.",
+    effectiveDate: "2026-08-29",
+    reviewStatus: "Owner execution version. Contact CREN for notices; not attorney approval.",
     sections: [
       {
         title: "What users may submit",
@@ -582,8 +582,8 @@ export const POLICY_PAGES = {
     eyebrow: "Contact permissions",
     description:
       "Draft rules for newsletters, service emails, advertiser communications, lead follow-up, phone calls, SMS, and opt-outs.",
-    effectiveDate: "Draft for review - 2026-08-29",
-    reviewStatus: "Draft for counsel and operations review before SMS/calling or marketing automation expands.",
+    effectiveDate: "2026-08-29",
+    reviewStatus: "Owner execution version. Contact CREN for notices; not attorney approval.",
     sections: [
       {
         title: "Email",
@@ -597,7 +597,7 @@ export const POLICY_PAGES = {
       {
         title: "Phone and SMS",
         bullets: [
-          "Do not launch marketing SMS, automated calls, prerecorded calls, or third-party call routing without counsel-approved consent language and operational controls.",
+          "Do not launch marketing SMS, automated calls, prerecorded calls, or third-party call routing without approved consent language and operational controls.",
           "Consent should not be pre-checked or bundled in a way that hides the communication method, seller identity, or consequence of agreeing.",
           "Transactional follow-up to a user-initiated request should be separated from marketing messages and logged by consent version.",
         ],

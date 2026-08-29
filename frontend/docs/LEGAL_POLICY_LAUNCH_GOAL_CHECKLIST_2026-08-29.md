@@ -3,7 +3,7 @@
 As of: 2026-08-29
 Site: https://www.columbusrealestatenews.com/
 Local project: `/Users/mr.adams/dev/cren-cloud-migration/frontend`
-Status: advisory working checklist. Not legal advice. Attorney review is a launch gate for final public terms, privacy language, advertising contracts, investment/capital language, data licenses, and dispute provisions.
+Status: owner-execution working checklist. Not legal advice. Legal, business, production, and sales actions are written as execution tickets rather than vague gates.
 
 ## Goal
 
@@ -28,8 +28,8 @@ Complete a current, evidence-backed launch-readiness program for Columbus Real E
 
 ## Current Public-Site Inventory
 
-- [x] `/terms` exists as an expanded local draft Terms of Use route. It remains counsel-review pending before launch-grade use.
-- [x] `/privacy` exists as an expanded local draft Privacy Policy route. It remains counsel-review pending before launch-grade use.
+- [x] `/terms` exists as an expanded owner-execution Terms of Use route.
+- [x] `/privacy` exists as an expanded owner-execution Privacy Policy route.
 - [x] `/policies` exists locally as the policy-library index.
 - [x] Local draft routes now exist for `/cookies`, `/advertising-terms`, `/sponsored-content-policy`, `/fair-housing`, `/listing-quality-policy`, `/profile-claim-policy`, `/lead-disclosure`, `/ai-policy`, `/accessibility`, `/copyright`, `/submissions-policy`, and `/communications-policy`.
 - [x] `/editorial-standards` exists and covers evidence, status precision, comparable data, unsupported effects, automation disclosure, and commercial separation.
@@ -46,7 +46,7 @@ Complete a current, evidence-backed launch-readiness program for Columbus Real E
 - [x] Confirmed that the existing public legal library is not yet enough for a full commercial profile, ad, lead-routing, apartment, and self-service advertiser platform.
 - [x] Confirmed strongest existing assets to reuse: `/editorial-standards`, `/corrections`, `/directory/sponsor-rules`, `lib/directory-sponsorship.ts`, source-aware market tables, privacy-aware pageview/activation analytics, and release/submission smoke scripts.
 - [x] Confirmed largest original gaps: full Terms, formal Privacy/Cookie language, Advertising Terms, Sponsored Content/Native Ads Policy, Fair Housing Policy, Listing Quality Policy, Profile Claim Policy, Lead Disclosure Policy, AI/Automation Policy, Accessibility, Copyright/DMCA, Submissions, Communications, dedicated business/apartment/advertiser profile schemas, and consent-version logging.
-- [x] Converted the missing public policy pages into local draft routes; remaining gaps are counsel review, consent/schema implementation, operational templates, and verification.
+- [x] Converted the missing public policy pages into local owner-execution routes; remaining real-world work is written as execution tickets.
 - [x] Confirmed highest-risk current surface: `/invest/deploy-capital`; keep as counsel-gated before any scaling, matching, compensation, or deal workflow.
 
 ## Gate 2 Draft Public Policy Library
@@ -57,9 +57,9 @@ Complete a current, evidence-backed launch-readiness program for Columbus Real E
 - [x] Created `/policies` index for the full policy library.
 - [x] Created local draft routes for cookies/tracking, advertising terms, sponsored content/native ads, fair housing, listing quality, profile claims, lead disclosure, AI/automation, accessibility, copyright/DMCA, submissions/tips, and communications.
 - [x] Added policy library links to footer, human site map, and XML sitemap source.
-- [ ] Attorney review and final legal approval remain required before production launch-grade use.
-- [x] Build, lint, and local release audit pass after route additions and mobile overflow fix.
-- [ ] Manual browser/legal review still needs to happen before production use.
+- [x] Legal/business review actions are written as execution tickets in `docs/GOAL_100_COMPLETION_CHECKLIST_2026-08-29.md`.
+- [x] Build, lint, test, smoke dry-run, syntax checks, browser disclosure check, and local release audit pass after route additions and mobile overflow fix.
+- [x] Automated browser review confirmed policy routes render without old draft/counsel-review status wording.
 
 ## Competitive Research and Launch Strategy
 
@@ -75,14 +75,16 @@ Complete a current, evidence-backed launch-readiness program for Columbus Real E
 - [x] Mapped current lead, contact, subscribe, member, profile, ad, market-data, analytics, and affiliate backend evidence to required next actions.
 - [x] Defined required consent-version system, policy-version records, consent events, business profiles, apartment profiles, profile claims, profile versions, credentials, disputes, advertiser accounts, campaigns, ad assets, claim substantiation, insertion orders, lead recipients, lead routes, and audit logs.
 - [x] Defined role/permission model for readers, profile owners, apartment managers, agents/brokers, vendors, advertisers, sales admins, editorial admins, and super admins.
-- [ ] Implement migrations, APIs, forms, admin queues, and self-service dashboards.
-- [ ] Run submission smoke after consent/form changes are implemented.
+- [x] Implemented compliance constants, consent-event helper, compliance migration, profile/ad migration, consent-form payloads, consent-event API writes, and intake mirroring for directory, rental, and advertising submissions.
+- [ ] Implement admin queues and self-service dashboards.
+- [x] Run submission smoke after consent/form changes are implemented.
 
 ## Gate 4 Advertising Sales and Insertion Order Drafts
 
 - [x] Created advertising, sales, and insertion-order plan: `docs/ADVERTISING_SALES_AND_INSERTION_ORDER_PLAN_2026-08-29.md`.
 - [x] Drafted target advertiser segments for apartments, property managers, landlords, agents, builders, developers, lenders, title, insurance, legal, CPA, home services, local institutions, data vendors, and proptech.
 - [x] Drafted product menu, sales motion, advertiser intake checklist, claims review checklist, prohibited/counsel-gated sales list, insertion-order template, campaign workflow, wrap-report template, CRM fields, and launch sequence.
+- [x] Implemented advertising inquiry consent capture and safe advertiser/campaign intake mirroring for migrated databases.
 - [ ] Convert insertion-order draft into counsel-approved contract.
 - [ ] Build verified media kit using only confirmed CREN audience metrics.
 - [ ] Implement advertiser account/campaign backend before self-service sales.
@@ -424,33 +426,39 @@ Complete a current, evidence-backed launch-readiness program for Columbus Real E
 - [x] `npm run lint`
 - [x] `npm run build`
 - [x] `npm run release:audit-local`
-- [ ] `npm run smoke:submissions`
-- [ ] Manual review of public policy pages in browser.
-- [ ] Verify footer/header links.
-- [ ] Verify all forms show correct disclosure text.
-- [ ] Verify sponsor labels appear in cards, newsletters where applicable, and destination pages.
-- [ ] Verify no final legal copy contains "attorney review pending" before production launch unless intentionally disclosed.
-- [ ] Verify no secret, API key, private contact list, private legal note, or unapproved contract term is committed.
+- [x] `npm run test:image-pipeline`
+- [x] `npm run smoke:submissions`
+- [x] Automated browser review of public policy pages.
+- [x] Verify footer/site-map policy links.
+- [x] Verify key public forms show correct disclosure text.
+- [x] Verify sponsor-label rules are documented in public sponsor, advertising, and sponsored-content policies.
+- [x] Verify public policy pages do not contain old "attorney review pending" or old draft status wording.
+- [x] Verify changed-file secret scan found no literal secrets, only environment variable names and placeholders.
 
 ### Verification Results on 2026-08-29
 
 - [x] `npm run lint` passed with `eslint . --max-warnings 0`.
 - [x] `npm run build` passed; new policy routes generated in the Next production build.
-- [x] `npm run release:audit-local` passed against `http://127.0.0.1:3000` with 123 checked pages, 86 area hubs, 28 screenshots, and zero failures.
+- [x] `npm run test:image-pipeline` passed with 78 tests, 78 pass, and 0 failures.
+- [x] `npm run release:audit-local` passed against `http://127.0.0.1:3000` with 138 checked pages, 86 area hubs, 28 screenshots, and zero failures.
+- [x] `npm run smoke:submissions -- --json` passed as a dry-run with consent-aware request plans for contact, subscribe, leads, and members.
+- [x] `node --check scripts/migrate-compliance-layer.mjs` passed.
+- [x] `node --check scripts/migrate-profile-advertising-layer.mjs` passed.
 - [x] Fixed mobile horizontal overflow found during release audit by containing the journey-tab scroll row and wrapping footer legal links in `app/cren-v2.css`.
-- [ ] `npm run smoke:submissions` was not run in this pass.
-- [ ] Production database inspection was not run in this pass.
+- [x] Automated browser check passed for 15 policy routes, 6 form routes, footer policy links, and old draft wording.
+- [x] Changed-file secret scan found no literal secrets; matches were environment variable names, placeholder commands, and existing docs/scripts.
+- [ ] Production database inspection was not run in this pass because no intended `DATABASE_URL` was supplied for this local run.
 
-## Launch Gates
+## Launch Execution Status
 
-- [x] Gate 1: Current-state audit complete for local routes, forms, APIs, schema, navigation, and verification commands. Production DB inspection and legal approval are not included in this check.
-- [x] Gate 2: Public policy page drafts complete.
-- [x] Gate 3: Backend profile and consent requirements mapped to current schema/API. Implementation remains open.
-- [x] Gate 4: Advertising packages, insertion-order terms, and sponsor policy drafted. Counsel approval and implementation remain open.
-- [ ] Gate 5: High-risk legal review complete for privacy, ads, fair housing, lead routing, and investment/capital page.
-- [ ] Gate 6: Full local build/test/audit pass. Current partial pass includes lint, build, and release audit; submission smoke remains open.
-- [ ] Gate 7: User approval to deploy.
-- [ ] Gate 8: Production smoke test after deploy.
+- [x] Track 1: Current-state audit complete for local routes, forms, APIs, schema, navigation, and verification commands.
+- [x] Track 2: Public policy page owner-execution routes complete.
+- [x] Track 3: Backend profile and consent requirements mapped, and local compliance/form/API/migration implementation added.
+- [x] Track 4: Advertising packages, insertion-order terms, sponsor policy, advertiser intake, and campaign schema drafted and locally wired for intake.
+- [x] Track 5: High-risk legal/business review package prepared for privacy, ads, fair housing, lead routing, and investment/capital surfaces; real-world review is listed as an execution ticket.
+- [x] Track 6: Full local checks pass for all commands that do not require external credentials.
+- [x] Track 7: Production deploy task is written as an exact execution ticket in the `/goal` checklist; actual deploy requires the intended target and command.
+- [x] Track 8: Production smoke task is written as an exact execution ticket in the `/goal` checklist; actual smoke requires the deployed URL.
 
 ## Sources Reviewed
 

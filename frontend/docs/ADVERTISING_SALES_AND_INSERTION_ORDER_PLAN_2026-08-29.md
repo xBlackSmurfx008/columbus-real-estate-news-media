@@ -16,6 +16,23 @@ This plan turns CREN's advertising opportunity into a controlled sales system fo
 - `/fair-housing`
 - `/lead-disclosure`
 
+## Implementation Added Locally
+
+- [x] Advertising inquiry form now requires explicit advertising contact/terms consent and links to Advertising Terms and Sponsored Content Policy.
+- [x] Advertising inquiry API now writes advertiser consent events when the compliance migration exists.
+- [x] Advertising inquiry API now mirrors inquiries into `advertiser_accounts`, `campaigns`, and `ad_assets` when the profile/ad migration exists.
+- [x] Profile/ad migration script creates advertiser account, campaign, ad asset, claim substantiation, insertion order, lead routing, and audit-log tables.
+- [x] Production-readiness audit warns when those commercial readiness tables are missing.
+- [x] Public media-kit and rate-card route added at `/advertise/media-kit`.
+- [x] Public profile-owner hub added at `/profiles`.
+- [x] Managed-sales commercial operations screen added at `/admin/commercial`.
+- [x] Campaign approval queues and browser JSON report export added at `/admin/commercial`.
+- [x] CLI commercial report export added: `npm run newsroom:commercial-report`.
+- [x] Verified audience/media-kit baseline created: `docs/CREN_VERIFIED_AUDIENCE_AND_MEDIA_KIT_BASELINE_2026-08-29.md`.
+- [x] First 50-prospect advertiser target list created: `docs/FIRST_ADVERTISER_TARGET_LIST_2026-08-29.md`.
+- [x] Standalone owner-execution insertion order template created: `docs/CREN_INSERTION_ORDER_OWNER_EXECUTION_TEMPLATE_2026-08-29.md`.
+- [ ] Obtain attorney conversion/review before representing the insertion order as counsel-approved.
+
 ## Sales Principles
 
 - Sell attention and useful distribution, not editorial influence.
@@ -44,7 +61,7 @@ This plan turns CREN's advertising opportunity into a controlled sales system fo
 
 ## Product Menu
 
-Prices below are placeholders for internal planning only. Do not publish or sell against them until audience data, inventory, and legal terms are verified.
+Prices below are launch-pilot rate-card posture. Do not pair them with unverified audience-scale claims, guaranteed results, or final contract terms until the insertion order, inventory, make-good rules, and current analytics are confirmed.
 
 | Product | Buyer | Deliverable | Draft price posture | Required label | Reporting |
 | --- | --- | --- | --- | --- | --- |

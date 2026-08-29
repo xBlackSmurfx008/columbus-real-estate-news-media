@@ -238,6 +238,64 @@ export async function initSchema() {
     )
   `;
 
+  await sql`
+    CREATE TABLE IF NOT EXISTS policy_versions (
+      id BIGSERIAL PRIMARY KEY,
+      policy_key TEXT NOT NULL,
+      version TEXT NOT NULL,
+      route TEXT NOT NULL,
+      title TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'owner_execution_version',
+      effective_at TIMESTAMPTZ,
+      approved_by TEXT,
+      approved_at TIMESTAMPTZ,
+      notes TEXT,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+
+  await sql`
+    CREATE UNIQUE INDEX IF NOT EXISTS policy_versions_key_version_idx
+    ON policy_versions(policy_key, version)
+  `;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS consent_events (
+      id BIGSERIAL PRIMARY KEY,
+      actor_type TEXT NOT NULL DEFAULT 'anonymous',
+      actor_id TEXT,
+      entity_type TEXT NOT NULL,
+      entity_id TEXT,
+      email TEXT,
+      phone TEXT,
+      consent_type TEXT NOT NULL,
+      consent_version TEXT NOT NULL,
+      consent_text TEXT NOT NULL,
+      policy_versions JSONB NOT NULL DEFAULT '{}'::jsonb,
+      source_route TEXT,
+      form_id TEXT,
+      form_version TEXT,
+      recipient_category TEXT,
+      compensation_disclosure_category TEXT,
+      ip_hash TEXT,
+      user_agent_hash TEXT,
+      revoked_at TIMESTAMPTZ,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS consent_events_entity_idx
+    ON consent_events(entity_type, entity_id, created_at DESC)
+  `;
+
+  await sql`
+    CREATE INDEX IF NOT EXISTS consent_events_email_idx
+    ON consent_events(email, created_at DESC)
+    WHERE email IS NOT NULL
+  `;
+
   // Server-side traffic (no raw IP / UA stored; visitor_hash rotates daily).
   await sql`
     CREATE TABLE IF NOT EXISTS page_views (

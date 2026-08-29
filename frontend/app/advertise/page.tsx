@@ -17,6 +17,12 @@ export default function AdvertisePage() {
           <p className="cren-body mt-2 max-w-2xl">
             Reach readers through labeled neighborhood, newsletter, service-guide, and directory placements built for measurable outcomes.
           </p>
+          <div className="cren-btn-row mt-5">
+            <Link href="/advertise/media-kit" className="cren-btn cren-btn-primary">Open media kit</Link>
+            <Link href="/advertise/self-service" className="cren-btn cren-btn-outline">Start self-service ad</Link>
+            <Link href="#advertising-inquiry" className="cren-btn cren-btn-outline">Request proposal</Link>
+            <Link href="/profiles" className="cren-btn cren-btn-outline">Claim a profile</Link>
+          </div>
           <p className="cren-body mt-3 text-sm">
             Editorial or general questions?{" "}
             <Link href="/contact?source=advertise-page" className="cren-text-link">

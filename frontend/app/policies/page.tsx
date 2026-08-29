@@ -5,7 +5,7 @@ import { POLICY_LIBRARY_ORDER, POLICY_PAGES, policyPath } from "@/lib/policy-pag
 
 export const metadata: Metadata = {
   title: "Policy Library",
-  description: "Draft legal, privacy, advertising, editorial, profile, lead-routing, and automation policies for Columbus Real Estate News.",
+  description: "Owner-execution legal, privacy, advertising, editorial, profile, lead-routing, and automation policies for Columbus Real Estate News.",
   alternates: { canonical: "/policies" },
 };
 
@@ -17,7 +17,7 @@ export default function PoliciesPage() {
           <div className="section-eyebrow">Legal and policy library</div>
           <h1 className="cren-heading-xl">CREN policies</h1>
           <p className="cren-body mt-3 max-w-3xl">
-            Draft operating policies for readers, members, advertisers, sponsors, profile owners, directory participants, and newsroom automation. These pages need counsel review before final production use.
+            Operating policies for readers, members, advertisers, sponsors, profile owners, directory participants, and newsroom automation. These are the current owner-execution versions for launch operations and should not be represented as attorney approval.
           </p>
         </header>
 

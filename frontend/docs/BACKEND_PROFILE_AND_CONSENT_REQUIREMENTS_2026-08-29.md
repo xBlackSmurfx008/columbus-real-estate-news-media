@@ -39,6 +39,23 @@ Before CREN offers self-service profiles, apartment listings, advertiser dashboa
 - What entity, listing, profile, campaign, or lead the agreement belongs to.
 - Whether human review was required and who approved it.
 
+## Implementation Added Locally
+
+- [x] Compliance constants added in `lib/compliance/policy-versions.ts`.
+- [x] Consent-event writer added in `lib/compliance/consent-events.ts`.
+- [x] Intake mirroring helper added in `lib/compliance/intake-records.ts`.
+- [x] Compliance migration added in `scripts/migrate-compliance-layer.mjs`.
+- [x] Profile and advertising migration added in `scripts/migrate-profile-advertising-layer.mjs`.
+- [x] `package.json` scripts added: `newsroom:migrate-compliance` and `newsroom:migrate-profile-ads`.
+- [x] Lead, contact, subscribe, and member APIs now write normalized consent events when `consent_events` exists.
+- [x] Contact, lead, subscribe, advertising inquiry, and join forms now submit form version, consent version, source route, and explicit consent values.
+- [x] Directory listing leads now mirror into profile intake tables when migrated tables exist.
+- [x] Rental listing leads now mirror into apartment profile intake tables when migrated tables exist.
+- [x] Advertising inquiries now mirror into advertiser account, campaign, and ad asset intake tables when migrated tables exist.
+- [ ] Run the migration scripts against the intended database.
+- [ ] Build the profile-owner and advertiser self-service dashboards.
+- [ ] Build admin queues for claims, disputes, claim substantiation, campaign approvals, and lead routing.
+
 ## Consent Version System
 
 Create a single compliance module before modifying forms:
@@ -491,16 +508,16 @@ Manual review required for:
 
 ## Implementation Sequence
 
-1. Add `lib/compliance/policy-versions.ts` with policy and consent copy constants.
-2. Add an idempotent migration script for `policy_versions` and `consent_events`.
-3. Update lead, contact, subscribe, and member APIs to write consent events.
-4. Add form checkboxes and policy links to lead, advertising, subscribe, and join forms.
-5. Add migration for business/apartment profiles, claims, credentials, versions, and disputes.
-6. Build profile-claim intake and admin review queue.
-7. Add advertiser account, campaign, ad asset, substantiation, and insertion-order tables.
-8. Refactor ad CRUD into campaign workflow.
-9. Add audit logs for profile, ad, lead, policy, and admin changes.
-10. Extend `npm run release:audit-local`, `npm run smoke:submissions`, and production readiness checks for policy routes, consent events, labels, and schema.
+1. [x] Add `lib/compliance/policy-versions.ts` with policy and consent copy constants.
+2. [x] Add an idempotent migration script for `policy_versions` and `consent_events`.
+3. [x] Update lead, contact, subscribe, and member APIs to write consent events.
+4. [x] Add form checkboxes and policy links to lead, advertising, subscribe, and join forms.
+5. [x] Add migration for business/apartment profiles, claims, credentials, versions, disputes, advertiser accounts, campaigns, ad assets, insertion orders, lead routes, and audit logs.
+6. [x] Add safe intake mirroring for directory listings, rental listings, and advertising inquiries.
+7. [ ] Build profile-claim intake UI and admin review queue.
+8. [ ] Refactor ad CRUD into campaign workflow UI.
+9. [ ] Add audit-log writes for every admin/profile/ad/lead mutation.
+10. [x] Extend `npm run release:audit-local`, `npm run smoke:submissions`, and production readiness checks for policy routes, consent payloads, and commercial readiness schema.
 
 ## Completion Criteria
 

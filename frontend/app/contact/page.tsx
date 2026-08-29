@@ -1,8 +1,13 @@
 import { ContactForm } from "@/components/contact-form";
 import { CrenPage } from "@/components/cren/cren-page";
 
-export default function ContactPage({ searchParams }: { searchParams?: { source?: string } }) {
-  const source = searchParams?.source ?? "direct";
+type ContactPageProps = {
+  searchParams: Promise<{ source?: string }>;
+};
+
+export default async function ContactPage({ searchParams }: ContactPageProps) {
+  const params = await searchParams;
+  const source = params.source ?? "direct";
 
   return (
     <CrenPage narrow>

@@ -27,6 +27,9 @@ const PERSONA_LABELS: Record<string, string> = {
   investor_seller: 'Investor Selling',
   capital_partner: 'Capital Partner',
   renter: 'Renter',
+  rental_listing: 'Rental Listing',
+  directory_listing: 'Directory Listing',
+  profile_claim: 'Profile Claim',
 };
 
 const STATUSES = ['new', 'contacted', 'qualified', 'won', 'lost'];

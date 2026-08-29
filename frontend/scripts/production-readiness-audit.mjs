@@ -61,6 +61,22 @@ for (const table of [
   "market_observations",
   "activation_events",
   "page_views",
+  "policy_versions",
+  "consent_events",
+  "business_profiles",
+  "apartment_profiles",
+  "profile_claims",
+  "profile_versions",
+  "profile_credentials",
+  "profile_disputes",
+  "advertiser_accounts",
+  "campaigns",
+  "ad_assets",
+  "claim_substantiation",
+  "insertion_orders",
+  "lead_recipients",
+  "lead_routes",
+  "audit_logs",
 ]) {
   report.requiredTables[table] = tables.has(table);
 }
@@ -78,6 +94,34 @@ if (!tables.has("market_sources") || !tables.has("market_observations")) {
     "MARKET_OBSERVATION_LAYER_MISSING",
     "Source-aware market tables are not installed; area hub market snapshots remain in pending-data mode.",
   );
+}
+
+for (const table of [
+  "policy_versions",
+  "consent_events",
+  "business_profiles",
+  "apartment_profiles",
+  "profile_claims",
+  "profile_versions",
+  "profile_credentials",
+  "profile_disputes",
+  "advertiser_accounts",
+  "campaigns",
+  "ad_assets",
+  "claim_substantiation",
+  "insertion_orders",
+  "lead_recipients",
+  "lead_routes",
+  "audit_logs",
+]) {
+  if (!tables.has(table)) {
+    addFinding(
+      findings,
+      "warn",
+      "COMMERCIAL_READINESS_TABLE_MISSING",
+      `${table} is missing; self-service profiles, versioned consent, lead routing, and advertiser workflows are not launch-ready.`,
+    );
+  }
 }
 
 if (tables.has("articles")) {
@@ -224,7 +268,7 @@ if (tables.has("market_observations")) {
   report.marketData.verifiedGeographies = geographies.count;
 }
 
-for (const table of ["contacts", "subscribers", "leads", "members"]) {
+for (const table of ["contacts", "subscribers", "leads", "members", "consent_events"]) {
   if (!tables.has(table)) continue;
   const rows = await sql.query(smokeCountQuery(table));
   report.audienceData[`${table}SmokeRows`] = rows[0].n;

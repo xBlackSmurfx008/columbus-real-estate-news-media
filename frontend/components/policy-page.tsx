@@ -89,8 +89,19 @@ export function PolicyPageShell({ policyKey }: { policyKey: PolicyPageKey }) {
               ))}
             </ul>
             <p className="cren-body mt-5 text-xs">
-              Draft policy pages help CREN prepare for legal review. They are not a substitute for legal advice.
+              These policy pages support CREN operations. They are not a substitute for legal advice.
             </p>
+            <div className="mt-4 space-y-2 text-sm">
+              <Link href="/contact?source=policy-library" className="cren-text-link block">
+                Contact about a policy
+              </Link>
+              <Link href="/profiles/claim" className="cren-text-link block">
+                Submit a profile claim
+              </Link>
+              <Link href="/advertise#advertising-inquiry" className="cren-text-link block">
+                Advertising contact
+              </Link>
+            </div>
           </aside>
         </div>
       </div>

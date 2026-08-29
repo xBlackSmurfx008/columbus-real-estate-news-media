@@ -157,6 +157,15 @@ export default function AdminDashboard() {
               </Link>
 
               <Link
+                href="/admin/commercial"
+                className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-red-200 transition text-center"
+              >
+                <div className="text-2xl mb-2">CRM</div>
+                <h3 className="font-semibold text-gray-900">Commercial Ops</h3>
+                <p className="text-sm text-gray-600">Claims, campaigns, reports</p>
+              </Link>
+
+              <Link
                 href="/admin/interviews?new=true"
                 className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-red-200 transition text-center"
               >

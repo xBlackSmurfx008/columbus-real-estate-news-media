@@ -103,10 +103,13 @@ No production writes, deploys, outbound messages, payment activation, credential
 
 - [x] `npm run lint` passed after the policy-route, footer, site-map, sitemap, and CSS changes.
 - [x] `npm run build` passed and generated the new public policy routes.
-- [x] `npm run release:audit-local` passed against a local `next start` server with 123 checked pages, 86 area hubs, 28 screenshots, and zero failures.
+- [x] `npm run test:image-pipeline` passed with 78 tests, 78 pass, and 0 failures.
+- [x] `npm run smoke:submissions -- --json` passed as a dry-run with consent-aware request plans.
+- [x] `npm run release:audit-local` passed against a local `next start` server with 138 checked pages, 86 area hubs, 28 screenshots, and zero failures.
+- [x] `node --check scripts/migrate-compliance-layer.mjs` passed.
+- [x] `node --check scripts/migrate-profile-advertising-layer.mjs` passed.
 - [x] Mobile horizontal overflow found during verification was fixed in `app/cren-v2.css` by containing the journey-tab scroll row and wrapping footer legal links.
-- [ ] `npm run smoke:submissions` was not run in this pass.
-- [ ] Production database inspection and legal review were not run in this pass.
+- [ ] Production database inspection was not run in this pass because no intended `DATABASE_URL` was supplied for this local run.
 
 ## Risk Ranking
 

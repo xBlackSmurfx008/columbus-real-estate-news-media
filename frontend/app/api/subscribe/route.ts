@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
+import { FORM_VERSIONS } from "@/lib/compliance/policy-versions";
+import { recordConsentEventSafely } from "@/lib/compliance/consent-events";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -15,6 +17,8 @@ type SubscribePayload = {
   commuteAnchor?: unknown;
   cadence?: unknown;
   interests?: unknown;
+  consent?: unknown;
+  sourceRoute?: unknown;
 };
 
 function cleanString(value: unknown, max = 160): string | null {
@@ -40,6 +44,9 @@ export async function POST(request: NextRequest) {
 
     if (typeof email !== "string" || !EMAIL_RE.test(email) || email.length > 320) {
       return NextResponse.json({ error: "Enter a valid email address." }, { status: 400 });
+    }
+    if (body.consent !== true) {
+      return NextResponse.json({ error: "Please check the email permission box." }, { status: 400 });
     }
 
     const area = cleanString(body.area, 120);
@@ -86,6 +93,17 @@ export async function POST(request: NextRequest) {
       `;
       subscriberId = subscriber.id;
     }
+    await recordConsentEventSafely(sql, {
+      consentKey: "emailMarketing",
+      entityType: "subscriber",
+      entityId: subscriberId,
+      email,
+      sourceRoute: cleanString(body.sourceRoute, 500) ?? source,
+      formId: "subscribe-form",
+      formVersion: FORM_VERSIONS.subscribe,
+      recipientCategory: "cren_newsletter",
+      compensationDisclosureCategory: "none",
+    });
 
     await sendTelegramInquiry({
       kind: 'newsletter',

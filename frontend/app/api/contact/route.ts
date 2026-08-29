@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
+import { FORM_VERSIONS } from "@/lib/compliance/policy-versions";
+import { recordConsentEventSafely } from "@/lib/compliance/consent-events";
+import { mirrorAdvertisingInquirySafely } from "@/lib/compliance/intake-records";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -8,7 +11,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, message, source, inquiry_type: inquiryType, company, package_interest: packageInterest, budget } = body;
+    const { name, email, message, source, inquiry_type: inquiryType, company, package_interest: packageInterest, budget, consent } = body;
 
     if (typeof name !== "string" || !name.trim() || name.length > 200) {
       return NextResponse.json({ error: "Enter your name." }, { status: 400 });
@@ -18,6 +21,9 @@ export async function POST(request: NextRequest) {
     }
     if (typeof message !== "string" || !message.trim() || message.length > 5000) {
       return NextResponse.json({ error: "Enter a message." }, { status: 400 });
+    }
+    if (consent !== true) {
+      return NextResponse.json({ error: "Please check the permission box so we can respond." }, { status: 400 });
     }
 
     const cleanSource = typeof source === 'string' ? source.slice(0, 120) : null;
@@ -35,6 +41,29 @@ export async function POST(request: NextRequest) {
       VALUES (${name.trim()}, ${email}, ${storedMessage}, ${cleanSource}, 'new')
       RETURNING id
     `;
+    const sourceRoute = typeof body.sourceRoute === "string" ? body.sourceRoute.slice(0, 500) : cleanSource;
+    await recordConsentEventSafely(sql, {
+      consentKey: isAdvertising ? "advertiserTerms" : "contactPermission",
+      entityType: "contact",
+      entityId: contact.id,
+      email,
+      sourceRoute,
+      formId: isAdvertising ? "advertising-inquiry-form" : "contact-form",
+      formVersion: isAdvertising ? FORM_VERSIONS.advertisingInquiry : FORM_VERSIONS.contact,
+      recipientCategory: isAdvertising ? "sales_review_queue" : "cren_team",
+      compensationDisclosureCategory: isAdvertising ? "advertiser" : "none",
+    });
+    if (isAdvertising) {
+      await mirrorAdvertisingInquirySafely(sql, {
+        contactId: contact.id,
+        name: name.trim(),
+        email,
+        company: cleanCompany,
+        packageInterest: cleanPackage,
+        budget: cleanBudget,
+        message: cleanMessage,
+      });
+    }
 
     await sendTelegramInquiry({
       kind: isAdvertising ? 'advertising' : 'general',

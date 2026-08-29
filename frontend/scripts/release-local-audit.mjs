@@ -3,6 +3,7 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { chromium } from "@playwright/test";
 import { franklinSeedsToAreas } from "../lib/franklin-areas.ts";
+import { POLICY_LIBRARY_ORDER, POLICY_PAGES, policyPath } from "../lib/policy-pages.ts";
 
 const baseUrl = process.env.RELEASE_AUDIT_BASE_URL || "http://127.0.0.1:3000";
 const outputDir =
@@ -127,6 +128,12 @@ const smokeRoutes = [
   ["/directory?area=Clintonville", "Find services and local hot spots serving Clintonville"],
   ["/directory/sponsor-rules", "Sponsor-safe service guide rules"],
   ["/directory/list-your-business?area=Dublin", "List a business serving Dublin"],
+  ["/advertise/media-kit", "Reach Columbus housing decisions without buying editorial influence"],
+  ["/advertise/self-service", "Start a CREN advertising order"],
+  ["/profiles", "Claim, update, or review a CREN profile"],
+  ["/profiles/claim", "Claim or update a CREN profile"],
+  ["/policies", "CREN policies"],
+  ...POLICY_LIBRARY_ORDER.map((key) => [policyPath(key), POLICY_PAGES[key].title]),
 ];
 
 for (const [path, heading] of smokeRoutes) {
@@ -182,6 +189,10 @@ const visualRoutes = [
   ["housing-dublin", "/housing-search?area=Dublin"],
   ["directory-clintonville", "/directory?area=Clintonville"],
   ["list-business-dublin", "/directory/list-your-business?area=Dublin"],
+  ["media-kit", "/advertise/media-kit"],
+  ["self-service-advertising", "/advertise/self-service"],
+  ["profiles", "/profiles"],
+  ["profiles-claim", "/profiles/claim"],
 ];
 
 for (const [name, path] of visualRoutes) {
@@ -214,6 +225,7 @@ if (initPost.status() !== 503) {
 for (const path of [
   "/api/admin/ads",
   "/api/admin/articles",
+  "/api/admin/commercial",
   "/api/admin/interviews",
   "/api/admin/leads",
   "/api/admin/market",

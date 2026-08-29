@@ -5,6 +5,18 @@ import { fileURLToPath } from "node:url";
 const DEFAULT_BASE_URL = "http://localhost:3000";
 const ROUTE_ORDER = ["contact", "subscribe", "leads", "members"];
 const LOCAL_HOSTS = new Set(["localhost", "127.0.0.1", "::1", "[::1]"]);
+const FORM_VERSIONS = {
+  contact: "contact-form-2026-08-29-1",
+  lead: "lead-form-2026-08-29-1",
+  subscribe: "subscribe-form-2026-08-29-1",
+  join: "join-form-2026-08-29-1",
+};
+const CONSENT_VERSIONS = {
+  contactPermission: "contact-permission-2026-08-29-1",
+  emailMarketing: "email-marketing-2026-08-29-1",
+  leadRouting: "lead-routing-2026-08-29-1",
+  memberTerms: "member-terms-2026-08-29-1",
+};
 
 function usage() {
   return [
@@ -72,6 +84,10 @@ export function buildSmokeRequests({ runId = createRunId(), routes = ROUTE_ORDER
         message: `Controlled CREN public submission smoke test. Run ${cleanRunId}. Do not contact.`,
         source: sourceMarker(cleanRunId, "contact"),
         inquiry_type: "general",
+        sourceRoute: "/contact?source=codex-smoke",
+        formVersion: FORM_VERSIONS.contact,
+        consentVersion: CONSENT_VERSIONS.contactPermission,
+        consent: true,
       },
     },
     {
@@ -90,6 +106,10 @@ export function buildSmokeRequests({ runId = createRunId(), routes = ROUTE_ORDER
         timeline: "3-6 months",
         budget: "smoke-test",
         interests: ["Telegram alerts", "Submission routing"],
+        sourceRoute: "/subscribe?source=codex-smoke",
+        formVersion: FORM_VERSIONS.subscribe,
+        consentVersion: CONSENT_VERSIONS.emailMarketing,
+        consent: true,
       },
     },
     {
@@ -110,6 +130,9 @@ export function buildSmokeRequests({ runId = createRunId(), routes = ROUTE_ORDER
           purpose: "Controlled CREN public submission smoke test.",
         },
         source: sourceMarker(cleanRunId, "leads"),
+        sourceRoute: "/housing-search?source=codex-smoke",
+        formVersion: FORM_VERSIONS.lead,
+        consentVersion: CONSENT_VERSIONS.leadRouting,
         consent: true,
       },
     },
@@ -125,6 +148,12 @@ export function buildSmokeRequests({ runId = createRunId(), routes = ROUTE_ORDER
         password: "CodexSmokePassword!123",
         interests: `Submission smoke test | ${sourceMarker(cleanRunId, "members")}`,
         source: sourceMarker(cleanRunId, "members"),
+        sourceRoute: "/join?source=codex-smoke",
+        formVersion: FORM_VERSIONS.join,
+        termsConsentVersion: CONSENT_VERSIONS.memberTerms,
+        emailConsentVersion: CONSENT_VERSIONS.emailMarketing,
+        termsConsent: true,
+        emailConsent: true,
       },
     },
   ];

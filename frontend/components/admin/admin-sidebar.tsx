@@ -13,6 +13,7 @@ export function AdminSidebar() {
     { name: 'Dashboard', href: '/admin', icon: 'LayoutDashboard' },
     { name: 'Activation', href: '/admin/activation', icon: 'Activity' },
     { name: 'Leads', href: '/admin/leads', icon: 'Users' },
+    { name: 'Commercial', href: '/admin/commercial', icon: 'Briefcase' },
     { name: 'Articles', href: '/admin/articles', icon: 'FileText' },
     { name: 'Advertisements', href: '/admin/ads', icon: 'Image' },
     { name: 'Market Data', href: '/admin/market', icon: 'TrendingUp' },
@@ -75,6 +76,11 @@ export function AdminSidebar() {
       Activity: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12h4l3 8 4-16 3 8h4" />
+        </svg>
+      ),
+      Briefcase: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6h4m-7 4h10m-12 8h14a2 2 0 002-2v-6a2 2 0 00-2-2h-3V6a2 2 0 00-2-2h-4a2 2 0 00-2 2v2H5a2 2 0 00-2 2v6a2 2 0 002 2z" />
         </svg>
       ),
       Mic2: (

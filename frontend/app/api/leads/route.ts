@@ -2,9 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { requireAuth } from "@/lib/auth";
 import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
+import { FORM_VERSIONS } from "@/lib/compliance/policy-versions";
+import { recordConsentEventSafely } from "@/lib/compliance/consent-events";
+import { mirrorLeadIntakeSafely } from "@/lib/compliance/intake-records";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PERSONAS = ["fsbo_seller", "investor_seller", "capital_partner", "renter", "rental_listing", "directory_listing"] as const;
+const PERSONAS = ["fsbo_seller", "investor_seller", "capital_partner", "renter", "rental_listing", "directory_listing", "profile_claim"] as const;
 const MAX_BODY_BYTES = 16_384;
 
 function cleanString(value: unknown, max = 500): string | null {
@@ -33,6 +36,12 @@ function summarizeDetails(value: unknown): string | null {
     .filter((part): part is string => Boolean(part));
 
   return parts.join(" | ").slice(0, 900) || null;
+}
+
+function leadRecipientCategory(persona: typeof PERSONAS[number]) {
+  if (persona === "rental_listing" || persona === "directory_listing" || persona === "profile_claim") return "profile_review_queue";
+  if (persona === "capital_partner") return "owner_review_only";
+  return "cren_team";
 }
 
 // POST: public lead intake from the funnel pages
@@ -74,6 +83,29 @@ export async function POST(request: NextRequest) {
       )
       RETURNING id
     `;
+    const cleanPhone = typeof phone === "string" ? phone.slice(0, 40) : null;
+    const cleanSource = typeof source === "string" ? source.slice(0, 120) : null;
+    await recordConsentEventSafely(sql, {
+      consentKey: persona === "profile_claim" ? "profileClaim" : "leadRouting",
+      entityType: "lead",
+      entityId: lead.id,
+      email,
+      phone: cleanPhone,
+      sourceRoute: typeof body.sourceRoute === "string" ? body.sourceRoute.slice(0, 500) : cleanSource,
+      formId: "lead-form",
+      formVersion: FORM_VERSIONS.lead,
+      recipientCategory: leadRecipientCategory(persona),
+      compensationDisclosureCategory: persona === "capital_partner" ? "unknown_pending_review" : "none",
+    });
+    await mirrorLeadIntakeSafely(sql, {
+      leadId: lead.id,
+      persona,
+      name: name.trim(),
+      email,
+      phone: cleanPhone,
+      area: typeof area === "string" ? area.slice(0, 120) : null,
+      details: details && typeof details === "object" && !Array.isArray(details) ? details as Record<string, unknown> : {},
+    });
 
     await sendTelegramInquiry({
       kind: 'lead',
@@ -81,9 +113,9 @@ export async function POST(request: NextRequest) {
       persona,
       name: name.trim(),
       email,
-      phone: typeof phone === "string" ? phone.slice(0, 40) : null,
+      phone: cleanPhone,
       area: typeof area === "string" ? area.slice(0, 120) : null,
-      source: typeof source === "string" ? source.slice(0, 120) : null,
+      source: cleanSource,
       message: summarizeDetails(details),
     });
 

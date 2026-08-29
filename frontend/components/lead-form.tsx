@@ -1,7 +1,9 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 import { trackEvent } from "@/lib/analytics-client";
+import { CONSENT_COPY, FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 
 export type LeadField = {
   name: string;
@@ -19,12 +21,15 @@ export function LeadForm({
   submitLabel = "Send my request",
   successMessage = "Got it. You'll hear from us within 1 business day.",
 }: {
-  persona: "fsbo_seller" | "investor_seller" | "capital_partner" | "renter" | "rental_listing" | "directory_listing";
+  persona: "fsbo_seller" | "investor_seller" | "capital_partner" | "renter" | "rental_listing" | "directory_listing" | "profile_claim";
   source: string;
   fields: LeadField[];
   submitLabel?: string;
   successMessage?: string;
 }) {
+  const consentCopy = persona === "profile_claim" ? CONSENT_COPY.profileClaim : CONSENT_COPY.leadRouting;
+  const consentPolicyPath = persona === "profile_claim" ? "/profile-claim-policy" : "/lead-disclosure";
+  const consentPolicyLabel = persona === "profile_claim" ? "Profile Claim Policy" : "Lead Disclosure Policy";
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
@@ -53,6 +58,9 @@ export function LeadForm({
           phone: data.get("phone"),
           area: data.get("area"),
           details,
+          sourceRoute: window.location.pathname + window.location.search,
+          formVersion: FORM_VERSIONS.lead,
+          consentVersion: consentCopy.version,
           consent: data.get("consent") === "on",
           company: data.get("company"), // honeypot
         }),
@@ -143,7 +151,17 @@ export function LeadForm({
 
         <label className="flex items-start gap-2 text-sm text-[color:var(--text-secondary)]">
           <input type="checkbox" name="consent" required className="mt-1" />
-          <span>We may contact you about your request. We never sell your information.</span>
+          <span>
+            {consentCopy.text} Read the{" "}
+            <Link href={consentPolicyPath} className="cren-text-link">
+              {consentPolicyLabel}
+            </Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="cren-text-link">
+              Privacy Policy
+            </Link>
+            .
+          </span>
         </label>
 
         {error && (

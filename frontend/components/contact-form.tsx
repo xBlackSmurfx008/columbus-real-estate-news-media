@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { trackEvent } from "@/lib/analytics-client";
+import { CONSENT_COPY, FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 
 export function ContactForm({ source }: { source: string }) {
   const [submitted, setSubmitted] = useState(false);
@@ -25,6 +26,10 @@ export function ContactForm({ source }: { source: string }) {
           email: data.get("email"),
           message: data.get("message"),
           source,
+          sourceRoute: window.location.pathname + window.location.search,
+          formVersion: FORM_VERSIONS.contact,
+          consentVersion: CONSENT_COPY.contactPermission.version,
+          consent: data.get("consent") === "on",
         }),
       });
       if (!res.ok) {
@@ -88,6 +93,20 @@ export function ContactForm({ source }: { source: string }) {
             placeholder="Tip, correction, partnership idea, or question"
             required
           />
+        </label>
+        <label className="flex items-start gap-2 text-sm text-[color:var(--text-secondary)]">
+          <input type="checkbox" name="consent" required className="mt-1" />
+          <span>
+            {CONSENT_COPY.contactPermission.text} Read the{" "}
+            <Link href="/privacy" className="cren-text-link">
+              Privacy Policy
+            </Link>{" "}
+            and{" "}
+            <Link href="/communications-policy" className="cren-text-link">
+              Communications Policy
+            </Link>
+            .
+          </span>
         </label>
         {error && (
           <p className="text-sm text-[color:var(--red)]" role="alert">

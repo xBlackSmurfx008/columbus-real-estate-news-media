@@ -1,8 +1,10 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { trackEvent } from "@/lib/analytics-client";
+import { CONSENT_COPY, FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 
 const INTEREST_OPTIONS = [
   "Buying a home",
@@ -38,6 +40,12 @@ export function JoinForm({ source }: { source: string }) {
           password: data.get("password"),
           interests: picked.join(", "),
           source,
+          sourceRoute: window.location.pathname + window.location.search,
+          formVersion: FORM_VERSIONS.join,
+          termsConsentVersion: CONSENT_COPY.memberTerms.version,
+          emailConsentVersion: CONSENT_COPY.emailMarketing.version,
+          termsConsent: data.get("termsConsent") === "on",
+          emailConsent: data.get("emailConsent") === "on",
         }),
       });
       if (!res.ok) {
@@ -92,6 +100,32 @@ export function JoinForm({ source }: { source: string }) {
             ))}
           </div>
         </fieldset>
+
+        <label className="flex items-start gap-2 text-sm text-[color:var(--text-secondary)]">
+          <input type="checkbox" name="termsConsent" required className="mt-1" />
+          <span>
+            {CONSENT_COPY.memberTerms.text} Read the{" "}
+            <Link href="/terms" className="cren-text-link">
+              Terms
+            </Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="cren-text-link">
+              Privacy Policy
+            </Link>
+            .
+          </span>
+        </label>
+
+        <label className="flex items-start gap-2 text-sm text-[color:var(--text-secondary)]">
+          <input type="checkbox" name="emailConsent" className="mt-1" />
+          <span>
+            {CONSENT_COPY.emailMarketing.text} Read the{" "}
+            <Link href="/communications-policy" className="cren-text-link">
+              Communications Policy
+            </Link>
+            .
+          </span>
+        </label>
 
         {error && (
           <p className="text-sm text-[color:var(--red)]" role="alert">

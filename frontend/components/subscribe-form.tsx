@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { trackEvent } from "@/lib/analytics-client";
+import { CONSENT_COPY, FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 
 type SubscribeFormProps = {
   source: string;
@@ -66,6 +67,10 @@ export function SubscribeForm({ source, initialEmail = "", initialArea = "", ini
           commuteAnchor: data.get("commuteAnchor"),
           cadence,
           interests,
+          sourceRoute: window.location.pathname + window.location.search,
+          formVersion: FORM_VERSIONS.subscribe,
+          consentVersion: CONSENT_COPY.emailMarketing.version,
+          consent: data.get("consent") === "on",
         }),
       });
       if (!res.ok) {
@@ -178,6 +183,20 @@ export function SubscribeForm({ source, initialEmail = "", initialArea = "", ini
             <option value="weekend">Weekend planning</option>
             <option value="rental-season">Rental season or market shifts</option>
           </select>
+        </label>
+        <label className="flex items-start gap-2 text-sm text-[color:var(--text-secondary)]">
+          <input type="checkbox" name="consent" required className="mt-1" />
+          <span>
+            {CONSENT_COPY.emailMarketing.text} Read the{" "}
+            <Link href="/privacy" className="cren-text-link">
+              Privacy Policy
+            </Link>{" "}
+            and{" "}
+            <Link href="/communications-policy" className="cren-text-link">
+              Communications Policy
+            </Link>
+            .
+          </span>
         </label>
 
         {error && (

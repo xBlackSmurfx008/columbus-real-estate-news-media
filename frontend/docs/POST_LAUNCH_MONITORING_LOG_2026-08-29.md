@@ -26,6 +26,7 @@ Scope: first post-launch production checks for `https://columbusrealestatenews.c
 | 2026-08-29 16:12 UTC | Alias drift check | Custom domain had drifted to `dpl_5eiL97PTfp4iGWsEQ9DhgZApoxWv`; new launch routes returned 404 there. | Reassigned apex and `www` aliases to verified deployment `dpl_AFrXs6nu7Un6v18W9LV3wiH319c2`. |
 | 2026-08-29 16:14 UTC | Public route checks | `/advertise/media-kit`, `/advertise/self-service`, and `/profiles/claim` returned 200 on apex domain. | Passed after alias correction. |
 | 2026-08-29 16:14 UTC | Vercel production error logs | Error-log commands returned no error entries after fetching logs. | Continue monitoring. |
+| 2026-08-29 16:25 UTC | Post-push alias and route recheck | `columbusrealestatenews.com` still pointed to verified deployment `dpl_AFrXs6nu7Un6v18W9LV3wiH319c2`; `/advertise/media-kit`, `/advertise/self-service`, and `/profiles/claim` returned 200. | Passed. |
 
 ## Commands Used
 

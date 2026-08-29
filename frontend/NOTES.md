@@ -96,6 +96,7 @@ Not claimed:
 - Post-correction production readiness audit at 2026-08-29 16:12:58 UTC returned `ok: true`, `findings: []`, and zero smoke rows.
 - Recent Vercel production error-log commands returned no error entries.
 - First-wave advertiser outreach package and tracker are ready, but no external outreach was sent because no connected sending account/CRM was available in this session.
+- Post-push recheck at 2026-08-29 16:25 UTC confirmed `columbusrealestatenews.com` still pointed to `dpl_AFrXs6nu7Un6v18W9LV3wiH319c2`; `/advertise/media-kit`, `/advertise/self-service`, and `/profiles/claim` returned 200.
 
 ## Verification Already Passed
 

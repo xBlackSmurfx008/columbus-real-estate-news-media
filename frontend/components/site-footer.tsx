@@ -18,6 +18,8 @@ const companyLinks = [
   { href: "/editorial-standards", label: "Editorial Standards" },
   { href: "/corrections", label: "Corrections" },
   { href: "/advertise", label: "Advertise" },
+  { href: "/policies", label: "Policies" },
+  { href: "/fair-housing", label: "Fair Housing" },
   { href: "/subscribe", label: "Membership" },
   { href: "/contact", label: "Contact" },
   { href: "/directory/list-your-business", label: "List Your Business" },
@@ -65,8 +67,10 @@ export function SiteFooter() {
           <span>© {new Date().getFullYear()} Columbus Real Estate News LLC</span>
           <div className="footer-bottom-links">
             <Link href="/site-map">Site Map</Link>
+            <Link href="/policies">Policies</Link>
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
+            <Link href="/accessibility">Accessibility</Link>
           </div>
         </div>
       </div>

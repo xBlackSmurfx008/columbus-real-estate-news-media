@@ -790,9 +790,10 @@ a.btn-subscribe {
   flex-shrink: 0;
 }
 .journey-tabs {
-  max-width: 1200px; margin: 0 auto; padding: 12px 24px;
+  width: min(100%, 1200px); max-width: 100%; margin: 0 auto; padding: 12px 24px;
   display: flex; flex-wrap: nowrap; gap: 4px 8px; align-items: center;
   overflow-x: auto;
+  box-sizing: border-box;
   scrollbar-width: none;
 }
 .journey-tabs::-webkit-scrollbar { display: none; }
@@ -1175,7 +1176,7 @@ a.price-btn-outline {
   display: flex; justify-content: space-between; align-items: center;
   font-size: 13px; opacity: 0.4;
 }
-.footer-bottom-links { display: flex; gap: 20px; }
+.footer-bottom-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px 20px; max-width: 100%; }
 .footer-bottom-links a { color: rgba(255,255,255,0.4); text-decoration: none; }
 
 /* ── TOAST ── */
@@ -1277,6 +1278,8 @@ a.price-btn-outline {
   .journey-tab { padding: 8px 14px; font-size: 13px; }
   .form-row { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+  .footer-bottom { align-items: flex-start; flex-direction: column; gap: 16px; }
+  .footer-bottom-links { justify-content: flex-start; }
   .event-row { grid-template-columns: 60px 1fr; }
   .event-badge { display: none; }
 }

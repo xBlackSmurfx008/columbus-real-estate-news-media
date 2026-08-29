@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
 import { AREA_SECTION_LABELS, AREA_SECTION_ORDER } from "@/lib/franklin-areas";
 import { areasGroupedBySection, topics } from "@/lib/data";
+import { POLICY_LIBRARY_ORDER, POLICY_PAGES, policyPath } from "@/lib/policy-pages";
 
 export const metadata: Metadata = {
   title: "Site Map",
@@ -10,7 +11,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/site-map" },
 };
 
-const primarySections = [
+type SiteMapLink = readonly [string, string];
+
+const primarySections: { title: string; links: SiteMapLink[] }[] = [
   {
     title: "Housing and real estate",
     links: [
@@ -60,11 +63,20 @@ const primarySections = [
       ["Subscribe", "/subscribe"],
       ["Saved Items", "/saved"],
       ["Contact", "/contact"],
-      ["Privacy", "/privacy"],
-      ["Terms of Use", "/terms"],
     ],
   },
-] as const;
+  {
+    title: "Legal and policy",
+    links: [
+      ["Policy Library", "/policies"],
+      ["Privacy", "/privacy"],
+      ["Terms of Use", "/terms"],
+      ...POLICY_LIBRARY_ORDER.filter((key) => key !== "privacy" && key !== "terms").map(
+        (key) => [POLICY_PAGES[key].title, policyPath(key)] as const,
+      ),
+    ],
+  },
+];
 
 export default function SiteMapPage() {
   const groupedAreas = areasGroupedBySection();

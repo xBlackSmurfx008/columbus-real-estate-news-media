@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 import { areas, topics } from '@/lib/data';
 import { getArticlePath } from '@/lib/article-routing';
 import { getAreaReleasePolicy } from '@/lib/consumer-insights';
+import { POLICY_LIBRARY_ORDER, policyPath } from '@/lib/policy-pages';
 import { getArticles } from '@/lib/public-data';
 import { absoluteUrl } from '@/lib/site';
 
@@ -40,8 +41,8 @@ const staticPaths = [
   '/join',
   '/subscribe',
   '/contact',
-  '/privacy',
-  '/terms',
+  '/policies',
+  ...POLICY_LIBRARY_ORDER.map(policyPath),
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

@@ -91,7 +91,7 @@ try {
     UPDATE articles
     SET image_url = ${blob.url}, updated_at = NOW()
     WHERE id = ${articleId} AND status IN ('draft', 'live')
-      AND (image_url IS NULL OR image_url LIKE '/images/heroes/%')
+      AND (image_url IS NULL OR image_url LIKE '/images/heroes/%' OR image_url LIKE '%/placeholder-%')
     RETURNING id, title
   `);
   if (!updated) {

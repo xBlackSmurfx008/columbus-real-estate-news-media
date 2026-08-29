@@ -29,7 +29,7 @@ const rows = await withRetry(() => sql`
   FROM articles
   JOIN editorial_review_jobs ON editorial_review_jobs.article_id = articles.id
   WHERE articles.status = 'live'
-    AND (articles.image_url IS NULL OR articles.image_url LIKE '/images/heroes/%')
+    AND (articles.image_url IS NULL OR articles.image_url LIKE '/images/heroes/%' OR articles.image_url LIKE '%/placeholder-%')
     AND editorial_review_jobs.machine_score = editorial_review_jobs.machine_possible
   ORDER BY articles.created_at DESC
 `);

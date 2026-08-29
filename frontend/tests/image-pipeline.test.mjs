@@ -92,3 +92,14 @@ test("a hero URL that only resolves after a deploy is never attached to a live a
   assert.doesNotMatch(publish, /--allow-deploy-lag plus a deploy/);
   assert.match(publish, /Do NOT work around this with --allow-deploy-lag/);
 });
+
+test("live placeholder heroes are included in the guarded replacement path", async () => {
+  const [listSource, startSource, attachSource] = await Promise.all([
+    readFile(new URL("../scripts/list-missing-images.mjs", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/record-image-start.mjs", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/attach-article-image.mjs", import.meta.url), "utf8"),
+  ]);
+  assert.match(listSource, /image_url LIKE '%\/placeholder-%'/);
+  assert.match(startSource, /image_url LIKE '%\/placeholder-%'/);
+  assert.match(attachSource, /image_url LIKE '%\/placeholder-%'/);
+});

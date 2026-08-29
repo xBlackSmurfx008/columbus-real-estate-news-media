@@ -19,7 +19,7 @@ const [recorded] = await withRetry(() => sql`
   INSERT INTO article_image_jobs (article_id, status, attempts, last_error_code, updated_at)
   SELECT ${articleId}, 'FAILED', 1, ${errorCode}, NOW()
   FROM articles
-  WHERE id = ${articleId} AND status = 'live' AND (image_url IS NULL OR image_url LIKE '/images/heroes/%')
+  WHERE id = ${articleId} AND status = 'live' AND (image_url IS NULL OR image_url LIKE '/images/heroes/%' OR image_url LIKE '%/placeholder-%')
   ON CONFLICT (article_id) DO UPDATE SET
     status = 'FAILED',
     attempts = article_image_jobs.attempts + 1,
@@ -28,7 +28,7 @@ const [recorded] = await withRetry(() => sql`
   WHERE article_image_jobs.status NOT IN ('READY_FOR_REVIEW', 'APPROVED')
     AND EXISTS (
       SELECT 1 FROM articles
-      WHERE id = ${articleId} AND status = 'live' AND (image_url IS NULL OR image_url LIKE '/images/heroes/%')
+      WHERE id = ${articleId} AND status = 'live' AND (image_url IS NULL OR image_url LIKE '/images/heroes/%' OR image_url LIKE '%/placeholder-%')
     )
   RETURNING article_id
 `);

@@ -10,7 +10,7 @@ You are completing a bounded image-only maintenance run for Columbus Real Estate
 - Explicitly invoke the built-in `$imagegen` skill once per selected article. Use the exact `imagePrompt` from the manifest.
 - Process articles one at a time. A failure on one article must not stop later articles.
 - Never attach an image before inspecting it.
-- The output is an openly AI-generated editorial illustration for a non-public draft. Never describe it as a photograph.
+- The output is an openly AI-generated editorial illustration. Selected live articles are eligible only when their current hero URL is a placeholder and the guarded attach script permits replacement. Never describe it as a photograph.
 
 ## Per-article workflow
 
@@ -33,7 +33,7 @@ You are completing a bounded image-only maintenance run for Columbus Real Estate
 9. Run:
    `node scripts/attach-article-image.mjs --article-id <article-id> --file <saved-file>`
 10. Confirm the script returns `ok: true` and `status: READY_FOR_REVIEW`. It normalizes the source to a consistent 1600×900
-   WebP, uploads to stable storage, verifies the URL, and attaches only to a still-imageless non-public draft.
+   WebP, uploads to stable storage, verifies the URL, and attaches only when the article is a draft or a live article whose current hero URL is a placeholder. It must never replace a real existing hero image.
 11. If generation or validation fails after the retry, run:
    `node scripts/record-image-failure.mjs --article-id <article-id> --code <SAFE_CODE>`
     A guarded attach returning `noOp: true` because the article already has an image is not a failure; another run won the

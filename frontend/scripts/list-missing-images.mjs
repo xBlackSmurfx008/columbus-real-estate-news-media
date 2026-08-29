@@ -28,8 +28,10 @@ const rows = await withRetry(() => sql`
     editorial_review_jobs.submission->'location'->>'name' AS location_name
   FROM articles
   JOIN editorial_review_jobs ON editorial_review_jobs.article_id = articles.id
+  LEFT JOIN article_image_jobs ON article_image_jobs.article_id = articles.id
   WHERE articles.status = 'live'
     AND (articles.image_url IS NULL OR articles.image_url LIKE '/images/heroes/%' OR articles.image_url LIKE '%/placeholder-%')
+    AND (article_image_jobs.status IS NULL OR article_image_jobs.status IN ('PENDING', 'FAILED', 'READY_FOR_REVIEW'))
     AND editorial_review_jobs.machine_score = editorial_review_jobs.machine_possible
   ORDER BY articles.created_at DESC
 `);

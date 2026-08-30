@@ -1,12 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { isAgentResponse, requireAgentCapability } from "@/lib/agent-auth";
 import {
   buildDailyDigest,
   getEscalationAlerts,
   getReports,
 } from "@/src/agent/reporting/digest";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const session = await requireAgentCapability(request, "report:read");
+    if (isAgentResponse(session)) return session;
     return NextResponse.json({
       ok: true,
       reports: getReports(),
@@ -18,8 +21,10 @@ export async function GET() {
   }
 }
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
+    const session = await requireAgentCapability(request, "report:write");
+    if (isAgentResponse(session)) return session;
     const report = buildDailyDigest();
     const alerts = getEscalationAlerts();
     return NextResponse.json({ ok: true, report, alerts });

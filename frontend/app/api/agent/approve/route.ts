@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { isAgentResponse, requireAgentCapability } from "@/lib/agent-auth";
 import { sendThreadReply } from "@/src/agent/email/engine";
 
 interface ApprovalPayload {
@@ -7,8 +8,10 @@ interface ApprovalPayload {
   reason?: string;
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    const session = await requireAgentCapability(request, "email:approve");
+    if (isAgentResponse(session)) return session;
     const payload = (await request.json()) as ApprovalPayload;
     if (!payload.threadId || typeof payload.approved !== "boolean") {
       return NextResponse.json(

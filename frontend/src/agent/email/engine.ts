@@ -127,9 +127,10 @@ export async function processInboundMessage(input: {
   });
 
   const approval = requiresHumanApproval(thread);
-  if (approval.required) {
+  const autoSendLowRisk = process.env.AGENT_AUTO_SEND_LOW_RISK === "true";
+  if (approval.required || !autoSendLowRisk) {
     thread.status = "pending_approval";
-    thread.approvalReason = approval.reason;
+    thread.approvalReason = approval.reason || "Automatic external replies are disabled by policy.";
   } else {
     thread.approvalDecision = "auto_approved";
     await sendThreadReply(thread.id, true, "Auto-approved low-risk response.");

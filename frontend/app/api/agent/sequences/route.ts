@@ -1,4 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { isAgentResponse, requireAgentCapability } from "@/lib/agent-auth";
+import { hasAgentCapability } from "@/src/agent/policy/capabilities";
 import { enrollSequence, executeSequenceStep, getSequenceSnapshot, upsertSequence } from "@/src/agent/workflows/sequences";
 
 type SequencePayload =
@@ -30,10 +32,13 @@ type SequencePayload =
   | {
       action: "run_step";
       enrollmentId: string;
+      approvalId?: string;
     };
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const session = await requireAgentCapability(request, "sequence:manage");
+    if (isAgentResponse(session)) return session;
     return NextResponse.json({ ok: true, snapshot: getSequenceSnapshot() });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
@@ -41,8 +46,10 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    const session = await requireAgentCapability(request, "sequence:manage");
+    if (isAgentResponse(session)) return session;
     const payload = (await request.json()) as SequencePayload;
     if (payload.action === "upsert_sequence") {
       const sequence = upsertSequence(payload.sequence);
@@ -53,7 +60,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: true, enrollment });
     }
     if (payload.action === "run_step") {
-      const enrollment = await executeSequenceStep(payload.enrollmentId);
+      if (!hasAgentCapability(session.role, "sequence:execute")) {
+        return NextResponse.json({ error: "Forbidden", capability: "sequence:execute" }, { status: 403 });
+      }
+      const enrollment = await executeSequenceStep(payload.enrollmentId, payload.approvalId);
       return NextResponse.json({ ok: true, enrollment });
     }
     return NextResponse.json({ error: "Invalid action." }, { status: 400 });

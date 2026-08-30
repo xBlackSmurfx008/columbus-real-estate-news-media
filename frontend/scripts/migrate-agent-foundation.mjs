@@ -1,0 +1,152 @@
+#!/usr/bin/env node
+// Idempotent migration for durable agent runs, approvals, tasks, incidents,
+// policies, and step-level execution records.
+// Usage: DATABASE_URL=... node scripts/migrate-agent-foundation.mjs
+
+import { neon } from "@neondatabase/serverless";
+
+const databaseUrl = process.env.DATABASE_URL;
+if (!databaseUrl) {
+  console.error("DATABASE_URL environment variable is not set");
+  process.exit(1);
+}
+
+const sql = neon(databaseUrl);
+
+const tables = [
+  ["agent_runs", `CREATE TABLE IF NOT EXISTS agent_runs (
+    id TEXT PRIMARY KEY,
+    agent_name TEXT NOT NULL,
+    workflow_name TEXT NOT NULL,
+    version TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'queued',
+    initiated_by TEXT NOT NULL,
+    entity_type TEXT,
+    entity_id TEXT,
+    policy_version TEXT,
+    trace_id TEXT,
+    error_code TEXT,
+    started_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    finished_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT agent_runs_status_check CHECK (status IN ('queued', 'running', 'waiting_on_input', 'waiting_on_approval', 'completed', 'failed', 'blocked', 'cancelled'))
+  )`],
+  ["agent_steps", `CREATE TABLE IF NOT EXISTS agent_steps (
+    id BIGSERIAL PRIMARY KEY,
+    run_id TEXT NOT NULL REFERENCES agent_runs(id) ON DELETE CASCADE,
+    step_name TEXT NOT NULL,
+    tool_name TEXT,
+    input_hash TEXT,
+    input_json JSONB NOT NULL DEFAULT '{}'::jsonb,
+    output_json JSONB NOT NULL DEFAULT '{}'::jsonb,
+    status TEXT NOT NULL DEFAULT 'running',
+    error_code TEXT,
+    started_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    finished_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT agent_steps_status_check CHECK (status IN ('running', 'completed', 'failed', 'blocked'))
+  )`],
+  ["agent_approvals", `CREATE TABLE IF NOT EXISTS agent_approvals (
+    id BIGSERIAL PRIMARY KEY,
+    run_id TEXT NOT NULL REFERENCES agent_runs(id) ON DELETE CASCADE,
+    step_id BIGINT REFERENCES agent_steps(id) ON DELETE SET NULL,
+    action_class TEXT NOT NULL,
+    risk TEXT NOT NULL,
+    payload_json JSONB NOT NULL DEFAULT '{}'::jsonb,
+    required_role TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    requested_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    expires_at TIMESTAMPTZ NOT NULL,
+    decided_at TIMESTAMPTZ,
+    decided_by TEXT,
+    reason TEXT,
+    CONSTRAINT agent_approvals_status_check CHECK (status IN ('pending', 'approved', 'executing', 'executed', 'rejected', 'revision_requested', 'paused'))
+  )`],
+  ["agent_tasks", `CREATE TABLE IF NOT EXISTS agent_tasks (
+    id BIGSERIAL PRIMARY KEY,
+    kind TEXT NOT NULL,
+    entity_type TEXT,
+    entity_id TEXT,
+    priority TEXT NOT NULL DEFAULT 'normal',
+    status TEXT NOT NULL DEFAULT 'pending',
+    due_at TIMESTAMPTZ,
+    owner_role TEXT NOT NULL,
+    dedupe_key TEXT UNIQUE NOT NULL,
+    payload_json JSONB NOT NULL DEFAULT '{}'::jsonb,
+    last_error TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    completed_at TIMESTAMPTZ,
+    CONSTRAINT agent_tasks_status_check CHECK (status IN ('pending', 'in_progress', 'completed', 'overdue', 'blocked', 'cancelled'))
+  )`],
+  ["agent_policies", `CREATE TABLE IF NOT EXISTS agent_policies (
+    id BIGSERIAL PRIMARY KEY,
+    policy_name TEXT NOT NULL,
+    version TEXT NOT NULL,
+    config_json JSONB NOT NULL DEFAULT '{}'::jsonb,
+    effective_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    expires_at TIMESTAMPTZ,
+    approved_by TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (policy_name, version)
+  )`],
+  ["agent_incidents", `CREATE TABLE IF NOT EXISTS agent_incidents (
+    id BIGSERIAL PRIMARY KEY,
+    severity TEXT NOT NULL,
+    workflow TEXT NOT NULL,
+    entity_type TEXT,
+    entity_id TEXT,
+    error_code TEXT NOT NULL,
+    details_redacted JSONB NOT NULL DEFAULT '{}'::jsonb,
+    status TEXT NOT NULL DEFAULT 'open',
+    owner_role TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    resolved_at TIMESTAMPTZ,
+    CONSTRAINT agent_incidents_severity_check CHECK (severity IN ('P0', 'P1', 'P2', 'P3')),
+    CONSTRAINT agent_incidents_status_check CHECK (status IN ('open', 'acknowledged', 'resolved', 'closed'))
+  )`],
+  ["source_packets", `CREATE TABLE IF NOT EXISTS source_packets (
+    id TEXT PRIMARY KEY,
+    subject TEXT NOT NULL,
+    question TEXT,
+    source_urls JSONB NOT NULL DEFAULT '[]'::jsonb,
+    source_hashes JSONB NOT NULL DEFAULT '[]'::jsonb,
+    packet_json JSONB NOT NULL DEFAULT '{}'::jsonb,
+    review_status TEXT NOT NULL DEFAULT 'needs_review',
+    agent_run_id TEXT REFERENCES agent_runs(id) ON DELETE SET NULL,
+    reviewed_by TEXT,
+    reviewed_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT source_packets_status_check CHECK (review_status IN ('needs_review', 'approved', 'rejected', 'stale'))
+  )`],
+  ["agent_state_records", `CREATE TABLE IF NOT EXISTS agent_state_records (
+    namespace TEXT NOT NULL,
+    record_id TEXT NOT NULL,
+    record_json JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (namespace, record_id)
+  )`],
+];
+
+for (const [name, ddl] of tables) {
+  await sql.query(ddl);
+  console.log(`ensured: table ${name}`);
+}
+
+for (const ddl of [
+  "CREATE INDEX IF NOT EXISTS agent_runs_status_idx ON agent_runs(status, created_at DESC)",
+  "CREATE INDEX IF NOT EXISTS agent_runs_entity_idx ON agent_runs(entity_type, entity_id, created_at DESC)",
+  "CREATE INDEX IF NOT EXISTS agent_steps_run_idx ON agent_steps(run_id, created_at ASC)",
+  "CREATE INDEX IF NOT EXISTS agent_approvals_pending_idx ON agent_approvals(status, expires_at)",
+  "CREATE INDEX IF NOT EXISTS agent_tasks_due_idx ON agent_tasks(status, due_at)",
+  "CREATE INDEX IF NOT EXISTS agent_incidents_open_idx ON agent_incidents(status, severity, created_at DESC)",
+  "CREATE INDEX IF NOT EXISTS source_packets_review_idx ON source_packets(review_status, created_at DESC)",
+  "CREATE INDEX IF NOT EXISTS agent_state_records_namespace_idx ON agent_state_records(namespace, updated_at DESC)",
+]) {
+  await sql.query(ddl);
+}
+
+console.log("agent foundation migration complete");

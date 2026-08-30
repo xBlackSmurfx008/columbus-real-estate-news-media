@@ -1,5 +1,6 @@
 import { emailGateway } from "@/src/agent/integrations/email";
 import { crmAdapter } from "@/src/agent/integrations/crm";
+import { claimAgentApproval, completeAgentApproval } from "@/src/agent/durable-store";
 import { nextId, sequenceEnrollmentsStore, sequencesStore, threadsStore, upsert } from "@/src/agent/store";
 import type { Sequence, SequenceEnrollment } from "@/src/agent/types";
 import { socialDmGateway } from "@/src/agent/integrations/socialDm";
@@ -86,7 +87,17 @@ function touchesSentToday(contactId: string): number {
     }).length;
 }
 
-export async function executeSequenceStep(enrollmentId: string): Promise<SequenceEnrollment> {
+export async function executeSequenceStep(
+  enrollmentId: string,
+  approvalId?: string,
+): Promise<SequenceEnrollment> {
+  if (process.env.AGENT_EXTERNAL_SENDS_ENABLED !== "true") {
+    throw new Error("External sequence sends are disabled by policy.");
+  }
+  if (!approvalId) {
+    throw new Error("An exact durable approval is required for an external sequence send.");
+  }
+
   const enrollment = sequenceEnrollmentsStore.get(enrollmentId);
   if (!enrollment) throw new Error("Enrollment not found.");
   if (enrollment.status !== "active") return enrollment;
@@ -126,18 +137,37 @@ export async function executeSequenceStep(enrollmentId: string): Promise<Sequenc
     return upsert(sequenceEnrollmentsStore, enrollment);
   }
 
-  if (step.channel === "social_dm") {
-    await socialDmGateway.send({
-      toHandle: contact.email,
-      provider: "staged",
-      body: step.templateBody,
-    });
-  } else {
-    await emailGateway.send({
-      to: contact.email,
-      subject: step.templateSubject,
-      body: step.templateBody,
-    });
+  const approvalPayload = {
+    action: "sequence_send",
+    enrollmentId,
+    sequenceId: enrollment.sequenceId,
+    stepOrder: step.order,
+    channel: step.channel,
+    recipient: contact.email,
+    subject: step.templateSubject,
+    body: step.templateBody,
+  };
+  await claimAgentApproval(approvalId, approvalPayload);
+
+  try {
+    if (step.channel === "social_dm") {
+      await socialDmGateway.send({
+        toHandle: contact.email,
+        provider: "staged",
+        body: step.templateBody,
+      });
+    } else {
+      await emailGateway.send({
+        to: contact.email,
+        subject: step.templateSubject,
+        body: step.templateBody,
+      });
+    }
+    await completeAgentApproval(approvalId);
+  } catch (error) {
+    // Keep the approval in executing state when provider delivery is uncertain;
+    // this prevents a retry from sending the same message twice.
+    throw error;
   }
 
   crmAdapter.addActivity({

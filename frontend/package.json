@@ -29,6 +29,7 @@
     "newsroom:export-snapshot": "node scripts/export-content-snapshot.mjs",
     "newsroom:cleanup-smoke-records": "node scripts/cleanup-smoke-records.mjs",
     "newsroom:commercial-report": "node scripts/export-commercial-report.mjs",
+    "newsroom:migrate-agent-foundation": "node scripts/migrate-agent-foundation.mjs",
     "newsroom:reconcile-live-review-jobs": "node scripts/reconcile-live-editorial-review-jobs.mjs",
     "newsroom:migrate-compliance": "node --experimental-strip-types scripts/migrate-compliance-layer.mjs",
     "newsroom:migrate-member-profiles": "node scripts/migrate-member-profiles.mjs",

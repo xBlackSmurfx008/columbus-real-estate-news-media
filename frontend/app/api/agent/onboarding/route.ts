@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { isAgentResponse, requireAgentCapability } from "@/lib/agent-auth";
 import {
   createOnboardingTasksForDeal,
   getOnboardingSnapshot,
@@ -22,8 +23,10 @@ interface OnboardingUpdatePayload {
   notes?: string;
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const session = await requireAgentCapability(request, "onboarding:manage");
+    if (isAgentResponse(session)) return session;
     const snapshot = getOnboardingSnapshot();
     return NextResponse.json({ ok: true, snapshot });
   } catch (error) {
@@ -32,8 +35,10 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    const session = await requireAgentCapability(request, "onboarding:manage");
+    if (isAgentResponse(session)) return session;
     const payload = (await request.json()) as OnboardingStartPayload;
     let dealId = payload.dealId;
 
@@ -72,8 +77,10 @@ export async function POST(request: Request) {
   }
 }
 
-export async function PATCH(request: Request) {
+export async function PATCH(request: NextRequest) {
   try {
+    const session = await requireAgentCapability(request, "onboarding:manage");
+    if (isAgentResponse(session)) return session;
     const payload = (await request.json()) as OnboardingUpdatePayload;
     if (!payload.taskId || !payload.status) {
       return NextResponse.json({ error: "Required fields: taskId, status." }, { status: 400 });

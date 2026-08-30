@@ -6,7 +6,16 @@ Working directory: `/Users/mr.adams/dev/cren-cloud-migration/frontend`
 
 ## Active Goal Contract
 
-Objective: complete a comprehensive ColumbusRealEstateNews.com legal, policy, product, sales, advertising, profile-backend, automation, and launch-readiness package using current evidence.
+Objective: build the CREN autonomous-agent foundation to completion: Neon-backed durable agent state, authenticated capability-scoped tools, run/step/approval/task/incident/audit foundations, Operations Control Tower and Research/Production Desk workflows, and final deterministic verification followed by one final smoke-testing pass.
+
+Non-goals for this goal: sending outreach, publishing content, charging money,
+changing production permissions, or deploying externally without separate
+explicit approval.
+
+Completion proof: production state survives restart from Neon; side effects are
+idempotent and server-gated; approval pause/resume is durable; agent runs and
+tool calls are traceable; missing evidence blocks action; deterministic checks
+pass; final smoke testing is run only after the remaining build work is done.
 
 Current owner direction:
 
@@ -119,6 +128,107 @@ Not claimed:
 - Production readiness audit
 - Production release audit
 
+## Current Goal Research
+
+- Existing agent scaffold is under `src/agent` with API routes under
+  `app/api/agent` for email, CRM, sequences, onboarding, billing, reporting,
+  scheduling, approvals, and pilot UAT.
+- Existing agent state is held in process Maps with optional local JSON
+  persistence in `src/agent/store.ts`; this is not production-durable on
+  Vercel and must be replaced or wrapped with Neon repositories.
+- Existing sequence execution can call email/social gateways directly; every
+  external send needs server-side suppression, capability, approval, rate,
+  and audit checks.
+- Existing `requireAuth` is available in `lib/auth.ts`, but agent routes must
+  enforce role/capability authorization explicitly.
+- Existing profile/advertising migration provides campaign, asset,
+  substantiation, insertion-order, lead-routing, and audit tables. New agent
+  tables should be additive and reuse existing audit conventions.
+- Project guidance treats Vercel functions as stateless and recommends durable
+  Workflow/state handling for long-running agents and approvals.
+- Current official OpenAI Agents SDK references support tool guardrails,
+  durable human-in-the-loop pause/resume, tracing, and workflow testing. The
+  implementation remains provider-adapter based and must not assume an agent
+  SDK itself supplies CREN authorization.
+
+## Goal Progress
+
+- [x] Goal created and implementation contract established.
+- [x] Current agent code, auth, Neon access, migrations, and project guidance researched.
+- [x] Neon-backed durable agent foundation migration and repositories added.
+- [x] Capability-scoped authenticated tool boundary applied to agent routes.
+- [x] Operations Control Tower scan and Research/Production Desk source-packet intake added.
+- [x] Deterministic verification and final safe smoke-testing pass completed.
+
 ## Next Action
 
-Post-launch owner/vendor tasks remain only where code cannot make the fact true: attorney review, final published company contact details if desired, payment/refund/tax configuration, SMS/calling vendor configuration, actual outbound sales sends from the approved email/CRM account, and the first 48 hours of elapsed monitoring after launch.
+The additive Neon migration has been applied to the configured database.
+Keep external sends disabled until approval records, provider credentials,
+suppression checks, and a controlled rollout are explicitly approved.
+
+The detailed ordered completion path is documented in
+`/Users/mr.adams/cren/review/CREN_AUTONOMOUS_AGENT_COMPLETION_BACKLOG_2026-08-30.md`.
+
+## Discovered Environment State
+
+Read-only discovery on 2026-08-30 found that the intended Neon database has
+the profile/advertising and consent/audit tables. The additive agent migration
+has now run successfully, including `agent_state_records`.
+Vercel production has encrypted `DATABASE_URL`, `CRM_SYNC_URL`,
+`CRM_SYNC_SECRET`, Telegram, cron, and Blob variables, plus explicit
+durable-state, outbound-send, low-risk-reply, and CRM-sync flags. Secret values
+were not printed.
+Vercel has Development, Preview, and Production environments but no discovered
+staging environment or `STAGING_DATABASE_URL`; use a separate Neon branch for
+Preview validation before running the agent migration.
+
+## Autonomous Agent Build Record
+
+As of: 2026-08-30
+
+Implemented:
+
+- `scripts/migrate-agent-foundation.mjs` adds durable `agent_runs`,
+  `agent_steps`, `agent_approvals`, `agent_tasks`, `agent_policies`,
+  `agent_incidents`, and `source_packets` tables.
+- `src/agent/durable-store.ts` provides Neon-backed run, step, approval, task,
+  incident, audit, and source-packet writes with input hashing and deduplication.
+- `src/agent/durable-state.ts` adds `agent_state_records` and hydrates/flushes
+  the legacy CRM, inbox, sequence, onboarding, billing, and report records
+  through a serialized request boundary while domain repositories are migrated.
+- `src/agent/policy/capabilities.ts` and `lib/agent-auth.ts` enforce role and
+  capability checks at the agent API boundary.
+- All existing `/api/agent/*` routes now require authenticated capabilities;
+  `/api/agent/control-tower`, `/api/agent/research`, and `/api/agent/approvals`
+  are available as the first durable workflows.
+- Outbound sequence sends require `AGENT_EXTERNAL_SENDS_ENABLED=true` plus an
+  exact, non-expired durable approval. Low-risk inbound auto-replies are
+  disabled unless `AGENT_AUTO_SEND_LOW_RISK=true`.
+- The pilot harness reports sequence execution as `blocked_by_policy` by
+  default and does not send external messages.
+
+Verification:
+
+- `git diff --check`: passed.
+- `node --check scripts/migrate-agent-foundation.mjs`: passed.
+- `npm run lint`: passed.
+- `npm run build`: passed; 110 routes compiled, including new agent routes.
+- `npm run test:image-pipeline`: passed; 81 tests.
+- `npm run smoke:submissions -- --json`: passed in dry-run mode; no HTTP calls
+  or database inserts performed.
+
+Applied and configured after the initial verification:
+
+- `npm run newsroom:migrate-agent-foundation` completed against the configured
+  Neon database, including `agent_state_records`.
+- Production Vercel flags are explicit: durable state enabled, external sends
+  disabled, low-risk auto-replies disabled, and CRM sync enabled.
+- `npm run lint`, `npm run build`, and the deterministic suite were rerun after
+  the durable state wrapper; 90 tests passed and 110 routes compiled.
+
+Still not performed:
+
+- Vercel deployment of the current dirty worktree.
+- External outreach, email/social sends, publication, payments, or lead routing.
+- Remote production smoke testing.
+- Separate Neon Preview branch and cross-instance optimistic repository migration.

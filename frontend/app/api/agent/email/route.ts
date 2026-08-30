@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { isAgentResponse, requireAgentCapability } from "@/lib/agent-auth";
 import { processInboundEmail } from "@/src/agent/email/engine";
 import { emailGateway } from "@/src/agent/integrations/email";
 
@@ -8,8 +9,10 @@ interface EmailRoutePayload {
   body: string;
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    const session = await requireAgentCapability(request, "email:process");
+    if (isAgentResponse(session)) return session;
     const payload = (await request.json()) as EmailRoutePayload | { action: "sync"; messages: EmailRoutePayload[] };
 
     if ("action" in payload && payload.action === "sync") {
@@ -49,8 +52,10 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const session = await requireAgentCapability(request, "email:process");
+    if (isAgentResponse(session)) return session;
     return NextResponse.json({
       ok: true,
       mailbox: emailGateway.getMailboxSnapshot(),

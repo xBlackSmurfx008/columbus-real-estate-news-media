@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { isAgentResponse, requireAgentCapability } from "@/lib/agent-auth";
 import { googleCalendarAdapter } from "@/src/agent/integrations/googleCalendar";
 import { crmAdapter } from "@/src/agent/integrations/crm";
 
@@ -11,8 +12,10 @@ interface SchedulePayload {
   notes?: string;
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const session = await requireAgentCapability(request, "schedule:manage");
+    if (isAgentResponse(session)) return session;
     const slots = await googleCalendarAdapter.getAvailableSlots();
     const events = await googleCalendarAdapter.listEvents();
     return NextResponse.json({ ok: true, slots, events });
@@ -22,8 +25,10 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    const session = await requireAgentCapability(request, "schedule:manage");
+    if (isAgentResponse(session)) return session;
     const payload = (await request.json()) as SchedulePayload;
     if (!payload.contactEmail || !payload.contactName || !payload.title || !payload.start || !payload.end) {
       return NextResponse.json(

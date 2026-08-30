@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { isAgentResponse, requireAgentCapability } from "@/lib/agent-auth";
 import { getBillingSnapshot, setContractStatus, setInvoiceStatus, upsertContract, upsertInvoice } from "@/src/agent/workflows/billing";
 
 type BillingPayload =
@@ -37,8 +38,10 @@ type BillingPayload =
       status: "draft" | "sent" | "paid" | "overdue";
     };
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const session = await requireAgentCapability(request, "billing:manage");
+    if (isAgentResponse(session)) return session;
     return NextResponse.json({ ok: true, snapshot: getBillingSnapshot() });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
@@ -46,8 +49,10 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    const session = await requireAgentCapability(request, "billing:manage");
+    if (isAgentResponse(session)) return session;
     const payload = (await request.json()) as BillingPayload;
     if (payload.action === "upsert_contract") {
       return NextResponse.json({ ok: true, contract: upsertContract(payload.contract) });

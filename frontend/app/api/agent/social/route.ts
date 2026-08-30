@@ -1,4 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { isAgentResponse, requireAgentCapability } from "@/lib/agent-auth";
+import { hasAgentCapability } from "@/src/agent/policy/capabilities";
 import { processInboundSocialDm, sendThreadReply } from "@/src/agent/email/engine";
 import { threadsStore } from "@/src/agent/store";
 
@@ -15,8 +17,10 @@ interface SocialApprovalPayload {
   reason?: string;
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const session = await requireAgentCapability(request, "social:process");
+    if (isAgentResponse(session)) return session;
     const threads = [...threadsStore.values()].filter((thread) => thread.channel === "social_dm");
     return NextResponse.json({ ok: true, threads });
   } catch (error) {
@@ -25,8 +29,10 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    const session = await requireAgentCapability(request, "social:process");
+    if (isAgentResponse(session)) return session;
     const payload = (await request.json()) as SocialInboundPayload | SocialApprovalPayload;
 
     if ("fromHandle" in payload) {
@@ -40,6 +46,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: true, thread });
     }
 
+    if (!hasAgentCapability(session.role, "social:approve")) {
+      return NextResponse.json({ error: "Forbidden", capability: "social:approve" }, { status: 403 });
+    }
     if (!payload.threadId || typeof payload.approved !== "boolean") {
       return NextResponse.json({ error: "Required fields: threadId, approved." }, { status: 400 });
     }

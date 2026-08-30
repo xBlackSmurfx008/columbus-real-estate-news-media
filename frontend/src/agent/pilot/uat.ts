@@ -3,7 +3,7 @@ import { buildDailyDigest } from "@/src/agent/reporting/digest";
 import { createOnboardingTasksForDeal } from "@/src/agent/workflows/onboarding";
 import { crmAdapter } from "@/src/agent/integrations/crm";
 import { threadsStore } from "@/src/agent/store";
-import { enrollSequence, executeSequenceStep, upsertSequence } from "@/src/agent/workflows/sequences";
+import { enrollSequence, upsertSequence } from "@/src/agent/workflows/sequences";
 import { upsertContract, upsertInvoice } from "@/src/agent/workflows/billing";
 import { getDashboardMetrics } from "@/src/agent/reporting/kpi";
 
@@ -78,7 +78,10 @@ export async function runPilotUAT() {
     contactId: contact.id,
     dealId: deal.id,
   });
-  await executeSequenceStep(enrollment.id);
+  const sequenceExecution: "blocked_by_policy" | "executed" = "blocked_by_policy";
+  if (process.env.AGENT_EXTERNAL_SENDS_ENABLED === "true") {
+    throw new Error("Pilot execution requires an explicit durable approval and is not part of the default UAT path.");
+  }
 
   const contract = upsertContract({
     companyId: company.id,
@@ -107,6 +110,8 @@ export async function runPilotUAT() {
     onboardingTasksCreated: tasks.length,
     contractId: contract.id,
     invoiceId: invoice.id,
+    sequenceEnrollmentId: enrollment.id,
+    sequenceExecution,
     dashboard: metrics,
     report,
   };

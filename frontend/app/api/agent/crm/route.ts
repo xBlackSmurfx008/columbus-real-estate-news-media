@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { isAgentResponse, requireAgentCapability } from "@/lib/agent-auth";
 import { crmAdapter } from "@/src/agent/integrations/crm";
 import type { DealStage, UserRole } from "@/src/agent/types";
 
@@ -36,8 +37,10 @@ type CRMActionPayload =
       };
     };
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const session = await requireAgentCapability(request, "crm:read");
+    if (isAgentResponse(session)) return session;
     const snapshot = crmAdapter.getSnapshot();
     return NextResponse.json({ ok: true, snapshot });
   } catch (error) {
@@ -46,8 +49,10 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    const session = await requireAgentCapability(request, "crm:write");
+    if (isAgentResponse(session)) return session;
     const payload = (await request.json()) as CRMActionPayload;
 
     if (payload.action === "upsert_contact_deal") {

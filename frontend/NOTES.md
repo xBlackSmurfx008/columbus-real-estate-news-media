@@ -225,10 +225,16 @@ Applied and configured after the initial verification:
   disabled, low-risk auto-replies disabled, and CRM sync enabled.
 - `npm run lint`, `npm run build`, and the deterministic suite were rerun after
   the durable state wrapper; 90 tests passed and 110 routes compiled.
+- Production deployment `dpl_4298bpAtLN4qF5k8vxGt57QRhXTC` completed and was
+  aliased to `https://columbusrealestatenews.com`.
+- Final launch monitor passed, public commercial/profile/policy routes returned
+  `200`, unauthenticated agent access returned `401`, and production readiness
+  returned `ok: true` with no findings.
 
 Still not performed:
 
-- Vercel deployment of the current dirty worktree.
 - External outreach, email/social sends, publication, payments, or lead routing.
-- Remote production smoke testing.
-- Separate Neon Preview branch and cross-instance optimistic repository migration.
+- Separate Neon Preview branch and replacement of the compatibility record
+  wrapper with domain-specific repositories.
+- Remote submission smoke with controlled records; keep this as the final
+  pre-release check for any future public-form change.

@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { isAgentResponse, requireAgentCapability } from "@/lib/agent-auth";
 import {
   decideAgentApproval,
-  listPendingAgentApprovals,
+  listAgentApprovals,
   requestAgentApproval,
+  resumeAgentApproval,
 } from "@/src/agent/durable-store";
 
 type ApprovalPayload =
@@ -26,13 +27,18 @@ type ApprovalPayload =
       approvalId: string;
       decision: "approved" | "rejected" | "revision_requested" | "paused";
       reason?: string;
+    }
+  | {
+      action: "resume";
+      approvalId: string;
+      reason?: string;
     };
 
 export async function GET(request: NextRequest) {
   try {
     const session = await requireAgentCapability(request, "email:approve");
     if (isAgentResponse(session)) return session;
-    const approvals = await listPendingAgentApprovals();
+    const approvals = await listAgentApprovals();
     return NextResponse.json({ ok: true, approvals });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown approval error";
@@ -47,7 +53,7 @@ export async function POST(request: NextRequest) {
     const payload = (await request.json()) as ApprovalPayload;
 
     if (payload.action === "list") {
-      const approvals = await listPendingAgentApprovals(payload.limit);
+      const approvals = await listAgentApprovals(payload.limit);
       return NextResponse.json({ ok: true, approvals });
     }
     if (payload.action === "request") {
@@ -58,6 +64,14 @@ export async function POST(request: NextRequest) {
       const approval = await decideAgentApproval(
         payload.approvalId,
         payload.decision,
+        `user:${session.userId}`,
+        payload.reason,
+      );
+      return NextResponse.json({ ok: true, approval });
+    }
+    if (payload.action === "resume") {
+      const approval = await resumeAgentApproval(
+        payload.approvalId,
         `user:${session.userId}`,
         payload.reason,
       );

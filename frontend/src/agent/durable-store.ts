@@ -84,6 +84,20 @@ function hash(value: unknown): string {
   return createHash("sha256").update(json(value)).digest("hex");
 }
 
+function redact(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(redact);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, entry]) => {
+      if (/(password|secret|token|authorization|api[-_]?key)/i.test(key)) return [key, "[REDACTED]"];
+      return [key, redact(entry)];
+    }));
+  }
+  if (typeof value === "string") {
+    return value.replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[EMAIL]");
+  }
+  return value;
+}
+
 export async function createAgentRun(input: AgentRunInput) {
   const sql = getDb();
   const rows = await sql`
@@ -163,6 +177,19 @@ export async function decideAgentApproval(
   return rows[0];
 }
 
+export async function resumeAgentApproval(id: string, resumedBy: string, reason?: string) {
+  const sql = getDb();
+  const rows = await sql`
+    UPDATE agent_approvals
+    SET status = 'pending', decided_by = ${resumedBy}, decided_at = NULL,
+        reason = ${reason || "Resumed for review."}
+    WHERE id = ${id} AND status = 'paused' AND expires_at > NOW()
+    RETURNING *
+  `;
+  if (!rows[0]) throw new Error("Approval not found, expired, or not paused.");
+  return rows[0];
+}
+
 export async function listPendingAgentApprovals(limit = 50) {
   const sql = getDb();
   return sql`
@@ -170,6 +197,30 @@ export async function listPendingAgentApprovals(limit = 50) {
     WHERE status = 'pending' AND expires_at > NOW()
     ORDER BY requested_at ASC
     LIMIT ${limit}
+  `;
+}
+
+export async function listAgentApprovals(limit = 50) {
+  const sql = getDb();
+  return sql`
+    SELECT agent_approvals.*, agent_runs.agent_name, agent_runs.workflow_name,
+      agent_runs.version AS agent_version, agent_runs.trace_id, agent_runs.initiated_by
+    FROM agent_approvals
+    JOIN agent_runs ON agent_runs.id = agent_approvals.run_id
+    WHERE (agent_approvals.status = 'pending' AND agent_approvals.expires_at > NOW())
+      OR agent_approvals.status = 'paused'
+    ORDER BY agent_approvals.requested_at ASC
+    LIMIT ${limit}
+  `;
+}
+
+export async function expireAgentApprovals() {
+  const sql = getDb();
+  return sql`
+    UPDATE agent_approvals
+    SET status = 'paused', reason = 'Approval expired before decision.', decided_at = COALESCE(decided_at, NOW())
+    WHERE status = 'pending' AND expires_at <= NOW()
+    RETURNING id
   `;
 }
 
@@ -226,7 +277,7 @@ export async function createAgentIncident(input: AgentIncidentInput) {
       details_redacted, status, owner_role
     ) VALUES (
       ${input.severity}, ${input.workflow}, ${input.entityType || null},
-      ${input.entityId || null}, ${input.errorCode}, ${json(input.details)}::jsonb,
+      ${input.entityId || null}, ${input.errorCode}, ${json(redact(input.details))}::jsonb,
       'open', ${input.ownerRole}
     )
     RETURNING *

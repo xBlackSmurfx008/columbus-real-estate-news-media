@@ -1,6 +1,6 @@
 # NOTES
 
-As of: 2026-08-29
+As of: 2026-08-30
 Project: Columbus Real Estate News frontend
 Working directory: `/Users/mr.adams/dev/cren-cloud-migration/frontend`
 
@@ -133,9 +133,8 @@ Not claimed:
 - Existing agent scaffold is under `src/agent` with API routes under
   `app/api/agent` for email, CRM, sequences, onboarding, billing, reporting,
   scheduling, approvals, and pilot UAT.
-- Existing agent state is held in process Maps with optional local JSON
-  persistence in `src/agent/store.ts`; this is not production-durable on
-  Vercel and must be replaced or wrapped with Neon repositories.
+- Agent business state now uses typed Neon repositories. The compatibility
+  state layer retains static knowledge only; it is not production truth.
 - Existing sequence execution can call email/social gateways directly; every
   external send needs server-side suppression, capability, approval, rate,
   and audit checks.
@@ -158,13 +157,18 @@ Not claimed:
 - [x] Neon-backed durable agent foundation migration and repositories added.
 - [x] Capability-scoped authenticated tool boundary applied to agent routes.
 - [x] Operations Control Tower scan and Research/Production Desk source-packet intake added.
-- [x] Deterministic verification and final safe smoke-testing pass completed.
+- [x] Deterministic verification and final safe smoke-testing pass completed for the current agent tranche.
+- [x] Separate Neon `cren-preview` branch created and wired to Vercel Preview.
+- [x] Authenticated Agent Ops surface, approval pause/resume, Control Tower
+  cron, CRM retry/dead-letter tracking, and controlled Preview UAT added.
 
 ## Next Action
 
-The additive Neon migration has been applied to the configured database.
-Keep external sends disabled until approval records, provider credentials,
-suppression checks, and a controlled rollout are explicitly approved.
+The additive Neon migration has been applied to Production and the isolated
+Preview branch. Keep external sends, low-risk auto-replies, social DMs, SMS,
+automated calls, payments, publication, and paid lead routing disabled until
+the owner/vendor approval record in
+`docs/AGENT_EXTERNAL_ACTION_HOLD_2026-08-30.md` is completed.
 
 The detailed ordered completion path is documented in
 `/Users/mr.adams/cren/review/CREN_AUTONOMOUS_AGENT_COMPLETION_BACKLOG_2026-08-30.md`.
@@ -178,9 +182,8 @@ Vercel production has encrypted `DATABASE_URL`, `CRM_SYNC_URL`,
 `CRM_SYNC_SECRET`, Telegram, cron, and Blob variables, plus explicit
 durable-state, outbound-send, low-risk-reply, and CRM-sync flags. Secret values
 were not printed.
-Vercel has Development, Preview, and Production environments but no discovered
-staging environment or `STAGING_DATABASE_URL`; use a separate Neon branch for
-Preview validation before running the agent migration.
+Vercel has Development, Preview, and Production environments but no separate
+staging environment. Preview is isolated on Neon branch `cren-preview`.
 
 ## Autonomous Agent Build Record
 
@@ -190,7 +193,9 @@ Implemented:
 
 - `scripts/migrate-agent-foundation.mjs` adds durable `agent_runs`,
   `agent_steps`, `agent_approvals`, `agent_tasks`, `agent_policies`,
-  `agent_incidents`, and `source_packets` tables.
+  `agent_incidents`, `audit_logs`, `source_packets`, and
+  `crm_sync_deliveries` tables, and repairs the earlier task-table contract
+  drift without dropping rows.
 - `src/agent/durable-store.ts` provides Neon-backed run, step, approval, task,
   incident, audit, and source-packet writes with input hashing and deduplication.
 - `src/agent/durable-state.ts` now hydrates only the static knowledge seed;
@@ -208,6 +213,12 @@ Implemented:
 - All existing `/api/agent/*` routes now require authenticated capabilities;
   `/api/agent/control-tower`, `/api/agent/research`, and `/api/agent/approvals`
   are available as the first durable workflows.
+- `/admin/agent-ops` exposes the authenticated operator view for counts, runs,
+  tasks, incidents, and approval decisions.
+- `/api/cron/agent-control-tower` runs the internal daily scan using the same
+  cron authorization pattern as the newsroom workflow.
+- CRM sync uses bounded retries for transient failures, reuses the external
+  idempotency key, and records dead letters in Neon.
 - Outbound sequence sends require `AGENT_EXTERNAL_SENDS_ENABLED=true` plus an
   exact, non-expired durable approval. Low-risk inbound auto-replies are
   disabled unless `AGENT_AUTO_SEND_LOW_RISK=true`.
@@ -237,11 +248,34 @@ Applied and configured after the initial verification:
 - Final launch monitor passed, public commercial/profile/policy routes returned
   `200`, unauthenticated agent access returned `401`, and production readiness
   returned `ok: true` with no findings.
+- Preview branch `br-lingering-band-anfxdkua` received the additive agent
+  migration and a final Vercel Preview deployment completed with `READY` state.
+- Preview smoke checks returned `200` for public routes, `401` for protected
+  agent APIs, and `307` from `/crm` to `/admin/login?next=/crm`.
+- Preview UAT now creates and cleans up controlled records while verifying
+  repository persistence, approval pause/resume, task dedupe, incident
+  redaction, source packets, reports, and Control Tower execution.
+- CRM contract tests cover transient retry, permanent failure, idempotency-key
+  reuse, and explicit disablement.
+- Authenticated Preview UAT passed on the isolated `cren-preview` Neon branch:
+  5 onboarding tasks were created, approval pause/resume/approve/execute,
+  task deduplication, incident redaction, source packets, reporting, and
+  Control Tower execution all passed, and cleanup returned controlled agent
+  tables to zero rows.
+- Authenticated `GET /api/agent/control-tower`, `GET /api/agent/approvals`,
+  and `/admin/agent-ops` checks returned `200` after UAT cleanup.
+- Final current-tranche verification passed: `npm run lint`,
+  `npm run test:image-pipeline` with 94 tests, `npm run build` with 111 routes,
+  migration syntax, and `git diff --check`.
+- Final Preview deployment `dpl_F9xrQC4KWa2RMH1e3rYt7q2vYNdX` reached `READY`
+  at `https://frontend-b01l2iakh-stephen-s-projects-96d9c6b4.vercel.app`.
+- Final smoke gate passed against that explicitly selected Preview URL: public
+  routes returned `200`, unauthenticated agent and cron routes returned `401`,
+  authenticated Agent Ops, Control Tower, and approvals returned `200`, and
+  `/crm` returned `307` to the admin login.
 
-Still not performed:
+External actions intentionally held:
 
 - External outreach, email/social sends, publication, payments, or lead routing.
-- Separate Neon Preview branch for non-empty agent workflow UAT before future
-  production data changes.
-- Remote submission smoke with controlled records; keep this as the final
-  pre-release check for any future public-form change.
+- Legal/provider/owner approval for an external-action pilot.
+- Production enablement of any outbound capability.

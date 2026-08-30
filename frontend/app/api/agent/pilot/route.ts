@@ -6,7 +6,8 @@ export async function POST(request: NextRequest) {
   try {
     const session = await requireAgentCapability(request, "pilot:run");
     if (isAgentResponse(session)) return session;
-    const result = await runPilotUAT();
+    const payload = await request.json().catch(() => ({}));
+    const result = await runPilotUAT({ cleanup: payload.cleanup !== false });
     return NextResponse.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";

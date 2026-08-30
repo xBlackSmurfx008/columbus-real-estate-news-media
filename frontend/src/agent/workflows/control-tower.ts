@@ -3,6 +3,7 @@ import {
   createAgentIncident,
   createAgentRun,
   createAgentTask,
+  expireAgentApprovals,
   finishAgentRun,
   recordAgentStep,
   writeAgentAudit,
@@ -16,6 +17,57 @@ type ControlTowerCount = {
   campaignsMissingTracking: number;
   claimsNeedingProof: number;
 };
+
+async function readControlTowerCounts() {
+  const sql = getDb();
+  const [agentRows, optionalTables] = await Promise.all([
+    sql`
+      SELECT
+        (SELECT COUNT(*)::int FROM agent_approvals WHERE status = 'pending' AND expires_at > NOW()) AS "pendingApprovals",
+        (SELECT COUNT(*)::int FROM agent_tasks WHERE status IN ('pending', 'in_progress') AND due_at IS NOT NULL AND due_at < NOW()) AS "overdueTasks",
+        (SELECT COUNT(*)::int FROM agent_incidents WHERE status IN ('open', 'acknowledged')) AS "openIncidents"
+    `,
+    sql`SELECT to_regclass('public.campaigns') AS campaigns, to_regclass('public.claim_substantiation') AS claim_substantiation`,
+  ]);
+
+  let blockedCampaigns = 0;
+  let campaignsMissingTracking = 0;
+  let claimsNeedingProof = 0;
+  if (optionalTables[0]?.campaigns) {
+    const rows = await sql`
+      SELECT
+        (SELECT COUNT(*)::int FROM campaigns WHERE status IN ('scheduled', 'live') AND (label IS NULL OR label = '')) AS "blockedCampaigns",
+        (SELECT COUNT(*)::int FROM campaigns WHERE status IN ('scheduled', 'live') AND (utm_campaign IS NULL OR utm_campaign = '')) AS "campaignsMissingTracking"
+    `;
+    blockedCampaigns = Number(rows[0]?.blockedCampaigns || 0);
+    campaignsMissingTracking = Number(rows[0]?.campaignsMissingTracking || 0);
+  }
+  if (optionalTables[0]?.claim_substantiation) {
+    const rows = await sql`SELECT COUNT(*)::int AS count FROM claim_substantiation WHERE status IN ('needed', 'submitted')`;
+    claimsNeedingProof = Number(rows[0]?.count || 0);
+  }
+
+  return {
+    pendingApprovals: Number(agentRows[0]?.pendingApprovals || 0),
+    overdueTasks: Number(agentRows[0]?.overdueTasks || 0),
+    openIncidents: Number(agentRows[0]?.openIncidents || 0),
+    blockedCampaigns,
+    campaignsMissingTracking,
+    claimsNeedingProof,
+  } satisfies ControlTowerCount;
+}
+
+export async function getControlTowerSnapshot(limit = 25) {
+  const sql = getDb();
+  await expireAgentApprovals();
+  const [counts, runs, tasks, incidents] = await Promise.all([
+    readControlTowerCounts(),
+    sql`SELECT id, agent_name, workflow_name, status, initiated_by, error_code, started_at, finished_at, created_at FROM agent_runs ORDER BY created_at DESC LIMIT ${limit}`,
+    sql`SELECT id, kind, entity_type, entity_id, priority, status, due_at, owner_role, dedupe_key, last_error, created_at, updated_at FROM agent_tasks ORDER BY created_at DESC LIMIT ${limit}`,
+    sql`SELECT id, severity, workflow, entity_type, entity_id, error_code, details_redacted, status, owner_role, created_at, resolved_at FROM agent_incidents ORDER BY created_at DESC LIMIT ${limit}`,
+  ]);
+  return { counts, runs, tasks, incidents };
+}
 
 export async function runControlTower(input: {
   initiatedBy: string;
@@ -33,19 +85,11 @@ export async function runControlTower(input: {
   });
 
   try {
+    await expireAgentApprovals();
     const sql = getDb();
     await sql`UPDATE agent_runs SET status = 'running', updated_at = NOW() WHERE id = ${runId}`;
 
-    const rows = await sql`
-      SELECT
-        (SELECT COUNT(*)::int FROM agent_approvals WHERE status = 'pending' AND expires_at > NOW()) AS "pendingApprovals",
-        (SELECT COUNT(*)::int FROM agent_tasks WHERE status IN ('pending', 'in_progress') AND due_at IS NOT NULL AND due_at < NOW()) AS "overdueTasks",
-        (SELECT COUNT(*)::int FROM agent_incidents WHERE status IN ('open', 'acknowledged')) AS "openIncidents",
-        (SELECT COUNT(*)::int FROM campaigns WHERE status IN ('scheduled', 'live') AND (label IS NULL OR label = '')) AS "blockedCampaigns",
-        (SELECT COUNT(*)::int FROM campaigns WHERE status IN ('scheduled', 'live') AND (utm_campaign IS NULL OR utm_campaign = '')) AS "campaignsMissingTracking",
-        (SELECT COUNT(*)::int FROM claim_substantiation WHERE status IN ('needed', 'submitted')) AS "claimsNeedingProof"
-    `;
-    const counts = rows[0] as unknown as ControlTowerCount;
+    const counts = await readControlTowerCounts();
 
     await recordAgentStep({
       runId,

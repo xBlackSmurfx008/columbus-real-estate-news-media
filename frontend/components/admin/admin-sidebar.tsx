@@ -14,6 +14,7 @@ export function AdminSidebar() {
     { name: 'Activation', href: '/admin/activation', icon: 'Activity' },
     { name: 'Leads', href: '/admin/leads', icon: 'Users' },
     { name: 'Commercial', href: '/admin/commercial', icon: 'Briefcase' },
+    { name: 'Agent Ops', href: '/admin/agent-ops', icon: 'Activity' },
     { name: 'Articles', href: '/admin/articles', icon: 'FileText' },
     { name: 'Advertisements', href: '/admin/ads', icon: 'Image' },
     { name: 'Market Data', href: '/admin/market', icon: 'TrendingUp' },

@@ -13,6 +13,46 @@ if (!databaseUrl) {
 
 const sql = neon(databaseUrl);
 
+async function hasColumn(tableName, columnName) {
+  const rows = await sql`
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = ${tableName} AND column_name = ${columnName}
+    LIMIT 1
+  `;
+  return Boolean(rows[0]);
+}
+
+async function hasTable(tableName) {
+  const rows = await sql`
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'public' AND table_name = ${tableName}
+    LIMIT 1
+  `;
+  return Boolean(rows[0]);
+}
+
+async function repairTaskTableContracts() {
+  const [crmHasKind, crmHasTitle, tasksHasKind, tasksHasTitle] = await Promise.all([
+    hasColumn("agent_crm_tasks", "kind"),
+    hasColumn("agent_crm_tasks", "title"),
+    hasColumn("agent_tasks", "kind"),
+    hasColumn("agent_tasks", "title"),
+  ]);
+
+  if (crmHasKind && !crmHasTitle) {
+    await sql`ALTER TABLE agent_crm_tasks RENAME TO agent_tasks_legacy_durable`;
+    console.log("Renamed the legacy durable task table before rebuilding its contract.");
+  }
+  if (tasksHasTitle && !tasksHasKind) {
+    await sql`ALTER TABLE agent_tasks RENAME TO agent_tasks_legacy_crm`;
+    console.log("Renamed the legacy CRM task table before rebuilding its contract.");
+  }
+}
+
+await repairTaskTableContracts();
+
 const tables = [
   ["agent_runs", `CREATE TABLE IF NOT EXISTS agent_runs (
     id TEXT PRIMARY KEY,
@@ -64,21 +104,16 @@ const tables = [
     CONSTRAINT agent_approvals_status_check CHECK (status IN ('pending', 'approved', 'executing', 'executed', 'rejected', 'revision_requested', 'paused'))
   )`],
   ["agent_crm_tasks", `CREATE TABLE IF NOT EXISTS agent_crm_tasks (
-    id BIGSERIAL PRIMARY KEY,
-    kind TEXT NOT NULL,
-    entity_type TEXT,
-    entity_id TEXT,
-    priority TEXT NOT NULL DEFAULT 'normal',
+    id TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'pending',
     due_at TIMESTAMPTZ,
-    owner_role TEXT NOT NULL,
-    dedupe_key TEXT UNIQUE NOT NULL,
-    payload_json JSONB NOT NULL DEFAULT '{}'::jsonb,
-    last_error TEXT,
+    assignee_role TEXT NOT NULL,
+    contact_id TEXT,
+    deal_id TEXT,
+    notes TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    completed_at TIMESTAMPTZ,
-    CONSTRAINT agent_tasks_status_check CHECK (status IN ('pending', 'in_progress', 'completed', 'overdue', 'blocked', 'cancelled'))
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   )`],
   ["agent_policies", `CREATE TABLE IF NOT EXISTS agent_policies (
     id BIGSERIAL PRIMARY KEY,
@@ -105,6 +140,18 @@ const tables = [
     resolved_at TIMESTAMPTZ,
     CONSTRAINT agent_incidents_severity_check CHECK (severity IN ('P0', 'P1', 'P2', 'P3')),
     CONSTRAINT agent_incidents_status_check CHECK (status IN ('open', 'acknowledged', 'resolved', 'closed'))
+  )`],
+  ["audit_logs", `CREATE TABLE IF NOT EXISTS audit_logs (
+    id BIGSERIAL PRIMARY KEY,
+    actor_type TEXT NOT NULL DEFAULT 'system',
+    actor_id TEXT,
+    entity_type TEXT NOT NULL,
+    entity_id TEXT,
+    action TEXT NOT NULL,
+    source_route TEXT,
+    before_json JSONB NOT NULL DEFAULT '{}'::jsonb,
+    after_json JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   )`],
   ["source_packets", `CREATE TABLE IF NOT EXISTS source_packets (
     id TEXT PRIMARY KEY,
@@ -185,16 +232,21 @@ const tables = [
     UNIQUE (deal_id, type)
   )`],
   ["agent_tasks", `CREATE TABLE IF NOT EXISTS agent_tasks (
-    id TEXT PRIMARY KEY,
-    title TEXT NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
+    kind TEXT NOT NULL,
+    entity_type TEXT,
+    entity_id TEXT,
+    priority TEXT NOT NULL DEFAULT 'normal',
     status TEXT NOT NULL DEFAULT 'pending',
     due_at TIMESTAMPTZ,
-    assignee_role TEXT NOT NULL,
-    contact_id TEXT REFERENCES agent_contacts(id) ON DELETE SET NULL,
-    deal_id TEXT REFERENCES agent_deals(id) ON DELETE SET NULL,
-    notes TEXT,
+    owner_role TEXT NOT NULL,
+    dedupe_key TEXT UNIQUE NOT NULL,
+    payload_json JSONB NOT NULL DEFAULT '{}'::jsonb,
+    last_error TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    completed_at TIMESTAMPTZ,
+    CONSTRAINT agent_tasks_status_check CHECK (status IN ('pending', 'in_progress', 'completed', 'overdue', 'blocked', 'cancelled'))
   )`],
   ["agent_activities", `CREATE TABLE IF NOT EXISTS agent_activities (
     id TEXT PRIMARY KEY,
@@ -308,12 +360,69 @@ const tables = [
     outreach JSONB,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   )`],
+  ["crm_sync_deliveries", `CREATE TABLE IF NOT EXISTS crm_sync_deliveries (
+    external_id TEXT PRIMARY KEY,
+    event_type TEXT NOT NULL,
+    payload_hash TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'queued',
+    attempts INTEGER NOT NULL DEFAULT 0,
+    last_http_status INTEGER,
+    last_error TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    delivered_at TIMESTAMPTZ,
+    CONSTRAINT crm_sync_deliveries_status_check CHECK (status IN ('queued', 'retrying', 'delivered', 'dead_letter'))
+  )`],
 ];
 
 for (const [name, ddl] of tables) {
   await sql.query(ddl);
   console.log(`ensured: table ${name}`);
 }
+
+if (await hasTable("agent_tasks_legacy_durable")) {
+  await sql.query(`
+    INSERT INTO agent_tasks (id, kind, entity_type, entity_id, priority, status, due_at,
+      owner_role, dedupe_key, payload_json, last_error, created_at, updated_at, completed_at)
+    SELECT id, kind, entity_type, entity_id, priority, status, due_at,
+      owner_role, dedupe_key, payload_json, last_error, created_at, updated_at, completed_at
+    FROM agent_tasks_legacy_durable
+    ON CONFLICT DO NOTHING
+  `);
+  await sql.query(`
+    SELECT setval(pg_get_serial_sequence('agent_tasks', 'id'), COALESCE(MAX(id), 1), MAX(id) IS NOT NULL)
+    FROM agent_tasks
+  `);
+  console.log("copied legacy durable tasks into agent_tasks");
+}
+
+if (await hasTable("agent_tasks_legacy_crm")) {
+  await sql.query(`
+    INSERT INTO agent_crm_tasks (id, title, status, due_at, assignee_role, contact_id, deal_id,
+      notes, created_at, updated_at)
+    SELECT id, title, status, due_at, assignee_role, contact_id, deal_id,
+      notes, created_at, updated_at
+    FROM agent_tasks_legacy_crm
+    ON CONFLICT DO NOTHING
+  `);
+  console.log("copied legacy CRM tasks into agent_crm_tasks");
+}
+
+await sql.query(`
+  DO $$
+  BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'agent_crm_tasks_contact_fk') THEN
+      ALTER TABLE agent_crm_tasks
+        ADD CONSTRAINT agent_crm_tasks_contact_fk FOREIGN KEY (contact_id)
+        REFERENCES agent_contacts(id) ON DELETE SET NULL;
+    END IF;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'agent_crm_tasks_deal_fk') THEN
+      ALTER TABLE agent_crm_tasks
+        ADD CONSTRAINT agent_crm_tasks_deal_fk FOREIGN KEY (deal_id)
+        REFERENCES agent_deals(id) ON DELETE SET NULL;
+    END IF;
+  END $$
+`);
 
 for (const ddl of [
   "CREATE INDEX IF NOT EXISTS agent_runs_status_idx ON agent_runs(status, created_at DESC)",
@@ -322,6 +431,7 @@ for (const ddl of [
   "CREATE INDEX IF NOT EXISTS agent_approvals_pending_idx ON agent_approvals(status, expires_at)",
   "CREATE INDEX IF NOT EXISTS agent_tasks_due_idx ON agent_tasks(status, due_at)",
   "CREATE INDEX IF NOT EXISTS agent_incidents_open_idx ON agent_incidents(status, severity, created_at DESC)",
+  "CREATE INDEX IF NOT EXISTS audit_logs_entity_idx ON audit_logs(entity_type, entity_id, created_at DESC)",
   "CREATE INDEX IF NOT EXISTS source_packets_review_idx ON source_packets(review_status, created_at DESC)",
   "CREATE INDEX IF NOT EXISTS agent_state_records_namespace_idx ON agent_state_records(namespace, updated_at DESC)",
   "CREATE UNIQUE INDEX IF NOT EXISTS agent_contacts_email_idx ON agent_contacts(LOWER(email))",
@@ -335,6 +445,7 @@ for (const ddl of [
   "CREATE INDEX IF NOT EXISTS agent_sequence_enrollments_status_idx ON agent_sequence_enrollments(status, updated_at DESC)",
   "CREATE INDEX IF NOT EXISTS agent_onboarding_tasks_due_idx ON agent_onboarding_tasks(status, due_at)",
   "CREATE INDEX IF NOT EXISTS agent_reports_date_idx ON agent_reports(report_date DESC, created_at DESC)",
+  "CREATE INDEX IF NOT EXISTS crm_sync_deliveries_status_idx ON crm_sync_deliveries(status, updated_at DESC)",
 ]) {
   await sql.query(ddl);
 }

@@ -36,6 +36,7 @@
     "newsroom:production-readiness": "node scripts/production-readiness-audit.mjs",
     "content:validate-sprint": "node --experimental-strip-types scripts/validate-content-sprint.mjs",
     "newsroom:uptime": "node scripts/uptime-check.mjs",
+    "newsroom:launch-monitor": "node scripts/launch-monitor.mjs",
     "telegram:validate": "python3 scripts/telegram_bot.py validate",
     "telegram:discover-chat": "python3 scripts/telegram_bot.py discover-chat",
     "telegram:test": "python3 scripts/telegram_bot.py send",

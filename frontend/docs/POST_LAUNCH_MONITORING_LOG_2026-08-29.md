@@ -27,6 +27,10 @@ Scope: first post-launch production checks for `https://columbusrealestatenews.c
 | 2026-08-29 16:14 UTC | Public route checks | `/advertise/media-kit`, `/advertise/self-service`, and `/profiles/claim` returned 200 on apex domain. | Passed after alias correction. |
 | 2026-08-29 16:14 UTC | Vercel production error logs | Error-log commands returned no error entries after fetching logs. | Continue monitoring. |
 | 2026-08-29 16:25 UTC | Post-push alias and route recheck | `columbusrealestatenews.com` still pointed to verified deployment `dpl_AFrXs6nu7Un6v18W9LV3wiH319c2`; `/advertise/media-kit`, `/advertise/self-service`, and `/profiles/claim` returned 200. | Passed. |
+| 2026-08-30 05:14 UTC | Launch monitor check | Alias and public routes passed, but production readiness found one newly live article without `image_url` and one live review row still at `READY_FOR_AUTOMATION`. | Repaired article image and reconciled review row. |
+| 2026-08-30 05:17 UTC | Article image repair | Attached unique Blob hero to `2026-08-29-upper-arlington-s-shops-on-lane-avenue-splits-old-anchor-into-three-tenants`: `hero-91bc6512b9236589.webp`; updated alt and caption. | Passed. |
+| 2026-08-30 05:17 UTC | Editorial reconciliation | Moved the article's review row from `READY_FOR_AUTOMATION` to `AUTO_PUBLISHED`. | Passed. |
+| 2026-08-30 05:17 UTC | Final readiness and launch monitor | Public image audit passed for 88 live articles; readiness returned `ok: true`, `findings: []`; launch monitor returned `ok: true`. | Passed. |
 
 ## Commands Used
 
@@ -41,6 +45,10 @@ curl -fsSI https://columbusrealestatenews.com/advertise/self-service
 curl -fsSI https://columbusrealestatenews.com/profiles/claim
 vercel logs dpl_AFrXs6nu7Un6v18W9LV3wiH319c2 --level error --since 2h --json
 vercel logs --environment production --level error --since 2h --no-branch --json
+node --env-file=.env.production.local scripts/launch-monitor.mjs --expected-deployment dpl_AFrXs6nu7Un6v18W9LV3wiH319c2 --json
+node --env-file=.env.production.local scripts/generate-placeholder-heroes.mjs
+node --env-file=.env.production.local scripts/attach-article-image.mjs --article-id 2026-08-29-upper-arlington-s-shops-on-lane-avenue-splits-old-anchor-into-three-tenants --file /Users/mr.adams/.codex/generated_images/01a04ba9-be1c-79c1-b2a3-680811d78400/call_kp60vsjVOnIytEamZH51Rmh1.png
+node --env-file=.env.production.local scripts/reconcile-live-editorial-review-jobs.mjs --execute --confirm=live-review-reconcile
 ```
 
 ## Next Monitoring Windows

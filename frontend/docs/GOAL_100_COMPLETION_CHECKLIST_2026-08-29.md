@@ -241,6 +241,12 @@ This `/goal` is complete when the user request has been turned into a working CR
 - [x] Post-correction readiness audit passed on 2026-08-29 at 16:12:58 UTC with `ok: true`, `findings: []`, and zero smoke rows.
 - [x] Recent Vercel production error-log checks returned no error entries.
 - [x] Post-push recheck on 2026-08-29 at 16:25 UTC confirmed the custom domain still pointed to `dpl_AFrXs6nu7Un6v18W9LV3wiH319c2` and launch routes returned 200.
+- [x] Launch monitor script added: `scripts/launch-monitor.mjs`.
+- [x] Launch monitor package script added: `npm run newsroom:launch-monitor`.
+- [x] 2026-08-30 launch monitor caught one newly live article missing `image_url` and one queued live review row.
+- [x] The Shops on Lane article was repaired with a unique Blob hero, image alt text, and AI-generated editorial illustration caption.
+- [x] The repaired article's review row was reconciled to `AUTO_PUBLISHED`.
+- [x] Final 2026-08-30 readiness and launch-monitor checks returned `ok: true`, `findings: []`, zero smoke rows, 88 live articles, and no queued live rows.
 
 ## Production Launch Checklist
 

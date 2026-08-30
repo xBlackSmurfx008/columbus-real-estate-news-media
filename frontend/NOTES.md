@@ -97,6 +97,10 @@ Not claimed:
 - Recent Vercel production error-log commands returned no error entries.
 - First-wave advertiser outreach package and tracker are ready, but no external outreach was sent because no connected sending account/CRM was available in this session.
 - Post-push recheck at 2026-08-29 16:25 UTC confirmed `columbusrealestatenews.com` still pointed to `dpl_AFrXs6nu7Un6v18W9LV3wiH319c2`; `/advertise/media-kit`, `/advertise/self-service`, and `/profiles/claim` returned 200.
+- `scripts/launch-monitor.mjs` and `npm run newsroom:launch-monitor` now run route, alias, and readiness checks in one command.
+- Launch monitor on 2026-08-30 at 05:14 UTC caught a new live article issue: the Shops on Lane article was missing `image_url` and still had `READY_FOR_AUTOMATION`.
+- Repaired that article by attaching unique Blob hero `hero-91bc6512b9236589.webp`, updating alt/caption, and reconciling the review row to `AUTO_PUBLISHED`.
+- Final launch monitor on 2026-08-30 at 05:17 UTC returned `ok: true`; production readiness returned `findings: []`, zero smoke rows, 88 live articles, and no queued live rows.
 
 ## Verification Already Passed
 

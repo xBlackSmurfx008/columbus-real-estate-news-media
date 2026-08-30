@@ -52,6 +52,19 @@ test("routes advertising interest to sales review", () => {
   assert(!route.interestTags.includes("advertise-page"));
 });
 
+test("routes newsletter sponsorship inquiries to advertising sales", () => {
+  const route = recommendCrmRoute({
+    source: "advertise-crm-live-smoke",
+    inquiryType: "advertising",
+    packageInterest: "newsletter sponsorship",
+  });
+
+  assert.equal(route.routeKey, "advertising-sales");
+  assert.equal(route.routingStatus, "sales_review");
+  assert(route.interestTags.includes("advertising"));
+  assert(!route.interestTags.includes("newsletter"));
+});
+
 test("routes newsletter preferences without turning source into a tag", () => {
   const route = recommendCrmRoute({
     source: "newsletter crm-test-live | role=investor",
@@ -174,7 +187,7 @@ test("sends signed payloads to the CRM intake endpoint", async () => {
         },
       );
 
-      assert.deepEqual(result, { ok: true, status: 201 });
+      assert.deepEqual(result, { ok: true, status: 201, attempts: 1 });
     },
   );
 });

@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+
 export type CrenCrmEventType =
   | "lead"
   | "contact"
@@ -45,9 +47,9 @@ export type CrenCrmPayload = CrenCrmSyncInput & {
 };
 
 export type CrenCrmSyncResult =
-  | { ok: true; skipped?: false; status: number }
+  | { ok: true; skipped?: false; status: number; attempts?: number }
   | { ok: true; skipped: true; reason: "disabled" | "missing_secret" | "missing_url" }
-  | { ok: false; status?: number; error: string };
+  | { ok: false; status?: number; error: string; attempts?: number };
 
 export type CrmRouteRecommendation = {
   routeKey:
@@ -180,6 +182,17 @@ export function recommendCrmRoute(input: {
   details?: unknown;
 }): CrmRouteRecommendation {
   const text = searchableText(input);
+  const inquiryType = cleanString(input.inquiryType, 120)?.toLowerCase();
+  const source = cleanString(input.source, 240)?.toLowerCase() ?? "";
+  const packageInterest = cleanString(input.packageInterest, 240)?.toLowerCase() ?? "";
+  const isAdvertisingInquiry =
+    inquiryType === "advertising" ||
+    source.includes("advertis") ||
+    source.includes("sponsor") ||
+    source.includes("media kit") ||
+    packageInterest.includes("advertis") ||
+    packageInterest.includes("sponsor") ||
+    packageInterest.includes("media kit");
   const subscriberSegment = subscriberSegmentFrom(input.persona ?? input.role ?? input.source);
   const interestTags = normalizeCrmInterestTags(input.interests, input.topic, input.role, input.persona, input.packageInterest);
 
@@ -192,6 +205,18 @@ export function recommendCrmRoute(input: {
       reason: "Member profile preference update.",
       subscriberSegment,
       interestTags: withTag(interestTags, "member"),
+    };
+  }
+
+  if (isAdvertisingInquiry) {
+    return {
+      routeKey: "advertising-sales",
+      assigneeLabel: "Advertising sales",
+      routingStatus: "sales_review",
+      responseSlaHours: 24,
+      reason: "Advertising or sponsorship inquiry.",
+      subscriberSegment: subscriberSegment === "general" ? "vendor" : subscriberSegment,
+      interestTags: withTag(interestTags, "advertising"),
     };
   }
 
@@ -216,18 +241,6 @@ export function recommendCrmRoute(input: {
       reason: "Investor or capital request.",
       subscriberSegment: subscriberSegment === "general" ? "investor" : subscriberSegment,
       interestTags: withTag(interestTags, "investing"),
-    };
-  }
-
-  if (text.includes("advertis") || text.includes("sponsor") || text.includes("media kit")) {
-    return {
-      routeKey: "advertising-sales",
-      assigneeLabel: "Advertising sales",
-      routingStatus: "sales_review",
-      responseSlaHours: 24,
-      reason: "Advertising or sponsorship inquiry.",
-      subscriberSegment: subscriberSegment === "general" ? "vendor" : subscriberSegment,
-      interestTags: withTag(interestTags, "advertising"),
     };
   }
 
@@ -303,6 +316,64 @@ function crmSyncTimeoutMs() {
   return Math.min(Math.max(parsed, 500), 10_000);
 }
 
+function crmSyncMaxAttempts() {
+  const parsed = Number(process.env.CRM_SYNC_MAX_ATTEMPTS);
+  if (!Number.isFinite(parsed) || parsed < 1) return 3;
+  return Math.min(Math.floor(parsed), 3);
+}
+
+function crmSyncRetryDelayMs(attempt: number) {
+  const parsed = Number(process.env.CRM_SYNC_RETRY_DELAY_MS);
+  const base = Number.isFinite(parsed) && parsed >= 0 ? parsed : 250;
+  return Math.min(base * 2 ** Math.max(0, attempt - 1), 1_000);
+}
+
+function isRetryableStatus(status: number) {
+  return status === 408 || status === 425 || status === 429 || status >= 500;
+}
+
+async function updateCrmDelivery(input: {
+  payload: CrenCrmPayload;
+  status: "queued" | "retrying" | "delivered" | "dead_letter";
+  attempts: number;
+  httpStatus?: number;
+  error?: string;
+}) {
+  try {
+    if (!process.env.DATABASE_URL) return;
+    const { getDb } = await import("@/lib/db");
+    const sql = getDb();
+    const payloadHash = createHash("sha256").update(JSON.stringify(input.payload)).digest("hex");
+    await sql`
+      INSERT INTO crm_sync_deliveries (external_id, event_type, payload_hash, status, attempts, last_http_status, last_error, delivered_at)
+      VALUES (${input.payload.externalId}, ${input.payload.eventType}, ${payloadHash}, ${input.status}, ${input.attempts}, ${input.httpStatus || null}, ${input.error || null}, CASE WHEN ${input.status} = 'delivered' THEN NOW() ELSE NULL END)
+      ON CONFLICT (external_id) DO UPDATE SET
+        event_type = EXCLUDED.event_type,
+        payload_hash = EXCLUDED.payload_hash,
+        status = EXCLUDED.status,
+        attempts = EXCLUDED.attempts,
+        last_http_status = EXCLUDED.last_http_status,
+        last_error = EXCLUDED.last_error,
+        updated_at = NOW(),
+        delivered_at = EXCLUDED.delivered_at
+    `;
+  } catch (error) {
+    console.warn("[crm-sync] durable delivery record unavailable", error instanceof Error ? error.message : String(error));
+  }
+}
+
+async function wasCrmDeliveryDelivered(externalId: string) {
+  try {
+    if (!process.env.DATABASE_URL) return undefined;
+    const { getDb } = await import("@/lib/db");
+    const sql = getDb();
+    const rows = await sql`SELECT last_http_status FROM crm_sync_deliveries WHERE external_id = ${externalId} AND status = 'delivered' LIMIT 1`;
+    return rows[0] ? Number(rows[0].last_http_status || 200) : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function isAllowedUrl(url: string) {
   try {
     const parsed = new URL(url);
@@ -374,32 +445,49 @@ export async function syncTo008Crm(input: CrenCrmSyncInput, fetcher: FetchLike =
   }
 
   const payload = buildCrenCrmPayload(input);
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), crmSyncTimeoutMs());
+  const deliveredStatus = await wasCrmDeliveryDelivered(payload.externalId);
+  if (deliveredStatus) return { ok: true, status: deliveredStatus, attempts: 0 };
 
-  try {
-    const response = await fetcher(url, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${secret}`,
-        "Content-Type": "application/json",
-        "Idempotency-Key": payload.externalId,
-      },
-      body: JSON.stringify(payload),
-      signal: controller.signal,
-    });
+  const maxAttempts = crmSyncMaxAttempts();
+  let attemptsMade = 0;
+  let lastStatus: number | undefined;
+  let lastError = "CRM sync failed.";
+  await updateCrmDelivery({ payload, status: "queued", attempts: 0 });
 
-    if (!response.ok) {
-      return { ok: false, status: response.status, error: `CRM sync failed with status ${response.status}.` };
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    attemptsMade = attempt;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), crmSyncTimeoutMs());
+    try {
+      const response = await fetcher(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${secret}`,
+          "Content-Type": "application/json",
+          "Idempotency-Key": payload.externalId,
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+      lastStatus = response.status;
+      if (response.ok) {
+        await updateCrmDelivery({ payload, status: "delivered", attempts: attempt, httpStatus: response.status });
+        return { ok: true, status: response.status, attempts: attempt };
+      }
+      lastError = `CRM sync failed with status ${response.status}.`;
+      if (!isRetryableStatus(response.status) || attempt === maxAttempts) break;
+    } catch (error) {
+      lastError = error instanceof Error ? error.message : String(error);
+      if (attempt === maxAttempts) break;
+    } finally {
+      clearTimeout(timeout);
     }
-
-    return { ok: true, status: response.status };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    return { ok: false, error: message };
-  } finally {
-    clearTimeout(timeout);
+    await updateCrmDelivery({ payload, status: "retrying", attempts: attempt, httpStatus: lastStatus, error: lastError });
+    await new Promise((resolve) => setTimeout(resolve, crmSyncRetryDelayMs(attempt)));
   }
+
+  await updateCrmDelivery({ payload, status: "dead_letter", attempts: attemptsMade, httpStatus: lastStatus, error: lastError });
+  return { ok: false, status: lastStatus, error: lastError, attempts: attemptsMade };
 }
 
 export function warnOnCrmSyncFailure(context: string, result: CrenCrmSyncResult) {

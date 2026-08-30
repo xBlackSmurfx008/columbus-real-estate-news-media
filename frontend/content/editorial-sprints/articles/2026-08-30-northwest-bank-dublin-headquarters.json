@@ -1,0 +1,144 @@
+{
+  "prompt_version": "cren-article-v1.0.0",
+  "title": "Northwest Bank Plans New Dublin Headquarters at Bridge North",
+  "category": "Development",
+  "author": "CREN Newsroom",
+  "date": "Aug 30, 2026",
+  "excerpt": "Dublin City Council approved incentives for Northwest Bank's new 75,000-square-foot Bridge North headquarters, targeting a 2029 move and 300 jobs by 2034.",
+  "body": "Northwest Bank will build a new Dublin headquarters at Bridge North, moving out of its Easton-area offices into a 75,000-square-foot building by the first half of 2029. Dublin City Council approved economic incentives for the project on August 24, 2026.\n\n## A New Anchor For Bridge North\n\nThe project sits inside Bridge North, a mixed-use development from Daimler Group and Indus Hotels in Dublin's Bridge Street District, according to [Dublin's city council announcement](https://dublinohiousa.gov/city-news/city-council-approves-economic-development-agreement-to-bring-northwest-bank-headquarters-to-dublins-bridge-street-district/). Moody Nolan, a Columbus-based architecture firm, is designing the office, and JLL is handling brokerage and project management, according to [Connect CRE](https://www.connectcre.com/stories/northwest-bank-to-open-75k-sf-corporate-headquarters-in-ohio/).\n\nBridge North already had a residential and hotel component in the pipeline before this office commitment became public; CREN covered [Dublin's approval of that plan](/blog/dublin-approves-bridge-north-296-homes-a-hotel-and-offices-near-bridge-park) in July. The bank's office lease fills in the commercial half of the same site.\n\n## Council Ties Incentives To New Jobs\n\nDublin's economic development agreement does not pay out incentives upfront. Northwest Bank can earn a performance-based grant equal to 15% of new employee payroll withholding taxes generated from 2030 through 2034, capped at $460,000, according to the city's announcement. It can also receive a separate $50,000 grant once it signs the lease and obtains an occupancy permit.\n\nThat structure means Dublin only pays if the bank actually adds local payroll and completes the building, rather than committing money against a project that could still change.\n\n## The Timeline: 2029 Move, 2034 Workforce Target\n\nNorthwest Bank expects to move into the new building in the first half of 2029 under an initial 15-year lease, according to Connect CRE. The bank's headquarters workforce is expected to more than double to 300 employees by 2034, according to Connect CRE and Dublin's announcement.\n\n\"This investment represents an important step in Northwest Bank's continued growth and transformation,\" said Louis J. Torchio, the bank's president and CEO, in the city's announcement.\n\n## What The Space Says About Office Demand\n\nDividing the building's 75,000 square feet by the bank's 300-employee target works out to about 250 square feet per worker once the headquarters reaches full staffing. That is a denser build-to-suit than many downtown Columbus Class A towers, which is consistent with a suburban headquarters designed around collaborative space rather than a traditional floor plan.\n\nThe move adds a financial-services anchor tenant to Dublin's office market at a time when the [Bridge Street District](/areas/dublin) is still filling out its commercial mix alongside Bridge Park's residential and hospitality growth. Building permits, an occupancy certificate and Northwest Bank's actual move-in date will be the next verifiable checkpoints.",
+  "read_time": "4 min read",
+  "area_slug": "dublin",
+  "topic_slug": "development",
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "development",
+    "dublin",
+    "office-development"
+  ],
+  "category_class": "card-img-development",
+  "icon": "$",
+  "featured": false,
+  "image_url": null,
+  "answer_summary": "Northwest Bank will build a new Dublin headquarters at Bridge North, moving out of its Easton-area offices into a 75,000-square-foot building by the first half of 2029. Dublin City Council approved economic incentives for the project on August 24, 2026.",
+  "primary_keyword": "Dublin headquarters",
+  "meta_description": "Dublin City Council approved incentives for Northwest Bank's new 75,000-square-foot Bridge North headquarters, with a 2029 move and 300 jobs by 2034.",
+  "fact_checked_at": "2026-08-30T16:11:07Z",
+  "canonical_event_key": "northwest-bank-dublin-bridge-north-headquarters-2026-08-24",
+  "location": {
+    "name": "Dublin",
+    "state": "OH"
+  },
+  "source_ledger": [
+    {
+      "id": "dublin-council-announcement",
+      "type": "PRIMARY",
+      "url": "https://dublinohiousa.gov/city-news/city-council-approves-economic-development-agreement-to-bring-northwest-bank-headquarters-to-dublins-bridge-street-district/",
+      "publisher": "City of Dublin, Ohio",
+      "title": "City Council Approves Economic Development Agreement to Bring Northwest Bank Headquarters to Dublin's Bridge Street District",
+      "published_at": "2026-08-24",
+      "fetched_at": "2026-08-30T16:11:07Z",
+      "http_status": 200
+    },
+    {
+      "id": "connect-cre-northwest-bank",
+      "type": "SECONDARY",
+      "url": "https://www.connectcre.com/stories/northwest-bank-to-open-75k-sf-corporate-headquarters-in-ohio/",
+      "publisher": "Connect CRE",
+      "title": "Northwest Bank to Open 75K-SF Corporate Headquarters in Ohio",
+      "published_at": "2026-08-26",
+      "fetched_at": "2026-08-30T16:11:07Z",
+      "http_status": 200
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "c1",
+      "claim": "Northwest Bank will build a new Dublin headquarters at Bridge North, moving out of its Easton-area offices into a 75,000-square-foot building by the first half of 2029.",
+      "source_ids": ["dublin-council-announcement", "connect-cre-northwest-bank"],
+      "kind": "FACT"
+    },
+    {
+      "id": "c2",
+      "claim": "Dublin City Council approved economic incentives for the project on August 24, 2026.",
+      "source_ids": ["dublin-council-announcement"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "c3",
+      "claim": "Northwest Bank can earn a performance-based grant equal to 15% of new employee payroll withholding taxes generated from 2030 through 2034, capped at $460,000, according to the city's announcement.",
+      "source_ids": ["dublin-council-announcement"],
+      "kind": "FACT"
+    },
+    {
+      "id": "c4",
+      "claim": "It can also receive a separate $50,000 grant once it signs the lease and obtains an occupancy permit.",
+      "source_ids": ["dublin-council-announcement"],
+      "kind": "FACT"
+    },
+    {
+      "id": "c5",
+      "claim": "Northwest Bank expects to move into the new building in the first half of 2029 under an initial 15-year lease, according to Connect CRE.",
+      "source_ids": ["connect-cre-northwest-bank"],
+      "kind": "FACT"
+    },
+    {
+      "id": "c6",
+      "claim": "The bank's headquarters workforce is expected to more than double to 300 employees by 2034, according to Connect CRE and Dublin's announcement.",
+      "source_ids": ["connect-cre-northwest-bank", "dublin-council-announcement"],
+      "kind": "FACT"
+    },
+    {
+      "id": "c7",
+      "claim": "This investment represents an important step in Northwest Bank's continued growth and transformation",
+      "source_ids": ["dublin-council-announcement"],
+      "kind": "QUOTE",
+      "exact_support": "This investment represents an important step in Northwest Bank's continued growth and transformation."
+    },
+    {
+      "id": "c8",
+      "claim": "Dividing the building's 75,000 square feet by the bank's 300-employee target works out to about 250 square feet per worker once the headquarters reaches full staffing.",
+      "source_ids": ["dublin-council-announcement", "connect-cre-northwest-bank"],
+      "kind": "CALCULATION",
+      "calculation": "75,000 sq ft / 300 employees = 250 sq ft per employee"
+    }
+  ],
+  "entity_ledger": [
+    {
+      "name": "Northwest Bank",
+      "source_ids": ["dublin-council-announcement", "connect-cre-northwest-bank"]
+    },
+    {
+      "name": "Dublin City Council",
+      "source_ids": ["dublin-council-announcement"]
+    },
+    {
+      "name": "Daimler Group",
+      "source_ids": ["dublin-council-announcement"]
+    },
+    {
+      "name": "Moody Nolan",
+      "source_ids": ["connect-cre-northwest-bank"]
+    },
+    {
+      "name": "JLL",
+      "source_ids": ["connect-cre-northwest-bank"]
+    }
+  ],
+  "image_brief": {
+    "primary_request": "Create a restrained CREN editorial card showing a suburban corporate office building under a Dublin, Ohio street sign context, evoking Bridge Street District architecture.",
+    "editorial_idea": "A calm exterior view suggesting a new build-to-suit corporate headquarters rising in a mixed-use district, without depicting a real or invented specific building.",
+    "story_anchors": [
+      "modern low-rise corporate office facade",
+      "Bridge Street District mixed-use streetscape"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "No licensed photo or official rendering of the Northwest Bank building was available at fetch time; an illustrative CREN graphic is appropriate until renderings are released.",
+    "avoid": "No real address, no fabricated building design presented as the actual Northwest Bank office, no handshakes, keys, money, arrows, glowing houses, hardhat-and-blueprint still lifes, glass-tower skyline montages."
+  },
+  "image_alt": "Editorial illustration of a suburban corporate office building representing Northwest Bank's planned Dublin headquarters.",
+  "image_provenance": {
+    "type": "CREN_GRAPHIC",
+    "caption": "CREN editorial illustration based on Dublin's economic development agreement for the project."
+  }
+}

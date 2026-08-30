@@ -4,6 +4,7 @@ import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
 import { FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 import { recordConsentEventSafely } from "@/lib/compliance/consent-events";
 import { mirrorAdvertisingInquirySafely } from "@/lib/compliance/intake-records";
+import { recommendCrmRoute, syncTo008Crm, warnOnCrmSyncFailure } from "@/lib/crm-sync";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -32,13 +33,20 @@ export async function POST(request: NextRequest) {
     const cleanPackage = typeof packageInterest === 'string' ? packageInterest.trim().slice(0, 120) : null;
     const cleanBudget = typeof budget === 'string' ? budget.trim().slice(0, 120) : null;
     const cleanMessage = message.trim();
+    const normalizedEmail = email.trim().toLowerCase();
+    const crmRoute = recommendCrmRoute({
+      source: cleanSource,
+      inquiryType,
+      packageInterest: cleanPackage,
+      details: cleanMessage,
+    });
     const storedMessage = isAdvertising
       ? [`Company: ${cleanCompany || 'Not provided'}`, `Package: ${cleanPackage || 'Not selected'}`, `Budget: ${cleanBudget || 'Not provided'}`, '', cleanMessage].join('\n')
       : cleanMessage;
     const sql = getDb();
     const [contact] = await sql`
       INSERT INTO contacts (name, email, message, source, status)
-      VALUES (${name.trim()}, ${email}, ${storedMessage}, ${cleanSource}, 'new')
+      VALUES (${name.trim()}, ${normalizedEmail}, ${storedMessage}, ${cleanSource}, 'new')
       RETURNING id
     `;
     const sourceRoute = typeof body.sourceRoute === "string" ? body.sourceRoute.slice(0, 500) : cleanSource;
@@ -46,7 +54,7 @@ export async function POST(request: NextRequest) {
       consentKey: isAdvertising ? "advertiserTerms" : "contactPermission",
       entityType: "contact",
       entityId: contact.id,
-      email,
+      email: normalizedEmail,
       sourceRoute,
       formId: isAdvertising ? "advertising-inquiry-form" : "contact-form",
       formVersion: isAdvertising ? FORM_VERSIONS.advertisingInquiry : FORM_VERSIONS.contact,
@@ -57,7 +65,7 @@ export async function POST(request: NextRequest) {
       await mirrorAdvertisingInquirySafely(sql, {
         contactId: contact.id,
         name: name.trim(),
-        email,
+        email: normalizedEmail,
         company: cleanCompany,
         packageInterest: cleanPackage,
         budget: cleanBudget,
@@ -69,13 +77,44 @@ export async function POST(request: NextRequest) {
       kind: isAdvertising ? 'advertising' : 'general',
       recordId: contact.id,
       name: name.trim(),
-      email,
+      email: normalizedEmail,
       source: cleanSource,
       company: cleanCompany,
       packageInterest: cleanPackage,
       budget: cleanBudget,
       message: cleanMessage,
     });
+
+    const crmSync = await syncTo008Crm({
+      eventType: "contact",
+      externalId: `cren:contacts:${String(contact.id)}`,
+      contact: {
+        name: name.trim(),
+        email: normalizedEmail,
+        company: cleanCompany,
+        role: isAdvertising ? "advertiser" : null,
+      },
+      lead: {
+        title: isAdvertising ? `Advertising inquiry: ${cleanCompany || name.trim()}` : `Contact inquiry: ${name.trim()}`,
+        source: cleanSource,
+        routeKey: crmRoute.routeKey,
+        assignedTo: crmRoute.assigneeLabel,
+        routingStatus: crmRoute.routingStatus,
+        message: cleanMessage,
+        packageInterest: cleanPackage,
+        budget: cleanBudget,
+        subscriberSegment: crmRoute.subscriberSegment,
+        interestTags: crmRoute.interestTags,
+        recordUrl: "https://www.columbusrealestatenews.com/admin/leads",
+      },
+      metadata: {
+        isAdvertising,
+        sourceRoute: "/api/contact",
+        routeReason: crmRoute.reason,
+        responseSlaHours: crmRoute.responseSlaHours,
+      },
+    });
+    warnOnCrmSyncFailure(`contact ${String(contact.id)}`, crmSync);
 
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch (error) {

@@ -6,6 +6,7 @@ import { setMemberSessionCookie, signMemberToken } from "@/lib/member-auth";
 import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
 import { FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 import { recordConsentEventSafely } from "@/lib/compliance/consent-events";
+import { recommendCrmRoute, syncTo008Crm, warnOnCrmSyncFailure } from "@/lib/crm-sync";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -103,6 +104,39 @@ export async function POST(request: NextRequest) {
       interests: cleanInterests,
       source: cleanSource,
     });
+
+    const crmRoute = recommendCrmRoute({
+      source: "member-profile",
+      role: member.role,
+      topic: cleanInterests,
+      interests: cleanInterests,
+    });
+    const crmSync = await syncTo008Crm({
+      eventType: "member_profile",
+      externalId: `cren:members:${String(member.id)}`,
+      contact: {
+        name: cleanName,
+        email: normalizedEmail,
+        role: member.role,
+      },
+      lead: {
+        title: `CREN member: ${cleanName}`,
+        source: cleanSource,
+        routeKey: crmRoute.routeKey,
+        assignedTo: crmRoute.assigneeLabel,
+        routingStatus: crmRoute.routingStatus,
+        subscriberSegment: crmRoute.subscriberSegment,
+        interestTags: crmRoute.interestTags,
+        recordUrl: "https://www.columbusrealestatenews.com/profile",
+      },
+      metadata: {
+        emailConsent: emailConsent === true,
+        sourceRoute: "/api/members",
+        routeReason: crmRoute.reason,
+        responseSlaHours: crmRoute.responseSlaHours,
+      },
+    });
+    warnOnCrmSyncFailure(`member ${String(member.id)}`, crmSync);
 
     return NextResponse.json({ ok: true, profile: member }, { status: 201 });
   } catch (error) {

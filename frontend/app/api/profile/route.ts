@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { requireMemberAuth } from "@/lib/member-auth";
+import { recommendCrmRoute, syncTo008Crm, warnOnCrmSyncFailure } from "@/lib/crm-sync";
 
 const MAX_BODY_BYTES = 8_192;
 
@@ -72,6 +73,40 @@ export async function PATCH(request: NextRequest) {
         VALUES (${profile.email}, ${preferredArea}, ${interests}, 'member-profile', 'active')
       `;
     }
+
+    const crmRoute = recommendCrmRoute({
+      source: "member-profile",
+      role,
+      topic: interests,
+      interests,
+    });
+    const crmSync = await syncTo008Crm({
+      eventType: "member_profile",
+      externalId: `cren:members:${String(profile.id)}:profile:${Date.now()}`,
+      contact: {
+        name,
+        email: profile.email,
+        role,
+      },
+      lead: {
+        title: `CREN profile update: ${name}`,
+        source: "member-profile",
+        routeKey: crmRoute.routeKey,
+        assignedTo: crmRoute.assigneeLabel,
+        routingStatus: crmRoute.routingStatus,
+        area: preferredArea,
+        message: bio,
+        subscriberSegment: crmRoute.subscriberSegment,
+        interestTags: crmRoute.interestTags,
+        recordUrl: "https://www.columbusrealestatenews.com/profile",
+      },
+      metadata: {
+        sourceRoute: "/api/profile",
+        routeReason: crmRoute.reason,
+        responseSlaHours: crmRoute.responseSlaHours,
+      },
+    });
+    warnOnCrmSyncFailure(`member profile ${String(profile.id)}`, crmSync);
 
     return NextResponse.json({ profile });
   } catch (error) {

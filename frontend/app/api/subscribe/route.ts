@@ -3,6 +3,7 @@ import { getDb } from "@/lib/db";
 import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
 import { FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 import { recordConsentEventSafely } from "@/lib/compliance/consent-events";
+import { recommendCrmRoute, syncTo008Crm, warnOnCrmSyncFailure } from "@/lib/crm-sync";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -70,6 +71,12 @@ export async function POST(request: NextRequest) {
       .filter(Boolean)
       .join(" | ")
       .slice(0, 700);
+    const crmRoute = recommendCrmRoute({
+      source: `newsletter ${sourceValue}`,
+      role,
+      topic,
+      interests,
+    });
 
     const sql = getDb();
     // Select-then-write: subscribers.email uniqueness is enforced by the
@@ -119,6 +126,38 @@ export async function POST(request: NextRequest) {
       interests: interests.join(', ') || null,
       source: sourceValue,
     });
+
+    const crmSync = await syncTo008Crm({
+      eventType: "newsletter_subscriber",
+      externalId: `cren:subscribers:${String(subscriberId)}`,
+      contact: {
+        name: "Newsletter Subscriber",
+        email,
+        role,
+      },
+      lead: {
+        title: `Newsletter subscriber: ${email}`,
+        source: sourceValue,
+        routeKey: crmRoute.routeKey,
+        assignedTo: crmRoute.assigneeLabel,
+        routingStatus: crmRoute.routingStatus,
+        area,
+        subscriberSegment: crmRoute.subscriberSegment,
+        interestTags: crmRoute.interestTags,
+        recordUrl: "https://www.columbusrealestatenews.com/admin/leads",
+      },
+      metadata: {
+        cadence,
+        timeline,
+        budget,
+        commuteAnchor,
+        topic: topicValue,
+        routeReason: crmRoute.reason,
+        responseSlaHours: crmRoute.responseSlaHours,
+        sourceRoute: "/api/subscribe",
+      },
+    });
+    warnOnCrmSyncFailure(`subscriber ${String(subscriberId)}`, crmSync);
 
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch (error) {

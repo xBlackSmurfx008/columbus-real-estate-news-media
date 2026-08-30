@@ -5,6 +5,7 @@ import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
 import { FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 import { recordConsentEventSafely } from "@/lib/compliance/consent-events";
 import { mirrorLeadIntakeSafely } from "@/lib/compliance/intake-records";
+import { crmEventTypeForLeadPersona, recommendCrmRoute, syncTo008Crm, warnOnCrmSyncFailure } from "@/lib/crm-sync";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PERSONAS = ["fsbo_seller", "investor_seller", "capital_partner", "renter", "rental_listing", "directory_listing", "profile_claim"] as const;
@@ -36,6 +37,10 @@ function summarizeDetails(value: unknown): string | null {
     .filter((part): part is string => Boolean(part));
 
   return parts.join(" | ").slice(0, 900) || null;
+}
+
+function detailString(details: Record<string, unknown>, key: string, max = 200): string | null {
+  return cleanString(details[key], max);
 }
 
 function leadRecipientCategory(persona: typeof PERSONAS[number]) {
@@ -85,6 +90,14 @@ export async function POST(request: NextRequest) {
     `;
     const cleanPhone = typeof phone === "string" ? phone.slice(0, 40) : null;
     const cleanSource = typeof source === "string" ? source.slice(0, 120) : null;
+    const cleanArea = typeof area === "string" ? area.slice(0, 120) : null;
+    const detailsObject = details && typeof details === "object" && !Array.isArray(details) ? details as Record<string, unknown> : {};
+    const detailSummary = summarizeDetails(detailsObject);
+    const crmRoute = recommendCrmRoute({
+      persona,
+      source: cleanSource,
+      details: detailSummary,
+    });
     await recordConsentEventSafely(sql, {
       consentKey: persona === "profile_claim" ? "profileClaim" : "leadRouting",
       entityType: "lead",
@@ -103,8 +116,8 @@ export async function POST(request: NextRequest) {
       name: name.trim(),
       email,
       phone: cleanPhone,
-      area: typeof area === "string" ? area.slice(0, 120) : null,
-      details: details && typeof details === "object" && !Array.isArray(details) ? details as Record<string, unknown> : {},
+      area: cleanArea,
+      details: detailsObject,
     });
 
     await sendTelegramInquiry({
@@ -114,10 +127,43 @@ export async function POST(request: NextRequest) {
       name: name.trim(),
       email,
       phone: cleanPhone,
-      area: typeof area === "string" ? area.slice(0, 120) : null,
+      area: cleanArea,
       source: cleanSource,
-      message: summarizeDetails(details),
+      message: detailSummary,
     });
+
+    const crmSync = await syncTo008Crm({
+      eventType: crmEventTypeForLeadPersona(String(persona)),
+      externalId: `cren:leads:${String(lead.id)}`,
+      contact: {
+        name: name.trim(),
+        email: email.trim().toLowerCase(),
+        phone: cleanPhone,
+        company: detailString(detailsObject, "business_name") ?? detailString(detailsObject, "company_name") ?? detailString(detailsObject, "company"),
+        role: String(persona),
+        website: detailString(detailsObject, "website", 500),
+      },
+      lead: {
+        title: `${String(persona).replace(/_/g, " ")}: ${name.trim()}`,
+        persona: String(persona),
+        source: cleanSource,
+        routeKey: crmRoute.routeKey,
+        assignedTo: crmRoute.assigneeLabel,
+        routingStatus: crmRoute.routingStatus,
+        area: cleanArea,
+        message: detailSummary,
+        details: detailSummary,
+        subscriberSegment: crmRoute.subscriberSegment,
+        interestTags: crmRoute.interestTags,
+        recordUrl: "https://www.columbusrealestatenews.com/admin/leads",
+      },
+      metadata: {
+        sourceRoute: "/api/leads",
+        routeReason: crmRoute.reason,
+        responseSlaHours: crmRoute.responseSlaHours,
+      },
+    });
+    warnOnCrmSyncFailure(`lead ${String(lead.id)}`, crmSync);
 
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch (error) {

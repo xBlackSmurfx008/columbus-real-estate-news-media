@@ -1,6 +1,5 @@
 import { crmAdapter } from "@/src/agent/integrations/crm";
 import {
-  dealsStore,
   listValues,
   nextId,
   onboardingTasksStore,
@@ -22,8 +21,8 @@ function dueDateFromNow(daysAhead: number): string {
   return date.toISOString();
 }
 
-export function createOnboardingTasksForDeal(dealId: string): OnboardingTask[] {
-  const deal = dealsStore.get(dealId);
+export async function createOnboardingTasksForDeal(dealId: string): Promise<OnboardingTask[]> {
+  const deal = (await crmAdapter.getSnapshot()).deals.find((candidate) => candidate.id === dealId);
   if (!deal) throw new Error("Deal not found.");
   if (deal.stage !== "won") throw new Error("Onboarding starts only when deal stage is won.");
 
@@ -45,7 +44,7 @@ export function createOnboardingTasksForDeal(dealId: string): OnboardingTask[] {
     return task;
   });
 
-  crmAdapter.addActivity({
+  await crmAdapter.addActivity({
     entityType: "deal",
     entityId: deal.id,
     contactId: deal.primaryContactId,
@@ -69,11 +68,11 @@ export function updateOnboardingTask(
   return upsert(onboardingTasksStore, task);
 }
 
-export function getOnboardingSnapshot(dealId?: string): {
+export async function getOnboardingSnapshot(dealId?: string): Promise<{
   deals: Deal[];
   tasks: OnboardingTask[];
-} {
-  const deals = listValues(dealsStore);
+}> {
+  const deals = (await crmAdapter.getSnapshot()).deals;
   const tasks = listValues(onboardingTasksStore).filter((task) =>
     dealId ? task.dealId === dealId : true,
   );

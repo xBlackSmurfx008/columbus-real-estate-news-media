@@ -194,8 +194,14 @@ Implemented:
 - `src/agent/durable-store.ts` provides Neon-backed run, step, approval, task,
   incident, audit, and source-packet writes with input hashing and deduplication.
 - `src/agent/durable-state.ts` adds `agent_state_records` and hydrates/flushes
-  the legacy CRM, inbox, sequence, onboarding, billing, and report records
+  the remaining legacy sequence, onboarding, billing, and report records
   through a serialized request boundary while domain repositories are migrated.
+- `src/agent/integrations/crm.ts` now uses typed Neon repositories for companies,
+  contacts, deals, stage history, SLAs, tasks, and activities.
+- `src/agent/repositories/inbox.ts` now persists email/social threads and
+  provider messages in Neon.
+- `/crm` requires an authenticated internal role before rendering pipeline,
+  billing, or outreach data.
 - `src/agent/policy/capabilities.ts` and `lib/agent-auth.ts` enforce role and
   capability checks at the agent API boundary.
 - All existing `/api/agent/*` routes now require authenticated capabilities;
@@ -220,7 +226,7 @@ Verification:
 Applied and configured after the initial verification:
 
 - `npm run newsroom:migrate-agent-foundation` completed against the configured
-  Neon database, including `agent_state_records`.
+  Neon database, including `agent_state_records`, CRM tables, and inbox tables.
 - Production Vercel flags are explicit: durable state enabled, external sends
   disabled, low-risk auto-replies disabled, and CRM sync enabled.
 - `npm run lint`, `npm run build`, and the deterministic suite were rerun after
@@ -235,6 +241,6 @@ Still not performed:
 
 - External outreach, email/social sends, publication, payments, or lead routing.
 - Separate Neon Preview branch and replacement of the compatibility record
-  wrapper with domain-specific repositories.
+  wrapper for sequences, onboarding, billing, and reports.
 - Remote submission smoke with controlled records; keep this as the final
   pre-release check for any future public-form change.

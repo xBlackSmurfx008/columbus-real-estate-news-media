@@ -1,21 +1,12 @@
 import { getDb } from "@/lib/db";
 import {
-  activitiesStore,
-  companiesStore,
-  contactsStore,
   contractsStore,
-  dealSlasStore,
-  dealStageHistoryStore,
-  dealsStore,
-  emailMessagesStore,
   invoicesStore,
   knowledgeStore,
   onboardingTasksStore,
   reportsStore,
   sequenceEnrollmentsStore,
   sequencesStore,
-  tasksStore,
-  threadsStore,
 } from "@/src/agent/store";
 
 type DurableStore = Map<string, unknown>;
@@ -25,15 +16,6 @@ function durableStore<T>(store: Map<string, T>): DurableStore {
 }
 
 const stores: Array<[string, DurableStore]> = [
-  ["companies", durableStore(companiesStore)],
-  ["contacts", durableStore(contactsStore)],
-  ["threads", durableStore(threadsStore)],
-  ["email_messages", durableStore(emailMessagesStore)],
-  ["deals", durableStore(dealsStore)],
-  ["deal_stage_history", durableStore(dealStageHistoryStore)],
-  ["deal_slas", durableStore(dealSlasStore)],
-  ["tasks", durableStore(tasksStore)],
-  ["activities", durableStore(activitiesStore)],
   ["onboarding_tasks", durableStore(onboardingTasksStore)],
   ["reports", durableStore(reportsStore)],
   ["knowledge", durableStore(knowledgeStore)],

@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await requireAgentCapability(request, "onboarding:manage");
     if (isAgentResponse(session)) return session;
-    const snapshot = getOnboardingSnapshot();
+    const snapshot = await getOnboardingSnapshot();
     return NextResponse.json({ ok: true, snapshot });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
@@ -49,15 +49,15 @@ export async function POST(request: NextRequest) {
           { status: 400 },
         );
       }
-      const company = crmAdapter.upsertCompany({
+      const company = await crmAdapter.upsertCompany({
         name: payload.companyName || `${payload.contactName} Company`,
       });
-      const contact = crmAdapter.upsertContact({
+      const contact = await crmAdapter.upsertContact({
         email: payload.contactEmail,
         name: payload.contactName,
         companyId: company.id,
       });
-      const deal = crmAdapter.upsertDeal({
+      const deal = await crmAdapter.upsertDeal({
         companyId: company.id,
         primaryContactId: contact.id,
         stage: "won",
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       dealId = deal.id;
     }
 
-    const tasks = createOnboardingTasksForDeal(dealId);
+    const tasks = await createOnboardingTasksForDeal(dealId);
     return NextResponse.json({ ok: true, dealId, tasks });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";

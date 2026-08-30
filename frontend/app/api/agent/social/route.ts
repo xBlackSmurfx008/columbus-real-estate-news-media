@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { isAgentResponse, requireAgentCapability } from "@/lib/agent-auth";
 import { hasAgentCapability } from "@/src/agent/policy/capabilities";
 import { processInboundSocialDm, sendThreadReply } from "@/src/agent/email/engine";
-import { threadsStore } from "@/src/agent/store";
+import { listThreads } from "@/src/agent/repositories/inbox";
 
 interface SocialInboundPayload {
   fromHandle: string;
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await requireAgentCapability(request, "social:process");
     if (isAgentResponse(session)) return session;
-    const threads = [...threadsStore.values()].filter((thread) => thread.channel === "social_dm");
+    const threads = await listThreads("social_dm");
     return NextResponse.json({ ok: true, threads });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";

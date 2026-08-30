@@ -1,9 +1,10 @@
 import { emailGateway } from "@/src/agent/integrations/email";
 import { crmAdapter } from "@/src/agent/integrations/crm";
 import { claimAgentApproval, completeAgentApproval } from "@/src/agent/durable-store";
-import { nextId, sequenceEnrollmentsStore, sequencesStore, threadsStore, upsert } from "@/src/agent/store";
+import { nextId, sequenceEnrollmentsStore, sequencesStore, upsert } from "@/src/agent/store";
 import type { Sequence, SequenceEnrollment } from "@/src/agent/types";
 import { socialDmGateway } from "@/src/agent/integrations/socialDm";
+import { listThreads } from "@/src/agent/repositories/inbox";
 
 const maxTouchesPerContactPerDay = Number(process.env.AGENT_MAX_TOUCHES_PER_CONTACT_PER_DAY || 2);
 const sendWindowStartHour = Number(process.env.AGENT_SEND_WINDOW_START_HOUR || 9);
@@ -46,9 +47,9 @@ export function enrollSequence(input: Pick<SequenceEnrollment, "sequenceId" | "c
   return upsert(sequenceEnrollmentsStore, enrollment);
 }
 
-function shouldPauseEnrollment(enrollment: SequenceEnrollment, sequence: Sequence): string | undefined {
+async function shouldPauseEnrollment(enrollment: SequenceEnrollment, sequence: Sequence): Promise<string | undefined> {
   if (sequence.stopOnReply) {
-    const hasReply = [...threadsStore.values()].some(
+    const hasReply = (await listThreads()).some(
       (thread) =>
         thread.contactId === enrollment.contactId &&
         (thread.status === "received" || thread.status === "pending_approval"),
@@ -56,8 +57,7 @@ function shouldPauseEnrollment(enrollment: SequenceEnrollment, sequence: Sequenc
     if (hasReply) return "Paused due to inbound reply.";
   }
   if (sequence.stopOnMeetingBooked) {
-    const meetingBooked = crmAdapter
-      .getSnapshot()
+    const meetingBooked = (await crmAdapter.getSnapshot())
       .activities.some(
         (activity) =>
           activity.contactId === enrollment.contactId && activity.type === "meeting_scheduled",
@@ -72,10 +72,9 @@ function inAllowedSendWindow(date = new Date()): boolean {
   return hour >= sendWindowStartHour && hour < sendWindowEndHour;
 }
 
-function touchesSentToday(contactId: string): number {
+async function touchesSentToday(contactId: string): Promise<number> {
   const now = new Date();
-  return crmAdapter
-    .getSnapshot()
+  return (await crmAdapter.getSnapshot())
     .activities.filter((a) => {
       if (a.contactId !== contactId || a.type !== "email_sent") return false;
       const created = new Date(a.createdAt);
@@ -105,7 +104,7 @@ export async function executeSequenceStep(
   const sequence = sequencesStore.get(enrollment.sequenceId);
   if (!sequence) throw new Error("Sequence not found.");
 
-  const pauseReason = shouldPauseEnrollment(enrollment, sequence);
+  const pauseReason = await shouldPauseEnrollment(enrollment, sequence);
   if (pauseReason) {
     enrollment.status = "paused";
     enrollment.stopReason = pauseReason;
@@ -120,7 +119,7 @@ export async function executeSequenceStep(
     return upsert(sequenceEnrollmentsStore, enrollment);
   }
 
-  const contact = crmAdapter.getSnapshot().contacts.find((candidate) => candidate.id === enrollment.contactId);
+  const contact = (await crmAdapter.getSnapshot()).contacts.find((candidate) => candidate.id === enrollment.contactId);
   if (!contact) throw new Error("Contact not found for enrollment.");
 
   if (!inAllowedSendWindow()) {
@@ -130,7 +129,7 @@ export async function executeSequenceStep(
     return upsert(sequenceEnrollmentsStore, enrollment);
   }
 
-  if (touchesSentToday(enrollment.contactId) >= maxTouchesPerContactPerDay) {
+  if ((await touchesSentToday(enrollment.contactId)) >= maxTouchesPerContactPerDay) {
     enrollment.status = "paused";
     enrollment.stopReason = "Daily touch cap reached for contact.";
     enrollment.updatedAt = new Date().toISOString();
@@ -170,7 +169,7 @@ export async function executeSequenceStep(
     throw error;
   }
 
-  crmAdapter.addActivity({
+  await crmAdapter.addActivity({
     entityType: "contact",
     entityId: enrollment.contactId,
     contactId: enrollment.contactId,

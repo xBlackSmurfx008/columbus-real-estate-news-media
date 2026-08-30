@@ -63,7 +63,7 @@ const tables = [
     reason TEXT,
     CONSTRAINT agent_approvals_status_check CHECK (status IN ('pending', 'approved', 'executing', 'executed', 'rejected', 'revision_requested', 'paused'))
   )`],
-  ["agent_tasks", `CREATE TABLE IF NOT EXISTS agent_tasks (
+  ["agent_crm_tasks", `CREATE TABLE IF NOT EXISTS agent_crm_tasks (
     id BIGSERIAL PRIMARY KEY,
     kind TEXT NOT NULL,
     entity_type TEXT,
@@ -129,6 +129,116 @@ const tables = [
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     PRIMARY KEY (namespace, record_id)
   )`],
+  ["agent_companies", `CREATE TABLE IF NOT EXISTS agent_companies (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    website TEXT,
+    industry TEXT,
+    owner_id TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`],
+  ["agent_contacts", `CREATE TABLE IF NOT EXISTS agent_contacts (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    title TEXT,
+    company_id TEXT REFERENCES agent_companies(id) ON DELETE SET NULL,
+    owner_id TEXT,
+    last_contacted_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`],
+  ["agent_deals", `CREATE TABLE IF NOT EXISTS agent_deals (
+    id TEXT PRIMARY KEY,
+    company_id TEXT NOT NULL REFERENCES agent_companies(id) ON DELETE CASCADE,
+    primary_contact_id TEXT REFERENCES agent_contacts(id) ON DELETE SET NULL,
+    stage TEXT NOT NULL,
+    mrr NUMERIC,
+    one_time_revenue NUMERIC,
+    weighted_value NUMERIC,
+    package_name TEXT,
+    close_date TIMESTAMPTZ,
+    renewal_date TIMESTAMPTZ,
+    owner_role TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`],
+  ["agent_deal_stage_history", `CREATE TABLE IF NOT EXISTS agent_deal_stage_history (
+    id TEXT PRIMARY KEY,
+    deal_id TEXT NOT NULL REFERENCES agent_deals(id) ON DELETE CASCADE,
+    from_stage TEXT,
+    to_stage TEXT NOT NULL,
+    changed_by_role TEXT NOT NULL,
+    reason TEXT,
+    changed_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`],
+  ["agent_deal_slas", `CREATE TABLE IF NOT EXISTS agent_deal_slas (
+    id TEXT PRIMARY KEY,
+    deal_id TEXT NOT NULL REFERENCES agent_deals(id) ON DELETE CASCADE,
+    type TEXT NOT NULL,
+    due_at TIMESTAMPTZ NOT NULL,
+    completed_at TIMESTAMPTZ,
+    status TEXT NOT NULL DEFAULT 'pending',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (deal_id, type)
+  )`],
+  ["agent_tasks", `CREATE TABLE IF NOT EXISTS agent_tasks (
+    id TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    due_at TIMESTAMPTZ,
+    assignee_role TEXT NOT NULL,
+    contact_id TEXT REFERENCES agent_contacts(id) ON DELETE SET NULL,
+    deal_id TEXT REFERENCES agent_deals(id) ON DELETE SET NULL,
+    notes TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`],
+  ["agent_activities", `CREATE TABLE IF NOT EXISTS agent_activities (
+    id TEXT PRIMARY KEY,
+    entity_type TEXT NOT NULL,
+    entity_id TEXT NOT NULL,
+    contact_id TEXT REFERENCES agent_contacts(id) ON DELETE SET NULL,
+    deal_id TEXT REFERENCES agent_deals(id) ON DELETE SET NULL,
+    thread_id TEXT,
+    type TEXT NOT NULL,
+    summary TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`],
+  ["agent_threads", `CREATE TABLE IF NOT EXISTS agent_threads (
+    id TEXT PRIMARY KEY,
+    contact_id TEXT NOT NULL REFERENCES agent_contacts(id) ON DELETE CASCADE,
+    deal_id TEXT REFERENCES agent_deals(id) ON DELETE SET NULL,
+    channel TEXT NOT NULL,
+    subject TEXT NOT NULL,
+    body TEXT NOT NULL,
+    intent TEXT NOT NULL,
+    risk TEXT NOT NULL,
+    confidence NUMERIC NOT NULL,
+    status TEXT NOT NULL,
+    draft_reply TEXT,
+    source_knowledge_ids JSONB NOT NULL DEFAULT '[]'::jsonb,
+    approval_decision TEXT NOT NULL,
+    approval_reason TEXT,
+    dm_provider TEXT,
+    dm_thread_external_id TEXT,
+    dm_handle TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`],
+  ["agent_messages", `CREATE TABLE IF NOT EXISTS agent_messages (
+    id TEXT PRIMARY KEY,
+    thread_id TEXT NOT NULL REFERENCES agent_threads(id) ON DELETE CASCADE,
+    contact_id TEXT NOT NULL REFERENCES agent_contacts(id) ON DELETE CASCADE,
+    direction TEXT NOT NULL,
+    provider_message_id TEXT NOT NULL,
+    subject TEXT NOT NULL,
+    body TEXT NOT NULL,
+    sent_at TIMESTAMPTZ NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`],
 ];
 
 for (const [name, ddl] of tables) {
@@ -145,6 +255,14 @@ for (const ddl of [
   "CREATE INDEX IF NOT EXISTS agent_incidents_open_idx ON agent_incidents(status, severity, created_at DESC)",
   "CREATE INDEX IF NOT EXISTS source_packets_review_idx ON source_packets(review_status, created_at DESC)",
   "CREATE INDEX IF NOT EXISTS agent_state_records_namespace_idx ON agent_state_records(namespace, updated_at DESC)",
+  "CREATE UNIQUE INDEX IF NOT EXISTS agent_contacts_email_idx ON agent_contacts(LOWER(email))",
+  "CREATE UNIQUE INDEX IF NOT EXISTS agent_companies_name_idx ON agent_companies(LOWER(name))",
+  "CREATE UNIQUE INDEX IF NOT EXISTS agent_deals_identity_idx ON agent_deals(company_id, COALESCE(primary_contact_id, ''))",
+  "CREATE INDEX IF NOT EXISTS agent_deals_stage_idx ON agent_deals(stage, updated_at DESC)",
+  "CREATE INDEX IF NOT EXISTS agent_activities_created_idx ON agent_activities(created_at DESC)",
+  "CREATE INDEX IF NOT EXISTS agent_threads_status_idx ON agent_threads(status, updated_at DESC)",
+  "CREATE INDEX IF NOT EXISTS agent_threads_channel_idx ON agent_threads(channel, created_at DESC)",
+  "CREATE UNIQUE INDEX IF NOT EXISTS agent_messages_provider_idx ON agent_messages(provider_message_id)",
 ]) {
   await sql.query(ddl);
 }

@@ -1,14 +1,7 @@
-import {
-  activitiesStore,
-  listValues,
-  nextId,
-  onboardingTasksStore,
-  reportsStore,
-  sequenceEnrollmentsStore,
-  threadsStore,
-  upsert,
-} from "@/src/agent/store";
+import { listValues, nextId, onboardingTasksStore, reportsStore, sequenceEnrollmentsStore, upsert } from "@/src/agent/store";
 import type { AgentReport, MessageThread } from "@/src/agent/types";
+import { listThreads } from "@/src/agent/repositories/inbox";
+import { crmAdapter } from "@/src/agent/integrations/crm";
 
 function isWithinNext48Hours(isoDate?: string): boolean {
   if (!isoDate) return false;
@@ -17,14 +10,14 @@ function isWithinNext48Hours(isoDate?: string): boolean {
   return target >= now && target <= now + 48 * 60 * 60 * 1000;
 }
 
-export function buildDailyDigest(): AgentReport {
-  const threads = listValues(threadsStore);
+export async function buildDailyDigest(): Promise<AgentReport> {
+  const threads = await listThreads();
   const pendingApprovals = threads.filter((t) => t.status === "pending_approval").length;
   const escalations = threads.filter((t) => t.status === "escalated").length;
   const autoSent = threads.filter(
     (t) => t.status === "sent" && t.approvalDecision === "auto_approved",
   ).length;
-  const syncFailures = listValues(activitiesStore).filter((a) =>
+  const syncFailures = (await crmAdapter.getSnapshot()).activities.filter((a) =>
     a.summary.toLowerCase().includes("sync failed"),
   ).length;
   const onboardingDueNext48h = listValues(onboardingTasksStore).filter((t) =>
@@ -70,12 +63,12 @@ export function buildDailyDigest(): AgentReport {
   return upsert(reportsStore, report);
 }
 
-export function getEscalationAlerts(): Array<{
+export async function getEscalationAlerts(): Promise<Array<{
   threadId: string;
   reason: string;
   risk: MessageThread["risk"];
-}> {
-  return listValues(threadsStore)
+}>> {
+  return (await listThreads())
     .filter((thread) => thread.status === "escalated" || thread.risk === "high")
     .map((thread) => ({
       threadId: thread.id,

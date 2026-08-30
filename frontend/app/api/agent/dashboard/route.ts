@@ -11,8 +11,8 @@ export async function GET(request: NextRequest) {
     if (isAgentResponse(session)) return session;
     return NextResponse.json({
       ok: true,
-      metrics: getDashboardMetrics(),
-      crm: crmAdapter.getSnapshot(),
+      metrics: await getDashboardMetrics(),
+      crm: await crmAdapter.getSnapshot(),
       billing: getBillingSnapshot(),
       sequences: getSequenceSnapshot(),
     });

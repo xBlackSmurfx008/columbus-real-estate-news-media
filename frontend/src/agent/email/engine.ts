@@ -3,19 +3,16 @@ import { buildDraftReply } from "@/src/agent/email/draft";
 import { initializeKnowledgeBase } from "@/src/agent/knowledge/base";
 import { crmAdapter } from "@/src/agent/integrations/crm";
 import { requiresHumanApproval } from "@/src/agent/policy/risk";
-import {
-  activitiesStore,
-  contactsStore,
-  emailMessagesStore,
-  nextId,
-  threadsStore,
-  upsert,
-} from "@/src/agent/store";
 import type { Channel, Contact, MessageThread } from "@/src/agent/types";
 import { emailGateway, type EmailInbound } from "@/src/agent/integrations/email";
 import { socialDmGateway } from "@/src/agent/integrations/socialDm";
+import { getThread, saveMessage, saveThread } from "@/src/agent/repositories/inbox";
 
 let initialized = false;
+
+function id(prefix: string): string {
+  return `${prefix}_${crypto.randomUUID()}`;
+}
 
 function ensureInitialized(): void {
   if (initialized) return;
@@ -23,18 +20,13 @@ function ensureInitialized(): void {
   initialized = true;
 }
 
-function findOrCreateContact(fromEmail: string): Contact {
-  const existing = [...contactsStore.values()].find((c) => c.email === fromEmail);
+async function findOrCreateContact(fromEmail: string): Promise<Contact> {
+  const existing = await crmAdapter.getContactByEmail(fromEmail);
   if (existing) return existing;
-  const now = new Date().toISOString();
-  const contact: Contact = {
-    id: nextId("contact"),
+  return crmAdapter.upsertContact({
     name: fromEmail.split("@")[0] || "unknown",
     email: fromEmail,
-    createdAt: now,
-    updatedAt: now,
-  };
-  return upsert(contactsStore, contact);
+  });
 }
 
 export async function processInboundEmail(input: EmailInbound): Promise<MessageThread> {
@@ -81,16 +73,15 @@ export async function processInboundMessage(input: {
 }): Promise<MessageThread> {
   ensureInitialized();
   const now = new Date().toISOString();
-  const contact = findOrCreateContact(input.from);
-  const relatedDeal = crmAdapter
-    .getSnapshot()
+  const contact = await findOrCreateContact(input.from);
+  const relatedDeal = (await crmAdapter.getSnapshot())
     .deals.find((deal) => deal.primaryContactId === contact.id);
   const classification = classifyIntent(input.subject, input.body);
   const risk = classifyRisk(input.subject, input.body);
   const drafted = buildDraftReply(classification.intent, input.subject, input.body);
 
   const thread: MessageThread = {
-    id: nextId("thread"),
+    id: id("thread"),
     contactId: contact.id,
     dealId: relatedDeal?.id,
     channel: input.channel,
@@ -114,13 +105,13 @@ export async function processInboundMessage(input: {
     updatedAt: now,
   };
 
-  upsert(threadsStore, thread);
-  upsert(emailMessagesStore, {
-    id: nextId("message"),
+  await saveThread(thread);
+  await saveMessage({
+    id: id("message"),
     threadId: thread.id,
     contactId: contact.id,
     direction: "inbound",
-    providerMessageId: input.providerMessageId || nextId("inbound"),
+    providerMessageId: input.providerMessageId || id("inbound"),
     subject: input.subject || "Inbound message",
     body: input.body,
     sentAt: input.receivedAt || now,
@@ -136,9 +127,8 @@ export async function processInboundMessage(input: {
     await sendThreadReply(thread.id, true, "Auto-approved low-risk response.");
   }
 
-  upsert(threadsStore, thread);
-  upsert(activitiesStore, {
-    id: nextId("activity"),
+  await saveThread(thread);
+  await crmAdapter.addActivity({
     entityType: "thread",
     entityId: thread.id,
     contactId: contact.id,
@@ -146,12 +136,10 @@ export async function processInboundMessage(input: {
     threadId: thread.id,
     type: "email_received",
     summary: `Inbound processed with intent=${thread.intent}, risk=${thread.risk}.`,
-    createdAt: now,
   });
 
   if (thread.status === "pending_approval") {
-    upsert(activitiesStore, {
-      id: nextId("activity"),
+    await crmAdapter.addActivity({
       entityType: "thread",
       entityId: thread.id,
       contactId: contact.id,
@@ -159,7 +147,6 @@ export async function processInboundMessage(input: {
       threadId: thread.id,
       type: "approval_required",
       summary: thread.approvalReason || "Requires human approval.",
-      createdAt: now,
     });
   }
 
@@ -171,9 +158,9 @@ export async function sendThreadReply(
   approved: boolean,
   reason?: string,
 ): Promise<MessageThread> {
-  const thread = threadsStore.get(threadId);
+  const thread = await getThread(threadId);
   if (!thread) throw new Error("Thread not found.");
-  const contact = contactsStore.get(thread.contactId);
+  const contact = (await crmAdapter.getSnapshot()).contacts.find((candidate) => candidate.id === thread.contactId);
   if (!contact) throw new Error("Contact not found.");
 
   if (!approved) {
@@ -181,7 +168,7 @@ export async function sendThreadReply(
     thread.status = "escalated";
     thread.approvalReason = reason || "Rejected by reviewer.";
     thread.updatedAt = new Date().toISOString();
-    upsert(threadsStore, thread);
+    await saveThread(thread);
     return thread;
   }
 
@@ -203,8 +190,7 @@ export async function sendThreadReply(
       });
     }
   } catch (error) {
-    upsert(activitiesStore, {
-      id: nextId("activity"),
+    await crmAdapter.addActivity({
       entityType: "thread",
       entityId: thread.id,
       contactId: contact.id,
@@ -212,13 +198,12 @@ export async function sendThreadReply(
       threadId: thread.id,
       type: "approval_required",
       summary: `Send failed: ${error instanceof Error ? error.message : "unknown error"}`,
-      createdAt: new Date().toISOString(),
     });
     throw error;
   }
   if (!outbound.ok) throw new Error("Message provider send failed.");
-  upsert(emailMessagesStore, {
-    id: nextId("message"),
+  await saveMessage({
+    id: id("message"),
     threadId: thread.id,
     contactId: contact.id,
     direction: "outbound",
@@ -231,10 +216,9 @@ export async function sendThreadReply(
   thread.status = "sent";
   thread.approvalDecision = thread.approvalDecision === "auto_approved" ? "auto_approved" : "approved";
   thread.updatedAt = new Date().toISOString();
-  upsert(threadsStore, thread);
+  await saveThread(thread);
 
-  upsert(activitiesStore, {
-    id: nextId("activity"),
+  await crmAdapter.addActivity({
     entityType: "thread",
     entityId: thread.id,
     contactId: contact.id,
@@ -242,11 +226,10 @@ export async function sendThreadReply(
     threadId: thread.id,
     type: "email_sent",
     summary: `Reply sent (${thread.approvalDecision}). reason=${reason || "n/a"}`,
-    createdAt: new Date().toISOString(),
   });
 
   // SLA follow-up task if no reply window is missed.
-  crmAdapter.upsertTask({
+  await crmAdapter.upsertTask({
     title: `Follow up on thread: ${thread.subject}`,
     status: "pending",
     dueAt: (() => {

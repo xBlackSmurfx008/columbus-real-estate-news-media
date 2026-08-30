@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const contact = crmAdapter.upsertContact({
+    const contact = await crmAdapter.upsertContact({
       email: payload.contactEmail,
       name: payload.contactName,
     });
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       notes: payload.notes,
     });
 
-    crmAdapter.addActivity({
+    await crmAdapter.addActivity({
       entityType: "contact",
       entityId: contact.id,
       contactId: contact.id,

@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await requireAgentCapability(request, "crm:read");
     if (isAgentResponse(session)) return session;
-    const snapshot = crmAdapter.getSnapshot();
+    const snapshot = await crmAdapter.getSnapshot();
     return NextResponse.json({ ok: true, snapshot });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
@@ -62,8 +62,8 @@ export async function POST(request: NextRequest) {
           { status: 400 },
         );
       }
-      const company = crmAdapter.upsertCompany(payload.company);
-      const contact = crmAdapter.upsertContact({
+      const company = await crmAdapter.upsertCompany(payload.company);
+      const contact = await crmAdapter.upsertContact({
         email: payload.contact.email,
         name: payload.contact.name,
         title: payload.contact.title,
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
 
       let deal;
       if (payload.deal) {
-        deal = crmAdapter.upsertDeal({
+        deal = await crmAdapter.upsertDeal({
           companyId: company.id,
           primaryContactId: contact.id,
           stage: payload.deal.stage,
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (payload.action === "move_stage") {
-      const deal = crmAdapter.moveDealStage(
+      const deal = await crmAdapter.moveDealStage(
         payload.dealId,
         payload.stage,
         payload.changedByRole,
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (payload.action === "upsert_task") {
-      const task = crmAdapter.upsertTask(payload.task);
+      const task = await crmAdapter.upsertTask(payload.task);
       return NextResponse.json({ ok: true, task });
     }
 

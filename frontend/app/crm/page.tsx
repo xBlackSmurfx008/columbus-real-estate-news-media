@@ -3,12 +3,18 @@ import { getDashboardMetrics } from "@/src/agent/reporting/kpi";
 import { getBillingSnapshot } from "@/src/agent/workflows/billing";
 import { getSequenceSnapshot } from "@/src/agent/workflows/sequences";
 import { CrenPage } from "@/components/cren/cren-page";
+import { getSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function CRMPage() {
-  const crm = crmAdapter.getSnapshot();
+export default async function CRMPage() {
+  const session = await getSession();
+  if (!session) redirect("/admin/login?next=/crm");
+  if (!["admin", "owner", "sales", "operations"].includes(session.role)) redirect("/admin");
+
+  const crm = await crmAdapter.getSnapshot();
   const billing = getBillingSnapshot();
   const sequences = getSequenceSnapshot();
-  const metrics = getDashboardMetrics();
+  const metrics = await getDashboardMetrics();
 
   return (
     <CrenPage>

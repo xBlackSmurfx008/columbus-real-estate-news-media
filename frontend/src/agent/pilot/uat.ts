@@ -2,7 +2,7 @@ import { processInboundEmail, processInboundSocialDm, sendThreadReply } from "@/
 import { buildDailyDigest } from "@/src/agent/reporting/digest";
 import { createOnboardingTasksForDeal } from "@/src/agent/workflows/onboarding";
 import { crmAdapter } from "@/src/agent/integrations/crm";
-import { threadsStore } from "@/src/agent/store";
+import { listThreads } from "@/src/agent/repositories/inbox";
 import { enrollSequence, upsertSequence } from "@/src/agent/workflows/sequences";
 import { upsertContract, upsertInvoice } from "@/src/agent/workflows/billing";
 import { getDashboardMetrics } from "@/src/agent/reporting/kpi";
@@ -31,15 +31,15 @@ export async function runPilotUAT() {
     providerThreadId: "dm-thread-1",
   });
 
-  const company = crmAdapter.upsertCompany({
+  const company = await crmAdapter.upsertCompany({
     name: "Onboarding Partner LLC",
   });
-  const contact = crmAdapter.upsertContact({
+  const contact = await crmAdapter.upsertContact({
     email: "onboarding@example.com",
     name: "Onboarding Partner",
     companyId: company.id,
   });
-  const deal = crmAdapter.upsertDeal({
+  const deal = await crmAdapter.upsertDeal({
     companyId: company.id,
     primaryContactId: contact.id,
     stage: "won",
@@ -48,7 +48,7 @@ export async function runPilotUAT() {
     oneTimeRevenue: 1750,
     ownerRole: "sales",
   });
-  const tasks = createOnboardingTasksForDeal(deal.id);
+  const tasks = await createOnboardingTasksForDeal(deal.id);
 
   const sequence = upsertSequence({
     name: "Founding Sponsor Intro",
@@ -98,12 +98,12 @@ export async function runPilotUAT() {
     dueAt: new Date(Date.now() + 7 * 86400000).toISOString(),
   });
 
-  const report = buildDailyDigest();
-  const metrics = getDashboardMetrics();
+  const report = await buildDailyDigest();
+  const metrics = await getDashboardMetrics();
 
   return {
     ok: true,
-    threadsTotal: threadsStore.size,
+    threadsTotal: (await listThreads()).length,
     lowRiskThreadId: lowRisk.id,
     highRiskThreadId: highRisk.id,
     socialThreadId: socialInbound.id,

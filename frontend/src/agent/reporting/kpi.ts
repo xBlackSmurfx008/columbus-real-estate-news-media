@@ -1,4 +1,4 @@
-import { activitiesStore, dealsStore } from "@/src/agent/store";
+import { crmAdapter } from "@/src/agent/integrations/crm";
 import type { DashboardMetrics } from "@/src/agent/types";
 
 function startOfWeek(): Date {
@@ -11,10 +11,9 @@ function startOfWeek(): Date {
   return start;
 }
 
-export function getDashboardMetrics(): DashboardMetrics {
+export async function getDashboardMetrics(): Promise<DashboardMetrics> {
   const weekStart = startOfWeek().getTime();
-  const activities = [...activitiesStore.values()];
-  const deals = [...dealsStore.values()];
+  const { activities, deals } = await crmAdapter.getSnapshot();
   const touchesThisWeek = activities.filter((a) => new Date(a.createdAt).getTime() >= weekStart).length;
   const discoveryCallsBooked = activities.filter((a) => a.type === "meeting_scheduled").length;
   const proposalsSent = deals.filter((d) => d.stage === "proposal_sent" || d.stage === "negotiation" || d.stage === "won").length;

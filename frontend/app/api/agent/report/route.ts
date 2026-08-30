@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       ok: true,
       reports: getReports(),
-      alerts: getEscalationAlerts(),
+      alerts: await getEscalationAlerts(),
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
@@ -25,8 +25,8 @@ export async function POST(request: NextRequest) {
   try {
     const session = await requireAgentCapability(request, "report:write");
     if (isAgentResponse(session)) return session;
-    const report = buildDailyDigest();
-    const alerts = getEscalationAlerts();
+    const report = await buildDailyDigest();
+    const alerts = await getEscalationAlerts();
     return NextResponse.json({ ok: true, report, alerts });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";

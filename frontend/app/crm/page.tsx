@@ -12,8 +12,8 @@ export default async function CRMPage() {
   if (!["admin", "owner", "sales", "operations"].includes(session.role)) redirect("/admin");
 
   const crm = await crmAdapter.getSnapshot();
-  const billing = getBillingSnapshot();
-  const sequences = getSequenceSnapshot();
+  const billing = await getBillingSnapshot();
+  const sequences = await getSequenceSnapshot();
   const metrics = await getDashboardMetrics();
 
   return (

@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await requireAgentCapability(request, "sequence:manage");
     if (isAgentResponse(session)) return session;
-    return NextResponse.json({ ok: true, snapshot: getSequenceSnapshot() });
+    return NextResponse.json({ ok: true, snapshot: await getSequenceSnapshot() });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json({ ok: false, error: message }, { status: 500 });
@@ -52,11 +52,11 @@ export async function POST(request: NextRequest) {
     if (isAgentResponse(session)) return session;
     const payload = (await request.json()) as SequencePayload;
     if (payload.action === "upsert_sequence") {
-      const sequence = upsertSequence(payload.sequence);
+      const sequence = await upsertSequence(payload.sequence);
       return NextResponse.json({ ok: true, sequence });
     }
     if (payload.action === "enroll") {
-      const enrollment = enrollSequence(payload.enrollment);
+      const enrollment = await enrollSequence(payload.enrollment);
       return NextResponse.json({ ok: true, enrollment });
     }
     if (payload.action === "run_step") {

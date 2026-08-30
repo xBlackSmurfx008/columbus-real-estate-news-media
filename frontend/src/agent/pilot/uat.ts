@@ -50,7 +50,7 @@ export async function runPilotUAT() {
   });
   const tasks = await createOnboardingTasksForDeal(deal.id);
 
-  const sequence = upsertSequence({
+  const sequence = await upsertSequence({
     name: "Founding Sponsor Intro",
     stopOnReply: true,
     stopOnMeetingBooked: true,
@@ -73,7 +73,7 @@ export async function runPilotUAT() {
       },
     ],
   });
-  const enrollment = enrollSequence({
+  const enrollment = await enrollSequence({
     sequenceId: sequence.id,
     contactId: contact.id,
     dealId: deal.id,
@@ -83,13 +83,13 @@ export async function runPilotUAT() {
     throw new Error("Pilot execution requires an explicit durable approval and is not part of the default UAT path.");
   }
 
-  const contract = upsertContract({
+  const contract = await upsertContract({
     companyId: company.id,
     dealId: deal.id,
     status: "sent",
     amount: 5250,
   });
-  const invoice = upsertInvoice({
+  const invoice = await upsertInvoice({
     contractId: contract.id,
     companyId: company.id,
     dealId: deal.id,

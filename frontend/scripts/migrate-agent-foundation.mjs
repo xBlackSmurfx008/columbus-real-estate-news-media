@@ -239,6 +239,75 @@ const tables = [
     sent_at TIMESTAMPTZ NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   )`],
+  ["agent_sequences", `CREATE TABLE IF NOT EXISTS agent_sequences (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    stop_on_reply BOOLEAN NOT NULL,
+    stop_on_meeting_booked BOOLEAN NOT NULL,
+    steps_json JSONB NOT NULL DEFAULT '[]'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`],
+  ["agent_sequence_enrollments", `CREATE TABLE IF NOT EXISTS agent_sequence_enrollments (
+    id TEXT PRIMARY KEY,
+    sequence_id TEXT NOT NULL REFERENCES agent_sequences(id) ON DELETE CASCADE,
+    contact_id TEXT NOT NULL REFERENCES agent_contacts(id) ON DELETE CASCADE,
+    deal_id TEXT REFERENCES agent_deals(id) ON DELETE SET NULL,
+    current_step_order INTEGER NOT NULL DEFAULT 1,
+    status TEXT NOT NULL DEFAULT 'active',
+    last_advanced_at TIMESTAMPTZ,
+    stop_reason TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`],
+  ["agent_onboarding_tasks", `CREATE TABLE IF NOT EXISTS agent_onboarding_tasks (
+    id TEXT PRIMARY KEY,
+    deal_id TEXT NOT NULL REFERENCES agent_deals(id) ON DELETE CASCADE,
+    type TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending',
+    due_at TIMESTAMPTZ,
+    assignee TEXT,
+    notes TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`],
+  ["agent_contracts", `CREATE TABLE IF NOT EXISTS agent_contracts (
+    id TEXT PRIMARY KEY,
+    company_id TEXT NOT NULL REFERENCES agent_companies(id) ON DELETE CASCADE,
+    deal_id TEXT NOT NULL REFERENCES agent_deals(id) ON DELETE CASCADE,
+    status TEXT NOT NULL,
+    amount NUMERIC NOT NULL,
+    starts_on DATE,
+    ends_on DATE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`],
+  ["agent_invoices", `CREATE TABLE IF NOT EXISTS agent_invoices (
+    id TEXT PRIMARY KEY,
+    contract_id TEXT NOT NULL REFERENCES agent_contracts(id) ON DELETE CASCADE,
+    company_id TEXT NOT NULL REFERENCES agent_companies(id) ON DELETE CASCADE,
+    deal_id TEXT NOT NULL REFERENCES agent_deals(id) ON DELETE CASCADE,
+    status TEXT NOT NULL,
+    amount NUMERIC NOT NULL,
+    due_at TIMESTAMPTZ NOT NULL,
+    paid_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`],
+  ["agent_reports", `CREATE TABLE IF NOT EXISTS agent_reports (
+    id TEXT PRIMARY KEY,
+    report_date DATE NOT NULL,
+    threads_handled INTEGER NOT NULL,
+    auto_sent INTEGER NOT NULL,
+    pending_approvals INTEGER NOT NULL,
+    escalations INTEGER NOT NULL,
+    sync_failures INTEGER NOT NULL,
+    onboarding_due_next_48h INTEGER NOT NULL,
+    summary TEXT NOT NULL,
+    channel_breakdown JSONB,
+    outreach JSONB,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )`],
 ];
 
 for (const [name, ddl] of tables) {
@@ -263,6 +332,9 @@ for (const ddl of [
   "CREATE INDEX IF NOT EXISTS agent_threads_status_idx ON agent_threads(status, updated_at DESC)",
   "CREATE INDEX IF NOT EXISTS agent_threads_channel_idx ON agent_threads(channel, created_at DESC)",
   "CREATE UNIQUE INDEX IF NOT EXISTS agent_messages_provider_idx ON agent_messages(provider_message_id)",
+  "CREATE INDEX IF NOT EXISTS agent_sequence_enrollments_status_idx ON agent_sequence_enrollments(status, updated_at DESC)",
+  "CREATE INDEX IF NOT EXISTS agent_onboarding_tasks_due_idx ON agent_onboarding_tasks(status, due_at)",
+  "CREATE INDEX IF NOT EXISTS agent_reports_date_idx ON agent_reports(report_date DESC, created_at DESC)",
 ]) {
   await sql.query(ddl);
 }

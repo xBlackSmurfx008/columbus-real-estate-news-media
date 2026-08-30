@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await requireAgentCapability(request, "billing:manage");
     if (isAgentResponse(session)) return session;
-    return NextResponse.json({ ok: true, snapshot: getBillingSnapshot() });
+    return NextResponse.json({ ok: true, snapshot: await getBillingSnapshot() });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json({ ok: false, error: message }, { status: 500 });
@@ -55,21 +55,21 @@ export async function POST(request: NextRequest) {
     if (isAgentResponse(session)) return session;
     const payload = (await request.json()) as BillingPayload;
     if (payload.action === "upsert_contract") {
-      return NextResponse.json({ ok: true, contract: upsertContract(payload.contract) });
+      return NextResponse.json({ ok: true, contract: await upsertContract(payload.contract) });
     }
     if (payload.action === "set_contract_status") {
       return NextResponse.json({
         ok: true,
-        contract: setContractStatus(payload.contractId, payload.status),
+        contract: await setContractStatus(payload.contractId, payload.status),
       });
     }
     if (payload.action === "upsert_invoice") {
-      return NextResponse.json({ ok: true, invoice: upsertInvoice(payload.invoice) });
+      return NextResponse.json({ ok: true, invoice: await upsertInvoice(payload.invoice) });
     }
     if (payload.action === "set_invoice_status") {
       return NextResponse.json({
         ok: true,
-        invoice: setInvoiceStatus(payload.invoiceId, payload.status),
+        invoice: await setInvoiceStatus(payload.invoiceId, payload.status),
       });
     }
     return NextResponse.json({ error: "Invalid action." }, { status: 400 });

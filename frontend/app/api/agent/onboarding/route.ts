@@ -85,7 +85,7 @@ export async function PATCH(request: NextRequest) {
     if (!payload.taskId || !payload.status) {
       return NextResponse.json({ error: "Required fields: taskId, status." }, { status: 400 });
     }
-    const task = updateOnboardingTask(payload.taskId, payload.status, payload.notes);
+    const task = await updateOnboardingTask(payload.taskId, payload.status, payload.notes);
     return NextResponse.json({ ok: true, task });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";

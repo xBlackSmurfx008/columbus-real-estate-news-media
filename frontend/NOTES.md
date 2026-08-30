@@ -193,13 +193,14 @@ Implemented:
   `agent_incidents`, and `source_packets` tables.
 - `src/agent/durable-store.ts` provides Neon-backed run, step, approval, task,
   incident, audit, and source-packet writes with input hashing and deduplication.
-- `src/agent/durable-state.ts` adds `agent_state_records` and hydrates/flushes
-  the remaining legacy sequence, onboarding, billing, and report records
-  through a serialized request boundary while domain repositories are migrated.
+- `src/agent/durable-state.ts` now hydrates only the static knowledge seed;
+  business records no longer depend on the compatibility state wrapper.
 - `src/agent/integrations/crm.ts` now uses typed Neon repositories for companies,
   contacts, deals, stage history, SLAs, tasks, and activities.
 - `src/agent/repositories/inbox.ts` now persists email/social threads and
   provider messages in Neon.
+- `src/agent/repositories/sequences.ts`, `onboarding.ts`, `billing.ts`, and
+  `reports.ts` persist the remaining agent business records in Neon.
 - `/crm` requires an authenticated internal role before rendering pipeline,
   billing, or outreach data.
 - `src/agent/policy/capabilities.ts` and `lib/agent-auth.ts` enforce role and
@@ -240,7 +241,7 @@ Applied and configured after the initial verification:
 Still not performed:
 
 - External outreach, email/social sends, publication, payments, or lead routing.
-- Separate Neon Preview branch and replacement of the compatibility record
-  wrapper for sequences, onboarding, billing, and reports.
+- Separate Neon Preview branch for non-empty agent workflow UAT before future
+  production data changes.
 - Remote submission smoke with controlled records; keep this as the final
   pre-release check for any future public-form change.

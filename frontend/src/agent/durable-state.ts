@@ -1,12 +1,6 @@
 import { getDb } from "@/lib/db";
 import {
-  contractsStore,
-  invoicesStore,
   knowledgeStore,
-  onboardingTasksStore,
-  reportsStore,
-  sequenceEnrollmentsStore,
-  sequencesStore,
 } from "@/src/agent/store";
 
 type DurableStore = Map<string, unknown>;
@@ -16,13 +10,7 @@ function durableStore<T>(store: Map<string, T>): DurableStore {
 }
 
 const stores: Array<[string, DurableStore]> = [
-  ["onboarding_tasks", durableStore(onboardingTasksStore)],
-  ["reports", durableStore(reportsStore)],
   ["knowledge", durableStore(knowledgeStore)],
-  ["sequences", durableStore(sequencesStore)],
-  ["sequence_enrollments", durableStore(sequenceEnrollmentsStore)],
-  ["contracts", durableStore(contractsStore)],
-  ["invoices", durableStore(invoicesStore)],
 ];
 
 let stateRequestTail = Promise.resolve();

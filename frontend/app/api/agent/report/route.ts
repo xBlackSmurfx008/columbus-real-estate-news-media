@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     if (isAgentResponse(session)) return session;
     return NextResponse.json({
       ok: true,
-      reports: getReports(),
+      reports: await getReports(),
       alerts: await getEscalationAlerts(),
     });
   } catch (error) {

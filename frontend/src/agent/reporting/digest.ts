@@ -1,7 +1,9 @@
-import { listValues, nextId, onboardingTasksStore, reportsStore, sequenceEnrollmentsStore, upsert } from "@/src/agent/store";
 import type { AgentReport, MessageThread } from "@/src/agent/types";
 import { listThreads } from "@/src/agent/repositories/inbox";
 import { crmAdapter } from "@/src/agent/integrations/crm";
+import { listEnrollments } from "@/src/agent/repositories/sequences";
+import { listReports, saveReport } from "@/src/agent/repositories/reports";
+import { listOnboardingTasks } from "@/src/agent/repositories/onboarding";
 
 function isWithinNext48Hours(isoDate?: string): boolean {
   if (!isoDate) return false;
@@ -20,18 +22,18 @@ export async function buildDailyDigest(): Promise<AgentReport> {
   const syncFailures = (await crmAdapter.getSnapshot()).activities.filter((a) =>
     a.summary.toLowerCase().includes("sync failed"),
   ).length;
-  const onboardingDueNext48h = listValues(onboardingTasksStore).filter((t) =>
+  const onboardingDueNext48h = (await listOnboardingTasks()).filter((t) =>
     isWithinNext48Hours(t.dueAt),
   ).length;
   const channelBreakdown = {
     email: threads.filter((t) => t.channel === "email").length,
     socialDm: threads.filter((t) => t.channel === "social_dm").length,
   };
+  const enrollments = await listEnrollments();
   const outreach = {
-    activeEnrollments: listValues(sequenceEnrollmentsStore).filter((s) => s.status === "active").length,
-    pausedEnrollments: listValues(sequenceEnrollmentsStore).filter((s) => s.status === "paused").length,
-    completedEnrollments: listValues(sequenceEnrollmentsStore).filter((s) => s.status === "completed")
-      .length,
+    activeEnrollments: enrollments.filter((s) => s.status === "active").length,
+    pausedEnrollments: enrollments.filter((s) => s.status === "paused").length,
+    completedEnrollments: enrollments.filter((s) => s.status === "completed").length,
   };
 
   const summary = [
@@ -47,7 +49,7 @@ export async function buildDailyDigest(): Promise<AgentReport> {
   ].join(" | ");
 
   const report: AgentReport = {
-    id: nextId("report"),
+    id: `report_${crypto.randomUUID()}`,
     date: new Date().toISOString().slice(0, 10),
     threadsHandled: threads.length,
     autoSent,
@@ -60,7 +62,7 @@ export async function buildDailyDigest(): Promise<AgentReport> {
     outreach,
     createdAt: new Date().toISOString(),
   };
-  return upsert(reportsStore, report);
+  return saveReport(report);
 }
 
 export async function getEscalationAlerts(): Promise<Array<{
@@ -78,5 +80,5 @@ export async function getEscalationAlerts(): Promise<Array<{
 }
 
 export function getReports() {
-  return listValues(reportsStore);
+  return listReports();
 }

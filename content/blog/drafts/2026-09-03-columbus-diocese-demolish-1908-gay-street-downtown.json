@@ -1,0 +1,232 @@
+{
+    "prompt_version": "cren-article-v1.0.0",
+    "title": "Columbus Diocese Plans to Demolish 1908 Gay St. Building",
+    "slug": "columbus-diocese-demolish-1908-gay-street-downtown",
+    "canonical_event_key": "diocese-columbus-197-gay-street-demolition-2026",
+    "category": "Development",
+    "area_slug": "downtown-columbus",
+    "topic_slug": "development",
+    "author": "CRE News Staff",
+    "date": "2026-09-03",
+    "featured": false,
+    "read_time": "5 min",
+    "image_url": null,
+    "primary_keyword": "Columbus Diocese",
+    "excerpt": "The Diocese of Columbus filed to demolish its 1908 building at 197 E. Gay St. for surface parking. The Downtown Commission votes September 22, 2026.",
+    "meta_description": "The Diocese of Columbus filed to demolish its 1908 building at 197 E. Gay St. for surface parking. The Downtown Commission votes September 22, 2026.",
+    "answer_summary": "The Roman Catholic Diocese of Columbus filed a Certificate of Appropriateness with the city's Planning Division to demolish its 1908 five-story building at 197 East Gay Street and convert the site to surface parking. The Downtown Commission, which must approve demolition in the historic district, is scheduled to take up the application on September 22.",
+    "fact_checked_at": "2026-09-03T06:33:00Z",
+    "tags": [
+        "columbus-ohio",
+        "central-ohio-real-estate",
+        "downtown-columbus",
+        "historic-preservation",
+        "development",
+        "institutional-real-estate"
+    ],
+    "location": {
+        "name": "Columbus, OH",
+        "state": "OH"
+    },
+    "body": "The Roman Catholic Diocese of Columbus filed a Certificate of Appropriateness with the city's Planning Division to demolish its 1908 five-story building at 197 East Gay Street and convert the site to surface parking. The Downtown Commission, which must approve demolition in the historic district, is scheduled to take up the application on September 22.\n\n## What the Diocese Submitted\n\nA Certificate of Appropriateness is the permit Columbus requires before anyone alters or demolishes a building within the Downtown Commission's jurisdiction, which covers exterior changes, new construction, and demolition in the downtown core. The application describes the project scope as demolition of the building and its \"conversion to surface parking,\" according to [Columbus Underground](https://columbusunderground.com/church-wants-to-tear-down-5-story-downtown-building-bw1/), which reported the filing on September 2. The filing was made with the Planning Division; no demolition permit has been pulled with the city's Building and Zoning Services as of publication.\n\nThe Diocese has not released a public statement on the application. CREN sought comment from the Diocese of Columbus; no response had been received by publication time.\n\n## The Building and Its Tenants\n\nThe building at 197 East Gay Street was constructed in 1908 and is five stories. The Diocese has owned it since the 1960s, and it currently houses three occupants: the Diocese's administrative offices, Catholic Social Services of the Diocese of Columbus, and the Our Lady of Guadalupe Center, which provides pastoral and social services to Columbus's Latino Catholic community.\n\nThe Diocese has not announced relocation plans for any of the three tenants. No timeline for vacating the building has appeared in the public filing or in Diocese communications reviewed as of this writing. Catholic Social Services and the Our Lady of Guadalupe Center both provide programs whose continuity is relevant to the communities they serve, and where those programs would relocate is not addressed in the submitted application.\n\n## Location in the Cathedral Block\n\nThe building sits in one of the more intact early-twentieth-century institutional blocks remaining in downtown Columbus. It stands behind [Saint Joseph Cathedral](https://www.stjosephcathedral.net/) at 212 E. Broad Street, next door to the [Columbus Athenaeum](https://www.columbusathenaeum.com/) at 32 N. 4th Street — a historic events venue still in active use — and across E. Gay Street from condominium units developed by Edwards Companies under its Neighborhood Launch initiative.\n\nThe [Catholic Diocese of Columbus](https://columbuscatholic.org/venue/197-e-gay-st-parking-lot/) lists a \"197 E. Gay St. Parking Lot\" as a venue on its website, indicating some existing parking use at the address. The relationship between that existing use and the building the Diocese seeks to demolish is not specified in publicly available documents.\n\n## Why the Building Is in Trouble\n\nAn unsafe order was placed on the structure after a brick wall collapsed in January 2026. The Diocese has not released a structural assessment or estimates for repairs. The unsafe order is the disclosed precipitating event, though it does not by itself authorize demolition — the Certificate of Appropriateness process and Downtown Commission approval remain required regardless of building condition.\n\nHistorically, the Downtown Commission has weighed demolition applications against the applicant's documentation of condition and repair costs, the building's significance within the historic district, and whether adaptive reuse or rehabilitation is feasible. When owners have demonstrated that rehabilitation costs exceed a building's viable economic use, the Commission has sometimes permitted demolition to proceed. When the record is thin or alternatives appear viable, the Commission has requested additional documentation or required alternatives. The Diocese's case will likely turn on what condition evidence and cost estimates it presents at the hearing.\n\n## The Surface Parking Tension\n\nThis application arrives while Columbus is running a 60-day public comment period on Zone In Phase 2, the city's comprehensive [zoning code modernization](https://columbusrealestatenews.com/blog/columbus-zone-in-phase-2-public-comment) that opened August 25 and extends through October 24. Zone In Phase 2 is specifically designed to add density and reduce surface parking's footprint in the city's urban core.\n\nReplacing a five-story building with a surface lot would move counter to that direction on a block that sits within the walkable, transit-proximate downtown core that both Zone In and the city's long-range comprehensive plan identify as a priority for active-use development. That tension between an institutional property owner's decision and city planning goals is one the Downtown Commission will need to navigate. The Commission's mandate is historic preservation, not land-use planning, but surface parking conversion of a historic building is precisely the scenario that Columbus's Certificate of Appropriateness process was designed to give the Commission authority to weigh.\n\nThe Columbus Athenaeum, immediately adjacent, would be a logical party to weigh in; no public statement from the Athenaeum had been released as of publication. The Columbus Preservation Office advises the Commission on historic resource significance; its assessment of the property has not been made public.\n\n## What to Watch\n\nIf the Diocese's application is on the agenda — which has not been formally published as of this writing — the Commission will take public comment before voting to approve, deny, or table the demolition request. An approval allows the Diocese to proceed to a demolition permit; a denial requires the Diocese to either appeal or revise its approach.\n\nThe building's fate after any Commission decision would depend on whether the Diocese pursues demolition, explores sale or adaptive reuse, or undertakes emergency stabilization of the structure pending a longer-term plan. None of those paths has been announced.",
+    "source_ledger": [
+        {
+            "id": "S1",
+            "type": "SECONDARY",
+            "url": "https://columbusunderground.com/church-wants-to-tear-down-5-story-downtown-building-bw1/",
+            "publisher": "Columbus Underground",
+            "title": "Church Wants to Tear Down 5-Story Downtown Building",
+            "published_at": "2026-09-02",
+            "fetched_at": "2026-09-03T06:33:00Z",
+            "http_status": 200
+        },
+        {
+            "id": "S2",
+            "type": "PRIMARY",
+            "url": "https://columbuscatholic.org/venue/197-e-gay-st-parking-lot/",
+            "publisher": "Catholic Diocese of Columbus",
+            "title": "197 E. Gay St. Parking Lot — Catholic Diocese of Columbus venue listing",
+            "published_at": null,
+            "fetched_at": "2026-09-03T06:33:00Z",
+            "http_status": 200
+        },
+        {
+            "id": "S3",
+            "type": "PRIMARY",
+            "url": "https://www.columbus.gov/News-articles/City-of-Columbus-Proposes-to-Expand-Reach-and-Focus-of-Zoning-Code-Modernization",
+            "publisher": "City of Columbus",
+            "title": "City of Columbus Proposes to Expand Reach and Focus of Zoning Code Modernization — Zone In Phase 2",
+            "published_at": "2026-08-20",
+            "fetched_at": "2026-09-03T06:33:00Z",
+            "http_status": 200
+        }
+    ],
+    "claim_ledger": [
+        {
+            "id": "C1",
+            "claim": "The Roman Catholic Diocese of Columbus filed a Certificate of Appropriateness with the city's Planning Division to demolish its 1908 five-story building at 197 East Gay Street and convert the site to surface parking.",
+            "source_ids": [
+                "S1"
+            ],
+            "kind": "STATUS"
+        },
+        {
+            "id": "C2",
+            "claim": "The Downtown Commission, which must approve demolition in the historic district, is scheduled to take up the application on September 22.",
+            "source_ids": [
+                "S1"
+            ],
+            "kind": "STATUS"
+        },
+        {
+            "id": "C3",
+            "claim": "The application describes the project scope as demolition of the building and its \"conversion to surface parking.\"",
+            "source_ids": [
+                "S1"
+            ],
+            "kind": "QUOTE",
+            "exact_support": "conversion to surface parking"
+        },
+        {
+            "id": "C4",
+            "claim": "No demolition permit has been pulled with the city's Building and Zoning Services as of publication.",
+            "source_ids": [
+                "S1"
+            ],
+            "kind": "STATUS"
+        },
+        {
+            "id": "C5",
+            "claim": "The building at 197 East Gay Street was constructed in 1908 and is five stories.",
+            "source_ids": [
+                "S1"
+            ],
+            "kind": "FACT"
+        },
+        {
+            "id": "C6",
+            "claim": "The Diocese has owned it since the 1960s.",
+            "source_ids": [
+                "S1"
+            ],
+            "kind": "FACT"
+        },
+        {
+            "id": "C7",
+            "claim": "It currently houses three occupants: the Diocese's administrative offices, Catholic Social Services of the Diocese of Columbus, and the Our Lady of Guadalupe Center.",
+            "source_ids": [
+                "S1"
+            ],
+            "kind": "FACT"
+        },
+        {
+            "id": "C8",
+            "claim": "It stands behind Saint Joseph Cathedral at 212 E. Broad Street, next door to the Columbus Athenaeum at 32 N. 4th Street — a historic events venue still in active use — and across E. Gay Street from condominium units developed by Edwards Companies under its Neighborhood Launch initiative.",
+            "source_ids": [
+                "S1"
+            ],
+            "kind": "FACT"
+        },
+        {
+            "id": "C9",
+            "claim": "The Catholic Diocese of Columbus lists a '197 E. Gay St. Parking Lot' as a venue on its website, indicating some existing parking use at the address.",
+            "source_ids": [
+                "S2"
+            ],
+            "kind": "FACT"
+        },
+        {
+            "id": "C10",
+            "claim": "An unsafe order was placed on the structure after a brick wall collapsed in January 2026.",
+            "source_ids": [
+                "S1"
+            ],
+            "kind": "FACT"
+        },
+        {
+            "id": "C11",
+            "claim": "Columbus is running a 60-day public comment period on Zone In Phase 2, the city's comprehensive zoning code modernization that opened August 25 and extends through October 24.",
+            "source_ids": [
+                "S3"
+            ],
+            "kind": "FACT"
+        },
+        {
+            "id": "C12",
+            "claim": "Zone In Phase 2 is specifically designed to add density and reduce surface parking's footprint in the city's urban core.",
+            "source_ids": [
+                "S3"
+            ],
+            "kind": "FACT"
+        }
+    ],
+    "entity_ledger": [
+        {
+            "name": "Roman Catholic Diocese of Columbus",
+            "source_ids": [
+                "S1",
+                "S2"
+            ]
+        },
+        {
+            "name": "Catholic Social Services of the Diocese of Columbus",
+            "source_ids": [
+                "S1"
+            ]
+        },
+        {
+            "name": "Our Lady of Guadalupe Center",
+            "source_ids": [
+                "S1"
+            ]
+        },
+        {
+            "name": "City of Columbus Downtown Commission",
+            "source_ids": [
+                "S1"
+            ]
+        },
+        {
+            "name": "Saint Joseph Cathedral",
+            "source_ids": [
+                "S1"
+            ]
+        },
+        {
+            "name": "Columbus Athenaeum",
+            "source_ids": [
+                "S1"
+            ]
+        },
+        {
+            "name": "Edwards Companies",
+            "source_ids": [
+                "S1"
+            ]
+        },
+        {
+            "name": "City of Columbus Planning Division",
+            "source_ids": [
+                "S1",
+                "S3"
+            ]
+        }
+    ],
+    "image_brief": {
+        "primary_request": "16:9 editorial hero showing the exterior of a five-story early-twentieth-century brick commercial building in downtown Columbus, Ohio — a dense urban streetscape with historic neighboring structures visible, conveying the stakes of a historic preservation decision.",
+        "editorial_idea": "Frame the building's facade at street level with Saint Joseph Cathedral or the Columbus Athenaeum partially visible to either side, establishing the historic institutional context that the Downtown Commission will weigh. A muted, documentary color palette reinforces the preservation-vs.-demolition tension without editorializing.",
+        "story_anchors": [
+            "Five-story 1908 brick building on E. Gay Street in downtown Columbus, surrounded by adjacent historic civic and religious structures.",
+            "Empty surface parking lot adjacent to historic downtown buildings — the proposed outcome, shown as a contrast to the built streetscape."
+        ],
+        "source_asset_considered": true,
+        "source_asset_note": "No licensed photograph of 197 E. Gay Street is in the CREN asset library. Franklin County Auditor GIS and the Historic Resources Commission archives may hold archival images of this structure; those were not retrieved in this run.",
+        "avoid": "Do not depict active demolition, rubble, or structural damage. Do not show building interiors. Avoid generic Columbus skyline shots that do not feature this specific block or building type."
+    },
+    "image_alt": "Five-story 1908 Diocese of Columbus office building at 197 E. Gay Street in downtown Columbus, subject of a September 2026 demolition application before the Downtown Commission.",
+    "image_provenance": {
+        "type": "AI_GENERATED",
+        "caption": "AI-generated editorial illustration of a five-story early-twentieth-century brick commercial building in Columbus's downtown historic district. AI-generated image for editorial use only; does not depict the actual structure at 197 E. Gay Street.",
+        "license": "CREN editorial use"
+    }
+}

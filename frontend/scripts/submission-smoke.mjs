@@ -1,4 +1,9 @@
 #!/usr/bin/env node
+// Rows written by this script MUST stay separable from real audience: it uses
+// the `codex-smoke:` source marker and `@example.com` emails, both of which the
+// canonical predicate in scripts/test-traffic-lib.mjs recognises, so the API
+// routes flag them `is_test = true` on write. See docs/TEST_TRAFFIC_CONVENTION.md
+// before changing any marker below.
 import { randomBytes } from "node:crypto";
 import { fileURLToPath } from "node:url";
 

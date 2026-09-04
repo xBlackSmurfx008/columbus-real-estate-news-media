@@ -4,6 +4,7 @@ import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
 import { FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 import { recordConsentEventSafely } from "@/lib/compliance/consent-events";
 import { mirrorAdvertisingInquirySafely } from "@/lib/compliance/intake-records";
+import { isTestTraffic } from "@/scripts/test-traffic-lib.mjs";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -35,10 +36,13 @@ export async function POST(request: NextRequest) {
     const storedMessage = isAdvertising
       ? [`Company: ${cleanCompany || 'Not provided'}`, `Package: ${cleanPackage || 'Not selected'}`, `Budget: ${cleanBudget || 'Not provided'}`, '', cleanMessage].join('\n')
       : cleanMessage;
+    // Shared predicate at write time (owner plan 2026-09-04, P0 item 2).
+    const isTest = isTestTraffic({ source: cleanSource, email, body: storedMessage });
+
     const sql = getDb();
     const [contact] = await sql`
-      INSERT INTO contacts (name, email, message, source, status)
-      VALUES (${name.trim()}, ${email}, ${storedMessage}, ${cleanSource}, 'new')
+      INSERT INTO contacts (name, email, message, source, status, is_test)
+      VALUES (${name.trim()}, ${email}, ${storedMessage}, ${cleanSource}, 'new', ${isTest})
       RETURNING id
     `;
     const sourceRoute = typeof body.sourceRoute === "string" ? body.sourceRoute.slice(0, 500) : cleanSource;

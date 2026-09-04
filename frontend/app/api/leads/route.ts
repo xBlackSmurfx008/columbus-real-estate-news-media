@@ -5,6 +5,9 @@ import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
 import { FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 import { recordConsentEventSafely } from "@/lib/compliance/consent-events";
 import { mirrorLeadIntakeSafely } from "@/lib/compliance/intake-records";
+import { recordFunnelEventSafely } from "@/lib/funnel-events";
+import { funnelForPersona } from "@/scripts/funnel-lib.mjs";
+import { isTestTraffic } from "@/scripts/test-traffic-lib.mjs";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PERSONAS = ["fsbo_seller", "investor_seller", "capital_partner", "renter", "rental_listing", "directory_listing", "profile_claim"] as const;
@@ -72,14 +75,18 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Please check the consent box so we can contact you." }, { status: 400 });
     }
 
+    // Classify at write time with the shared predicate so smoke submissions are
+    // separable from real leads by construction, not by a reporting filter.
+    const isTest = isTestTraffic({ source, email, body: summarizeDetails(details) });
+
     const sql = getDb();
     const [lead] = await sql`
-      INSERT INTO leads (persona, name, email, phone, area, details, source, status, consent)
+      INSERT INTO leads (persona, name, email, phone, area, details, source, status, consent, is_test)
       VALUES (
         ${persona}, ${name.trim()}, ${email}, ${typeof phone === "string" ? phone.slice(0, 40) : null},
         ${typeof area === "string" ? area.slice(0, 120) : null},
         ${JSON.stringify(details && typeof details === "object" ? details : {})}::jsonb,
-        ${typeof source === "string" ? source.slice(0, 120) : null}, 'new', true
+        ${typeof source === "string" ? source.slice(0, 120) : null}, 'new', true, ${isTest}
       )
       RETURNING id
     `;
@@ -106,6 +113,28 @@ export async function POST(request: NextRequest) {
       area: typeof area === "string" ? area.slice(0, 120) : null,
       details: details && typeof details === "object" && !Array.isArray(details) ? details as Record<string, unknown> : {},
     });
+
+    // form_submit is written server-side so it carries the lead id — that is
+    // what lets contacted/qualified/opportunity/closed join back to this visit.
+    const funnel = funnelForPersona(persona);
+    if (funnel) {
+      const attribution = (body.attribution && typeof body.attribution === "object" ? body.attribution : {}) as Record<string, unknown>;
+      await recordFunnelEventSafely(sql, {
+        funnel: funnel.slug,
+        stage: "form_submit",
+        path: typeof body.sourceRoute === "string" ? body.sourceRoute : funnel.path,
+        articleUrl: typeof attribution.articleUrl === "string" ? attribution.articleUrl : null,
+        articleSlug: typeof attribution.articleSlug === "string" ? attribution.articleSlug : null,
+        area: (typeof area === "string" ? area : null) ?? (typeof attribution.area === "string" ? attribution.area : null),
+        placement: typeof attribution.placement === "string" ? attribution.placement : cleanSource,
+        campaignSource: typeof attribution.campaignSource === "string" ? attribution.campaignSource : cleanSource,
+        campaignMedium: typeof attribution.campaignMedium === "string" ? attribution.campaignMedium : null,
+        campaignName: typeof attribution.campaignName === "string" ? attribution.campaignName : null,
+        referrerHost: typeof attribution.referrerHost === "string" ? attribution.referrerHost : null,
+        leadId: lead.id,
+        isTest,
+      });
+    }
 
     await sendTelegramInquiry({
       kind: 'lead',

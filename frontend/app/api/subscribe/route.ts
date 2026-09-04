@@ -3,6 +3,7 @@ import { getDb } from "@/lib/db";
 import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
 import { FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 import { recordConsentEventSafely } from "@/lib/compliance/consent-events";
+import { isTestTraffic } from "@/scripts/test-traffic-lib.mjs";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -84,6 +85,10 @@ export async function POST(request: NextRequest) {
         .join(" | ")
         .slice(0, 700) || null;
 
+    // Shared predicate, applied at write time: a smoke subscriber is flagged
+    // as it is created, so no report has to recognise it later.
+    const isTest = isTestTraffic({ source: sourceValue, email });
+
     const sql = getDb();
     // Select-then-write: subscribers.email uniqueness is enforced by the
     // migration script's index, but older rows may predate it.
@@ -126,15 +131,15 @@ export async function POST(request: NextRequest) {
         UPDATE subscribers
         SET area = COALESCE(${area}, area), topic = COALESCE(${topicValue}, topic),
             source = COALESCE(${sourceValue}, source),
-            status = 'active', updated_at = NOW()
+            status = 'active', is_test = ${isTest}, updated_at = NOW()
         WHERE id = ${existing[0].id}
         RETURNING id
       `;
       subscriberId = subscriber.id;
     } else {
       const [subscriber] = await sql`
-        INSERT INTO subscribers (email, area, topic, source, status)
-        VALUES (${email}, ${area}, ${topicValue}, ${sourceValue}, 'active')
+        INSERT INTO subscribers (email, area, topic, source, status, is_test)
+        VALUES (${email}, ${area}, ${topicValue}, ${sourceValue}, 'active', ${isTest})
         RETURNING id
       `;
       subscriberId = subscriber.id;

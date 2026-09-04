@@ -6,6 +6,7 @@ import { setMemberSessionCookie, signMemberToken } from "@/lib/member-auth";
 import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
 import { FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 import { recordConsentEventSafely } from "@/lib/compliance/consent-events";
+import { isTestTraffic } from "@/scripts/test-traffic-lib.mjs";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -33,9 +34,11 @@ export async function POST(request: NextRequest) {
     if (!cleanName) return NextResponse.json({ error: "Enter your name." }, { status: 400 });
     const passwordHash = await bcrypt.hash(password, 12);
 
+    const isTest = isTestTraffic({ source: typeof source === "string" ? source : null, email: normalizedEmail });
+
     const [member] = await sql`
-      INSERT INTO members (email, name, interests, password_hash, tier, status)
-      VALUES (${normalizedEmail}, ${cleanName}, ${cleanInterests}, ${passwordHash}, 'free', 'active')
+      INSERT INTO members (email, name, interests, password_hash, tier, status, is_test)
+      VALUES (${normalizedEmail}, ${cleanName}, ${cleanInterests}, ${passwordHash}, 'free', 'active', ${isTest})
       ON CONFLICT (email) DO NOTHING
       RETURNING id, email, name, interests, preferred_area, role, bio, tier, status
     `;
@@ -72,8 +75,8 @@ export async function POST(request: NextRequest) {
         subscriberId = subscriber.id;
       } else {
         const [subscriber] = await sql`
-          INSERT INTO subscribers (email, area, topic, source, status)
-          VALUES (${normalizedEmail}, null, ${cleanInterests}, ${cleanSource}, 'active')
+          INSERT INTO subscribers (email, area, topic, source, status, is_test)
+          VALUES (${normalizedEmail}, null, ${cleanInterests}, ${cleanSource}, 'active', ${isTest})
           RETURNING id
         `;
         subscriberId = subscriber.id;

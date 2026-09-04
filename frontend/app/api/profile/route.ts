@@ -67,9 +67,14 @@ export async function PATCH(request: NextRequest) {
         WHERE id = ${subscriber[0].id}
       `;
     } else {
+      // Carry the member's synthetic flag onto the mirrored subscriber, so a
+      // test account cannot re-enter the audience count through this path.
       await sql`
-        INSERT INTO subscribers (email, area, topic, source, status)
-        VALUES (${profile.email}, ${preferredArea}, ${interests}, 'member-profile', 'active')
+        INSERT INTO subscribers (email, area, topic, source, status, is_test)
+        VALUES (
+          ${profile.email}, ${preferredArea}, ${interests}, 'member-profile', 'active',
+          COALESCE((SELECT is_test FROM members WHERE email = ${profile.email} LIMIT 1), false)
+        )
       `;
     }
 

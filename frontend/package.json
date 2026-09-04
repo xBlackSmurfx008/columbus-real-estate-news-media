@@ -22,6 +22,8 @@
     "newsroom:reconcile-image-jobs": "node scripts/reconcile-live-image-jobs.mjs",
     "newsroom:migrate-page-views": "node scripts/migrate-page-views.mjs",
     "newsroom:migrate-activation-events": "node scripts/migrate-activation-events.mjs",
+    "newsroom:migrate-funnel-events": "node scripts/migrate-funnel-events.mjs",
+    "newsroom:flag-legacy-test-records": "node scripts/flag-legacy-test-records.mjs",
     "newsroom:migrate-article-routing": "node scripts/migrate-article-routing.mjs",
     "newsroom:migrate-market-data": "node scripts/migrate-market-observations.mjs",
     "newsroom:refresh-source-market-data": "node scripts/refresh-source-aware-market-data.mjs",

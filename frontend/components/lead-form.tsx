@@ -1,8 +1,10 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import Link from "next/link";
 import { trackEvent } from "@/lib/analytics-client";
+import { currentAttribution, trackFunnelStage } from "@/lib/funnel-client";
+import { funnelForPersona } from "@/scripts/funnel-lib.mjs";
 import { CONSENT_COPY, FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 
 export type LeadField = {
@@ -33,6 +35,16 @@ export function LeadForm({
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
+  const funnel = funnelForPersona(persona);
+  const startedRef = useRef(false);
+
+  // form_start fires once, on the reader's first real interaction with a field
+  // (not on render) — otherwise every funnel_view would look like a start.
+  function onFirstInteraction() {
+    if (startedRef.current || !funnel) return;
+    startedRef.current = true;
+    trackFunnelStage(funnel.slug, "form_start", { placement: source });
+  }
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -63,6 +75,9 @@ export function LeadForm({
           consentVersion: consentCopy.version,
           consent: data.get("consent") === "on",
           company: data.get("company"), // honeypot
+          // Funnel attribution travels with the submission so the server can
+          // write form_submit already joined to article, area and campaign.
+          attribution: { ...currentAttribution(), placement: source },
         }),
       });
       if (!res.ok) {
@@ -96,7 +111,12 @@ export function LeadForm({
 
   return (
     <div className="form-box mt-8" id="lead-form">
-      <form className="grid gap-4" onSubmit={onSubmit}>
+      <form
+        className="grid gap-4"
+        onSubmit={onSubmit}
+        onFocusCapture={onFirstInteraction}
+        onInputCapture={onFirstInteraction}
+      >
         {/* Honeypot — hidden from real visitors */}
         <input
           type="text"

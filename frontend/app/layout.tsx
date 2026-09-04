@@ -5,6 +5,7 @@ import "./cren-v2.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { PageviewTracker } from "@/components/pageview-tracker";
+import { FunnelTracker } from "@/components/funnel-tracker";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
 const dmSans = DM_Sans({
@@ -53,6 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${dmSans.variable} ${playfair.variable} ${spaceGrotesk.variable}`}>
       <body className="cren-theme font-sans antialiased">
         <PageviewTracker />
+        <FunnelTracker />
         <header className="relative z-[1100]">
           <SiteHeader />
         </header>

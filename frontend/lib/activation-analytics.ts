@@ -25,6 +25,8 @@ export const ACTIVATION_EVENT_DEFINITIONS = [
   { name: "generate_lead", label: "Lead forms submitted" },
   { name: "contact_request", label: "Contact forms submitted" },
   { name: "sign_up", label: "Signup events" },
+  { name: "article_cta_view", label: "Article CTAs seen" },
+  { name: "article_cta_click", label: "Article CTAs clicked" },
 ] as const;
 
 export type ActivationEventName = (typeof ACTIVATION_EVENT_DEFINITIONS)[number]["name"];
@@ -32,6 +34,12 @@ export type ActivationEventName = (typeof ACTIVATION_EVENT_DEFINITIONS)[number][
 const ACTIVATION_EVENT_SET = new Set<string>(ACTIVATION_EVENT_DEFINITIONS.map((event) => event.name));
 
 const ALLOWED_PAYLOAD_KEYS = new Set([
+  "article_id",
+  "article_url",
+  "cta_id",
+  "destination",
+  "funnel",
+  "placement",
   "area",
   "area_name",
   "area_slug",
@@ -130,6 +138,30 @@ function readableAreaLabel(slug: string): string {
 }
 
 const FORM_EVENT_NAMES = new Set(["generate_lead", "contact_request"]);
+
+/**
+ * CTR per article CTA placement (owner plan 2026-09-04, P1 item 4).
+ * Groups `article_cta_view` / `article_cta_click` by funnel and placement so
+ * the click-through rate of each contextual CTA is readable in one number.
+ */
+export function summarizeArticleCtaPerformance(events: StoredActivationEvent[]) {
+  const rows = new Map<string, { funnel: string; placement: string; views: number; clicks: number; ctr: number | null }>();
+
+  for (const event of events) {
+    if (event.name !== "article_cta_view" && event.name !== "article_cta_click") continue;
+    const funnel = typeof event.payload.funnel === "string" ? event.payload.funnel : "unknown";
+    const placement = typeof event.payload.placement === "string" ? event.payload.placement : "unknown";
+    const key = `${funnel}|${placement}`;
+    const row = rows.get(key) ?? { funnel, placement, views: 0, clicks: 0, ctr: null };
+    if (event.name === "article_cta_view") row.views += 1;
+    else row.clicks += 1;
+    rows.set(key, row);
+  }
+
+  return [...rows.values()]
+    .map((row) => ({ ...row, ctr: row.views > 0 ? Math.round((row.clicks / row.views) * 1000) / 10 : null }))
+    .sort((a, b) => b.views - a.views || b.clicks - a.clicks || a.funnel.localeCompare(b.funnel));
+}
 
 export function summarizeActivationEvents(events: StoredActivationEvent[], areaPageViews: StoredAreaPageView[] = []) {
   const relevant = events.filter((event) => isActivationEventName(event.name));

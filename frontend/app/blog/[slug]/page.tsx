@@ -7,6 +7,9 @@ import { getArticles, resolveArticleSlug, DbArticle } from "@/lib/public-data";
 import { getArticlePath } from "@/lib/article-routing";
 import { getAreaBySlug, getTopicBySlug } from "@/lib/data";
 import { getBlogPostBySlug } from "@/lib/blog";
+import { ArticleCtaSection } from "@/components/article-cta";
+import { resolveArticleCta } from "@/lib/article-cta";
+import { getAreaFollowPromise } from "@/lib/consumer-insights";
 import { absoluteUrl, safeJsonLd } from '@/lib/site';
 
 export const revalidate = 300;
@@ -216,6 +219,12 @@ export default async function BlogPostPage({
   const modifiedTime = toIsoDateTime(article.updated_at) ?? publishedTime;
   const factCheckedDisplay = formatDisplayDate(article.fact_checked_at);
 
+  // Exactly one contextual next action per article (owner plan 2026-09-04, item 4).
+  const cta = resolveArticleCta(article, {
+    isFollowableArea: (slug) => Boolean(getAreaBySlug(slug)),
+  });
+  const ctaArea = cta.kind === "area_follow" ? getAreaBySlug(cta.areaSlug) ?? null : null;
+
   const jsonLdNewsArticle = {
     "@context": "https://schema.org",
     "@type": "NewsArticle",
@@ -331,16 +340,14 @@ export default async function BlogPostPage({
               )}
             </div>
 
-            {/* CTA */}
-            <section className="cren-surface p-6" data-section-id="blog-cta">
-              <h2 className="cren-heading-lg text-[length:1.25rem]">Stay Informed</h2>
-              <p className="cren-body mt-2">
-                Get the Columbus RE Insider newsletter — market data, neighborhood analysis, and investment insights delivered every Tuesday.
-              </p>
-              <Link href="/subscribe" className="cren-btn cren-btn-primary mt-4 inline-flex">
-                Subscribe Free
-              </Link>
-            </section>
+            {/* One contextual next action, matched to this article's taxonomy. */}
+            <ArticleCtaSection
+              cta={cta}
+              articleId={article.id}
+              articleUrl={getArticlePath(article)}
+              areaName={ctaArea?.name}
+              followPromise={ctaArea ? getAreaFollowPromise(ctaArea) : undefined}
+            />
           </div>
 
           {/* Sidebar */}

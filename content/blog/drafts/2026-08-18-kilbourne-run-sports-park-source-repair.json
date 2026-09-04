@@ -1,0 +1,291 @@
+{
+  "prompt_version": "cren-article-v1.0.0",
+  "title": "Columbus Opens Free Turf Hours at Kilbourne Run After Fee Fight",
+  "slug": "columbus-reverses-250-fee-at-northland-s-new-kilbourne-run-sports-park",
+  "category": "local-politics",
+  "author": "CREN Newsroom",
+  "date": "Aug 18, 2026",
+  "excerpt": "Northland's $34.4M Kilbourne Run Sports Park opened after Columbus dropped a $250 turf-rental minimum and posted free walk-up hours on named fields instead.",
+  "answer_summary": "Columbus opened the $34.4 million Kilbourne Run Sports Park in Northland after residents objected to a $250 minimum charge for turf field time. The city now posts free walk-up hours on designated turf fields, and it held a ribbon-cutting and community day on July 29.",
+  "primary_keyword": "Kilbourne Run Sports Park",
+  "meta_description": "Columbus opened the $34.4 million Kilbourne Run Sports Park in Northland after dropping a $250 turf minimum and posting free walk-up hours on named fields.",
+  "fact_checked_at": "2026-09-04T18:10:00Z",
+  "canonical_event_key": "kilbourne-run-sports-park-access-2026",
+  "area_slug": "northland",
+  "topic_slug": "local-politics",
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "northland",
+    "local-politics",
+    "parks-and-recreation",
+    "city-investment"
+  ],
+  "read_time": "5 min",
+  "featured": false,
+  "image_url": null,
+  "location": {
+    "name": "Columbus, OH",
+    "state": "OH"
+  },
+  "body": "Columbus opened the $34.4 million Kilbourne Run Sports Park in Northland after residents objected to a $250 minimum charge for turf field time. The city now posts free walk-up hours on designated turf fields, and it held a ribbon-cutting and community day on July 29.\n\n## A $250 Minimum, and a Child Told to Leave\n\nKilbourne Run covers 62.666 acres at 4625 Westerville Road on the city's northeast side, in Northland. Columbus Recreation and Parks priced turf rentals at $125 an hour with a two-hour minimum, so the smallest block a group could book cost $250. [WOSU reported in April](https://www.wosu.org/politics-government/2026-04-29/resident-frustrated-by-prices-at-kilbourne-fields-highlights-debate-about-use-of-columbus-parks) that Recreation and Parks employees had removed a neighborhood child from a turf field that was not in use.\n\nCity Council member Melissa Green described that to WOSU. A \"neighborhood kid was out there trying to practice soccer and was removed by Rec and Park's employees out of concerns for making sure that the AstroTurf is preserved,\" she said.\n\n## What City Hall Said About Access\n\nGreen told WOSU she was concerned with making sure \"the communities where we have these facilities placed are also able to access them.\" Elon Simms, the mayor's chief of staff, defended the maintenance argument and then set it aside. The fields \"need to be operated at a particular level to ensure their long-term viability to be used,\" he said, \"but the bigger point here for us is that access matters.\" He added that no child or resident in Columbus should feel that something built in their neighborhood is not for them.\n\n## The Free Hours the City Now Posts\n\nThe city's own [park listing](https://columbusrecparks.com/parks/kilbourne-run-sports-park/) is the clearest record of what changed, because it names the fields and the hours. Fields 3 and 4 were open for walk-up play daily from noon to 9 p.m. between July 1 and July 31, 2026. Field 2 carries the longer window, daily from noon to 9 p.m. from August 1, 2026 through May 31, 2027. The same listing sets the terms: fields \"are to be shared fairly by all users,\" and \"any coaching, guided instruction or organized competition is not permitted.\"\n\n## What $34.4 Million Bought\n\nRecreation and Parks' [capital project page](https://columbusrecparks.com/connect/about/capital-improvement-projects/kilbourne-run-sports-park/) puts the budget at about $34.4 million and reports that roughly that much work had been completed, about 97 percent of the budget. That is a spending figure, not a construction-progress figure. The scope it lists includes five lighted artificial turf soccer fields, a championship field with bleacher seating, a press box and a scoreboard, natural turf fields with irrigation controls, walking loops, playgrounds, restrooms, shelters, a new maintenance facility, a roundabout at the park entry drive, and a connector trail to the Alum Creek Greenway.\n\n## Why This Park Exists at All\n\nWOSU traced the park back to a 2018 effort to keep the Columbus Crew in Columbus. The project was first aimed at the Ohio State Fairgrounds before it landed on the Kilbourne Run site. That origin explains the specification: this is a tournament-grade soccer complex dropped into a residential neighborhood, which is exactly the tension the pricing fight exposed.\n\n## Opening Day, and What Is Still Unsettled\n\nThe city held a [community day](https://columbusrecparks.com/calendar/kilbourne-run-sports-park-community-day/) at the park on July 29, 2026, from 1 to 3 p.m., with free activities, food, and giveaways, and cut the ribbon the same day. [Coverage of the opening](https://www.aol.com/articles/columbus-sports-park-opens-000000000.html) reported that the city dropped the planned $250 charge for community use and that the park now carries the city's first public-access turf field. Mayor Andrew Ginther said at the event that the city's kids are its top priority and that it has to keep investing in them.\n\nOne piece is still outstanding. WOSU reported in April that a grass field near the park's maintenance building would open for walk-up play in 2027, separate from the turf windows now posted. Neither city page CREN checked carries a date for it. For more on the surrounding area, see our [Northland guide](/areas/northland).",
+  "source_ledger": [
+    {
+      "id": "S1",
+      "type": "PRIMARY",
+      "url": "https://columbusrecparks.com/parks/kilbourne-run-sports-park/",
+      "publisher": "Columbus Recreation and Parks Department",
+      "title": "Kilbourne Run Sports Park (park listing, open-access play hours)",
+      "published_at": null,
+      "fetched_at": "2026-09-04T17:40:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "S2",
+      "type": "PRIMARY",
+      "url": "https://columbusrecparks.com/connect/about/capital-improvement-projects/kilbourne-run-sports-park/",
+      "publisher": "Columbus Recreation and Parks Department",
+      "title": "Kilbourne Run Sports Park (capital improvement project page)",
+      "published_at": null,
+      "fetched_at": "2026-09-04T17:39:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "S3",
+      "type": "PRIMARY",
+      "url": "https://columbusrecparks.com/calendar/kilbourne-run-sports-park-community-day/",
+      "publisher": "Columbus Recreation and Parks Department",
+      "title": "Kilbourne Run Sports Park Community Day",
+      "published_at": null,
+      "fetched_at": "2026-09-04T17:44:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "S4",
+      "type": "SECONDARY",
+      "url": "https://www.wosu.org/politics-government/2026-04-29/resident-frustrated-by-prices-at-kilbourne-fields-highlights-debate-about-use-of-columbus-parks",
+      "publisher": "WOSU Public Media",
+      "title": "Frustrations about prices at Kilbourne fields highlight debate about use of Columbus parks",
+      "published_at": "2026-04-29",
+      "fetched_at": "2026-09-04T17:36:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "S5",
+      "type": "SECONDARY",
+      "url": "https://www.aol.com/articles/columbus-sports-park-opens-000000000.html",
+      "publisher": "AOL",
+      "title": "New Columbus sports park opens",
+      "published_at": "2026-07-30",
+      "fetched_at": "2026-09-04T17:42:00Z",
+      "http_status": 200
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "C1",
+      "claim": "Columbus opened the $34.4 million Kilbourne Run Sports Park in Northland after residents objected to a $250 minimum charge for turf field time.",
+      "source_ids": [
+        "S2",
+        "S4",
+        "S5"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C2",
+      "claim": "The city now posts free walk-up hours on designated turf fields, and it held a ribbon-cutting and community day on July 29.",
+      "source_ids": [
+        "S1",
+        "S3",
+        "S5"
+      ],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C3",
+      "claim": "Kilbourne Run covers 62.666 acres at 4625 Westerville Road on the city's northeast side, in Northland.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C4",
+      "claim": "Columbus Recreation and Parks priced turf rentals at $125 an hour with a two-hour minimum, so the smallest block a group could book cost $250.",
+      "source_ids": [
+        "S4"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C5",
+      "claim": "Fields 3 and 4 were open for walk-up play daily from noon to 9 p.m. between July 1 and July 31, 2026.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C6",
+      "claim": "Field 2 carries the longer window, daily from noon to 9 p.m. from August 1, 2026 through May 31, 2027.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C7",
+      "claim": "puts the budget at about $34.4 million and reports that roughly that much work had been completed, about 97 percent of the budget",
+      "source_ids": [
+        "S2"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C8",
+      "claim": "The scope it lists includes five lighted artificial turf soccer fields, a championship field with bleacher seating, a press box and a scoreboard, natural turf fields with irrigation controls, walking loops, playgrounds, restrooms, shelters, a new maintenance facility, a roundabout at the park entry drive, and a connector trail to the Alum Creek Greenway.",
+      "source_ids": [
+        "S2"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C9",
+      "claim": "WOSU traced the park back to a 2018 effort to keep the Columbus Crew in Columbus.",
+      "source_ids": [
+        "S4"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C10",
+      "claim": "The city held a community day at the park on July 29, 2026, from 1 to 3 p.m., with free activities, food, and giveaways, and cut the ribbon the same day.",
+      "source_ids": [
+        "S3",
+        "S5"
+      ],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C11",
+      "claim": "reported that the city dropped the planned $250 charge for community use and that the park now carries the city's first public-access turf field",
+      "source_ids": [
+        "S1",
+        "S5"
+      ],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C12",
+      "claim": "WOSU reported in April that a grass field near the park's maintenance building would open for walk-up play in 2027, separate from the turf windows now posted.",
+      "source_ids": [
+        "S4"
+      ],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C13",
+      "claim": "A \"neighborhood kid was out there trying to practice soccer and was removed by Rec and Park's employees out of concerns for making sure that the AstroTurf is preserved,\" she said.",
+      "source_ids": [
+        "S4"
+      ],
+      "kind": "QUOTE",
+      "exact_support": "neighborhood kid was out there trying to practice soccer and was removed by Rec and Park's employees"
+    },
+    {
+      "id": "C14",
+      "claim": "she was concerned with making sure \"the communities where we have these facilities placed are also able to access them\"",
+      "source_ids": [
+        "S4"
+      ],
+      "kind": "QUOTE",
+      "exact_support": "the communities where we have these facilities placed are also able to access them"
+    },
+    {
+      "id": "C15",
+      "claim": "The fields \"need to be operated at a particular level to ensure their long-term viability to be used,\" he said, \"but the bigger point here for us is that access matters.\"",
+      "source_ids": [
+        "S4"
+      ],
+      "kind": "QUOTE",
+      "exact_support": "but the bigger point here for us is that access matters"
+    },
+    {
+      "id": "C16",
+      "claim": "fields \"are to be shared fairly by all users,\" and \"any coaching, guided instruction or organized competition is not permitted.\"",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "QUOTE",
+      "exact_support": "Any coaching, guided instruction or organized competition is not permitted"
+    }
+  ],
+  "entity_ledger": [
+    {
+      "name": "Columbus Recreation and Parks Department",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ]
+    },
+    {
+      "name": "Kilbourne Run Sports Park",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5"
+      ]
+    },
+    {
+      "name": "Melissa Green",
+      "source_ids": [
+        "S4"
+      ]
+    },
+    {
+      "name": "Elon Simms",
+      "source_ids": [
+        "S4"
+      ]
+    },
+    {
+      "name": "Andrew Ginther",
+      "source_ids": [
+        "S5"
+      ]
+    },
+    {
+      "name": "Columbus Crew",
+      "source_ids": [
+        "S4"
+      ]
+    },
+    {
+      "name": "Alum Creek Greenway",
+      "source_ids": [
+        "S2"
+      ]
+    }
+  ],
+  "image_brief": {
+    "primary_request": "16:9 editorial hero: an empty full-size artificial turf soccer field at a new municipal sports park on a summer evening, goal frames and field lighting visible, low residential rooftops beyond the fence line, no people, no logos, no text.",
+    "editorial_idea": "The story is about who is allowed onto an empty field, so the image should be the empty field itself with the neighborhood visible right behind it, not a game in progress.",
+    "story_anchors": [
+      "A full-size lighted artificial turf soccer field, unoccupied, with a chain-link perimeter fence and a posted hours sign at the gate",
+      "Single-family rooftops and mature trees of a Columbus residential neighborhood immediately beyond the park boundary"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "The city's park and capital project pages carry no openly licensed photograph of the completed fields that CREN can republish.",
+    "avoid": "No stadium crowds, no Columbus Crew marks or kits, no children's faces, no ribbon-cutting scissors, no aerial stadium renderings."
+  },
+  "image_alt": "An empty lighted artificial turf soccer field at a new Columbus municipal sports park, with a perimeter fence and neighborhood rooftops visible beyond it.",
+  "image_provenance": {
+    "type": "AI_GENERATED",
+    "caption": "AI-generated illustration of an empty municipal turf field. Not a photograph of Kilbourne Run Sports Park and not a rendering of its fields."
+  }
+}

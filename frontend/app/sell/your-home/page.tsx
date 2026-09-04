@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CrenPage } from "@/components/cren/cren-page";
 import { LeadForm } from "@/components/lead-form";
+import { FunnelDisclosure } from "@/components/funnel-disclosure";
 
 export const metadata: Metadata = {
   title: "Sell Your Columbus Home Without an Agent | Columbus Real Estate News",
@@ -65,6 +66,7 @@ export default function SellYourHomePage() {
           <p className="cren-body mt-2 max-w-2xl">
             Takes about two minutes. You will hear from us within 1 business day.
           </p>
+          <FunnelDisclosure variant="seller" />
           <LeadForm
             persona="fsbo_seller"
             source="sell-your-home"

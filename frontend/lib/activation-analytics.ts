@@ -25,6 +25,14 @@ export const ACTIVATION_EVENT_DEFINITIONS = [
   { name: "generate_lead", label: "Lead forms submitted" },
   { name: "contact_request", label: "Contact forms submitted" },
   { name: "sign_up", label: "Signup events" },
+  // Progressive membership signup. Step 1 (email + area/topic) and step 2
+  // (optional preference profile) are measured independently so
+  // visit -> signup and signup -> profile completion never share a number.
+  { name: "membership_signup_view", label: "Membership step 1 views" },
+  { name: "membership_signup", label: "Membership step 1 signups" },
+  { name: "membership_profile_view", label: "Membership step 2 views" },
+  { name: "membership_profile_complete", label: "Membership step 2 completions" },
+  { name: "membership_profile_skip", label: "Membership step 2 skips" },
 ] as const;
 
 export type ActivationEventName = (typeof ACTIVATION_EVENT_DEFINITIONS)[number]["name"];
@@ -204,6 +212,14 @@ export function summarizeActivationEvents(events: StoredActivationEvent[], areaP
     .sort((a, b) => b.views - a.views || b.preferences - a.preferences || b.follows - a.follows || a.area_name.localeCompare(b.area_name))
     .slice(0, 25);
 
+  const membershipSignupViews = countByName.get("membership_signup_view") ?? 0;
+  const membershipSignups = countByName.get("membership_signup") ?? 0;
+  const membershipProfileViews = countByName.get("membership_profile_view") ?? 0;
+  const membershipProfileCompletions = countByName.get("membership_profile_complete") ?? 0;
+  const membershipProfileSkips = countByName.get("membership_profile_skip") ?? 0;
+  const rate = (numerator: number, denominator: number) =>
+    denominator > 0 ? Math.round((numerator / denominator) * 1000) / 10 : null;
+
   return {
     totalEvents: relevant.length,
     eventCounts: ACTIVATION_EVENT_DEFINITIONS.map((definition) => ({
@@ -217,6 +233,13 @@ export function summarizeActivationEvents(events: StoredActivationEvent[], areaP
     checklistStarts,
     checklistCompletions,
     checklistCompletionRate,
+    membershipSignupViews,
+    membershipSignups,
+    membershipSignupRate: rate(membershipSignups, membershipSignupViews),
+    membershipProfileViews,
+    membershipProfileCompletions,
+    membershipProfileSkips,
+    membershipProfileCompletionRate: rate(membershipProfileCompletions, membershipProfileViews),
     topAreas: topValues(relevant, ["area_name", "area", "area_slug"]),
     topSources: topValues(relevant, ["method", "source", "section_id"]),
     topPersonas: topValues(relevant, ["persona", "role"]),

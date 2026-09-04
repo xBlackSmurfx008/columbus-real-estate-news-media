@@ -59,7 +59,7 @@ export function SiteFooter() {
           </div>
           <div>
             <div className="footer-col-title">Newsletter</div>
-            <p style={{ fontSize: 13, opacity: 0.4, marginBottom: 12 }}>Get the Columbus RE Insider every Tuesday.</p>
+            <p style={{ fontSize: 13, opacity: 0.4, marginBottom: 12 }}>Free membership. Your email and your area, nothing else.</p>
             <FooterNewsletterForm />
           </div>
         </div>

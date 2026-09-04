@@ -30,7 +30,7 @@ export default function RentPage() {
           </Link>
           <Link href="/blog/columbus-rent-trends-march-2026" className={cardClass}>
             <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Latest rent trends</h2>
-            <p className="cren-body mt-2 text-sm">Read a weekly brief on concessions, pricing, and renter demand by area.</p>
+            <p className="cren-body mt-2 text-sm">Read our latest on concessions, pricing, and renter demand by area.</p>
           </Link>
           <Link href="/areas" className={cardClass}>
             <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Neighborhood hub finder</h2>

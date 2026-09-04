@@ -59,7 +59,9 @@ export function SiteFooter() {
           </div>
           <div>
             <div className="footer-col-title">Newsletter</div>
-            <p style={{ fontSize: 13, opacity: 0.4, marginBottom: 12 }}>Get the Columbus RE Insider every Tuesday.</p>
+            <p style={{ fontSize: 13, opacity: 0.4, marginBottom: 12 }}>
+              Leave your email and we will send the Columbus brief when it launches. Nothing is going out yet.
+            </p>
             <FooterNewsletterForm />
           </div>
         </div>

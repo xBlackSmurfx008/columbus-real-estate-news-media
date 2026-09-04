@@ -35,6 +35,7 @@ import {
   isDurableArticleImageUrl,
 } from './article-image-policy.mjs';
 import { hostPlaceholderCard, PLACEHOLDER_CAPTION } from "./editorial-card-lib.mjs";
+import { APPROVED_AUTHORS, canonicalizeAuthor, isApprovedAuthor } from "./newsroom-authors.mjs";
 import { sendTelegramAlert } from "./telegram-alert.mjs";
 
 const filePath = process.argv[2];
@@ -75,6 +76,26 @@ if (!qualityReport.passed) {
 for (const field of ["title", "category", "author", "date"]) {
   if (!article[field]) {
     console.error(`Missing required field: ${field}`);
+    process.exit(1);
+  }
+}
+
+// One newsroom identity (owner plan 2026-09-04, P1 item 7). The approved byline
+// list lives in scripts/newsroom-authors.mjs; extend it there when a real
+// bylined human joins. A known legacy variant is corrected in place so the
+// story still publishes; anything else is blocked.
+{
+  const canonical = canonicalizeAuthor(article.author);
+  if (canonical !== article.author) {
+    console.warn(`Byline "${article.author}" normalized to "${canonical}".`);
+    article.author = canonical;
+  }
+  if (!isApprovedAuthor(article.author)) {
+    console.error(
+      `Byline "${article.author}" is not an approved author.\n`
+      + `Approved bylines: ${APPROVED_AUTHORS.join(", ")}.\n`
+      + `Add a new byline to frontend/scripts/newsroom-authors.mjs before publishing under it.`
+    );
     process.exit(1);
   }
 }

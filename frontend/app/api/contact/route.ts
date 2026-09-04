@@ -4,6 +4,8 @@ import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
 import { FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 import { recordConsentEventSafely } from "@/lib/compliance/consent-events";
 import { mirrorAdvertisingInquirySafely } from "@/lib/compliance/intake-records";
+import { enqueueInquirySafely } from "@/lib/inquiry-queue-db";
+import { inquiryTypeForContact } from "@/lib/inquiry-queue";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -42,6 +44,24 @@ export async function POST(request: NextRequest) {
       RETURNING id
     `;
     const sourceRoute = typeof body.sourceRoute === "string" ? body.sourceRoute.slice(0, 500) : cleanSource;
+
+    // Same invariant as the lead funnel: advertiser, directory, and general
+    // contact messages all enter the one operating queue with an owner and a
+    // one-business-day timer.
+    await enqueueInquirySafely(sql, {
+      sourceTable: "contacts",
+      sourceId: contact.id,
+      inquiryType: inquiryTypeForContact(cleanSource, typeof inquiryType === "string" ? inquiryType : null),
+      name: name.trim(),
+      email,
+      source: cleanSource,
+      sourceRoute,
+      summary: [cleanCompany ? `Company: ${cleanCompany}` : null, cleanPackage ? `Package: ${cleanPackage}` : null, cleanMessage]
+        .filter(Boolean)
+        .join(" | ")
+        .slice(0, 900),
+    });
+
     await recordConsentEventSafely(sql, {
       consentKey: isAdvertising ? "advertiserTerms" : "contactPermission",
       entityType: "contact",

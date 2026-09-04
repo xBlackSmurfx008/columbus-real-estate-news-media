@@ -4,6 +4,10 @@
     {
       "path": "/api/cron/newsroom-images",
       "schedule": "10 11 * * *"
+    },
+    {
+      "path": "/api/cron/lead-sla",
+      "schedule": "0 12,14,16,18,20,22 * * 1-5"
     }
   ]
 }

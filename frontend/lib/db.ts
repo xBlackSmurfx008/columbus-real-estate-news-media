@@ -410,9 +410,18 @@ export async function seedData() {
   }
 
   // --- ADS ---
+  // Never seed an ad that names a real company. The original seed shipped two
+  // native ads branded "Huntington Bank" and "Park National Bank" with
+  // status 'live' and invented product claims ("Expanding down payment
+  // assistance...", "Competitive rates..."). Neither is an advertiser. The
+  // homepage renders a native ad as "Paid content from <brand_name>", so
+  // seeding those rows asserts a paid relationship with a real financial
+  // institution that does not exist, and attributes lending claims to them we
+  // cannot support. Removed 2026-09-04.
+  //
+  // Only unbranded, empty display slots are seeded. A native ad must be created
+  // deliberately in the admin panel against a real, signed advertiser.
   const ads = [
-    { id:"ad1",name:"Huntington Bank - First-Time Buyer",type:"native",status:"live",placement:"homepage-native",title:"Huntington Bank: First-Time Buyer Programs Designed for Columbus Families",text:"Expanding down payment assistance to qualified buyers in Franklin, Delaware, and Licking counties.",cta_text:"Learn About Programs",cta_url:"#",brand_name:"Huntington Bank",brand_color:"#006747" },
-    { id:"ad2",name:"Park National - Commercial Lending",type:"native",status:"live",placement:"sidebar-native",title:"Park National Bank: Commercial Lending Made Local",text:"Competitive rates on commercial real estate loans with decision-making that stays in Columbus.",cta_text:"Get a Quote",cta_url:"#",brand_name:"Park National Bank",brand_color:"#1e3a5f" },
     { id:"ad3",name:"Leaderboard - Homepage",type:"display",status:"live",placement:"homepage-leaderboard",size:"728x90" },
     { id:"ad4",name:"Sidebar - Stories Top",type:"display",status:"live",placement:"stories-sidebar-top",size:"300x250" },
     { id:"ad5",name:"Sidebar - Stories Bottom",type:"display",status:"live",placement:"stories-sidebar-bottom",size:"300x600" }

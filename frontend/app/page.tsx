@@ -3,14 +3,18 @@ import { AnalyticsTracker } from "@/components/analytics-tracker";
 import { HomeSections } from "@/components/cren/home-sections";
 import { getCanonicalMarketData, selectHeadlineMetrics } from "@/lib/market-data";
 import { getPublicData } from "@/lib/public-data";
+import { pageMetadata } from "@/lib/page-metadata";
+import { publisherGraph } from "@/lib/publisher-schema";
+import { safeJsonLd } from "@/lib/site";
 
 export const revalidate = 300; // ISR: revalidate every 5 minutes
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: '/',
   title: 'Columbus Housing, Neighborhoods & Local Living',
-  description: 'Sourced local reporting and housing intelligence for Columbus renters, buyers, sellers, and residents.',
-  alternates: { canonical: '/' },
-};
+  description:
+    'Sourced local reporting and housing intelligence for Columbus renters, buyers, sellers, and residents, from a newsroom that reads the records itself.',
+});
 
 export default async function HomePage() {
   let data;
@@ -28,6 +32,11 @@ export default async function HomePage() {
 
   return (
     <div className="cren-home">
+      {/* Publisher identity for the site itself — see lib/publisher-schema.ts. */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(publisherGraph()) }}
+      />
       <AnalyticsTracker />
       <HomeSections
         articles={data?.articles ?? []}

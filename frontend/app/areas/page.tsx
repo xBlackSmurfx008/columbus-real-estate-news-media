@@ -4,12 +4,14 @@ import { AREA_SECTION_ORDER, AREA_SECTION_LABELS } from "@/lib/franklin-areas";
 import { areasGroupedBySection } from "@/lib/data";
 import { CrenPage } from "@/components/cren/cren-page";
 import { getArticles } from "@/lib/public-data";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: 'Columbus Neighborhood & Area Guides',
-  description: 'Explore local housing, development, schools, restaurants, events, and market reporting across Columbus and Franklin County.',
-  alternates: { canonical: '/areas' },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/areas",
+  title: "Columbus Neighborhood & Area Guides",
+  description:
+    "Explore housing, development, schools, restaurants, events, and sourced market reporting across Columbus neighborhoods, suburbs, and Franklin County hubs.",
+});
 
 export default async function AreasPage() {
   const grouped = areasGroupedBySection();

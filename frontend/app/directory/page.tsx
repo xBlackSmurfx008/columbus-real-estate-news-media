@@ -4,12 +4,14 @@ import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
 import { GUIDE_IMAGES, LOCAL_LIVING_CATEGORIES, SERVICE_CATEGORIES } from "@/lib/area-guides";
 import { DIRECTORY_VERIFICATION_LABELS, FIRST_DIRECTORY_PILOT_PACKAGE } from "@/lib/directory-sponsorship";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: "Columbus Local Business & Home Services Directory",
-  description: "Find Columbus-area home services, food, drink, entertainment, family activities, and local businesses—or submit a company for review.",
-  alternates: { canonical: "/directory" },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/directory",
+  title: "Columbus Home Services Directory",
+  description:
+    "Find Columbus-area home services, food, drink, entertainment, family activities, and local businesses, or submit a company for CREN directory review.",
+});
 
 function mapsSearch(category: string, area: string): string {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${category} near ${area}, Ohio`)}`;

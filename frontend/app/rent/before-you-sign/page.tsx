@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
 import { RenterDueDiligenceChecklist } from "@/components/renter-due-diligence-checklist";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/rent/before-you-sign",
   title: "Before You Sign a Columbus Lease",
   description:
     "A Columbus renter due-diligence checklist for fees, utilities, maintenance, owner verification, daily-life fit, lease risk, public records, and reviews.",
-  alternates: { canonical: "/rent/before-you-sign" },
-};
+});
 
 const resourceCards = [
   {

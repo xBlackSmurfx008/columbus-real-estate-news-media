@@ -9,14 +9,22 @@ import { absoluteUrl } from '@/lib/site';
 
 export const revalidate = 300;
 
-const staticPaths = [
+// Indexable, hand-authored paths.
+//
+// Per-visitor utility pages are deliberately absent. `/saved` renders whatever
+// is in THIS browser's localStorage and `/profile` renders the signed-in
+// member's own account, so neither has a stable public document to index —
+// both serve `noindex, follow`. Listing a noindex URL in the sitemap is a
+// contradiction, not a hedge: it asks Google to crawl a page we have already
+// told it not to keep. `/search` is noindex for the same reason and has never
+// been listed here. tests/page-metadata.test.mjs fails the build if a page
+// marked noindex reappears in this array.
+export const STATIC_SITEMAP_PATHS = [
   '/',
   '/blog',
   '/areas',
   '/topics',
   '/site-map',
-  '/saved',
-  '/profile',
   '/market-data',
   '/resources',
   '/things-to-do',
@@ -53,7 +61,7 @@ const staticPaths = [
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articles = await getArticles();
   return [
-    ...staticPaths.map((path) => ({
+    ...STATIC_SITEMAP_PATHS.map((path) => ({
       url: absoluteUrl(path),
       changeFrequency: path === '/' || path === '/blog' ? 'daily' as const : 'weekly' as const,
       priority: path === '/' ? 1 : 0.7,

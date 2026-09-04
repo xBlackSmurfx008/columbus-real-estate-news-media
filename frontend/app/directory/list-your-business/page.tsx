@@ -4,12 +4,14 @@ import { CrenPage } from "@/components/cren/cren-page";
 import { LeadForm } from "@/components/lead-form";
 import { LOCAL_LIVING_CATEGORIES, SERVICE_CATEGORIES } from "@/lib/area-guides";
 import { ADVERTISING_PACKAGE_OPTIONS, DIRECTORY_LISTING_FIELD_GROUPS } from "@/lib/directory-sponsorship";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/directory/list-your-business",
   title: "List Your Columbus-Area Business",
-  description: "Submit a Columbus-area home service, restaurant, entertainment, activity, or local business for CREN directory review.",
-  alternates: { canonical: "/directory/list-your-business" },
-};
+  description:
+    "Submit a Columbus-area home service, restaurant, entertainment venue, activity, or local business for review and inclusion in the CREN local directory.",
+});
 
 export default async function ListYourBusinessPage({ searchParams }: { searchParams: Promise<{ area?: string }> }) {
   const { area } = await searchParams;

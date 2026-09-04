@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CrenPage } from '@/components/cren/cren-page';
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: 'Editorial Standards',
-  description: 'The sourcing, data, automation, image, independence, and correction standards used by Columbus Real Estate News.',
-  alternates: { canonical: '/editorial-standards' },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/editorial-standards",
+  title: "CREN Editorial Standards",
+  description:
+    "The sourcing, data, automation, image, independence, and correction standards Columbus Real Estate News applies to every story before it can be published.",
+});
 
 const standards = [
   ['Evidence first', 'We prefer originating public records, official datasets, agendas, filings, permits, and named primary sources. Secondary reporting is attributed and linked.'],

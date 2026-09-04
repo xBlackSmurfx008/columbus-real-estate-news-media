@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
 import { POLICY_LIBRARY_ORDER, POLICY_PAGES, policyPath } from "@/lib/policy-pages";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: "Policy Library",
-  description: "Owner-execution legal, privacy, advertising, editorial, profile, lead-routing, and automation policies for Columbus Real Estate News.",
-  alternates: { canonical: "/policies" },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/policies",
+  title: "CREN Policy Library",
+  description:
+    "Owner-execution legal, privacy, advertising, editorial, profile, lead-routing, and automation policies for Columbus Real Estate News, collected in one place.",
+});
 
 export default function PoliciesPage() {
   return (

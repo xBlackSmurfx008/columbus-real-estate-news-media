@@ -1,67 +1,19 @@
 import type { Metadata } from 'next';
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
-import { CoverImage } from "@/components/cren/cover-image";
+import { ArticleCard } from "@/components/cren/article-card";
 import { getArticles, DbArticle } from "@/lib/public-data";
-import { getArticlePath } from "@/lib/article-routing";
+import { toArticleCardData } from "@/lib/article-card";
+import { pageMetadata } from "@/lib/page-metadata";
 
 export const revalidate = 300;
 
-export const metadata: Metadata = {
-  title: 'Columbus Real Estate News & Analysis',
-  description: 'Latest sourced reporting on Columbus housing, rent, development, local policy, restaurants, events, and neighborhood life.',
-  alternates: { canonical: '/blog' },
-};
-
-function ArticleCard({ article, featured = false }: { article: DbArticle; featured?: boolean }) {
-  const initials = article.author.split(" ").map((n) => n[0]).join("");
-
-  return (
-    <Link href={getArticlePath(article)} className="block no-underline group">
-      <article
-        className="cren-surface p-6 transition-shadow duration-300 hover:shadow-[var(--shadow-hover)]"
-        data-item-type="article"
-        data-item-id={article.id}
-      >
-        {article.image_url ? (
-          <div className={`relative mb-4 overflow-hidden rounded-[var(--radius-sm)] ${featured ? "aspect-[16/8]" : "aspect-[16/9]"}`}>
-            <CoverImage src={article.image_url} alt={article.title} sizes="(max-width: 768px) 100vw, 33vw" />
-          </div>
-        ) : (
-          featured && (
-            <div className="mb-4 aspect-[16/8] overflow-hidden rounded-[var(--radius-sm)] bg-gradient-to-br from-[color:var(--green)]/15 via-[color:var(--gold)]/10 to-transparent" />
-          )
-        )}
-        <div className="mb-2 flex flex-wrap items-center gap-2">
-          <span className="inline-block rounded-full bg-[color:var(--green)]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--green)]">
-            {article.category}
-          </span>
-          {article.featured && (
-            <span className="inline-block rounded-full bg-[color:var(--gold)]/15 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--gold)]">
-              Featured
-            </span>
-          )}
-        </div>
-        <h3 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)] transition-colors group-hover:text-[color:var(--green)]">
-          {article.title}
-        </h3>
-        {article.excerpt && (
-          <p className="mt-2 line-clamp-2 text-sm text-[color:var(--text-secondary)]">{article.excerpt}</p>
-        )}
-        <div className="mt-4 flex items-center gap-3 text-xs text-[color:var(--text-muted)]">
-          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[color:var(--green)] text-[10px] font-bold text-white">
-            {initials}
-          </div>
-          <span className="font-medium text-[color:var(--text-secondary)]">{article.author}</span>
-          <span>·</span>
-          <span>{article.date}</span>
-          <span>·</span>
-          <span>{article.read_time}</span>
-        </div>
-      </article>
-    </Link>
-  );
-}
+export const metadata: Metadata = pageMetadata({
+  path: '/blog',
+  title: 'Columbus Real Estate Reporting & Analysis',
+  description:
+    'Latest sourced reporting on Columbus housing, rent, development, local policy, restaurants, events, and neighborhood life across Columbus and Central Ohio.',
+});
 
 export default async function BlogPage() {
   let articles: DbArticle[] = [];
@@ -71,8 +23,12 @@ export default async function BlogPage() {
     articles = [];
   }
 
-  const featuredArticles = articles.filter((a) => a.featured);
-  const otherArticles = articles.filter((a) => !a.featured);
+  // Mapped to the ten fields a card actually renders before it crosses the
+  // server/client boundary — see lib/article-card.ts for why that matters to
+  // the size of this page.
+  const cards = articles.map(toArticleCardData);
+  const featuredArticles = cards.filter((a) => a.featured);
+  const otherArticles = cards.filter((a) => !a.featured);
 
   return (
     <CrenPage>

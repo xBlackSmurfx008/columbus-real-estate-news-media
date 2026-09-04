@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
 import { LeadForm } from "@/components/lead-form";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: "Claim or Update a CREN Profile",
-  description: "Submit a CREN profile claim, correction, dispute, or factual update request for review.",
-  alternates: { canonical: "/profiles/claim" },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/profiles/claim",
+  title: "Submit a CREN Profile Claim",
+  description:
+    "Submit a Columbus Real Estate News profile claim, correction, dispute, or factual update request, and we will review it against our profile claim policy.",
+});
 
 export default function ProfileClaimPage() {
   return (

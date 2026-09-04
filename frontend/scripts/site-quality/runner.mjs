@@ -21,6 +21,7 @@ import { leadFormValidation, leadFormSubmission } from "./checks/lead-form.mjs";
 import { analyticsMounted, analyticsFlowing, analyticsWritable } from "./checks/analytics.mjs";
 import { schemaMarkup } from "./checks/schema.mjs";
 import { indexability, canonicals } from "./checks/indexability.mjs";
+import { metadataQuality } from "./checks/metadata.mjs";
 import { imagePolicy, imagesReachable, renderedImages } from "./checks/images.mjs";
 import { responsePerformance, webVitals } from "./checks/performance.mjs";
 import { dataReadiness } from "./checks/readiness.mjs";
@@ -31,6 +32,7 @@ export const CHECKS = [
   externalLinks,
   indexability,
   canonicals,
+  metadataQuality,
   schemaMarkup,
   disclosurePolicyPages,
   funnelDisclosures,

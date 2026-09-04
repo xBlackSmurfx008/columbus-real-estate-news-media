@@ -9,6 +9,8 @@ import { formatPeriod, getCanonicalMarketData, selectAreaMetrics, type MarketMet
 import { getArticlePath } from "@/lib/article-routing";
 import { CoverImage } from "@/components/cren/cover-image";
 import { GuideCard, RepresentativeImageNote } from "@/components/guide-card";
+import { composeDescription, composeTitle } from "@/lib/page-metadata";
+import { absoluteUrl } from "@/lib/site";
 import { getAreaGuide, OFFICIAL_ACTIVITY_SOURCES } from "@/lib/area-guides";
 import { AreaFollowForm } from "@/components/area-follow-form";
 import {
@@ -35,11 +37,29 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const releasePolicy = getAreaReleasePolicy(area);
   const realityCheck: FlagshipRealityCheck | null = getAreaRealityCheck(area) ?? getFlagshipRealityCheck(area.slug);
   return {
-    title: realityCheck ? `${area.name} Area Reality Check` : `${area.name} Housing & Local Living Guide`,
+    title: realityCheck
+      ? composeTitle([`${area.name} Area Reality Check`, `${area.name} Reality Check`])
+      : composeTitle([
+          `${area.name} Housing & Local Living Guide`,
+          `${area.name} Housing Guide`,
+          `${area.name} Guide`,
+        ]),
+    // composeDescription keeps the hub blurb inside the 165-character
+    // convention: the old `${blurb} ${one fixed sentence}` template ran to 199
+    // characters on the areas with a long blurb, so Google truncated the
+    // sentence mid-thought on five hubs.
     description: realityCheck
-      ? realityCheck.shortAnswer
-      : `${area.description} Follow housing, rent, development, schools, restaurants, events, and local decisions affecting ${area.name}.`,
-    alternates: { canonical: `/areas/${area.slug}` },
+      ? composeDescription(realityCheck.shortAnswer, [
+          `Sourced ${area.name} reporting on housing, rent, development, and local decisions.`,
+          `Sourced ${area.name} housing and development reporting.`,
+        ])
+      : composeDescription(area.description, [
+          `Follow housing, rent, development, schools, restaurants, events, and local decisions affecting ${area.name}.`,
+          `Follow ${area.name} housing, rent, development, schools, and the local decisions behind them.`,
+          `Follow ${area.name} housing, rent, and development as we publish it.`,
+          `Follow ${area.name} housing and local news.`,
+        ]),
+    alternates: { canonical: absoluteUrl(`/areas/${area.slug}`) },
     robots: { index: releasePolicy.indexable, follow: true },
   };
 }
@@ -50,7 +70,7 @@ function ArticleCard({ article }: { article: DbArticle }) {
       <div className="cren-surface overflow-hidden transition-shadow duration-300 hover:shadow-[var(--shadow-hover)]">
         {article.image_url && (
           <div className="relative aspect-[16/9] overflow-hidden">
-            <CoverImage src={article.image_url} alt={article.title} sizes="(max-width: 768px) 100vw, 50vw" />
+            <CoverImage src={article.image_url} alt={article.title} thumbnail />
           </div>
         )}
         <div className="p-5">

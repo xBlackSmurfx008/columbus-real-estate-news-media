@@ -6,12 +6,14 @@ import {
   SPONSOR_PACKAGE_DEFINITIONS,
   SPONSOR_REPORTING_EXAMPLE,
 } from "@/lib/directory-sponsorship";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/advertise/media-kit",
   title: "CREN Media Kit and Rate Card",
-  description: "Advertiser products, rate-card posture, labels, reporting, and claim-review requirements for Columbus Real Estate News.",
-  alternates: { canonical: "/advertise/media-kit" },
-};
+  description:
+    "Advertiser products, rate-card posture, labeling rules, reporting, and the claim-review requirements every Columbus Real Estate News campaign must meet.",
+});
 
 const audiencePromises = [
   {

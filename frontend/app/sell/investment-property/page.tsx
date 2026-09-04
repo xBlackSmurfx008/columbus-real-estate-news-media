@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { CrenPage } from "@/components/cren/cren-page";
 import { LeadForm } from "@/components/lead-form";
 import { FunnelDisclosure } from "@/components/funnel-disclosure";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: "Sell Your Columbus Rental or Portfolio Off-Market | Columbus Real Estate News",
+export const metadata: Metadata = pageMetadata({
+  path: "/sell/investment-property",
+  title: "Sell a Columbus Rental or Portfolio Off-Market",
   description:
-    "Sell your Columbus investment property directly. As-is, tenants in place, no listing, no commission. Quiet and fast.",
-};
+    "Sell your Columbus investment property directly to local buyers. As-is condition, tenants in place, no listing, no showings, and no commission. Quiet and fast.",
+});
 
 const faqs = [
   {

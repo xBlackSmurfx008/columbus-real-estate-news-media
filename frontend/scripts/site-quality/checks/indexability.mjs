@@ -5,6 +5,7 @@
 // own meta robots. A page listed in the sitemap that carries `noindex`, or a
 // sitemap URL blocked by robots.txt, is a contradiction we are shipping.
 
+import { acceptedOrigins } from "../corpus.mjs";
 import { canonicalHrefs, hasNoindex, metaContent } from "../html.mjs";
 import { htmlPages } from "../pages.mjs";
 import { fail, pass, skip, verdict } from "../result.mjs";
@@ -83,7 +84,15 @@ export const indexability = {
       findings.push(`sitemap: ${corpus.reason}`);
     } else {
       if (corpus.sitemapUrls.length === 0) findings.push("/sitemap.xml parses but lists zero URLs");
-      const offOrigin = corpus.sitemapUrls.filter((entry) => !entry.startsWith(`${target.origin}/`) && entry !== target.origin);
+      // Off-origin sitemap URLs are a real defect on production. On a local or
+      // preview target they are expected: `metadataBase` is the production
+      // origin, so a locally served sitemap correctly names production URLs.
+      // Failing there would make `--target local` permanently red for a
+      // non-defect and train people to ignore this check.
+      const acceptable = [`${target.origin}/`, ...acceptedOrigins(target).map((origin) => `${origin}/`)];
+      const offOrigin = corpus.sitemapUrls.filter(
+        (entry) => !acceptable.some((prefix) => entry.startsWith(prefix)) && entry !== target.origin,
+      );
       if (offOrigin.length > 0) {
         findings.push(`sitemap lists ${offOrigin.length} URL(s) outside ${target.origin}, e.g. ${offOrigin[0]}`);
       }

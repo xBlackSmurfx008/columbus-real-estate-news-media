@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { CrenPage } from "@/components/cren/cren-page";
 import { LeadForm } from "@/components/lead-form";
 import { FunnelDisclosure } from "@/components/funnel-disclosure";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: "Deploy Capital in Columbus Real Estate | Columbus Real Estate News",
+export const metadata: Metadata = pageMetadata({
+  path: "/invest/deploy-capital",
+  title: "Deploy Capital in Columbus Real Estate",
   description:
-    "Have capital to put to work in Central Ohio real estate? Tell us your goals and we'll start a conversation about local opportunities.",
-};
+    "Have capital to put to work in Central Ohio real estate? Tell us your goals and your range, and we will start a conversation about local Columbus opportunities.",
+});
 
 const faqs = [
   {

@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
+import { pageMetadata } from "@/lib/page-metadata";
 
 const cardClass = "cren-surface cren-card-link block rounded-[var(--radius)] border border-[color:var(--border)] p-5";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/rent",
+  title: "Rent in Columbus, Ohio",
+  description:
+    "Renting in Columbus, with local context: a before-you-sign checklist, neighborhood hubs, current rent reporting, and free help finding a place that fits.",
+});
 
 export default function RentPage() {
   return (

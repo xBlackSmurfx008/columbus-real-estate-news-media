@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
+import { pageMetadata } from "@/lib/page-metadata";
 
 const cardClass = "cren-surface cren-card-link block rounded-[var(--radius)] border border-[color:var(--border)] p-5";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/buy",
+  title: "Buy a Home in Columbus, Ohio",
+  description:
+    "Columbus buyer guidance from a local newsroom: price-band tradeoffs, neighborhood comparisons, school-zone demand, and the market data behind your timing.",
+});
 
 export default function BuyPage() {
   return (

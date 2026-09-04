@@ -1,6 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { SubscribeForm } from "@/components/subscribe-form";
 import { CrenPage } from "@/components/cren/cren-page";
+import { pageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/subscribe",
+  title: "Follow Your Part of Columbus, Free",
+  description:
+    "Your email and your Columbus area — that is the whole signup. Free membership on a local newsroom that reads the permits, county records, and market reports.",
+});
 
 type SubscribePageProps = {
   searchParams: Promise<{

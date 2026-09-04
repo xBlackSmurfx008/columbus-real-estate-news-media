@@ -1,9 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/page-metadata";
 import { SponsorSpotlight } from "@/components/sections/sponsor-spotlight";
 import { topics } from "@/lib/data";
 import { CrenPage } from "@/components/cren/cren-page";
 import { AdvertisingInquiryForm } from "@/components/advertising-inquiry-form";
 import { FIRST_DIRECTORY_PILOT_PACKAGE, SPONSOR_PACKAGE_DEFINITIONS } from "@/lib/directory-sponsorship";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/advertise",
+  title: "Advertise in Columbus with CREN",
+  description:
+    "Labeled neighborhood, service-guide, and directory placements on a Columbus real estate news site. Advertising buys distribution, never newsroom coverage.",
+});
 
 export default function AdvertisePage() {
   const spotlightTopics = topics.slice(0, 3);

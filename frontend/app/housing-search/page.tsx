@@ -5,12 +5,14 @@ import { CrenPage } from "@/components/cren/cren-page";
 import { LeadForm } from "@/components/lead-form";
 import { PartnerLinks } from "@/components/partner-links";
 import { GUIDE_IMAGES } from "@/lib/area-guides";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: "Search, Buy, Rent, Sell or List Columbus Housing",
-  description: "Compare places to search Columbus homes and apartments, plan a sale, or advertise a rental—with verification and scam-safety checks.",
-  alternates: { canonical: "/housing-search" },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/housing-search",
+  title: "Search Columbus Homes and Rentals",
+  description:
+    "Compare the places to search Columbus homes and apartments, plan a sale, or advertise a rental, with verification steps and scam-safety checks for each.",
+});
 
 const PAGE_PATH = "/housing-search";
 

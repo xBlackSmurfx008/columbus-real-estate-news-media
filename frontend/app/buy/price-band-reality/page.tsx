@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
 import { BUYER_PRICE_BANDS } from "@/lib/consumer-insights";
+import { pageMetadata } from "@/lib/page-metadata";
 
 const buyerSourceLinks = [
   {
@@ -66,12 +67,12 @@ const buyerContentQueue = [
   },
 ] as const;
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/buy/price-band-reality",
   title: "Columbus Buyer Price-Band Reality",
   description:
-    "Compare Columbus buyer budget bands by tradeoffs, nearby area substitutes, verification steps, and next actions before touring homes.",
-  alternates: { canonical: "/buy/price-band-reality" },
-};
+    "Compare Columbus buyer budget bands by their real tradeoffs, nearby area substitutes, verification steps, and the next actions to take before touring homes.",
+});
 
 export default function BuyerPriceBandRealityPage() {
   return (

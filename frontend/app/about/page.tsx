@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: 'About',
-  description: 'About Columbus Real Estate News, its newsroom, coverage mission, sourcing, corrections, and publishing standards.',
-  alternates: { canonical: '/about' },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/about",
+  title: "About CREN and Our Columbus Coverage",
+  description:
+    "About Columbus Real Estate News: the newsroom, what we cover across Central Ohio, how we source and check stories, and how corrections and standards work.",
+});
 
 export default function AboutPage() {
   return (

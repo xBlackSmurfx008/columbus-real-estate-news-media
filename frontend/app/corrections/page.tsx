@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CrenPage } from '@/components/cren/cren-page';
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: 'Corrections Policy',
-  description: 'How Columbus Real Estate News receives, verifies, records, and publishes corrections and clarifications.',
-  alternates: { canonical: '/corrections' },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/corrections",
+  title: "CREN Corrections Policy",
+  description:
+    "How Columbus Real Estate News receives, verifies, records, and publishes corrections, and how to tell us when we have got something wrong in a story.",
+});
 
 export default function CorrectionsPage() {
   return (

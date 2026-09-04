@@ -116,8 +116,21 @@ export const schemaMarkup = {
 
     // 3. Advisory coverage gaps on the pages that carry the brand.
     const home = usable.get("/");
-    if (home && jsonLdNodes(home.text).length === 0) {
-      advisory.push("/ — homepage has no structured data at all (no Organization or WebSite node), so search engines have no machine-readable publisher identity for the site");
+    if (home) {
+      const homeNodes = jsonLdNodes(home.text);
+      if (homeNodes.length === 0) {
+        advisory.push("/ — homepage has no structured data at all (no Organization or WebSite node), so search engines have no machine-readable publisher identity for the site");
+      } else {
+        // Present is not the same as sufficient: the publisher identity is what
+        // ties every NewsArticle's `publisher` to a real entity, and the
+        // WebSite node is what carries the sitelinks search box.
+        if (!findNode(homeNodes, "Organization") && !findNode(homeNodes, "NewsMediaOrganization")) {
+          advisory.push("/ — homepage structured data declares no Organization, so the publisher named on every article resolves to nothing");
+        }
+        if (!findNode(homeNodes, "WebSite")) {
+          advisory.push("/ — homepage structured data declares no WebSite node");
+        }
+      }
     }
 
     const stats = { pagesInspected: usable.size, articlePagesValidated: articlePaths.length };

@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { CrenPage } from "@/components/cren/cren-page";
 import { LeadForm } from "@/components/lead-form";
 import { FunnelDisclosure } from "@/components/funnel-disclosure";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: "Find a Rental Home or Apartment in Columbus | Columbus Real Estate News",
+export const metadata: Metadata = pageMetadata({
+  path: "/rent/find-a-home",
+  title: "Find a Rental Home or Apartment in Columbus",
   description:
-    "Tell us what you're looking for and your budget. We'll help match you with Columbus rentals that fit — no fees to you.",
-};
+    "Tell us the Columbus areas you want, what you need, and what you can spend. We will help match you with rentals across the metro that fit, at no cost to you.",
+});
 
 const faqs = [
   {

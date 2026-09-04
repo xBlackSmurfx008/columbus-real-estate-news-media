@@ -6,7 +6,7 @@
 // list would silently stop covering pages the moment someone adds a route.
 
 import { FUNNEL_PATHS } from "../funnel-lib.mjs";
-import { url as targetUrl } from "./target.mjs";
+import { PRODUCTION_ORIGIN, url as targetUrl } from "./target.mjs";
 
 /** Pages that must always be inspected, sitemap or not. */
 export const CRITICAL_PATHS = [
@@ -40,14 +40,29 @@ export function parseSitemapUrls(xml) {
   return urls;
 }
 
-export function pathFromUrl(value, origin) {
+export function pathFromUrl(value, origin, alsoAccept = []) {
   try {
     const parsed = new URL(value);
-    if (parsed.origin !== origin) return null;
+    if (parsed.origin !== origin && !alsoAccept.includes(parsed.origin)) return null;
     return `${parsed.pathname}${parsed.search}` || "/";
   } catch {
     return null;
   }
+}
+
+/**
+ * Origins whose sitemap entries count as "this site" for a given target.
+ *
+ * A local `next start` serves a sitemap full of ABSOLUTE PRODUCTION URLs,
+ * because `metadataBase` is the production origin and has to be — the sitemap
+ * we publish must name the URLs Google should index, not localhost. Before this
+ * existed, `--target local` therefore matched zero sitemap URLs and silently
+ * fell back to the 16 CRITICAL_PATHS, so a local run inspected a third of the
+ * pages a production run did while reporting the same confident PASS lines.
+ * Production stays strict: there, an off-origin sitemap URL is a real defect.
+ */
+export function acceptedOrigins(target) {
+  return target.isProduction ? [] : [PRODUCTION_ORIGIN];
 }
 
 /**
@@ -84,9 +99,10 @@ export async function loadCorpus(http, target, { articles = 8, areas = 5, topics
   }
 
   const sitemapUrls = parseSitemapUrls(response.text);
+  const alsoAccept = acceptedOrigins(target);
   const byKind = { static: [], article: [], area: [], topic: [] };
   for (const entry of sitemapUrls) {
-    const path = pathFromUrl(entry, target.origin);
+    const path = pathFromUrl(entry, target.origin, alsoAccept);
     if (!path) continue;
     byKind[classifyPath(path)].push(path);
   }

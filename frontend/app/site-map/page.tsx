@@ -4,12 +4,14 @@ import { CrenPage } from "@/components/cren/cren-page";
 import { AREA_SECTION_LABELS, AREA_SECTION_ORDER } from "@/lib/franklin-areas";
 import { areasGroupedBySection, topics } from "@/lib/data";
 import { POLICY_LIBRARY_ORDER, POLICY_PAGES, policyPath } from "@/lib/policy-pages";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: "Site Map",
-  description: "Browse every major Columbus Real Estate News section, housing resource, topic, and local area hub.",
-  alternates: { canonical: "/site-map" },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/site-map",
+  title: "CREN Site Map and Section Index",
+  description:
+    "Browse every major Columbus Real Estate News section in one place: housing resources, market data, topic hubs, neighborhood area guides, and policies.",
+});
 
 type SiteMapLink = readonly [string, string];
 

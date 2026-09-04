@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { CrenPage } from "@/components/cren/cren-page";
 import Link from "next/link";
 import { JoinForm } from "@/components/join-form";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: "Join Free | Columbus Real Estate News",
+export const metadata: Metadata = pageMetadata({
+  path: "/join",
+  title: "Join CREN Free and Follow Your Areas",
   description:
     "Free CREN membership with a saved profile. Follow your Columbus neighborhoods and help shape the deal alerts and market tools we are building next.",
-};
+});
 
 export default function JoinPage() {
   return (

@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CrenPage } from '@/components/cren/cren-page';
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: 'CREN Newsroom',
-  description: 'How the Columbus Real Estate News newsroom researches, checks, illustrates, publishes, and corrects local reporting.',
-  alternates: { canonical: '/newsroom' },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/newsroom",
+  title: "Inside the CREN Newsroom",
+  description:
+    "How the Columbus Real Estate News newsroom researches, checks, illustrates, publishes, and corrects local reporting, and exactly what automation does here.",
+});
 
 export default function NewsroomPage() {
   return (

@@ -41,10 +41,11 @@ every skip into a blocking failure when you need proof of full coverage.
 | `links-external` | advisory | Outbound source links in articles resolve. **Off by default** — CLAUDE.md forbids hammering other outlets. `--external-links`. |
 | `indexability` | yes | robots.txt, the sitemap and each page's meta robots agree. A sitemap URL that serves `noindex` is a contradiction. |
 | `canonicals` | yes | Exactly one canonical per page, absolute, right host, and a cross-pointing canonical must resolve. Missing canonicals are advisory. |
-| `schema` | yes | Every `ld+json` block parses; article pages carry a valid `NewsArticle` and `BreadcrumbList`. Coverage gaps are advisory. |
+| `metadata` | yes | No two indexable pages share a `<title>` or a meta description, and none is missing. Length outside CLAUDE.md's conventions (title 45–75, description 140–165) and a brand repeated inside one title are advisory. |
+| `schema` | yes | Every `ld+json` block parses; article pages carry a valid `NewsArticle` and `BreadcrumbList`. The homepage must declare an `Organization` and a `WebSite`. Coverage gaps are advisory. |
 | `disclosure-policy-pages` | yes | `/lead-disclosure`, `/editorial-standards`, `/privacy`, `/terms` resolve. |
 | `disclosure-funnel` | yes | `components/funnel-disclosure.tsx` renders on all four funnel pages. |
-| `disclosure-affiliate` | yes | `components/ftc-disclosure.tsx` renders **above** the first affiliate link, by document position. |
+| `disclosure-affiliate` | yes | `components/ftc-disclosure.tsx` renders **above** the first *paid* link (`rel="sponsored"`), by document position. `/go/*` alone is the outbound click tracker and carries unpaid links too, so it does not trigger the rule — demanding "some links below pay us" above an unpaid link would publish a false statement. |
 | `lead-form-validation` | yes | All four form endpoints reject invalid input with HTTP 400. Writes nothing, so it is safe on production. |
 | `lead-form-submission` | yes | A real submission lands, is flagged `is_test`, and is deleted. **Write path — see below.** |
 | `analytics-mounted` | yes | The root layout still mounts `PageviewTracker` and `FunnelTracker`. |
@@ -95,6 +96,26 @@ of restating it:
 - `scripts/submission-smoke.mjs` → `lead-form-*` (imported)
 - `scripts/test-traffic-lib.mjs` → every write path (imported)
 - `scripts/funnel-lib.mjs` → funnel identity everywhere (imported)
+
+## What the build already guarantees, so the gate does not have to
+
+`verify:site` inspects a *served* site, which means it can only find a metadata
+defect after a deploy. The same rules are asserted against the source in
+`tests/seo-metadata.test.mjs`, which runs in `npm run test:image-pipeline` and
+fails the build instead:
+
+- every static page builds its head through `lib/page-metadata.ts`, so a
+  self-referencing absolute canonical is not something anyone can forget;
+- the canonical path matches the route the file is actually served at;
+- titles and meta descriptions are unique, inside the length conventions, and
+  never repeat the brand the root layout template already appends;
+- no page marked `noindex` appears in `app/sitemap.ts` — the `/saved`
+  contradiction the gate caught on 2026-09-04 cannot come back silently;
+- `/saved`, `/profile` and `/search` stay `noindex`, because each renders one
+  visitor's own state;
+- the homepage publisher graph asserts no founding date, address, telephone,
+  social profile, named person, or rating. Those are not established anywhere
+  in this repository, and structured data is not the place to guess.
 
 Still separate, on purpose:
 

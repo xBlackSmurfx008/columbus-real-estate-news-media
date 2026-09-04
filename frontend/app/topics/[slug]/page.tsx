@@ -6,6 +6,8 @@ import { CrenPage } from "@/components/cren/cren-page";
 import { getArticles, DbArticle } from "@/lib/public-data";
 import { getArticlePath } from "@/lib/article-routing";
 import { CoverImage } from "@/components/cren/cover-image";
+import { composeDescription } from "@/lib/page-metadata";
+import { absoluteUrl } from "@/lib/site";
 
 export const revalidate = 300;
 
@@ -15,8 +17,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!topic) return {};
   return {
     title: `${topic.name} in Columbus`,
-    description: `${topic.description} Sourced Columbus and Central Ohio coverage for residents and housing decisions.`,
-    alternates: { canonical: `/topics/${topic.slug}` },
+    // Longest truthful tail that keeps the description inside 165 characters —
+    // the fixed one-sentence template left the shortest topic blurbs at 119.
+    description: composeDescription(topic.description, [
+      'Sourced Columbus and Central Ohio coverage for residents, renters, buyers, and the housing decisions in front of them.',
+      'Sourced Columbus and Central Ohio coverage for residents, renters, buyers, and local housing decisions.',
+      'Sourced Columbus and Central Ohio coverage for residents and housing decisions.',
+      'Sourced Columbus and Central Ohio coverage.',
+    ]),
+    alternates: { canonical: absoluteUrl(`/topics/${topic.slug}`) },
   };
 }
 
@@ -57,7 +66,7 @@ export default async function TopicDetailPage({
                 <div className="cren-surface overflow-hidden transition-shadow duration-300 hover:shadow-[var(--shadow-hover)]">
                   {article.image_url && (
                     <div className="relative aspect-[16/9] overflow-hidden">
-                      <CoverImage src={article.image_url} alt={article.title} sizes="(max-width: 768px) 100vw, 33vw" />
+                      <CoverImage src={article.image_url} alt={article.title} thumbnail />
                     </div>
                   )}
                   <div className="p-5">

@@ -13,14 +13,16 @@ import {
 import { EMPTY_MARKET_DATA_SET } from "@/lib/market-data-core";
 import { getMarketData, DbNeighborhood } from "@/lib/public-data";
 import { SITE_URL } from "@/lib/site";
+import { pageMetadata } from "@/lib/page-metadata";
 
 export const revalidate = 300;
 
-export const metadata: Metadata = {
-  title: 'Columbus Housing Market Data',
-  description: 'Columbus housing and rental indicators with definitions, source context, and links to local analysis.',
-  alternates: { canonical: '/market-data' },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/market-data",
+  title: "Columbus Housing Market Data",
+  description:
+    "Columbus housing and rental indicators with plain definitions, the source and date behind every number, and links to the local analysis that explains them.",
+});
 
 function directionClass(direction: string): string {
   if (direction === "up") return "cren-data-up";

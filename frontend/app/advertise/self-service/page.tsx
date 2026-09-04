@@ -3,12 +3,14 @@ import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
 import { AdvertisingInquiryForm } from "@/components/advertising-inquiry-form";
 import { SPONSOR_PACKAGE_DEFINITIONS } from "@/lib/directory-sponsorship";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: "Self-Service CREN Advertising Intake",
-  description: "Select a CREN advertising package, submit campaign details, accept advertising terms, and enter the managed-sales review queue.",
-  alternates: { canonical: "/advertise/self-service" },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/advertise/self-service",
+  title: "Self-Service CREN Ad Intake",
+  description:
+    "Select a CREN advertising package, submit your campaign details, accept the advertising terms, and enter the managed-sales review queue in one sitting.",
+});
 
 const intakeSteps = [
   "Select the closest package and describe audience, geography, date, budget, and desired reader action.",

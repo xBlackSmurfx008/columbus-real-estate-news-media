@@ -19,7 +19,7 @@ import {
   tags,
   textContent,
 } from "../scripts/site-quality/html.mjs";
-import { classifyPath, parseSitemapUrls, pathFromUrl, sample } from "../scripts/site-quality/corpus.mjs";
+import { acceptedOrigins, classifyPath, parseSitemapUrls, pathFromUrl, sample } from "../scripts/site-quality/corpus.mjs";
 import { resolveTarget, url as targetUrl } from "../scripts/site-quality/target.mjs";
 import { FAIL, PASS, SKIP, isBlockingFailure, result, verdict } from "../scripts/site-quality/result.mjs";
 import { isAllowed, parseRobots } from "../scripts/site-quality/checks/indexability.mjs";
@@ -27,12 +27,14 @@ import { findNode, validateBreadcrumb, validateNewsArticle } from "../scripts/si
 import { bodyUrls, citedDomains } from "../scripts/site-quality/checks/sources.mjs";
 import { cadenceFor, daysBetween, parseSourceDate } from "../scripts/site-quality/checks/stale-stats.mjs";
 import { duplicateGroups, normalizeByline } from "../scripts/site-quality/checks/authors.mjs";
-import { firstAffiliateLinkIndex, ftcDisclosureIndex, verifyMarkers } from "../scripts/site-quality/checks/disclosures.mjs";
+import { firstAffiliateLinkIndex, firstSponsoredLinkIndex, ftcDisclosureIndex, verifyMarkers } from "../scripts/site-quality/checks/disclosures.mjs";
 import { assertAllPayloadsAreTestTraffic } from "../scripts/site-quality/checks/lead-form.mjs";
 import { buildSmokeRequests } from "../scripts/submission-smoke.mjs";
 import { percentile } from "../scripts/site-quality/checks/performance.mjs";
 import { parseAuditJson } from "../scripts/site-quality/checks/readiness.mjs";
 import { parseAuditReport } from "../scripts/site-quality/checks/images.mjs";
+import { duplicates, lengthNotes } from "../scripts/site-quality/checks/metadata.mjs";
+import { CHECK_IDS } from "../scripts/site-quality/runner.mjs";
 
 // --- result model -----------------------------------------------------------
 
@@ -126,6 +128,7 @@ test("sitemap parsing, path classification and deterministic sampling", () => {
   assert.deepEqual(parseSitemapUrls(xml), ["https://x.test/", "https://x.test/blog/a"]);
   assert.equal(pathFromUrl("https://x.test/blog/a", "https://x.test"), "/blog/a");
   assert.equal(pathFromUrl("https://other.test/x", "https://x.test"), null);
+  assert.equal(pathFromUrl("https://other.test/x", "https://x.test", ["https://other.test"]), "/x");
   assert.equal(classifyPath("/blog/a"), "article");
   assert.equal(classifyPath("/areas/dublin"), "area");
   assert.equal(classifyPath("/about"), "static");
@@ -230,6 +233,19 @@ test("the FTC disclosure must appear before the first affiliate link, not merely
   assert.equal(ftcDisclosureIndex("<p>nothing</p>"), -1);
 });
 
+test("the disclosure rule keys on a PAID link, not on the outbound click tracker", () => {
+  // /go/* carries unpaid links too — Zillow, Realtor.com, the county auditor.
+  // Demanding "some links below pay us" above an unpaid link would publish a
+  // false statement, which is the opposite of what the rule is for.
+  const unpaid = '<a href="/go/zillow-buy" rel="noopener noreferrer">Zillow</a>';
+  assert.notEqual(firstAffiliateLinkIndex(unpaid), -1);
+  assert.equal(firstSponsoredLinkIndex(unpaid), -1);
+
+  const paid = '<p>Some links below pay us if you buy.</p><a href="/go/partner" rel="sponsored nofollow noopener noreferrer">Partner</a>';
+  assert.notEqual(firstSponsoredLinkIndex(paid), -1);
+  assert.ok(ftcDisclosureIndex(paid) < firstSponsoredLinkIndex(paid));
+});
+
 // --- write-path safety ------------------------------------------------------
 
 test("every payload the lead-form check would send is classified as test traffic", () => {
@@ -262,4 +278,66 @@ test("the image audit's JSON becomes one finding per broken hero, not a raw dump
   const report = parseAuditReport('{"ok":false,"missing":[{"id":"a","title":"A"}],"broken":[]}');
   assert.equal(report.missing.length, 1);
   assert.equal(parseAuditReport("crashed before printing"), null);
+});
+
+// --- titles and meta descriptions -------------------------------------------
+
+test("pages serving an identical title or description are grouped, not counted twice", () => {
+  const groups = duplicates([
+    ["/buy", "Columbus Real Estate News | Local Housing & Living Intelligence"],
+    ["/rent", "Columbus Real Estate News | Local Housing & Living Intelligence"],
+    ["/sell", "Columbus Real Estate News | Local Housing & Living Intelligence"],
+    ["/about", "About CREN and Our Columbus Coverage | Columbus Real Estate News"],
+  ]);
+  assert.equal(groups.length, 1);
+  assert.deepEqual(groups[0][1], ["/buy", "/rent", "/sell"]);
+});
+
+test("a page that serves no title at all is not reported as a duplicate of another blank", () => {
+  assert.deepEqual(duplicates([["/a", ""], ["/b", ""]]), []);
+});
+
+test("the brand appearing twice in one title is reported even when the length is fine", () => {
+  const notes = lengthNotes(
+    "/join",
+    "Join Columbus Real Estate News, Free | Columbus Real Estate News",
+    "x".repeat(150),
+  );
+  assert.equal(notes.length, 1);
+  assert.match(notes[0], /repeats "Columbus Real Estate News" twice/);
+});
+
+test("titles and descriptions inside the convention produce no notes", () => {
+  assert.deepEqual(lengthNotes("/sell/your-home", "x".repeat(60), "y".repeat(150)), []);
+});
+
+test("an editorial headline is not measured against the template title convention", () => {
+  const headline = `${"x".repeat(70)} | Columbus Real Estate News`;
+  assert.deepEqual(lengthNotes("/blog/a-long-columbus-headline", headline, "y".repeat(150)), []);
+  // ...but the same length on a hand-authored page still is.
+  assert.equal(lengthNotes("/resources", headline, "y".repeat(150)).length, 1);
+  // ...and a description is measured everywhere, article or not.
+  assert.equal(lengthNotes("/blog/a-long-columbus-headline", headline, "y".repeat(199)).length, 1);
+});
+
+test("a local target maps the production URLs its own sitemap emits", () => {
+  // metadataBase makes a locally served sitemap name production URLs. If those
+  // do not map back, `--target local` inspects only the 16 CRITICAL_PATHS and
+  // reports a confident PASS on a third of the site.
+  const local = resolveTarget("local");
+  assert.deepEqual(acceptedOrigins(local), ["https://columbusrealestatenews.com"]);
+  assert.equal(
+    pathFromUrl("https://columbusrealestatenews.com/areas/bexley", local.origin, acceptedOrigins(local)),
+    "/areas/bexley",
+  );
+});
+
+test("production stays strict about off-origin sitemap URLs", () => {
+  const production = resolveTarget("production");
+  assert.deepEqual(acceptedOrigins(production), []);
+  assert.equal(pathFromUrl("https://someone-else.test/x", production.origin, acceptedOrigins(production)), null);
+});
+
+test("the metadata check is registered in the suite", () => {
+  assert.ok(CHECK_IDS.includes("metadata"), "verify:site would silently stop checking titles and descriptions");
 });

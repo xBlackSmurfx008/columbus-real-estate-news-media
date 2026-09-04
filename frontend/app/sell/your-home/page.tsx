@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { CrenPage } from "@/components/cren/cren-page";
 import { LeadForm } from "@/components/lead-form";
 import { FunnelDisclosure } from "@/components/funnel-disclosure";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: "Sell Your Columbus Home Without an Agent | Columbus Real Estate News",
+export const metadata: Metadata = pageMetadata({
+  path: "/sell/your-home",
+  title: "Sell Your Columbus Home Without an Agent",
   description:
-    "Get a no-obligation offer on your Columbus home. No 6% commission, no repairs, no showings. Local buyers, you pick the closing date.",
-};
+    "Get a free, no-obligation offer on your Columbus home. No 6% commission, no repairs, no showings, no cleanout. Local buyers, and you pick the closing date.",
+});
 
 const faqs = [
   {

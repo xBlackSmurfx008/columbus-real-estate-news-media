@@ -1,5 +1,14 @@
+import type { Metadata } from "next";
 import { ContactForm } from "@/components/contact-form";
 import { CrenPage } from "@/components/cren/cren-page";
+import { pageMetadata } from "@/lib/page-metadata";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/contact",
+  title: "Contact the CREN Newsroom",
+  description:
+    "Send Columbus Real Estate News an editorial tip, a correction, a partnership question, or anything else. Advertising inquiries start on the Advertise page.",
+});
 
 type ContactPageProps = {
   searchParams: Promise<{ source?: string }>;

@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: "Claim or Update a CREN Profile",
-  description: "Claim, update, or request review for CREN business, apartment, professional, advertiser, and member profiles.",
-  alternates: { canonical: "/profiles" },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/profiles",
+  title: "CREN Business and Member Profiles",
+  description:
+    "Claim, update, or request review for a CREN business, apartment, professional, advertiser, or member profile, and see what proof of authority we ask for.",
+});
 
 const profilePaths = [
   {

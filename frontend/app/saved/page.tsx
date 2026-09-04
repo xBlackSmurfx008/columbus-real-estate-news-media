@@ -4,13 +4,18 @@ import { SavedItemsPanel, type SavedItemReference } from "@/components/saved-ite
 import { getArticlePath } from "@/lib/article-routing";
 import { allStoryItems, areas, topics } from "@/lib/data";
 import { getPublicData } from "@/lib/public-data";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: "Saved CREN Items",
-  description: "Review CREN areas, topics, stories, and searches saved in this browser.",
-  alternates: { canonical: "/saved" },
-  robots: { index: false, follow: true },
-};
+// Per-visitor page: everything below is read from this browser's localStorage,
+// so there is no stable public document to index. noindex, and absent from
+// app/sitemap.ts.
+export const metadata: Metadata = pageMetadata({
+  path: "/saved",
+  title: "Saved Columbus Areas, Topics and Stories",
+  description:
+    "Review the Columbus neighborhoods, topics, stories, and searches you saved on Columbus Real Estate News. Saved items stay in this browser only.",
+  noindex: true,
+});
 
 export default async function SavedPage() {
   const data = await getPublicData();

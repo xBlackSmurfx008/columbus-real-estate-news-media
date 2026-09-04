@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
+import { pageMetadata } from "@/lib/page-metadata";
 
 const cardClass = "cren-surface cren-card-link block rounded-[var(--radius)] border border-[color:var(--border)] p-5";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/sell",
+  title: "Sell a Columbus Home or Rental",
+  description:
+    "Two ways to sell in Columbus without a listing: a direct offer on the home you live in, or a quiet off-market exit from a rental, plus the local market data.",
+});
 
 export default function SellPage() {
   return (

@@ -14,12 +14,17 @@ import {
   searchTextMatches,
   topicSearchText,
 } from '@/lib/search-index';
+import { pageMetadata } from '@/lib/page-metadata';
 
-export const metadata: Metadata = {
-  title: 'Search Columbus Areas, Stories & Resources',
-  description: 'Search CREN coverage by Columbus neighborhood, suburb, topic, market question, restaurant, event, or story.',
-  robots: { index: false, follow: true },
-};
+// noindex: a results page is a per-query view of content that is already
+// indexed at its own URL, and it is not listed in app/sitemap.ts.
+export const metadata: Metadata = pageMetadata({
+  path: '/search',
+  title: 'Search Columbus Areas and Stories',
+  description:
+    'Search Columbus Real Estate News coverage by neighborhood, suburb, topic, market question, restaurant, event, or story headline across the whole archive.',
+  noindex: true,
+});
 
 type SearchPageProps = {
   searchParams: Promise<{ q?: string | string[] }>;

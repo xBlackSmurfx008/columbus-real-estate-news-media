@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
+import { pageMetadata } from "@/lib/page-metadata";
 
 const cardClass = "cren-surface cren-card-link block rounded-[var(--radius)] border border-[color:var(--border)] p-5";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/invest",
+  title: "Invest in Columbus Real Estate",
+  description:
+    "Central Ohio investor coverage without the listing-portal noise: rent and pricing signals, the development pipeline, and neighborhood-level demand reporting.",
+});
 
 export default function InvestPage() {
   return (

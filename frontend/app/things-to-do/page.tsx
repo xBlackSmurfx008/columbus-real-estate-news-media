@@ -5,12 +5,14 @@ import { CrenPage } from "@/components/cren/cren-page";
 import { GuideCard } from "@/components/guide-card";
 import { featuredAreas } from "@/lib/data";
 import { GUIDE_IMAGES, OFFICIAL_ACTIVITY_SOURCES, type GuideCard as GuideCardData } from "@/lib/area-guides";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
-  title: "Things to Do in Columbus: Kids, Parks, Food & Events",
-  description: "Find daytime activities, kids programs, parks, trails, food, arts, entertainment, and current events across Columbus and Central Ohio.",
-  alternates: { canonical: "/things-to-do" },
-};
+export const metadata: Metadata = pageMetadata({
+  path: "/things-to-do",
+  title: "Things to Do in Columbus, Ohio",
+  description:
+    "Find daytime activities, kids programs, parks, trails, food, arts, entertainment, and current events across Columbus and Central Ohio neighborhoods.",
+});
 
 const discoveryCards: GuideCardData[] = [
   {

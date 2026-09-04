@@ -11,13 +11,14 @@ import {
   SPONSOR_PACKAGE_DEFINITIONS,
   SPONSOR_REPORTING_EXAMPLE,
 } from "@/lib/directory-sponsorship";
+import { pageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+  path: "/directory/sponsor-rules",
   title: "CREN Sponsor-Safe Service Guide Rules",
   description:
     "CREN rules for sponsored directory placement, service guides, fair-housing-safe language, disclosures, proof, lead routing, and dispute handling.",
-  alternates: { canonical: "/directory/sponsor-rules" },
-};
+});
 
 const officialResources = [
   {

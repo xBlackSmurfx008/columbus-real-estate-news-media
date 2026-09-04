@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "npm run test:market-consistency && next build --webpack",
+    "test:market-consistency": "node --experimental-strip-types --test tests/market-data-consistency.test.mjs",
+    "verify:market-consistency": "node --experimental-strip-types scripts/verify-market-consistency.mjs",
     "start": "next start",
     "release:audit-local": "node --experimental-strip-types scripts/release-local-audit.mjs",
     "lint": "eslint . --max-warnings 0",

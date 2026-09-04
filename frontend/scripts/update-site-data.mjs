@@ -11,6 +11,9 @@
 // }
 
 import { readFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { neon } from "@neondatabase/serverless";
 
 const filePath = process.argv[2];
@@ -76,6 +79,19 @@ if (Array.isArray(data.neighborhoods) && data.neighborhoods.length > 0) {
     updated++;
   }
   console.log(`neighborhoods: updated ${updated}, ${missing} name(s) not found`);
+}
+
+// Any write that touches market numbers must leave the committed outage
+// fallback in step with the database — otherwise /market-data and the homepage
+// can serve different values again.
+if (data.market_snapshot || data.neighborhoods || data.hero_stats) {
+  const script = join(dirname(fileURLToPath(import.meta.url)), "export-content-snapshot.mjs");
+  console.log("re-exporting content/snapshot/public-data.json ...");
+  const result = spawnSync(process.execPath, [script], { stdio: "inherit", env: process.env });
+  if (result.status !== 0) {
+    console.error("snapshot re-export FAILED — the outage fallback is now behind the database.");
+    process.exit(result.status ?? 1);
+  }
 }
 
 console.log("done");

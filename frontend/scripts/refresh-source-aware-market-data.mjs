@@ -3,6 +3,9 @@
 // Dry-run is the default; use --write only after reviewing the fetched summary.
 
 import { neon } from "@neondatabase/serverless";
+import { spawnSync } from "node:child_process";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { validateMarketObservation } from "./market-observation-lib.mjs";
 import {
   FRED_FEED,
@@ -96,3 +99,27 @@ const byMetric = observations.reduce((groups, observation) => {
   return groups;
 }, {});
 console.log(JSON.stringify({ write, asOfDate, observations: observations.length, byMetric, areas: [...new Set(observations.map((observation) => observation.geography_slug))].length }, null, 2));
+
+if (write) await reexportSnapshot();
+
+/**
+ * Re-export the committed outage fallback so it can never drift behind the
+ * database again. This is the fix for the 2026-09-04 inconsistency: the Aug
+ * 28-30 refreshes updated the DB but nobody re-exported the snapshot, so any
+ * surface serving the fallback reported a different YoY and mortgage rate.
+ * Skipped with --no-snapshot only when a caller re-exports itself.
+ */
+async function reexportSnapshot() {
+  if (process.argv.includes("--no-snapshot")) {
+    console.log("snapshot re-export skipped (--no-snapshot)");
+    return;
+  }
+  const script = join(dirname(fileURLToPath(import.meta.url)), "export-content-snapshot.mjs");
+  console.log("re-exporting content/snapshot/public-data.json ...");
+  const result = spawnSync(process.execPath, [script], { stdio: "inherit", env: process.env });
+  if (result.status !== 0) {
+    console.error("snapshot re-export FAILED — commit no market change until the fallback matches the database.");
+    process.exit(result.status ?? 1);
+  }
+  console.log("Commit the refreshed snapshot alongside this market update.");
+}

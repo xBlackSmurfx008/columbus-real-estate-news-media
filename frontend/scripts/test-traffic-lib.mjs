@@ -84,7 +84,10 @@ export const TEST_TRAFFIC_TABLES = {
   leads: { label: "Leads", sourceColumn: "source", emailColumn: "email", flagColumn: "is_test" },
   members: { label: "Members", sourceColumn: "interests", emailColumn: "email", flagColumn: "is_test" },
   consent_events: { label: "Consent events", sourceColumn: "source_route", emailColumn: "email", flagColumn: "is_test" },
-  affiliate_clicks: { label: "Affiliate clicks", flagColumn: "is_test" },
+  // `campaign_source` is added by scripts/migrate-affiliate-tracking.mjs and is
+  // where a smoke run puts its `smoke:` marker (`/go/<key>?source=smoke:...`).
+  // testTrafficSql() drops it automatically where the column is not present.
+  affiliate_clicks: { label: "Affiliate clicks", sourceColumn: "campaign_source", flagColumn: "is_test" },
   funnel_events: { label: "Funnel events", sourceColumn: "campaign_source", flagColumn: "is_test" },
 };
 

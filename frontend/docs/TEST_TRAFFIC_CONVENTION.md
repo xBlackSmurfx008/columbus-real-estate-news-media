@@ -33,8 +33,13 @@ flagged})`, and the SQL builders `testTrafficSql(table)` /
 `realTrafficSql(table)`. **Nothing else may define its own rule.**
 
 - **Capture** — `/api/subscribe`, `/api/contact`, `/api/leads`, `/api/members`,
-  `/api/funnel/event` — calls `isTestTraffic(...)` and stores the result in
-  `is_test` as the row is created.
+  `/api/funnel/event`, and the `/go/<key>` outbound redirect — calls
+  `isTestTraffic(...)` and stores the result in `is_test` as the row is created.
+  For an outbound click the marker rides on the link itself:
+  `/go/<key>?source=smoke:<what-you-are-testing>`, which lands in
+  `affiliate_clicks.campaign_source`. `/go` additionally flags an automated
+  user agent, and records which of the two rules excluded the row in
+  `exclusion_reason`.
 - **Reporting** — `scripts/kpi-report.mjs` — calls
   `resolveTestTrafficPredicates(sql, table)` and filters every total with it.
 - **Sweeping** — `scripts/cleanup-smoke-records.mjs` — uses the same predicate

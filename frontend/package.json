@@ -23,6 +23,8 @@
     "newsroom:migrate-page-views": "node scripts/migrate-page-views.mjs",
     "newsroom:migrate-activation-events": "node scripts/migrate-activation-events.mjs",
     "newsroom:migrate-funnel-events": "node scripts/migrate-funnel-events.mjs",
+    "newsroom:migrate-affiliate-tracking": "node --experimental-strip-types scripts/migrate-affiliate-tracking.mjs",
+    "newsroom:affiliate-report": "node scripts/affiliate-report.mjs",
     "newsroom:flag-legacy-test-records": "node scripts/flag-legacy-test-records.mjs",
     "newsroom:migrate-article-routing": "node scripts/migrate-article-routing.mjs",
     "newsroom:migrate-market-data": "node scripts/migrate-market-observations.mjs",

@@ -2,6 +2,7 @@ import type { MetadataRoute } from 'next';
 import { areas, topics } from '@/lib/data';
 import { getArticlePath } from '@/lib/article-routing';
 import { getAreaReleasePolicy } from '@/lib/consumer-insights';
+import { isFlagshipArea } from '@/lib/flagship-areas';
 import { POLICY_LIBRARY_ORDER, policyPath } from '@/lib/policy-pages';
 import { getArticles } from '@/lib/public-data';
 import { absoluteUrl } from '@/lib/site';
@@ -60,10 +61,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...areas
       .map((area) => ({ area, policy: getAreaReleasePolicy(area) }))
       .filter(({ policy }) => policy.indexable)
+      // Flagship hubs (owner plan 2026-09-04, P1 item 8) are the pages we
+      // actually keep deep and current, so they crawl at least as often and
+      // rank at least as high as a proof-cohort hub. Tier assignment itself is
+      // unchanged; only the crawl signal is raised.
       .map(({ area, policy }) => ({
         url: absoluteUrl(`/areas/${area.slug}`),
-        changeFrequency: policy.changeFrequency,
-        priority: policy.sitemapPriority,
+        changeFrequency: isFlagshipArea(area.slug) ? ('weekly' as const) : policy.changeFrequency,
+        priority: isFlagshipArea(area.slug) ? Math.max(policy.sitemapPriority, 0.95) : policy.sitemapPriority,
       })),
     ...topics.map((topic) => ({
       url: absoluteUrl(`/topics/${topic.slug}`),

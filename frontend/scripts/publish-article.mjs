@@ -37,6 +37,7 @@ import {
 import { hostPlaceholderCard, PLACEHOLDER_CAPTION } from "./editorial-card-lib.mjs";
 import { APPROVED_AUTHORS, canonicalizeAuthor, isApprovedAuthor } from "./newsroom-authors.mjs";
 import { sendTelegramAlert } from "./telegram-alert.mjs";
+import { PUBLICATION_GATES, recordGateBlock } from "./publication-gate-log.mjs";
 
 const filePath = process.argv[2];
 if (!filePath) {
@@ -47,6 +48,29 @@ if (!filePath) {
 const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) {
   console.error("DATABASE_URL environment variable is not set");
+  process.exit(1);
+}
+
+// The client is constructed here (not after the gates) purely so a blocked
+// attempt can be recorded. neon() opens no connection until a query runs.
+const sql = neon(databaseUrl);
+
+/**
+ * Block publication and leave a durable trace (owner plan item 11: "failed
+ * publication gates" is a weekly scorecard signal). The gate decision is
+ * unchanged — this only makes the block countable a week later.
+ */
+async function blockPublication(gate, message, detail = {}) {
+  console.error(message);
+  await recordGateBlock(sql, {
+    gate,
+    // `detail.reason` lets a gate whose first console line is generic record
+    // something a weekly reader can act on without opening the JSON detail.
+    reason: (detail.reason ?? message.split("\n")[0]).slice(0, 1000),
+    articleRef: detail.articleRef ?? null,
+    articleTitle: detail.articleTitle ?? null,
+    detail: detail.extra ?? {},
+  });
   process.exit(1);
 }
 
@@ -62,21 +86,41 @@ const VALID_TOPICS = ["market-trends", "schools", "development", "local-politics
 
 const article = JSON.parse(readFileSync(filePath, "utf-8"));
 
+const gateContext = () => ({ articleTitle: article.title ?? null });
+
 if (article.image_url != null && !isDurableArticleImageUrl(article.image_url)) {
-  console.error('Image URL must use an approved durable HTTPS image host. Use null to run the image backfill.');
-  process.exit(1);
+  await blockPublication(
+    PUBLICATION_GATES.IMAGE_HOST,
+    'Image URL must use an approved durable HTTPS image host. Use null to run the image backfill.',
+    gateContext(),
+  );
 }
 
 const qualityReport = evaluateArticle(article);
 if (!qualityReport.passed) {
-  console.error(`Editorial quality gate blocked this draft:\n${formatQualityReport(qualityReport)}`);
-  process.exit(1);
+  await blockPublication(
+    PUBLICATION_GATES.EDITORIAL_QUALITY,
+    `Editorial quality gate blocked this draft:\n${formatQualityReport(qualityReport)}`,
+    {
+      ...gateContext(),
+      reason: `Editorial quality gate: ${qualityReport.score}/${qualityReport.possible} checks passed; failed `
+        + `${(qualityReport.failedCodes ?? []).join(", ")}`,
+      extra: {
+        score: qualityReport.score,
+        possible: qualityReport.possible,
+        failed_checks: qualityReport.failedCodes ?? [],
+      },
+    },
+  );
 }
 
 for (const field of ["title", "category", "author", "date"]) {
   if (!article[field]) {
-    console.error(`Missing required field: ${field}`);
-    process.exit(1);
+    await blockPublication(
+      PUBLICATION_GATES.REQUIRED_FIELD,
+      `Missing required field: ${field}`,
+      { ...gateContext(), extra: { field } },
+    );
   }
 }
 
@@ -91,18 +135,22 @@ for (const field of ["title", "category", "author", "date"]) {
     article.author = canonical;
   }
   if (!isApprovedAuthor(article.author)) {
-    console.error(
+    await blockPublication(
+      PUBLICATION_GATES.BYLINE,
       `Byline "${article.author}" is not an approved author.\n`
       + `Approved bylines: ${APPROVED_AUTHORS.join(", ")}.\n`
-      + `Add a new byline to frontend/scripts/newsroom-authors.mjs before publishing under it.`
+      + `Add a new byline to frontend/scripts/newsroom-authors.mjs before publishing under it.`,
+      { ...gateContext(), extra: { byline: article.author } },
     );
-    process.exit(1);
   }
 }
 
 if (article.topic_slug && !VALID_TOPICS.includes(article.topic_slug)) {
-  console.error(`Invalid topic_slug "${article.topic_slug}". Must be one of: ${VALID_TOPICS.join(", ")}`);
-  process.exit(1);
+  await blockPublication(
+    PUBLICATION_GATES.TOPIC_SLUG,
+    `Invalid topic_slug "${article.topic_slug}". Must be one of: ${VALID_TOPICS.join(", ")}`,
+    { ...gateContext(), extra: { topic_slug: article.topic_slug } },
+  );
 }
 
 if (article.excerpt && (article.excerpt.length < 100 || article.excerpt.length > 180)) {
@@ -119,7 +167,6 @@ const parsedDate = new Date(article.date);
 const isoPrefix = toIsoDate(Number.isNaN(parsedDate.getTime()) ? new Date() : parsedDate);
 const id = `${isoPrefix}-${slug}`;
 
-const sql = neon(databaseUrl);
 await ensureEditorialReviewTable(sql);
 await ensureArticleImageFingerprintTable(sql);
 
@@ -127,16 +174,22 @@ let imageFingerprint = null;
 if (article.image_url) {
   imageFingerprint = await fingerprintArticleImageUrl(article.image_url);
   if (!imageFingerprint) {
-    console.error('Image URL is not reachable as a decodable image.');
-    process.exit(1);
+    await blockPublication(
+      PUBLICATION_GATES.IMAGE_UNREACHABLE,
+      'Image URL is not reachable as a decodable image.',
+      { ...gateContext(), articleRef: id },
+    );
   }
   const existingFingerprints = await sql`
     SELECT article_id, sha256, perceptual_hash FROM article_image_fingerprints
   `;
   const duplicateImage = findDuplicateImageFingerprint(existingFingerprints, imageFingerprint);
   if (duplicateImage) {
-    console.error(`Image duplicates article "${duplicateImage.articleId}" (${duplicateImage.kind}, distance ${duplicateImage.distance}).`);
-    process.exit(1);
+    await blockPublication(
+      PUBLICATION_GATES.IMAGE_DUPLICATE,
+      `Image duplicates article "${duplicateImage.articleId}" (${duplicateImage.kind}, distance ${duplicateImage.distance}).`,
+      { ...gateContext(), articleRef: id, extra: { duplicate_of: duplicateImage.articleId, kind: duplicateImage.kind } },
+    );
   }
 }
 
@@ -174,15 +227,16 @@ if (newTokens.size > 0) {
   }
   const isDuplicate = worst.jac >= 0.4;
   if (isDuplicate && !FORCE) {
-    console.error(
+    await blockPublication(
+      PUBLICATION_GATES.DUPLICATE_STORY,
       `Duplicate guard blocked this article.\n`
       + `  New:      "${article.title}"\n`
       + `  Existing: "${worst.title}" (id: ${worst.id})\n`
       + `  Overlap:  ${(worst.jac * 100).toFixed(0)}% of title terms; shared: ${worst.shared.join(", ")}\n`
       + `This looks like a story we already covered. Pick a genuinely new story, or\n`
-      + `if this really is different, re-run with --force.`
+      + `if this really is different, re-run with --force.`,
+      { ...gateContext(), articleRef: id, extra: { duplicate_of: worst.id, overlap: Number(worst.jac.toFixed(3)) } },
     );
-    process.exit(1);
   }
   if (worst.jac >= 0.3) {
     console.warn(
@@ -211,8 +265,11 @@ const [row] = await sql`
 `;
 
 if (!row) {
-  console.error(`Insert skipped: an article with id "${id}" already exists. Adjust the title (the id is derived from date + title) and retry.`);
-  process.exit(1);
+  await blockPublication(
+    PUBLICATION_GATES.ID_COLLISION,
+    `Insert skipped: an article with id "${id}" already exists. Adjust the title (the id is derived from date + title) and retry.`,
+    { ...gateContext(), articleRef: id },
+  );
 }
 
 await saveEditorialReview(sql, id, article, qualityReport);

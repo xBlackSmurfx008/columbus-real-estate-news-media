@@ -31,6 +31,8 @@
     "newsroom:commercial-report": "node scripts/export-commercial-report.mjs",
     "newsroom:reconcile-live-review-jobs": "node scripts/reconcile-live-editorial-review-jobs.mjs",
     "newsroom:migrate-compliance": "node --experimental-strip-types scripts/migrate-compliance-layer.mjs",
+    "newsroom:migrate-inquiry-queue": "node --experimental-strip-types scripts/migrate-inquiry-queue.mjs",
+    "newsroom:lead-sla-sweep": "node --experimental-strip-types scripts/lead-sla-sweep.mjs",
     "newsroom:migrate-member-profiles": "node scripts/migrate-member-profiles.mjs",
     "newsroom:migrate-profile-ads": "node scripts/migrate-profile-advertising-layer.mjs",
     "newsroom:production-readiness": "node scripts/production-readiness-audit.mjs",

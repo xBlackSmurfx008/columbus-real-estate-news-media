@@ -5,6 +5,8 @@ import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
 import { FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 import { recordConsentEventSafely } from "@/lib/compliance/consent-events";
 import { mirrorLeadIntakeSafely } from "@/lib/compliance/intake-records";
+import { enqueueInquirySafely } from "@/lib/inquiry-queue-db";
+import { inquiryTypeForPersona } from "@/lib/inquiry-queue";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PERSONAS = ["fsbo_seller", "investor_seller", "capital_partner", "renter", "rental_listing", "directory_listing", "profile_claim"] as const;
@@ -85,13 +87,32 @@ export async function POST(request: NextRequest) {
     `;
     const cleanPhone = typeof phone === "string" ? phone.slice(0, 40) : null;
     const cleanSource = typeof source === "string" ? source.slice(0, 120) : null;
+    const cleanSourceRoute = typeof body.sourceRoute === "string" ? body.sourceRoute.slice(0, 500) : null;
+
+    // Operating invariant: a lead does not exist without an assigned owner and
+    // an SLA timer. The queue row is written here, in the same request; the
+    // scheduled sweep reconciles anything this call ever fails to create.
+    await enqueueInquirySafely(sql, {
+      sourceTable: "leads",
+      sourceId: lead.id,
+      inquiryType: inquiryTypeForPersona(persona),
+      persona,
+      name: name.trim(),
+      email,
+      phone: cleanPhone,
+      area: typeof area === "string" ? area.slice(0, 120) : null,
+      source: cleanSource,
+      sourceRoute: cleanSourceRoute,
+      summary: summarizeDetails(details),
+    });
+
     await recordConsentEventSafely(sql, {
       consentKey: persona === "profile_claim" ? "profileClaim" : "leadRouting",
       entityType: "lead",
       entityId: lead.id,
       email,
       phone: cleanPhone,
-      sourceRoute: typeof body.sourceRoute === "string" ? body.sourceRoute.slice(0, 500) : cleanSource,
+      sourceRoute: cleanSourceRoute ?? cleanSource,
       formId: "lead-form",
       formVersion: FORM_VERSIONS.lead,
       recipientCategory: leadRecipientCategory(persona),

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CrenPage } from "@/components/cren/cren-page";
 import { LeadForm } from "@/components/lead-form";
+import { FunnelDisclosure } from "@/components/funnel-disclosure";
 
 export const metadata: Metadata = {
   title: "Find a Rental Home or Apartment in Columbus | Columbus Real Estate News",
@@ -59,6 +60,7 @@ export default function FindARentalPage() {
         <div className="cren-surface p-8">
           <h2 className="cren-heading-lg">Tell us what you&apos;re looking for</h2>
           <p className="cren-body mt-2 max-w-2xl">You will hear from us within 1 business day.</p>
+          <FunnelDisclosure variant="renter" />
           <LeadForm
             persona="renter"
             source="find-a-home"

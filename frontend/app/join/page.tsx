@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { CrenPage } from "@/components/cren/cren-page";
+import Link from "next/link";
 import { JoinForm } from "@/components/join-form";
 
 export const metadata: Metadata = {
   title: "Join Free | Columbus Real Estate News",
   description:
-    "Free membership: the weekly Columbus market brief, neighborhood insights, and first access to deal alerts and premium data as they launch.",
+    "Free CREN membership with a saved profile. Follow your Columbus neighborhoods and help shape the deal alerts and market tools we are building next.",
 };
 
 export default function JoinPage() {
@@ -16,16 +17,22 @@ export default function JoinPage() {
           <div className="section-eyebrow">Membership</div>
           <h1 className="cren-heading-xl">Join free. Know Columbus real estate before everyone else.</h1>
           <p className="cren-body mt-2 max-w-2xl">
-            Membership is free — and it stays free. You get the weekly market brief, neighborhood-level
-            insights, and first-in-line access to the tools we&apos;re building next: deal alerts and premium
-            market data. No spam, no pressure, unsubscribe anytime.
+            Membership is free and it stays free. A member account saves your neighborhoods and your preferences,
+            and puts you first in line for the tools we are building next. No spam, no pressure, leave anytime.
+          </p>
+          <p className="cren-body mt-2 max-w-2xl text-sm">
+            Want in without a password?{" "}
+            <Link href="/subscribe?source=join-page" className="cren-text-link">
+              Join with your email and your area
+            </Link>{" "}
+            instead. It takes one step.
           </p>
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
           <div className="cren-surface rounded-[var(--radius)] border border-[color:var(--border)] p-5">
-            <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Weekly market brief</h2>
-            <p className="cren-body mt-2 text-sm">The Columbus numbers that matter, in plain English, every week.</p>
+            <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Your areas, saved</h2>
+            <p className="cren-body mt-2 text-sm">Pick the Columbus neighborhoods you follow. Your profile keeps them and you can change them anytime.</p>
           </div>
           <div className="cren-surface rounded-[var(--radius)] border border-[color:var(--border)] p-5">
             <h2 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">Deal alerts (coming)</h2>
@@ -39,7 +46,11 @@ export default function JoinPage() {
 
         <div className="cren-surface p-8">
           <h2 className="cren-heading-lg">Become a member</h2>
-          <p className="cren-body mt-2 text-sm">Create a password so you can return to your profile and update your preferences.</p>
+          <p className="cren-body mt-2 text-sm">
+            Create a password so you can return to your profile and update your preferences. Straight answer on email:
+            we have not sent a member email yet. We are building it, and you will hear from us before the first one
+            goes out.
+          </p>
           <JoinForm source="join-page" />
         </div>
       </div>

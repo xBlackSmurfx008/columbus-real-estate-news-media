@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CrenPage } from "@/components/cren/cren-page";
 import { LeadForm } from "@/components/lead-form";
+import { FunnelDisclosure } from "@/components/funnel-disclosure";
 
 export const metadata: Metadata = {
   title: "Deploy Capital in Columbus Real Estate | Columbus Real Estate News",
@@ -63,6 +64,7 @@ export default function DeployCapitalPage() {
         <div className="cren-surface p-8">
           <h2 className="cren-heading-lg">Let&apos;s start a conversation</h2>
           <p className="cren-body mt-2 max-w-2xl">You will hear from us within 1 business day.</p>
+          <FunnelDisclosure variant="capital" />
           <LeadForm
             persona="capital_partner"
             source="deploy-capital"

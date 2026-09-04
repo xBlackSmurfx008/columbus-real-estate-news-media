@@ -85,8 +85,8 @@ export function LeadForm({
         <p className="font-semibold text-[color:var(--text-hero)]">{successMessage}</p>
         <p className="mt-2">
           Want Columbus market updates while you wait?{" "}
-          <a href="/join?source=lead-success" className="cren-text-link">
-            Join free — weekly brief and first access to deal alerts
+          <a href="/subscribe?source=lead-success" className="cren-text-link">
+            Join free with your email and your area
           </a>
           .
         </p>

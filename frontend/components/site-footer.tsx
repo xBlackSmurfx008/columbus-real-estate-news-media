@@ -60,7 +60,7 @@ export function SiteFooter() {
           <div>
             <div className="footer-col-title">Newsletter</div>
             <p style={{ fontSize: 13, opacity: 0.4, marginBottom: 12 }}>
-              Leave your email and we will send the Columbus brief when it launches. Nothing is going out yet.
+              Free membership. Your email and your area, nothing else. We have not sent a member email yet. We are building it.
             </p>
             <FooterNewsletterForm />
           </div>

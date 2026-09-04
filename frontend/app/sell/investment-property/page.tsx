@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CrenPage } from "@/components/cren/cren-page";
 import { LeadForm } from "@/components/lead-form";
+import { FunnelDisclosure } from "@/components/funnel-disclosure";
 
 export const metadata: Metadata = {
   title: "Sell Your Columbus Rental or Portfolio Off-Market | Columbus Real Estate News",
@@ -59,6 +60,7 @@ export default function SellInvestmentPropertyPage() {
         <div className="cren-surface p-8">
           <h2 className="cren-heading-lg">Tell us about the property</h2>
           <p className="cren-body mt-2 max-w-2xl">You will hear from us within 1 business day.</p>
+          <FunnelDisclosure variant="seller" />
           <LeadForm
             persona="investor_seller"
             source="sell-investment-property"

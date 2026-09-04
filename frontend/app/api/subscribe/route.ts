@@ -6,7 +6,13 @@ import { recordConsentEventSafely } from "@/lib/compliance/consent-events";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Progressive profiling: "signup" is step 1 (email + area/topic, the only
+// thing that stands between a visitor and membership). "profile" is the
+// optional step 2 that fills in the rest of the subscriber record.
+type SubscribeStep = "signup" | "profile";
+
 type SubscribePayload = {
+  step?: unknown;
   email?: unknown;
   area?: unknown;
   topic?: unknown;
@@ -40,12 +46,15 @@ function cleanList(value: unknown, maxItems = 8): string[] {
 export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as SubscribePayload;
+    const step: SubscribeStep = body.step === "profile" ? "profile" : "signup";
     const email = cleanString(body.email, 320)?.toLowerCase() ?? "";
 
     if (typeof email !== "string" || !EMAIL_RE.test(email) || email.length > 320) {
       return NextResponse.json({ error: "Enter a valid email address." }, { status: 400 });
     }
-    if (body.consent !== true) {
+    // Consent is captured once, at step 1. Step 2 only enriches a record that
+    // already carries a logged consent event.
+    if (step === "signup" && body.consent !== true) {
       return NextResponse.json({ error: "Please check the email permission box." }, { status: 400 });
     }
 
@@ -58,28 +67,65 @@ export async function POST(request: NextRequest) {
     const commuteAnchor = cleanString(body.commuteAnchor, 120);
     const cadence = cleanString(body.cadence, 80);
     const interests = cleanList(body.interests);
-    const topicValue = [topic, ...interests].filter(Boolean).join(" | ").slice(0, 500) || null;
-    const sourceValue = [
-      source,
-      role ? `role=${role}` : null,
-      cadence ? `cadence=${cadence}` : null,
-      timeline ? `timeline=${timeline}` : null,
-      budget ? `budget=${budget}` : null,
-      commuteAnchor ? `commute=${commuteAnchor}` : null,
-    ]
-      .filter(Boolean)
-      .join(" | ")
-      .slice(0, 700);
+    const topicValue =
+      [...new Set([topic, ...interests].filter((value): value is string => Boolean(value)))].join(" | ").slice(0, 500) ||
+      null;
+    const sourceValue =
+      [
+        source,
+        step === "profile" ? "step=profile" : null,
+        role ? `role=${role}` : null,
+        cadence ? `cadence=${cadence}` : null,
+        timeline ? `timeline=${timeline}` : null,
+        budget ? `budget=${budget}` : null,
+        commuteAnchor ? `commute=${commuteAnchor}` : null,
+      ]
+        .filter(Boolean)
+        .join(" | ")
+        .slice(0, 700) || null;
 
     const sql = getDb();
     // Select-then-write: subscribers.email uniqueness is enforced by the
     // migration script's index, but older rows may predate it.
     const existing = await sql`SELECT id FROM subscribers WHERE email = ${email} LIMIT 1`;
+
+    if (step === "profile") {
+      // Step 2 never creates a member and never blanks out what step 1 stored.
+      if (existing.length === 0) {
+        return NextResponse.json({ error: "We could not find that email. Sign up first." }, { status: 404 });
+      }
+      const [subscriber] = await sql`
+        UPDATE subscribers
+        SET area = COALESCE(${area}, area),
+            topic = COALESCE(${topicValue}, topic),
+            source = COALESCE(${sourceValue}, source),
+            status = 'active', updated_at = NOW()
+        WHERE id = ${existing[0].id}
+        RETURNING id
+      `;
+      await sendTelegramInquiry({
+        kind: "newsletter",
+        recordId: subscriber.id,
+        email,
+        area,
+        role,
+        topic: topicValue,
+        cadence,
+        timeline,
+        budget,
+        commuteAnchor,
+        interests: interests.join(", ") || null,
+        source: sourceValue,
+      });
+      return NextResponse.json({ ok: true, step: "profile" }, { status: 200 });
+    }
+
     let subscriberId: string | number;
     if (existing.length > 0) {
       const [subscriber] = await sql`
         UPDATE subscribers
-        SET area = ${area}, topic = ${topicValue}, source = ${sourceValue},
+        SET area = COALESCE(${area}, area), topic = COALESCE(${topicValue}, topic),
+            source = COALESCE(${sourceValue}, source),
             status = 'active', updated_at = NOW()
         WHERE id = ${existing[0].id}
         RETURNING id
@@ -120,7 +166,7 @@ export async function POST(request: NextRequest) {
       source: sourceValue,
     });
 
-    return NextResponse.json({ ok: true }, { status: 201 });
+    return NextResponse.json({ ok: true, step: "signup" }, { status: 201 });
   } catch (error) {
     const err = error instanceof Error ? error.message : String(error);
     return NextResponse.json({ error: err }, { status: 500 });

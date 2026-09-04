@@ -421,7 +421,11 @@ export async function seedData() {
   //
   // Only unbranded, empty display slots are seeded. A native ad must be created
   // deliberately in the admin panel against a real, signed advertiser.
-  const ads = [
+  const ads: Array<{
+    id: string; name: string; type: string; status: string; placement: string;
+    size?: string; title?: string; text?: string; cta_text?: string;
+    cta_url?: string; brand_name?: string; brand_color?: string;
+  }> = [
     { id:"ad3",name:"Leaderboard - Homepage",type:"display",status:"live",placement:"homepage-leaderboard",size:"728x90" },
     { id:"ad4",name:"Sidebar - Stories Top",type:"display",status:"live",placement:"stories-sidebar-top",size:"300x250" },
     { id:"ad5",name:"Sidebar - Stories Bottom",type:"display",status:"live",placement:"stories-sidebar-bottom",size:"300x600" }

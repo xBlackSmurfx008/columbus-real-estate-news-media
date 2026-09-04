@@ -196,6 +196,11 @@ const SEEDS: Seed[] = [
   { slug: "south-campus-area", name: "South Campus area", kind: "neighborhood" },
   { slug: "south-linden", name: "South Linden", kind: "neighborhood" },
   { slug: "south-side", name: "South Side", kind: "neighborhood" },
+  // The side of Columbus served by the Greater South East Area Commission.
+  // Added 2026-09-04: published CREN coverage already used this area_slug and
+  // local outlets name the place this way, so the hub existed in our data
+  // before it existed in this registry.
+  { slug: "southeast-columbus", name: "Southeast Columbus", kind: "corridor" },
   { slug: "tri-village", name: "Tri-Village", kind: "neighborhood" },
   { slug: "university-district", name: "University District", kind: "neighborhood" },
   { slug: "victorian-village", name: "Victorian Village", kind: "neighborhood" },

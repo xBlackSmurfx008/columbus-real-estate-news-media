@@ -7,7 +7,7 @@ import { franklinSeedsToAreas } from "../lib/franklin-areas.ts";
 
 test("every declared area has complete discovery, housing, service, and image cards", () => {
   const areas = franklinSeedsToAreas();
-  assert.equal(areas.length, 86);
+  assert.equal(areas.length, 87);
 
   for (const area of areas) {
     const guide = getAreaGuide(area);

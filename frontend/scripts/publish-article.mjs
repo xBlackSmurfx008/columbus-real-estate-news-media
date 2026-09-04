@@ -1,7 +1,9 @@
 #!/usr/bin/env node
-// Stages one article after deterministic editorial checks.
-// The image workflow/admin finalizer is the only path that can transition the
-// exact reviewed article-image pair to live.
+// Publishes one article live immediately after it passes the deterministic
+// editorial checks (owner policy, 2026-08-25): no pre-publish human approval
+// gate. Review and corrections happen post-publish via the admin panel.
+// A missing hero image never blocks publication — the durable image workflow
+// attaches or replaces the hero after the fact.
 // Usage: DATABASE_URL=... node scripts/publish-article.mjs path/to/article.json
 //
 // article.json shape:
@@ -175,7 +177,7 @@ const [row] = await sql`
     title, excerpt, body, author, date, read_time,
     area_slug, topic_slug, tags, image_url, meta_description, image_alt, image_caption, fact_checked_at
   ) VALUES (
-    ${id}, ${slug}, 'draft', ${article.featured ?? false},
+    ${id}, ${slug}, 'live', ${article.featured ?? false},
     ${article.category}, ${article.category_class ?? "card-img-market"}, ${article.icon ?? "$"},
     ${article.title}, ${article.excerpt ?? null}, ${article.body ?? null}, ${article.author}, ${article.date},
     ${article.read_time ?? "5 min read"}, ${article.area_slug ?? null}, ${article.topic_slug ?? null},
@@ -205,8 +207,9 @@ if (article.image_url && imageFingerprint) {
   `;
 }
 
-// If no image_url was supplied, attach a branded editorial card to the draft
-// when Blob credentials are present; the finalizer still owns publication.
+// If no image_url was supplied, attach a branded editorial card so the live
+// article isn't imageless; the durable image job replaces it with a real
+// hero later. A missing hero never blocks publication either way.
 if (!row.image_url) {
   if (process.env.BLOB_READ_WRITE_TOKEN) {
     const hosted = await hostPlaceholderCard({ id, title: article.title, category: article.category, area_slug: article.area_slug });
@@ -222,9 +225,9 @@ if (!row.image_url) {
     console.log(`Hero placeholder attached: ${hosted.url}`);
   } else {
     console.warn(
-      "WARNING: draft staged without a hero and BLOB_READ_WRITE_TOKEN is not set, so no hero can be attached from this session. "
+      "WARNING: article published live without a hero and BLOB_READ_WRITE_TOKEN is not set, so no placeholder can be attached from this session. "
       + "Do NOT work around this with --allow-deploy-lag; it can write a hero URL that is not reachable until a deploy happens. "
-      + "Set BLOB_READ_WRITE_TOKEN in this environment and re-run scripts/generate-placeholder-heroes.mjs, or leave the draft imageless for the durable image job to fill."
+      + "Set BLOB_READ_WRITE_TOKEN in this environment and re-run scripts/generate-placeholder-heroes.mjs, or leave the article imageless for the durable image job to fill."
     );
   }
 }
@@ -233,15 +236,16 @@ if (!row.image_url) {
 // a Telegram outage must never roll back or block a publish.
 const telegram = await sendTelegramAlert({
   status: "COMPLETED",
-  summary: `Staged draft for automation: ${article.title} (${article.category}, quality ${qualityReport.score}/${qualityReport.possible})`,
+  summary: `Published live: ${article.title} (${article.category}, quality ${qualityReport.score}/${qualityReport.possible})`,
   articles: [{ id, title: article.title }],
-  linkMode: "review",
+  linkMode: "live",
 });
 if (!telegram.ok) console.warn(`Telegram publish alert not delivered: ${telegram.error}`);
 
-console.log("Staged draft for automation:");
+console.log("Published live:");
 console.log(JSON.stringify({
   article: row,
   quality: { score: qualityReport.score, possible: qualityReport.possible },
+  live_url: `https://columbusrealestatenews.com/blog/${slug}`,
   review_url: `https://columbusrealestatenews.com/admin/articles?edit=${encodeURIComponent(id)}`,
 }, null, 2));

@@ -29,6 +29,7 @@
     "newsroom:refresh-source-market-data": "node scripts/refresh-source-aware-market-data.mjs",
     "newsroom:import-market-data": "node scripts/import-market-observations.mjs",
     "newsroom:kpi": "node scripts/kpi-report.mjs",
+    "newsroom:scorecard": "node --experimental-strip-types scripts/weekly-scorecard.mjs",
     "newsroom:alert-failure": "node scripts/alert-failure.mjs",
     "newsroom:export-snapshot": "node scripts/export-content-snapshot.mjs",
     "newsroom:cleanup-smoke-records": "node scripts/cleanup-smoke-records.mjs",

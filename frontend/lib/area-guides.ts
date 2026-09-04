@@ -200,70 +200,9 @@ export const OFFICIAL_ACTIVITY_SOURCES = [
   },
 ] as const;
 
-export const HOUSING_SEARCH_SOURCES = {
-  buy: [
-    { title: "Realtor.com", href: "https://www.realtor.com/realestateandhomes-search/Columbus_OH", note: "Homes for sale and agent-listed properties." },
-    { title: "Zillow", href: "https://www.zillow.com/columbus-oh/", note: "For-sale listings, saved searches, and property pages." },
-    { title: "Redfin", href: "https://www.redfin.com/city/4664/OH/Columbus", note: "For-sale search, map tools, and market context." },
-    { title: "Homes.com", href: "https://www.homes.com/columbus-oh/", note: "Another broad portal for comparing active inventory." },
-  ],
-  rent: [
-    { title: "Apartments.com", href: "https://www.apartments.com/columbus-oh/", note: "Apartments, houses, condos, and townhomes for rent." },
-    { title: "Zillow Rentals", href: "https://www.zillow.com/columbus-oh/rentals/", note: "Rental listings and saved searches across housing types." },
-    { title: "Realtor.com Rentals", href: "https://www.realtor.com/apartments/Columbus_OH", note: "Agent and property-manager rental listings." },
-    { title: "AffordableHousing.com", href: "https://www.affordablehousing.com/columbus-oh/", note: "Affordable rental and housing-assistance search tools." },
-  ],
-  list: [
-    { title: "Zillow Rental Manager", href: "https://www.zillow.com/rental-manager/", note: "Create and distribute a rental listing; review current pricing and network terms." },
-    { title: "Apartments.com Rental Manager", href: "https://www.apartments.com/rental-manager/", note: "Advertise rentals and manage inquiries; confirm current product terms." },
-    { title: "Avail by Realtor.com", href: "https://www.realtor.com/landlords/list-rental-property", note: "Rental listing and landlord tools; confirm current syndication and pricing terms." },
-  ],
-} as const;
-
-export type HousingSearchMode = keyof typeof HOUSING_SEARCH_SOURCES;
-
-function slugifyExternalPlace(value: string): string {
-  return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-}
-
-export function housingSearchSourcesForArea(
-  mode: HousingSearchMode,
-  area: string,
-): ReadonlyArray<{ title: string; href: string; note: string }> {
-  const selectedArea = area.trim();
-  if (!selectedArea || /^columbus(?: and central ohio)?$/i.test(selectedArea)) return HOUSING_SEARCH_SOURCES[mode];
-
-  const encodedQuery = encodeURIComponent(`${selectedArea}, OH`);
-  const slug = slugifyExternalPlace(`${selectedArea} OH`);
-
-  return HOUSING_SEARCH_SOURCES[mode].map((source) => {
-    if (source.title === "Realtor.com") {
-      return { ...source, href: `https://www.realtor.com/realestateandhomes-search/${slug}` };
-    }
-    if (source.title === "Realtor.com Rentals") {
-      return { ...source, href: `https://www.realtor.com/apartments/${slug}` };
-    }
-    if (source.title === "Zillow") {
-      return { ...source, href: `https://www.zillow.com/homes/${encodedQuery}_rb/` };
-    }
-    if (source.title === "Zillow Rentals") {
-      return { ...source, href: `https://www.zillow.com/${slug}/rentals/` };
-    }
-    if (source.title === "Redfin") {
-      return { ...source, href: `https://www.redfin.com/city?q=${encodedQuery}` };
-    }
-    if (source.title === "Homes.com") {
-      return { ...source, href: `https://www.homes.com/${slug}/` };
-    }
-    if (source.title === "Apartments.com") {
-      return { ...source, href: `https://www.apartments.com/${slug}/` };
-    }
-    if (source.title === "AffordableHousing.com") {
-      return { ...source, href: `https://www.affordablehousing.com/${slug}/` };
-    }
-    return source;
-  });
-}
+// The housing-search comparison sets moved to `lib/outbound-partners.ts` on
+// 2026-09-04 so that the destination list, the click dimensions, and the
+// affiliate labelling all read from one registry. Import from there.
 
 export const SERVICE_CATEGORIES = [
   "HVAC and indoor air",

@@ -111,7 +111,7 @@ export const POLICY_PAGES = {
           "Lead data such as persona, area, budget, timeline, property details, business details, capital-interest details, source page, consent, and status.",
           "Advertiser and business data such as business name, legal entity name, public contact details, service areas, credentials, claimant authority, dispute contact, creative assets, packages, and campaign details.",
           "Usage data such as page path, referrer host, event name, sanitized event payload, and daily visitor hash where analytics are enabled.",
-          "Affiliate data such as partner slug, source path, and referrer when a user follows an affiliate redirect.",
+          "Outbound partner data such as partner name, source page, selected area, the reader intent of the block, the block placement, destination host, referrer host, and a daily visitor hash when a reader follows a partner link.",
         ],
       },
       {
@@ -176,7 +176,7 @@ export const POLICY_PAGES = {
         bullets: [
           "Member and admin login use first-party HTTP-only session cookies.",
           "Pageview and activation endpoints record path-level engagement using daily visitor hashes, not raw IP addresses or full user agents in the analytics tables.",
-          "Affiliate redirects can log partner slug, source path, and referrer for reporting.",
+          "Partner links on utility pages route through a CREN redirect that logs partner, source page, area, intent, placement, destination host, referrer host, and a daily visitor hash for reporting. No raw IP address or full user agent is stored.",
           "Newsletter providers, pixels, third-party analytics, and advertising tags must be inventoried before activation.",
         ],
       },

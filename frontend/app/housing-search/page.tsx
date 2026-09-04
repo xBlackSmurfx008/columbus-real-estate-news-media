@@ -3,7 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
 import { LeadForm } from "@/components/lead-form";
-import { GUIDE_IMAGES, housingSearchSourcesForArea } from "@/lib/area-guides";
+import { PartnerLinks } from "@/components/partner-links";
+import { GUIDE_IMAGES } from "@/lib/area-guides";
 
 export const metadata: Metadata = {
   title: "Search, Buy, Rent, Sell or List Columbus Housing",
@@ -11,26 +12,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/housing-search" },
 };
 
-function SourceGrid({ sources, area }: { sources: ReadonlyArray<{ title: string; href: string; note: string }>; area: string }) {
-  return (
-    <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-      {sources.map((source) => (
-        <a key={source.title} href={source.href} target="_blank" rel="noopener noreferrer" className="cren-surface cren-card-link p-5">
-          <h3 className="font-semibold text-[color:var(--text-hero)]">{source.title} ↗</h3>
-          <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">{area}</p>
-          <p className="cren-body mt-2 text-sm">{source.note}</p>
-        </a>
-      ))}
-    </div>
-  );
-}
+const PAGE_PATH = "/housing-search";
 
 export default async function HousingSearchPage({ searchParams }: { searchParams: Promise<{ area?: string }> }) {
   const { area } = await searchParams;
   const selectedArea = typeof area === "string" && area.trim() ? area.trim().slice(0, 120) : "Columbus and Central Ohio";
-  const buySources = housingSearchSourcesForArea("buy", selectedArea);
-  const rentSources = housingSearchSourcesForArea("rent", selectedArea);
-  const listingSources = housingSearchSourcesForArea("list", selectedArea);
 
   return (
     <CrenPage>
@@ -62,14 +48,14 @@ export default async function HousingSearchPage({ searchParams }: { searchParams
           <div className="section-eyebrow">Buy a home</div>
           <h2 className="cren-heading-lg">Compare active homes for sale</h2>
           <p className="cren-body mt-2 max-w-3xl text-sm">Use several portals because coverage, freshness, filters, status labels, and agent relationships differ.</p>
-          <SourceGrid sources={buySources} area={selectedArea} />
+          <PartnerLinks intent="buy" area={selectedArea} page={PAGE_PATH} placement="housing-search-buy" className="mt-5" />
         </section>
 
         <section id="rent" className="scroll-mt-36">
           <div className="section-eyebrow">Rent an apartment or house</div>
           <h2 className="cren-heading-lg">Compare rentals and total monthly cost</h2>
           <p className="cren-body mt-2 max-w-3xl text-sm">Compare advertised rent plus required fees, utilities, parking, deposits, pet costs, application criteria, lease term, and renewal terms.</p>
-          <SourceGrid sources={rentSources} area={selectedArea} />
+          <PartnerLinks intent="rent" area={selectedArea} page={PAGE_PATH} placement="housing-search-rent" className="mt-5" />
           <Link href="/rent/before-you-sign" className="cren-text-link mt-4 inline-block text-sm font-semibold">
             Run the Before You Sign checklist
           </Link>
@@ -104,7 +90,7 @@ export default async function HousingSearchPage({ searchParams }: { searchParams
           <p className="cren-body mt-2 max-w-3xl text-sm">
             Review each platform&apos;s current pricing, syndication, screening, application, and fair-housing terms. A CREN request creates a private lead record; it does not automatically publish a listing.
           </p>
-          <SourceGrid sources={listingSources} area={selectedArea} />
+          <PartnerLinks intent="list-rental" area={selectedArea} page={PAGE_PATH} placement="housing-search-list-rental" columns={3} className="mt-5" />
           <div className="cren-surface mt-6 p-6 md:p-8">
             <h3 className="cren-heading-md">Tell CREN about the rental</h3>
             <p className="cren-body mt-2 text-sm">We will review the property, service area, availability, and the right listing or advertising path before anything appears publicly.</p>

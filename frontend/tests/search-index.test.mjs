@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { housingSearchSourcesForArea } from "../lib/area-guides.ts";
+import { outboundLinksFor } from "../lib/outbound-partners.ts";
 import {
   RESOURCE_SEARCH_SUGGESTIONS,
   areaSearchText,
@@ -27,10 +27,16 @@ test("resource suggestions cover non-article user intents", () => {
 });
 
 test("housing search links can be scoped to a selected area", () => {
-  const defaultSources = housingSearchSourcesForArea("buy", "Columbus and Central Ohio");
-  const dublinSources = housingSearchSourcesForArea("buy", "Dublin");
+  const defaultSources = outboundLinksFor("buy", "Columbus and Central Ohio");
+  const dublinSources = outboundLinksFor("buy", "Dublin");
 
-  assert.equal(defaultSources[0].href, "https://www.realtor.com/realestateandhomes-search/Columbus_OH");
-  assert.match(dublinSources[0].href, /dublin-oh/);
-  assert.match(dublinSources.find((source) => source.title === "Zillow")?.href ?? "", /Dublin%2C%20OH/);
+  assert.equal(
+    defaultSources[0].destinationUrl,
+    "https://www.realtor.com/realestateandhomes-search/Columbus_OH",
+  );
+  assert.match(dublinSources[0].destinationUrl, /dublin-oh/);
+  assert.match(
+    dublinSources.find((source) => source.title === "Zillow")?.destinationUrl ?? "",
+    /Dublin%2C%20OH/,
+  );
 });

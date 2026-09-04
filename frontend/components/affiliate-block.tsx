@@ -1,5 +1,7 @@
 import { getDb } from "@/lib/db";
-import { FtcDisclosure } from "@/components/ftc-disclosure";
+import { loadAffiliatePrograms } from "@/lib/affiliate-programs";
+import { isPlaceholderUrl, outboundHref, resolveAffiliateUrl } from "@/lib/outbound-partners";
+import { OutboundLinkGroup, type OutboundCardLink } from "@/components/outbound-link-group";
 
 type Partner = {
   slug: string;
@@ -9,13 +11,14 @@ type Partner = {
   url: string;
 };
 
-function isPlaceholderAffiliateUrl(url: string) {
-  return /example\.com/i.test(url);
-}
-
-// Server component: renders active affiliate partners for a category with
-// the FTC disclosure above them. Renders nothing if the category is empty
-// or the DB is unreachable — affiliate blocks must never break a page.
+// Server component: the older category-driven block on /resources and /improve.
+//
+// It now renders through OutboundLinkGroup, so it obeys the same invariant as
+// the utility-page comparison sets: a paid link cannot render without the FTC
+// disclosure above it, and a link is only marked paid when `affiliate_programs`
+// holds a real, active relationship for that partner. Placeholder rows
+// (example.com) stay hidden. Renders nothing if the category is empty or the
+// database is unreachable — an affiliate block must never break a page.
 export async function AffiliateBlock({
   category,
   fromPath,
@@ -37,29 +40,24 @@ export async function AffiliateBlock({
   } catch {
     return null;
   }
-  partners = partners.filter((partner) => !isPlaceholderAffiliateUrl(partner.url));
+  partners = partners.filter((partner) => !isPlaceholderUrl(partner.url));
   if (partners.length === 0) return null;
+
+  const programs = await loadAffiliatePrograms();
+
+  const links: OutboundCardLink[] = partners.map((partner) => ({
+    key: partner.slug,
+    title: partner.name,
+    note: partner.blurb ?? partner.cta_text ?? "",
+    host: null,
+    href: outboundHref(partner.slug, { page: fromPath, placement: `affiliate-block:${category}` }),
+    sponsored: resolveAffiliateUrl(programs.get(partner.slug) ?? null, partner.url) !== null,
+  }));
 
   return (
     <section className="cren-surface p-8">
       <h2 className="cren-heading-lg">{heading}</h2>
-      <div className="mt-3">
-        <FtcDisclosure />
-      </div>
-      <div className="mt-4 grid gap-4 md:grid-cols-3">
-        {partners.map((p) => (
-          <a
-            key={p.slug}
-            href={`/go/${p.slug}?from=${encodeURIComponent(fromPath)}`}
-            rel="sponsored nofollow"
-            className="cren-surface cren-card-link block rounded-[var(--radius)] border border-[color:var(--border)] p-5"
-          >
-            <h3 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)]">{p.name}</h3>
-            {p.blurb && <p className="cren-body mt-2 text-sm">{p.blurb}</p>}
-            <span className="cren-text-link mt-3 inline-block text-sm font-semibold">{p.cta_text ?? "Learn more"} →</span>
-          </a>
-        ))}
-      </div>
+      <OutboundLinkGroup links={links} columns={3} className="mt-4" />
     </section>
   );
 }

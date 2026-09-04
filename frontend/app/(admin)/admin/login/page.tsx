@@ -40,11 +40,6 @@ export default function LoginPage() {
     }
   };
 
-  const handleDemoClick = () => {
-    setEmail('admin@columbusrealestatenews.com');
-    setPassword('cren2026admin');
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
@@ -136,23 +131,6 @@ export default function LoginPage() {
             )}
           </button>
 
-          {/* Demo Credentials Hint */}
-          <div className="pt-4 border-t border-gray-200">
-            <p className="text-sm text-gray-600 mb-3">Demo credentials:</p>
-            <button
-              type="button"
-              onClick={handleDemoClick}
-              className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition text-gray-700 font-medium"
-            >
-              Fill Demo Credentials
-            </button>
-            <p className="text-xs text-gray-500 mt-2">
-              Email: <code className="bg-gray-100 px-1 rounded">admin@columbusrealestatenews.com</code>
-            </p>
-            <p className="text-xs text-gray-500">
-              Password: <code className="bg-gray-100 px-1 rounded">cren2026admin</code>
-            </p>
-          </div>
         </form>
       </div>
     </div>

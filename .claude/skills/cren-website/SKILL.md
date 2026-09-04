@@ -13,8 +13,8 @@ description: Columbus Real Estate News website development, deployment, and mana
 | **Vercel Project** | `frontend` under scope `stephen-s-projects-96d9c6b4` (deploy with `vercel` from a linked dir; the old prj_DNobq…/team_bofjJ… IDs are stale — `vercel domains inspect columbusrealestatenews.com` confirms the binding) |
 | **Framework** | Next.js 16+ App Router, TypeScript, Tailwind v4 |
 | **Database** | NeonDB (PostgreSQL) via `@neondatabase/serverless` |
-| **DB Connection** | `postgresql://neondb_owner:npg_5qx6sKPEdvBO@ep-shy-truth-amtfxuif-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require` |
-| **Admin Login** | /admin/login — `admin@columbusrealestatenews.com` / `cren2026admin` |
+| **DB Connection** | see `DATABASE_URL` in the environment (never committed) |
+| **Admin Login** | /admin/login — `admin@columbusrealestatenews.com` / password from `ADMIN_DEFAULT_PASSWORD` (never committed) |
 | **Project Root** | Look for `frontend/` directory in the user's mounted folder |
 
 ## CRITICAL: Build & Deploy Process
@@ -121,7 +121,7 @@ selectors live in `lib/market-data-core.ts`.
 cd "$WORKSPACE/frontend"
 node -e "
 const { neon } = require('@neondatabase/serverless');
-const sql = neon('postgresql://neondb_owner:npg_5qx6sKPEdvBO@ep-shy-truth-amtfxuif-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require');
+const sql = neon(process.env.DATABASE_URL);
 (async () => {
   const rows = await sql\`SELECT * FROM articles WHERE status = 'live'\`;
   console.log(rows);
@@ -158,9 +158,9 @@ After DB changes, pages auto-refresh within 5 minutes. For immediate updates, re
 
 These must be set in Vercel project settings AND in `.env.local`:
 ```
-DATABASE_URL=postgresql://neondb_owner:npg_5qx6sKPEdvBO@ep-shy-truth-amtfxuif-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require
-ADMIN_JWT_SECRET=cren-prod-jwt-secret-x9k2m7f4p1v8
-ADMIN_DEFAULT_PASSWORD=cren2026admin
+DATABASE_URL=<set in Vercel env, never committed>
+ADMIN_JWT_SECRET=<set in Vercel env, never committed>
+ADMIN_DEFAULT_PASSWORD=<set in Vercel env, never committed>
 ```
 
 ## Common Tasks

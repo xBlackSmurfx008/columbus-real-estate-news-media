@@ -7,7 +7,8 @@ import { CONSUMER_INTENT_CARDS, PROOF_COHORT_AREA_SLUGS, getAreaFollowPromise } 
 import { areas, topics } from '@/lib/data';
 import { isLocalLivingArticle, prepareHomeArticles } from '@/lib/home-feed';
 import { RESOURCE_SEARCH_SUGGESTIONS, areaSearchText, articleSearchText, topicSearchText } from '@/lib/search-index';
-import type { DbAd, DbArticle, DbMarketSnapshot, DbNeighborhood } from '@/lib/public-data';
+import { formatPeriod, formatSource, type MarketMetric } from '@/lib/market-data-core';
+import type { DbAd, DbArticle, DbNeighborhood } from '@/lib/public-data';
 import type { Area } from '@/lib/types';
 
 const categoryTagClass: Record<string, string> = {
@@ -23,7 +24,8 @@ const bentoBgs = ['bg-1', 'bg-2', 'bg-3', 'bg-4', 'bg-5', 'bg-6'];
 
 interface HomeSectionsProps {
   articles?: DbArticle[];
-  marketSnapshot?: DbMarketSnapshot[];
+  /** Canonical market metrics (lib/market-data.ts). Never a second copy of the numbers. */
+  marketMetrics?: MarketMetric[];
   neighborhoods?: DbNeighborhood[];
   ads?: DbAd[];
 }
@@ -72,14 +74,14 @@ function ArticleCard({ article, index, className = 'bento-sm' }: { article: DbAr
   );
 }
 
-export function HomeSections({ articles = [], marketSnapshot = [], neighborhoods = [], ads = [] }: HomeSectionsProps) {
+export function HomeSections({ articles = [], marketMetrics = [], neighborhoods = [], ads = [] }: HomeSectionsProps) {
   const preparedArticles = prepareHomeArticles(articles);
   const heroArticle = preparedArticles[0] ?? null;
   const latestArticles = preparedArticles.slice(1, 7);
   const usedIds = new Set([heroArticle?.id, ...latestArticles.map((article) => article.id)].filter(Boolean));
   const localCandidates = preparedArticles.filter((article) => !usedIds.has(article.id));
   const localLiving = localCandidates.filter(isLocalLivingArticle).slice(0, 4);
-  const marketPulse = marketSnapshot.slice(0, 4);
+  const marketPulse = marketMetrics.slice(0, 4);
   const nativeAd = ads.find((ad) => ad.type === 'native');
   const featuredNeighborhoods = neighborhoods.slice(0, 6).map((neighborhood) => ({
     ...neighborhood,
@@ -195,11 +197,15 @@ export function HomeSections({ articles = [], marketSnapshot = [], neighborhoods
               <small>Verify geography and period in the full report</small>
             </div>
             <div className="market-brief-stats">
-              {marketPulse.length > 0 ? marketPulse.map((item) => (
-                <div key={item.id} className="market-brief-stat">
-                  <strong>{item.value}</strong>
-                  <span>{item.label}</span>
-                  {item.change && <small>{item.change}</small>}
+              {marketPulse.length > 0 ? marketPulse.map((metric) => (
+                <div key={metric.id} className="market-brief-stat">
+                  <strong>{metric.value}</strong>
+                  <span>{metric.label}</span>
+                  <small>
+                    {[metric.changeLabel, `${metric.geography.label} · ${formatPeriod(metric)}`, formatSource(metric)]
+                      .filter(Boolean)
+                      .join(' · ')}
+                  </small>
                 </div>
               )) : (
                 <p>Latest verified snapshot temporarily unavailable.</p>

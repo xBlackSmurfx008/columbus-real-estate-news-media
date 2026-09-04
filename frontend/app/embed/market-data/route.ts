@@ -1,4 +1,4 @@
-import { getLatestMarketObservations, getMarketData } from "@/lib/public-data";
+import { formatPeriod, getCanonicalMarketData, selectHeadlineMetrics } from "@/lib/market-data";
 
 export const revalidate = 300;
 
@@ -20,25 +20,17 @@ function changeColor(direction: string): string {
 }
 
 export async function GET() {
+  // Same canonical set and same selector as the homepage and /market-data,
+  // so an embedded widget can never publish a number the site contradicts.
   let cards: { label: string; value: string; change: string; direction: string }[] = [];
   try {
-    const [data, observations] = await Promise.all([getMarketData(), getLatestMarketObservations()]);
-    const cityObservations = observations.filter((observation) =>
-      observation.geography_slug === "columbus-citywide" || observation.geography_slug === "united-states"
-    );
-    cards = cityObservations.length > 0
-      ? cityObservations.map((observation) => ({
-        label: `${observation.label} · ${observation.period_end}`,
-        value: `${observation.geography_label}: ${observation.value_display}`,
-        change: observation.source_name,
-        direction: "neutral",
-      }))
-      : data.snapshot.map((m) => ({
-        label: m.label,
-        value: m.value,
-        change: m.change,
-        direction: m.direction,
-      }));
+    const set = await getCanonicalMarketData();
+    cards = selectHeadlineMetrics(set).map((metric) => ({
+      label: `${metric.label} · ${metric.geography.label}`,
+      value: metric.value,
+      change: [metric.changeLabel, formatPeriod(metric), metric.source.name].filter(Boolean).join(" · "),
+      direction: metric.direction,
+    }));
   } catch {
     cards = [];
   }

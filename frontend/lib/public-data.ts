@@ -56,8 +56,19 @@ export interface DbMarketSnapshot {
   change: string;
   direction: string;
   sort_order: number;
+  // Provenance columns. Every public metric must carry them; a row without
+  // them is rendered as unsourced rather than presented as verified.
+  source_name?: string | null;
+  source_url?: string | null;
+  source_date?: string | null;
+  methodology?: string | null;
 }
 
+/**
+ * @deprecated hero_stats is no longer a source of truth for public market
+ * numbers. The homepage stat bar derives from the canonical set in
+ * lib/market-data.ts. The table survives only for the admin panel.
+ */
 export interface DbHeroStat {
   id: number;
   value: string;
@@ -146,7 +157,10 @@ export interface PublicSiteData {
   articles: DbArticle[];
   ads: DbAd[];
   marketSnapshot: DbMarketSnapshot[];
+  /** @deprecated Retained for the admin panel only — never render publicly. */
   heroStats: DbHeroStat[];
+  /** Latest verified source-aware observations; part of the outage fallback. */
+  marketObservations?: DbMarketObservation[];
   neighborhoods: DbNeighborhood[];
   tickers: DbTicker[];
   interviews: DbInterview[];
@@ -178,6 +192,10 @@ function snapshotArticles(): DbArticle[] {
 // fallback path silently undoes the query-level fix.
 function snapshotArticlesWithoutBodies(): DbArticle[] {
   return snapshotArticles().map((article) => ({ ...article, body: null }));
+}
+
+function snapshotObservations(): DbMarketObservation[] {
+  return Array.isArray(snapshot.marketObservations) ? snapshot.marketObservations : [];
 }
 
 function logDbFallback(where: string, error: unknown) {
@@ -231,6 +249,7 @@ export const getPublicData = cache(async (): Promise<PublicSiteData> => {
       ads: snapshot.ads ?? [],
       marketSnapshot: snapshot.marketSnapshot ?? [],
       heroStats: snapshot.heroStats ?? [],
+      marketObservations: snapshotObservations(),
       neighborhoods: snapshot.neighborhoods ?? [],
       tickers: snapshot.tickers ?? [],
       interviews: snapshot.interviews ?? [],
@@ -371,26 +390,30 @@ export const getArticles = cache(async (): Promise<DbArticle[]> => {
   }
 });
 
-/** Get market data for display */
-export const getMarketData = cache(async () => {
+/** Raw stored market rows. Public surfaces should use getCanonicalMarketData()
+ *  from lib/market-data.ts instead of reading these directly. */
+export const getMarketData = cache(async (): Promise<{
+  snapshot: DbMarketSnapshot[];
+  neighborhoods: DbNeighborhood[];
+  fromFallback: boolean;
+}> => {
   try {
     const sql = getDb();
-    const [snapshotRows, heroStats, neighborhoods] = await Promise.all([
+    const [snapshotRows, neighborhoods] = await Promise.all([
       sql`SELECT * FROM market_snapshot ORDER BY sort_order ASC`,
-      sql`SELECT * FROM hero_stats ORDER BY sort_order ASC`,
       sql`SELECT * FROM neighborhoods ORDER BY sort_order ASC`,
     ]);
     return {
       snapshot: snapshotRows as unknown as DbMarketSnapshot[],
-      heroStats: heroStats as unknown as DbHeroStat[],
       neighborhoods: neighborhoods as unknown as DbNeighborhood[],
+      fromFallback: false,
     };
   } catch (error) {
     logDbFallback("getMarketData", error);
     return {
       snapshot: snapshot.marketSnapshot ?? [],
-      heroStats: snapshot.heroStats ?? [],
       neighborhoods: snapshot.neighborhoods ?? [],
+      fromFallback: true,
     };
   }
 });
@@ -431,9 +454,10 @@ export const getAreaMarketObservations = cache(async (areaSlug: string): Promise
     `;
     return rows as unknown as DbMarketObservation[];
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error(`[public-data] DB unavailable in getAreaMarketObservations; hiding unverified area metrics: ${message}`);
-    return [];
+    // The committed snapshot only ever contains rows that were verified and
+    // published, so serving it keeps provenance intact during an outage.
+    logDbFallback("getAreaMarketObservations", error);
+    return snapshotObservations().filter((row) => row.geography_slug === areaSlug);
   }
 });
 
@@ -477,8 +501,7 @@ export const getLatestMarketObservations = cache(async (): Promise<DbMarketObser
     `;
     return rows as unknown as DbMarketObservation[];
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error(`[public-data] DB unavailable in getLatestMarketObservations; hiding unverified market metrics: ${message}`);
-    return [];
+    logDbFallback("getLatestMarketObservations", error);
+    return snapshotObservations();
   }
 });

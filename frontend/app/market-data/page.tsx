@@ -1,7 +1,18 @@
 import type { Metadata } from 'next';
 import Link from "next/link";
 import { CrenPage } from "@/components/cren/cren-page";
-import { getLatestMarketObservations, getMarketData, DbMarketObservation, DbMarketSnapshot, DbNeighborhood } from "@/lib/public-data";
+import {
+  formatPeriod,
+  getCanonicalMarketData,
+  marketDataStructuredData,
+  selectAllMetrics,
+  selectHeadlineMetrics,
+  type MarketDataSet,
+  type MarketMetric,
+} from "@/lib/market-data";
+import { EMPTY_MARKET_DATA_SET } from "@/lib/market-data-core";
+import { getMarketData, DbNeighborhood } from "@/lib/public-data";
+import { SITE_URL } from "@/lib/site";
 
 export const revalidate = 300;
 
@@ -17,22 +28,48 @@ function directionClass(direction: string): string {
   return "cren-data-neutral";
 }
 
+function MetricCard({ metric }: { metric: MarketMetric }) {
+  return (
+    <div className="cren-metric-inner">
+      <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">{metric.label}</p>
+      <p className="mt-1 font-[family-name:var(--mono)] text-2xl font-semibold text-[color:var(--text-hero)]">{metric.value}</p>
+      {metric.changeLabel && <p className={`mt-1 text-sm ${directionClass(metric.direction)}`}>{metric.changeLabel}</p>}
+      <p className="mt-2 text-xs text-[color:var(--text-muted)]">{metric.geography.label} · {formatPeriod(metric)}</p>
+      {metric.source.url && metric.source.name ? (
+        <a href={metric.source.url} target="_blank" rel="noopener noreferrer" className="cren-text-link mt-1 inline-block text-xs">
+          Source: {metric.source.name}
+        </a>
+      ) : (
+        <p className="mt-1 text-xs text-[color:var(--text-muted)]">Source not attached — treat as unverified</p>
+      )}
+    </div>
+  );
+}
+
 export default async function MarketDataPage() {
-  let observations: DbMarketObservation[] = [];
-  let snapshot: DbMarketSnapshot[] = [];
+  let marketSet: MarketDataSet = EMPTY_MARKET_DATA_SET;
   let neighborhoods: DbNeighborhood[] = [];
 
   try {
-    const [data, latestObservations] = await Promise.all([getMarketData(), getLatestMarketObservations()]);
-    snapshot = data.snapshot;
-    neighborhoods = data.neighborhoods;
-    observations = latestObservations;
+    const [set, legacy] = await Promise.all([getCanonicalMarketData(), getMarketData()]);
+    marketSet = set;
+    neighborhoods = legacy.neighborhoods;
   } catch {
     // Will show empty state
   }
 
+  // Same canonical set, same selector the homepage uses: the headline bar here
+  // cannot report a different number from the one on the homepage.
+  const headline = selectHeadlineMetrics(marketSet);
+  const allMetrics = selectAllMetrics(marketSet);
+  const structuredData = marketDataStructuredData(marketSet, `${SITE_URL}/market-data`);
+
   return (
     <CrenPage>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <div className="cren-stack-lg">
         <div className="cren-surface p-8">
           <div className="section-eyebrow">Market Data</div>
@@ -42,11 +79,34 @@ export default async function MarketDataPage() {
           </p>
         </div>
 
-        {observations.length > 0 ? (
+        <section className="cren-surface p-6 md:p-8">
+          <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+            <h2 className="cren-heading-lg">Headline indicators</h2>
+            <p className="text-xs text-[color:var(--text-muted)]">
+              {marketSet.updatedAt ? `Canonical set updated ${marketSet.updatedAt}` : "Update date unavailable"}
+              {marketSet.fromFallback ? " · serving last-known-good snapshot" : ""}
+            </p>
+          </div>
+          {headline.length > 0 ? (
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {headline.map((metric) => (
+                <MetricCard key={metric.id} metric={metric} />
+              ))}
+            </div>
+          ) : (
+            <p className="cren-body text-[color:var(--text-muted)]">Headline indicators are unavailable right now.</p>
+          )}
+          <p className="cren-body mt-4 text-xs text-[color:var(--text-muted)]">
+            These are the same values the homepage stat bar and the CREN embed render — one canonical record per measure,
+            geography, and period.
+          </p>
+        </section>
+
+        {allMetrics.length > 0 && (
           <section className="cren-surface p-6 md:p-8">
             <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-              <h2 className="cren-heading-lg">Source-aware measures</h2>
-              <p className="text-xs text-[color:var(--text-muted)]">Latest verified observation by area and measure</p>
+              <h2 className="cren-heading-lg">All measures</h2>
+              <p className="text-xs text-[color:var(--text-muted)]">Latest verified record by measure, area, and property type</p>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[720px] text-sm">
@@ -55,36 +115,47 @@ export default async function MarketDataPage() {
                     <th className="pb-3 pr-4 text-left text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">Measure</th>
                     <th className="pb-3 px-4 text-left text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">Area</th>
                     <th className="pb-3 px-4 text-right text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">Value</th>
-                    <th className="pb-3 px-4 text-right text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">Period ending</th>
+                    <th className="pb-3 px-4 text-right text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">Period</th>
                     <th className="pb-3 pl-4 text-left text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">Source</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {observations.map((observation, index) => {
-                    const areaHref = observation.geography_type === "national"
+                  {allMetrics.map((metric, index) => {
+                    const areaHref = metric.geography.type === "national" || metric.geography.type === "metro"
                       ? null
-                      : `/areas/${observation.geography_slug}`;
+                      : `/areas/${metric.geography.slug}`;
                     return (
-                      <tr key={observation.id} className={`border-b border-[color:var(--border)]/50 ${index % 2 === 0 ? "" : "bg-[color:var(--bg-surface)]"}`}>
+                      <tr key={metric.id} className={`border-b border-[color:var(--border)]/50 ${index % 2 === 0 ? "" : "bg-[color:var(--bg-surface)]"}`}>
                         <td className="py-3 pr-4">
-                          <p className="font-semibold text-[color:var(--text-hero)]">{observation.label}</p>
-                          <p className="text-xs text-[color:var(--text-muted)]">{observation.property_type}</p>
+                          <p className="font-semibold text-[color:var(--text-hero)]">{metric.label}</p>
+                          <p className="text-xs text-[color:var(--text-muted)]">{metric.propertyType.replaceAll("-", " ")}</p>
                         </td>
                         <td className="px-4 py-3">
                           {areaHref ? (
-                            <Link href={areaHref} className="cren-text-link font-semibold">{observation.geography_label}</Link>
+                            <Link href={areaHref} className="cren-text-link font-semibold">{metric.geography.label}</Link>
                           ) : (
-                            <span className="text-[color:var(--text-secondary)]">{observation.geography_label}</span>
+                            <span className="text-[color:var(--text-secondary)]">{metric.geography.label}</span>
                           )}
-                          <p className="text-xs text-[color:var(--text-muted)]">{observation.geography_type}</p>
+                          <p className="text-xs text-[color:var(--text-muted)]">{metric.geography.type}</p>
                         </td>
-                        <td className="px-4 py-3 text-right font-[family-name:var(--mono)] font-semibold text-[color:var(--text-hero)]">{observation.value_display}</td>
+                        <td className="px-4 py-3 text-right font-[family-name:var(--mono)] font-semibold text-[color:var(--text-hero)]">
+                          {metric.value}
+                          {metric.changeLabel && (
+                            <span className={`ml-2 text-xs font-normal ${directionClass(metric.direction)}`}>{metric.changeLabel}</span>
+                          )}
+                        </td>
                         <td className="px-4 py-3 text-right text-[color:var(--text-secondary)]">
-                          <p>{observation.period_end}</p>
-                          <p className="text-xs text-[color:var(--text-muted)]">as of {observation.as_of_date}</p>
+                          <p>{formatPeriod(metric)}</p>
+                          <p className="text-xs text-[color:var(--text-muted)]">
+                            {metric.source.asOf ? `as of ${metric.source.asOf}` : "observation date not stated"}
+                          </p>
                         </td>
                         <td className="pl-4 py-3">
-                          <a href={observation.source_url} target="_blank" rel="noopener noreferrer" className="cren-text-link">{observation.source_name}</a>
+                          {metric.source.url && metric.source.name ? (
+                            <a href={metric.source.url} target="_blank" rel="noopener noreferrer" className="cren-text-link">{metric.source.name}</a>
+                          ) : (
+                            <span className="text-xs text-[color:var(--text-muted)]">Source not attached — treat as unverified</span>
+                          )}
                         </td>
                       </tr>
                     );
@@ -94,33 +165,13 @@ export default async function MarketDataPage() {
             </div>
             <p className="cren-body mt-4 text-xs text-[color:var(--text-muted)]">Measures are published with their geography, property type, reporting period, and source. They are not appraisals, rent quotes, or mortgage offers.</p>
           </section>
-        ) : null}
+        )}
 
-        {/* Legacy supplemental snapshot */}
-        {snapshot.length > 0 && <section className="cren-surface p-6 md:p-8">
-          <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-            <h2 className="cren-heading-lg">{observations.length > 0 ? "Legacy supplemental snapshot" : "Market Snapshot"}</h2>
-            <p className="text-xs text-[color:var(--text-muted)]">Latest stored snapshot; individual data periods vary</p>
-          </div>
-          {snapshot.length > 0 ? (
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {snapshot.map((m) => (
-                <div key={m.id} className="cren-metric-inner">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">{m.label}</p>
-                  <p className="mt-1 font-[family-name:var(--mono)] text-2xl font-semibold text-[color:var(--text-hero)]">{m.value}</p>
-                  <p className={`mt-1 text-sm ${directionClass(m.direction)}`}>{m.change}</p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="cren-body text-[color:var(--text-muted)]">Market data loading...</p>
-          )}
-        </section>}
 
         {/* Neighborhood Comparison */}
         {neighborhoods.length > 0 && (
           <section className="cren-surface p-6 md:p-8">
-            <h2 className="cren-heading-lg mb-4">{observations.length > 0 ? "Legacy neighborhood comparison" : "Neighborhood Comparison"}</h2>
+            <h2 className="cren-heading-lg mb-4">Neighborhood comparison</h2>
             <p className="cren-body mb-6 text-sm text-[color:var(--text-secondary)]">
               Side-by-side data for {neighborhoods.length} Columbus neighborhoods. Click any row for the full area report.
             </p>
@@ -193,9 +244,8 @@ export default async function MarketDataPage() {
             <a href="https://www.redfin.com/news/data-center/methodology/" target="_blank" rel="noopener noreferrer" className="cren-text-link">Redfin methodology</a>
           </div>
           <p className="cren-body mt-4 rounded-[var(--radius-sm)] border border-[color:var(--border)] p-3 text-xs">
-            {observations.length > 0
-              ? "Source-aware observations are the primary display. Individual measures remain subject to each source's definitions, revisions, and geographic limitations."
-              : "Legacy dashboard rows do not yet expose source URL, observation date, geography, and property type on every individual metric. Do not use an unlabeled row as an appraisal, rent quote, mortgage offer, or prediction."}
+            Every measure above comes from the one canonical market-data record for that measure, geography, and period.
+            Individual measures remain subject to each source&apos;s definitions, revisions, and geographic limitations.
           </p>
           <Link href="/blog" className="cren-text-link mt-4 inline-block text-sm font-semibold">
             Read latest analysis

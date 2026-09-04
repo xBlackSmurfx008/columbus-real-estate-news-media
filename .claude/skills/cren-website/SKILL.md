@@ -76,14 +76,36 @@ app/
 - `lib/public-data.ts` — getPublicData(), getArticles(), getArticleBySlug(), generateSlug()
 - `lib/auth.ts` — JWT auth (jose), requireAuth(), session cookies
 
+## Market data — one canonical system (do not add a second copy)
+
+Every public market number comes from **`lib/market-data.ts`** (`getCanonicalMarketData()`),
+which reconciles `market_observations` + `market_snapshot` into one set where each metric
+carries **value + geography + period + source + updated_at**. Pure logic and the surface
+selectors live in `lib/market-data-core.ts`.
+
+- Surfaces (homepage stat bar, `/market-data`, `/embed/market-data`, area hubs,
+  `MarketSnapshotBlock`, JSON-LD) pick metrics with `selectHeadlineMetrics` /
+  `selectAreaMetrics` / `selectAllMetrics`. They never choose a value.
+- **Never** read `market_snapshot`, `market_observations`, or `hero_stats` directly in a
+  page or component. `hero_stats` is retired as a source of truth (admin-editable only).
+- Never render a metric without provenance; unsourced values display as unverified.
+- `refresh-market-data.mjs`, `refresh-source-aware-market-data.mjs --write`, and
+  `update-site-data.mjs` re-export `content/snapshot/public-data.json` automatically so the
+  outage fallback cannot drift. Commit that file with any market change.
+- Gates: `npm run build` runs `npm run test:market-consistency`
+  (`tests/market-data-consistency.test.mjs`) and **fails the build** when two current
+  surfaces disagree, when provenance is missing, or when the committed fallback was
+  hand-edited (fingerprint check). `DATABASE_URL=... npm run verify:market-consistency` is
+  the live half: DB vs committed fallback vs `hero_stats`.
+
 ## Database Tables (12)
 
 | Table | Key Fields | Notes |
 |-------|-----------|-------|
 | `articles` | id, status, featured, category, title, excerpt, body, author, date, area_slug, topic_slug | **status must be `'live'`** (not 'published') for public display |
 | `ads` | id, name, type, status, placement, title, text, brand_name | status `'live'` = active |
-| `market_snapshot` | label, value, change, direction, sort_order | 5 market stat cards |
-| `hero_stats` | value, label, sort_order | Homepage hero stat bar (4 items) |
+| `market_snapshot` | label, value, change, direction, sort_order, source_name, source_url, source_date, methodology | Metro stat cards. Read only via `lib/market-data.ts`. |
+| `hero_stats` | value, label, sort_order | **Retired as a source of truth** (2026-09-04). Admin-editable only; the homepage stat bar derives from the canonical market set. |
 | `neighborhoods` | name, median, yoy, rent, dom, inventory, sort_order | 14 neighborhoods |
 | `ticker_items` | text, active, sort_order | Scrolling news ticker |
 | `interviews` | name, initials, role, topic, status, date | Expert interview lineup |

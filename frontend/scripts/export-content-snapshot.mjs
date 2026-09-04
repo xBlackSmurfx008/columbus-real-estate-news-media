@@ -13,6 +13,7 @@
 // unless --force is passed, so a flaky read can never erase the fallback.
 
 import { neon } from "@neondatabase/serverless";
+import { marketSnapshotFingerprint } from "./market-snapshot-fingerprint.mjs";
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -29,7 +30,7 @@ if (!databaseUrl) {
 
 const sql = neon(databaseUrl);
 
-const [articles, ads, marketSnapshot, heroStats, neighborhoods, tickers, interviews, testimonials, settingsRows] =
+const [articles, ads, marketSnapshot, heroStats, neighborhoods, tickers, interviews, testimonials, settingsRows, marketObservations] =
   await Promise.all([
     sql`SELECT * FROM articles WHERE status = 'live' ORDER BY created_at DESC`,
     sql`SELECT * FROM ads WHERE status = 'live' ORDER BY created_at DESC`,
@@ -40,6 +41,42 @@ const [articles, ads, marketSnapshot, heroStats, neighborhoods, tickers, intervi
     sql`SELECT * FROM interviews ORDER BY sort_order ASC`,
     sql`SELECT * FROM testimonials ORDER BY sort_order ASC`,
     sql`SELECT key, value FROM settings`,
+    // Same shape and same filters as getLatestMarketObservations() so the
+    // fallback serves exactly what the live query would have served.
+    sql`
+      SELECT DISTINCT ON (
+        market_observations.metric_key,
+        market_observations.geography_slug,
+        market_observations.property_type
+      )
+        market_observations.id,
+        market_observations.metric_key,
+        market_observations.label,
+        market_observations.value_display,
+        market_observations.value_numeric,
+        market_observations.unit,
+        market_observations.geography_type,
+        market_observations.geography_slug,
+        market_observations.geography_label,
+        market_observations.property_type,
+        TO_CHAR(market_observations.period_start, 'YYYY-MM-DD') AS period_start,
+        TO_CHAR(market_observations.period_end, 'YYYY-MM-DD') AS period_end,
+        TO_CHAR(market_observations.as_of_date, 'YYYY-MM-DD') AS as_of_date,
+        market_sources.name AS source_name,
+        market_observations.source_url,
+        COALESCE(market_observations.methodology_url, market_sources.methodology_url) AS methodology_url,
+        market_observations.notes
+      FROM market_observations
+      JOIN market_sources ON market_sources.slug = market_observations.source_slug
+      WHERE market_observations.quality_status = 'verified'
+        AND market_sources.active = true
+      ORDER BY
+        market_observations.metric_key,
+        market_observations.geography_slug,
+        market_observations.property_type,
+        market_observations.period_end DESC,
+        market_observations.updated_at DESC
+    `,
   ]);
 
 if (articles.length === 0 && !force) {
@@ -64,6 +101,7 @@ for (const row of settingsRows) settings[row.key] = row.value;
 const snapshot = {
   _meta: {
     generated_at: new Date().toISOString(),
+    market_fingerprint: "",
     note:
       "Last-known-good public content, served when the database is unreachable. " +
       "Refresh with: node scripts/export-content-snapshot.mjs (requires DATABASE_URL). " +
@@ -73,6 +111,7 @@ const snapshot = {
   ads,
   marketSnapshot,
   heroStats,
+  marketObservations,
   neighborhoods,
   tickers,
   interviews,
@@ -80,10 +119,15 @@ const snapshot = {
   settings,
 };
 
+// Stamped after the payload exists; tests recompute it to catch a hand-edited
+// fallback that no longer matches what the database exported.
+snapshot._meta.market_fingerprint = marketSnapshotFingerprint(snapshot);
+
 mkdirSync(dirname(snapshotPath), { recursive: true });
 writeFileSync(snapshotPath, JSON.stringify(snapshot, null, 2) + "\n");
 console.log(
   `Snapshot written to ${snapshotPath}: ${articles.length} articles, ${ads.length} ads, ` +
-    `${neighborhoods.length} neighborhoods, ${tickers.length} ticker items.`
+    `${neighborhoods.length} neighborhoods, ${marketObservations.length} market observations, ` +
+    `${tickers.length} ticker items (market fingerprint ${snapshot._meta.market_fingerprint}).`
 );
 console.log("Commit the updated snapshot so the deployed site can use it as its outage fallback.");

@@ -4,7 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { getAreaBySlug } from "@/lib/data";
 import { CrenPage } from "@/components/cren/cren-page";
-import { getArticles, getAreaMarketObservations, DbArticle, DbMarketObservation } from "@/lib/public-data";
+import { getArticles, DbArticle } from "@/lib/public-data";
+import { formatPeriod, getCanonicalMarketData, selectAreaMetrics, type MarketMetric } from "@/lib/market-data";
 import { getArticlePath } from "@/lib/article-routing";
 import { CoverImage } from "@/components/cren/cover-image";
 import { GuideCard, RepresentativeImageNote } from "@/components/guide-card";
@@ -74,13 +75,15 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
 
   let local: DbArticle[] = [];
   let metro: DbArticle[] = [];
-  let observations: DbMarketObservation[] = [];
+  // Area metrics come from the canonical market set, so an area hub and the
+  // metro dashboard can never disagree about the same measure.
+  let areaMetrics: MarketMetric[] = [];
 
   try {
-    const [allArticles, areaObservations] = await Promise.all([getArticles(), getAreaMarketObservations(area.slug)]);
+    const [allArticles, marketSet] = await Promise.all([getArticles(), getCanonicalMarketData()]);
     local = allArticles.filter((a) => a.area_slug === area.slug && area.slug !== "columbus-citywide");
     metro = allArticles.filter((a) => a.area_slug === "columbus-citywide").slice(0, 4);
-    observations = areaObservations;
+    areaMetrics = selectAreaMetrics(marketSet, area.slug);
   } catch {
     // Continue with empty data
   }
@@ -252,21 +255,25 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
         </section>
 
         {/* Source-aware Market Data */}
-        {observations.length > 0 ? (
+        {areaMetrics.length > 0 ? (
           <div className="cren-surface p-6 md:p-8">
             <h2 className="cren-heading-lg mb-2">{area.name} housing and rent snapshot</h2>
             <p className="cren-body mb-5 text-sm">Each measure keeps its source, geography, property type, and observation period attached.</p>
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {observations.map((observation) => (
-                <div key={observation.id} className="cren-metric-inner">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">{observation.label}</p>
-                  <p className="mt-1 font-[family-name:var(--mono)] text-xl font-semibold text-[color:var(--text-hero)]">{observation.value_display}</p>
+              {areaMetrics.map((metric) => (
+                <div key={metric.id} className="cren-metric-inner">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-[color:var(--text-muted)]">{metric.label}</p>
+                  <p className="mt-1 font-[family-name:var(--mono)] text-xl font-semibold text-[color:var(--text-hero)]">{metric.value}</p>
                   <p className="mt-2 text-xs text-[color:var(--text-muted)]">
-                    {observation.property_type.replaceAll('-', ' ')} · period ending {observation.period_end}
+                    {metric.propertyType.replaceAll('-', ' ')} · {formatPeriod(metric)}
                   </p>
-                  <a href={observation.source_url} target="_blank" rel="noopener noreferrer" className="cren-text-link mt-2 inline-block text-xs">
-                    Source: {observation.source_name}
-                  </a>
+                  {metric.source.url && metric.source.name ? (
+                    <a href={metric.source.url} target="_blank" rel="noopener noreferrer" className="cren-text-link mt-2 inline-block text-xs">
+                      Source: {metric.source.name}
+                    </a>
+                  ) : (
+                    <p className="mt-2 text-xs text-[color:var(--text-muted)]">Source not attached — treat as unverified</p>
+                  )}
                 </div>
               ))}
             </div>

@@ -135,7 +135,10 @@ export function getAreaGuide(area: Area): AreaGuide {
         eyebrow: "Sell",
         title: `Plan a home sale in ${area.name}`,
         description: "Start with property records, local market evidence, likely selling costs, timing, and your available representation paths.",
-        href: "/sell/your-home",
+        // The `area` parameter is read by captureAttribution, so a seller lead
+        // that starts on a hub stays attributable to the area even when
+        // session storage is unavailable.
+        href: `/sell/your-home?area=${encodeURIComponent(area.name)}`,
         image: GUIDE_IMAGES.housing,
         imageAlt: "Representative editorial image of a Central Ohio residential street",
       },

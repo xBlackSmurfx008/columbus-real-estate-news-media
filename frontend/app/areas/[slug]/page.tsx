@@ -17,6 +17,14 @@ import {
   getAreaReleasePolicy,
   getProofCohortContentPackage,
 } from "@/lib/consumer-insights";
+import {
+  buildAreaMarketComparison,
+  getFlagshipArea,
+  getFlagshipRealityCheck,
+  resolveFaqSource,
+  resolveReportingRecord,
+  type FlagshipRealityCheck,
+} from "@/lib/flagship-areas";
 
 export const revalidate = 300;
 
@@ -25,7 +33,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const area = getAreaBySlug(slug);
   if (!area) return {};
   const releasePolicy = getAreaReleasePolicy(area);
-  const realityCheck = getAreaRealityCheck(area);
+  const realityCheck: FlagshipRealityCheck | null = getAreaRealityCheck(area) ?? getFlagshipRealityCheck(area.slug);
   return {
     title: realityCheck ? `${area.name} Area Reality Check` : `${area.name} Housing & Local Living Guide`,
     description: realityCheck
@@ -64,37 +72,82 @@ function ArticleCard({ article }: { article: DbArticle }) {
 
 const funnelCardClass = "cren-surface cren-card-link block rounded-[var(--radius)] border border-[color:var(--border)] p-4";
 
+/**
+ * One cell of the flagship comparison table. A missing metric is stated as a
+ * gap, never filled in from a neighbouring geography.
+ */
+function MarketComparisonCell({ metric }: { metric: MarketMetric | null }) {
+  if (!metric) {
+    return <span className="text-[color:var(--text-muted)]">Not published</span>;
+  }
+  return (
+    <span className="inline-block">
+      <span className="font-[family-name:var(--mono)] font-semibold text-[color:var(--text-hero)]">{metric.value}</span>
+      <span className="mt-0.5 block text-xs text-[color:var(--text-muted)]">{formatPeriod(metric)}</span>
+    </span>
+  );
+}
+
 export default async function AreaDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const area = getAreaBySlug(slug);
   if (!area) notFound();
   const guide = getAreaGuide(area);
-  const realityCheck = getAreaRealityCheck(area);
+  // Flagship hubs (owner plan 2026-09-04, P1 item 8) carry a reality check of
+  // their own when they are not part of the original proof cohort.
+  const flagship = getFlagshipArea(area.slug);
+  const realityCheck: FlagshipRealityCheck | null = getAreaRealityCheck(area) ?? flagship?.realityCheck ?? null;
   const contentPackage = getProofCohortContentPackage(area);
-  const followPromise = getAreaFollowPromise(area);
+  const followPromise = realityCheck?.followPromise ?? getAreaFollowPromise(area);
 
   let local: DbArticle[] = [];
   let metro: DbArticle[] = [];
+  let allArticles: DbArticle[] = [];
   // Area metrics come from the canonical market set, so an area hub and the
   // metro dashboard can never disagree about the same measure.
   let areaMetrics: MarketMetric[] = [];
+  let comparison: ReturnType<typeof buildAreaMarketComparison> | null = null;
 
   try {
-    const [allArticles, marketSet] = await Promise.all([getArticles(), getCanonicalMarketData()]);
-    local = allArticles.filter((a) => a.area_slug === area.slug && area.slug !== "columbus-citywide");
-    metro = allArticles.filter((a) => a.area_slug === "columbus-citywide").slice(0, 4);
+    const [articles, marketSet] = await Promise.all([getArticles(), getCanonicalMarketData()]);
+    allArticles = articles;
+    local = articles.filter((a) => a.area_slug === area.slug && area.slug !== "columbus-citywide");
+    metro = articles.filter((a) => a.area_slug === "columbus-citywide").slice(0, 4);
     areaMetrics = selectAreaMetrics(marketSet, area.slug);
+    if (flagship) {
+      comparison = buildAreaMarketComparison(
+        marketSet,
+        area.slug,
+        flagship.comparisonSlugs,
+        (comparedSlug) => getAreaBySlug(comparedSlug)?.name ?? comparedSlug,
+      );
+    }
   } catch {
     // Continue with empty data
   }
 
+  // Every cited story is resolved against the live article set, so a hub can
+  // never point at coverage that was unpublished, renamed, or never existed.
+  const reportingRecord = flagship ? resolveReportingRecord(flagship.reportingRecord, allArticles) : [];
+  const faqs = (flagship?.faqs ?? []).map((faq) => ({ faq, source: resolveFaqSource(faq, allArticles) }));
+  const faqStructuredData =
+    faqs.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          name: `${area.name} housing questions`,
+          mainEntity: faqs.map(({ faq }) => ({
+            "@type": "Question",
+            name: faq.question,
+            acceptedAnswer: { "@type": "Answer", text: faq.answer },
+          })),
+        }
+      : null;
+
   // For the citywide hub itself, "local" is the full metro feed.
   if (area.slug === "columbus-citywide") {
-    try {
-      const all = await getArticles();
-      local = all.filter((a) => a.area_slug === "columbus-citywide");
-      metro = [];
-    } catch {}
+    local = allArticles.filter((a) => a.area_slug === "columbus-citywide");
+    metro = [];
   }
 
   const reportedHeroImage = local.find((a) => a.image_url)?.image_url ?? null;
@@ -115,7 +168,15 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
 
   return (
     <CrenPage>
-      <div className="cren-stack-lg">
+      {/* One attribute makes every funnel CTA click anywhere on this hub carry
+          the area, because FunnelTracker reads the nearest data-area-slug. */}
+      <div className="cren-stack-lg" data-area-slug={area.slug}>
+        {faqStructuredData && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
+          />
+        )}
         {/* Header */}
         <div className="cren-surface overflow-hidden">
           <div className="relative aspect-[21/9] w-full overflow-hidden bg-[color:var(--green-pale)]">
@@ -196,6 +257,32 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
                 ))}
               </div>
             </div>
+          </section>
+        )}
+
+        {reportingRecord.length > 0 && (
+          <section className="cren-surface p-6 md:p-8" data-section-id="area-reporting-record">
+            <div className="mb-5 max-w-3xl">
+              <div className="section-eyebrow">What we reported</div>
+              <h2 className="cren-heading-lg">CREN reporting on {area.name}</h2>
+              <p className="cren-body mt-2 text-sm">
+                Each line states what one published story established, no more strongly than the story did. Open a story to
+                read the records and sources behind it.
+              </p>
+            </div>
+            <ol className="grid gap-3">
+              {reportingRecord.map(({ article, whatItShows }) => (
+                <li key={article.id} className="cren-soft p-4">
+                  <p className="text-sm text-[color:var(--text-body)]">{whatItShows}</p>
+                  <div className="mt-2 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <Link href={getArticlePath(article)} className="cren-text-link text-sm font-semibold">
+                      {article.title}
+                    </Link>
+                    <span className="text-xs text-[color:var(--text-muted)]">{article.date}</span>
+                  </div>
+                </li>
+              ))}
+            </ol>
           </section>
         )}
 
@@ -289,8 +376,84 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
           </div>
         )}
 
+        {/* Flagship comparison: this area against its substitutes and the metro
+            baseline, using only what the canonical market set already carries. */}
+        {comparison && comparison.hasAnyValue && (
+          <section className="cren-surface p-6 md:p-8" data-section-id="area-market-comparison">
+            <div className="mb-5 max-w-3xl">
+              <div className="section-eyebrow">Compare before you commit</div>
+              <h2 className="cren-heading-lg">{area.name} against comparable areas</h2>
+              <p className="cren-body mt-2 text-sm">
+                Same measure, same source, same period, so the gap between two areas is measured rather than estimated.
+                These are the areas a reader here usually weighs on price and housing type. Where no source publishes a
+                series for an area, the cell stays empty.
+              </p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[560px] border-collapse text-left text-sm">
+                <thead>
+                  <tr className="border-b border-[color:var(--border)]">
+                    <th scope="col" className="py-2 pr-4 font-semibold text-[color:var(--text-hero)]">Area</th>
+                    <th scope="col" className="py-2 pr-4 font-semibold text-[color:var(--text-hero)]">Typical home value</th>
+                    <th scope="col" className="py-2 font-semibold text-[color:var(--text-hero)]">Observed rent</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {comparison.rows.map((row) => (
+                    <tr key={row.slug} className="border-b border-[color:var(--border)] last:border-0">
+                      <th scope="row" className="py-3 pr-4 font-normal">
+                        {row.isSubject ? (
+                          <span className="font-semibold text-[color:var(--text-hero)]">{row.label}</span>
+                        ) : (
+                          <Link href={`/areas/${row.slug}`} className="cren-text-link">{row.label}</Link>
+                        )}
+                        {row.isBaseline && (
+                          <span className="ml-2 text-xs text-[color:var(--text-muted)]">metro baseline</span>
+                        )}
+                      </th>
+                      <td className="py-3 pr-4">
+                        <MarketComparisonCell metric={row.metrics["typical-home-value"]} />
+                      </td>
+                      <td className="py-3">
+                        <MarketComparisonCell metric={row.metrics["observed-rent"]} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="cren-soft mt-4 p-4 text-xs text-[color:var(--text-muted)]">
+              {comparison.sources.length > 0 && (
+                <p>
+                  Source:{" "}
+                  {comparison.sources.map((source, index) => (
+                    <span key={source.name}>
+                      {index > 0 && ", "}
+                      {source.url ? (
+                        <a href={source.url} target="_blank" rel="noopener noreferrer" className="cren-text-link">
+                          {source.name}
+                        </a>
+                      ) : (
+                        source.name
+                      )}
+                    </span>
+                  ))}
+                  .
+                </p>
+              )}
+              {comparison.missingSlugs.length > 0 && (
+                <p className="mt-2">
+                  No published series exists for{" "}
+                  {comparison.missingSlugs.map((missing) => getAreaBySlug(missing)?.name ?? missing).join(", ")}. CREN
+                  leaves those cells empty rather than substituting a figure from a different geography.
+                </p>
+              )}
+            </div>
+          </section>
+        )}
+
         {/* Housing search and listing actions */}
-        <section>
+        <section data-section-id="area-housing-actions">
           <div className="mb-5 max-w-3xl">
             <div className="section-eyebrow">Housing actions</div>
             <h2 className="cren-heading-lg">Search, rent, buy, sell or list in {area.name}</h2>
@@ -348,6 +511,28 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
             <div className="grid gap-4 md:grid-cols-2">
               {metro.map((a) => (
                 <ArticleCard key={a.id} article={a} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {faqs.length > 0 && (
+          <section className="cren-surface p-6 md:p-8" data-section-id="area-faq">
+            <div className="mb-4 max-w-3xl">
+              <div className="section-eyebrow">Straight answers</div>
+              <h2 className="cren-heading-lg">Questions people ask about {area.name}</h2>
+            </div>
+            <div className="grid gap-3">
+              {faqs.map(({ faq, source }) => (
+                <details key={faq.question} className="cren-soft p-4">
+                  <summary className="cursor-pointer font-semibold text-[color:var(--text-hero)]">{faq.question}</summary>
+                  <p className="cren-body mt-2 text-sm">{faq.answer}</p>
+                  {source && (
+                    <Link href={getArticlePath(source)} className="cren-text-link mt-2 inline-block text-xs">
+                      Our reporting: {source.title}
+                    </Link>
+                  )}
+                </details>
               ))}
             </div>
           </section>

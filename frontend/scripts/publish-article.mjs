@@ -21,7 +21,8 @@
 //   "category_class": string,   // default "card-img-market"
 //   "icon": string,             // default "$"
 //   "image_url": string | null,
-//   "featured": boolean         // default false
+//   "featured": boolean,        // default false
+//   "coverage_calendar_id": string  // optional; the calendar entry this covers
 // }
 
 import { readFileSync } from "node:fs";
@@ -308,6 +309,40 @@ if (!row.image_url) {
       + "Set BLOB_READ_WRITE_TOKEN in this environment and re-run scripts/generate-placeholder-heroes.mjs, or leave the article imageless for the durable image job to fill."
     );
   }
+}
+
+// Close the coverage-calendar loop (see frontend/docs/COVERAGE_CALENDAR.md).
+// Wired in exactly like publication-gate-log.mjs: the gate has already decided
+// by the time this runs, the whole thing is wrapped, and neither the module
+// failing to load nor the write failing can change the exit code or the
+// article that was just published. Worst case we log nothing and the entry is
+// closed out by hand with `coverage-calendar.mjs cover`.
+try {
+  const { closeCalendarLoop } = await import("./coverage-calendar-store.mjs");
+  const calendar = await closeCalendarLoop(sql, {
+    articleId: id,
+    title: article.title,
+    body: article.body ?? "",
+    publishedOn: isoPrefix,
+    explicitEntryId: article.coverage_calendar_id ?? null,
+  });
+  if (calendar.status === "covered") {
+    console.log(`Coverage calendar: marked "${calendar.entryIds[0]}" covered by this article.`);
+  } else if (calendar.status === "ambiguous") {
+    console.warn(
+      `Coverage calendar: ${calendar.entryIds.length} entries match this article `
+      + `(${calendar.entryIds.join(", ")}). Nothing marked — close the right one with `
+      + `\`node scripts/coverage-calendar.mjs cover <id> --article ${id}\`.`,
+    );
+  } else if (calendar.status === "unknown-id") {
+    console.warn(`Coverage calendar: coverage_calendar_id "${calendar.explicitEntryId}" is not a known entry.`);
+  } else if (calendar.status === "error") {
+    console.warn(`Coverage calendar not updated (article still published): ${calendar.error}`);
+  }
+} catch (error) {
+  console.warn(
+    `Coverage calendar not updated (article still published): ${error instanceof Error ? error.message : String(error)}`,
+  );
 }
 
 // Owner notification per publish (CMO directive 2026-08-17 P2). Best-effort:

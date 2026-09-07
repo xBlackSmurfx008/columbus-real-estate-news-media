@@ -1,10 +1,42 @@
 {
   "_meta": {
-    "generated_at": "2026-09-06T16:22:03.006Z",
+    "generated_at": "2026-09-07T16:16:28.841Z",
     "market_fingerprint": "84fbd3f5f01666747265ba9a2f830f2e",
     "note": "Last-known-good public content, served when the database is unreachable. Refresh with: node scripts/export-content-snapshot.mjs (requires DATABASE_URL). Never edit articles here by hand — this file only ever mirrors what was live in the database."
   },
   "articles": [
+    {
+      "id": "2026-09-07-second-baptist-opens-2-4-acres-on-columbus-near-east-side-to-developers",
+      "status": "live",
+      "featured": false,
+      "category": "Neighborhoods",
+      "category_class": "card-img-market",
+      "icon": "$",
+      "title": "Second Baptist Opens 2.4 Acres on Columbus Near East Side to Developers",
+      "excerpt": "A Near East Side church is shopping 2.4 acres to development partners, including a full block on East Long Street. The RFP is live at eastpact.org/rfp.",
+      "body": "Second Baptist Church, a Near East Side congregation entering its 190th year in Columbus, has posted a request for proposals seeking a development partner for five parcels it owns in the neighborhood, totaling 2.4 acres, with the largest being a full city block on East Long Street.\n\n## Five Sites, Including a Full Block on East Long Street\n\nThe RFP, posted at [eastpact.org/rfp](https://www.eastpact.org/rfp) and first reported by [Columbus Underground on September 4, 2026](https://columbusunderground.com/development-roundup-construction-starting-on-south-side-new-affordable-housing-and-more-bw1/), describes five distinct parcels the congregation controls in the Near East Side, totaling 2.4 acres. The largest is a contiguous block of developable land between 17th and 18th Streets, fronting East Long Street — a site the church controls entirely, totaling 1.17 acres.\n\nFor context, that much contiguous land is enough ground for a mid-size apartment building, a mixed-income residential complex with ground-floor retail, or a scattered-site development split across multiple buildings — the actual form will depend on what a selected partner proposes and what the church accepts.\n\n## A Church With a Housing Track Record\n\nSecond Baptist is not new to development. Its prior housing effort, Chandler Arms, delivered 45 units of senior citizen housing in the neighborhood. That project gives prospective partners a concrete reference point for how the institution operates and what it has been willing to commit to in the past.\n\nThe church operates through the Second Baptist Housing Association, a nonprofit entity that structures its development activity separately from congregation operations — a common arrangement for faith-based community development, which allows the organization to hold assets, enter long-term agreements, and receive public housing subsidies without commingling those funds with the congregation's general budget.\n\n## What an RFP Is and Is Not\n\nA request for proposals is not the same as an outright sale of the land. It typically means an institution is identifying potential partners — often for a ground lease, co-development, or joint-venture structure — where the church retains a long-term stake in the outcome. A ground lease, for example, lets a developer build and operate a project while the church holds the underlying land and receives a lease payment over a long, multi-decade term.\n\nThe specific terms Second Baptist is offering, and whether it is open to market-rate development, affordable housing, or both, are not publicly detailed in reporting available at publication time. Interested developers need to review the RFP directly at [eastpact.org/rfp](https://www.eastpact.org/rfp).\n\nThe submission deadline was not confirmed by CREN at publication time. Check the RFP page for current dates.\n\nCREN contacted Second Baptist Church for comment on the RFP scope, preferred partnership structure, and timeline. No response was received before publication.\n\n## Where This Land Sits in the Near East Side\n\nEast Long Street is one of the main east-west routes through the Near East Side. The 17th-to-18th Street block, where the church's largest parcel sits, is in a section of the neighborhood that has drawn institutional investment this year. CREN has followed active development work along the [Near East Side corridor](/areas/near-east-side), including Nationwide Children's Hospital's East Main Street site purchase and the Diocese of Columbus's demolition proposal for a building on Gay Street.\n\nSecond Baptist's parcels represent a meaningful addition to the neighborhood's developable land inventory. Most buildable Near East Side parcels are individually small. A block of that size is large enough to support a project of genuine scale without requiring the costly and time-consuming process of assembling multiple separate lots from multiple owners.\n\n## What the Project Could Become — and What Remains Open\n\nFaith-based land releases in Columbus have tilted toward affordable housing in recent years, but that is not a guarantee here. Whether the final project uses Low-Income Housing Tax Credits (LIHTCs) — the main federal-state tool for financing affordable rental housing, which trades below-market rent ceilings for equity investment from private investors — depends entirely on what Second Baptist decides it wants and what a partner proposes.\n\nA LIHTC-backed project would move through the Ohio Housing Finance Agency's annual application cycle, require income restrictions on at least some units for a period of many years, and likely take longer to finance and develop than a straight market-rate deal. A market-rate project would move faster but may not address the income constraints that affect many Near East Side residents.\n\nCREN will report on the selected partner and project type once a public announcement is made. Check CREN's [Near East Side coverage](/areas/near-east-side) or [development topic page](/topics/development) for updates.\n",
+      "author": "CREN Newsroom",
+      "date": "2026-09-07",
+      "read_time": "4 min read",
+      "area_slug": "near-east-side",
+      "topic_slug": "development",
+      "image_url": null,
+      "created_at": "2026-09-07T16:12:33.571Z",
+      "updated_at": "2026-09-07T16:12:33.571Z",
+      "meta_description": "Second Baptist Church seeks a development partner for five Near East Side parcels totaling 2.4 acres, including a 1.17-acre block on East Long Street.",
+      "image_alt": "Map-style graphic showing five church-owned parcels totaling 2.4 acres in Columbus's Near East Side, with the 1.17-acre East Long Street block between 17th and 18th Streets highlighted.",
+      "image_caption": "AI-generated illustration showing approximate parcel locations near East Long Street. Not a survey, official plat, or Franklin County Auditor map.",
+      "fact_checked_at": "2026-09-07T10:45:00.000Z",
+      "tags": [
+        "columbus-ohio",
+        "central-ohio-real-estate",
+        "near-east-side",
+        "development",
+        "affordable-housing",
+        "neighborhood"
+      ],
+      "canonical_slug": "second-baptist-opens-2-4-acres-on-columbus-near-east-side-to-developers"
+    },
     {
       "id": "2026-09-06-south-side-columbus-breaks-ground-on-150-unit-affordable-apartments",
       "status": "live",
@@ -49,11 +81,11 @@
       "author": "CREN Newsroom",
       "date": "Sep 6, 2026",
       "read_time": "4 min",
-      "area_slug": "polaris",
+      "area_slug": "polaris-area",
       "topic_slug": "development",
       "image_url": null,
       "created_at": "2026-09-06T16:10:43.155Z",
-      "updated_at": "2026-09-06T16:10:43.155Z",
+      "updated_at": "2026-09-07T01:45:48.950Z",
       "meta_description": "Columbus’s first new Trader Joe’s in over 20 years is planned for 2109 Ikea Way in Polaris. A plumbing permit was issued July 21 for the 12,500-sq-ft store.",
       "image_alt": "The undeveloped 2109 Ikea Way site in the Polaris corridor, Columbus, Ohio, where an interior fit-out permit has been filed for a new 12,500-square-foot Trader Joe's store.",
       "image_caption": "AI-generated editorial illustration of the Polaris corridor and 2109 Ikea Way site. Not an official Trader Joe's or NP Limited Partnership rendering.",
@@ -61,7 +93,7 @@
       "tags": [
         "columbus-ohio",
         "central-ohio-real-estate",
-        "polaris",
+        "polaris-area",
         "retail-development",
         "northwest-columbus",
         "development"
@@ -3706,38 +3738,38 @@
   ],
   "tickers": [
     {
-      "id": 223,
-      "text": "The NRP Group breaks ground on 150-unit Stone Ridge affordable apartments on Columbus's South Side",
+      "id": 229,
+      "text": "Second Baptist Church seeks development partner for 2.4 acres on Near East Side, including full block on E. Long St.",
       "active": true,
       "sort_order": 0
     },
     {
-      "id": 224,
-      "text": "Trader Joe's files permits for its third Central Ohio store at Polaris, first new location in 20-plus years",
+      "id": 230,
+      "text": "The NRP Group breaks ground on 150-unit Stone Ridge affordable apartments on Columbus's South Side",
       "active": true,
       "sort_order": 1
     },
     {
-      "id": 225,
-      "text": "German Village's Cedar Square wins contested 3-2 commission approval; bylaws dispute may follow",
+      "id": 231,
+      "text": "Trader Joe's files permits for its third Central Ohio store at Polaris, first new location in 20-plus years",
       "active": true,
       "sort_order": 2
     },
     {
-      "id": 226,
-      "text": "Columbus Diocese files to demolish 1908 Gay St. building for surface parking (Downtown Commission vote Sept. 22)",
+      "id": 232,
+      "text": "Franklin County's informal 2026 property value review sessions closed Sept. 5; final values expected December",
       "active": true,
       "sort_order": 3
     },
     {
-      "id": 227,
-      "text": "Nationwide Children's buys $7.6M Near East Side block on E. Main St.",
+      "id": 233,
+      "text": "German Village's Cedar Square wins contested 3-2 commission approval; bylaws dispute may follow",
       "active": true,
       "sort_order": 4
     },
     {
-      "id": 228,
-      "text": "Franklin County's informal 2026 property value review sessions closed Sept. 5; final values expected December",
+      "id": 234,
+      "text": "Columbus Diocese files to demolish 1908 Gay St. building for surface parking (Downtown Commission vote Sept. 22)",
       "active": true,
       "sort_order": 5
     }

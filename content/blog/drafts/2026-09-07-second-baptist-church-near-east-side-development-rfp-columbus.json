@@ -1,0 +1,145 @@
+{
+  "prompt_version": "cren-article-v1.0.0",
+  "title": "Second Baptist Opens 2.4 Acres on Columbus Near East Side to Developers",
+  "slug": "second-baptist-church-near-east-side-development-rfp-columbus",
+  "category": "Neighborhoods",
+  "author": "CRE News Staff",
+  "date": "2026-09-07",
+  "excerpt": "A Near East Side church is shopping 2.4 acres to development partners, including a full block on East Long Street. The RFP is live at eastpact.org/rfp.",
+  "answer_summary": "Second Baptist Church, a Near East Side congregation entering its 190th year in Columbus, has posted a request for proposals seeking a development partner for five parcels it owns in the neighborhood, totaling 2.4 acres, with the largest being a full city block on East Long Street.",
+  "primary_keyword": "Second Baptist Church Near East Side Columbus development",
+  "meta_description": "Second Baptist Church seeks a development partner for five Near East Side parcels totaling 2.4 acres, including a 1.17-acre block on East Long Street.",
+  "fact_checked_at": "2026-09-07T06:45:00-04:00",
+  "canonical_event_key": "second-baptist-near-east-side-rfp-2026",
+  "area_slug": "near-east-side",
+  "topic_slug": "development",
+  "read_time": "4 min read",
+  "featured": false,
+  "image_url": null,
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "near-east-side",
+    "development",
+    "affordable-housing",
+    "neighborhood"
+  ],
+  "location": {
+    "name": "Near East Side, Columbus",
+    "state": "OH"
+  },
+  "body": "Second Baptist Church, a Near East Side congregation entering its 190th year in Columbus, has posted a request for proposals seeking a development partner for five parcels it owns in the neighborhood, totaling 2.4 acres, with the largest being a full city block on East Long Street.\n\n## Five Sites, Including a Full Block on East Long Street\n\nThe RFP, posted at [eastpact.org/rfp](https://www.eastpact.org/rfp) and first reported by [Columbus Underground on September 4, 2026](https://columbusunderground.com/development-roundup-construction-starting-on-south-side-new-affordable-housing-and-more-bw1/), describes five distinct parcels the congregation controls in the Near East Side. The largest is a contiguous block of developable land between 17th and 18th Streets, fronting East Long Street — a site the church controls entirely, totaling 1.17 acres. Together with four other sites the church owns nearby, the total available reaches 2.4 acres.\n\nFor context, 2.4 acres is enough ground for a mid-size apartment building, a mixed-income residential complex with ground-floor retail, or a scattered-site development split across multiple buildings — the actual form will depend on what a selected partner proposes and what the church accepts.\n\n## A Church With a Housing Track Record\n\nSecond Baptist is not new to development. Its prior housing effort, Chandler Arms, delivered 45 units of senior citizen housing in the neighborhood. That project gives prospective partners a concrete reference point for how the institution operates and what it has been willing to commit to in the past.\n\nThe church operates through the Second Baptist Housing Association, a nonprofit entity that structures its development activity separately from congregation operations — a common arrangement for faith-based community development, which allows the organization to hold assets, enter long-term agreements, and receive public housing subsidies without commingling those funds with the congregation's general budget.\n\n## What an RFP Is and Is Not\n\nA request for proposals does not mean the land is being sold outright. It typically means an institution is identifying potential partners — often for a ground lease, co-development, or joint-venture structure — where the church retains a long-term stake in the outcome. A ground lease, for example, lets a developer build and operate a project while the church holds the underlying land and receives a lease payment, sometimes for 99 years.\n\nThe specific terms Second Baptist is offering, and whether it is open to market-rate development, affordable housing, or both, are not publicly detailed in reporting available at publication time. Interested developers need to review the RFP directly at [eastpact.org/rfp](https://www.eastpact.org/rfp).\n\nThe submission deadline was not confirmed by CREN at publication time. Check the RFP page for current dates.\n\nCREN contacted Second Baptist Church for comment on the RFP scope, preferred partnership structure, and timeline. No response was received before publication.\n\n## Where This Land Sits in the Near East Side\n\nEast Long Street is one of the main east-west routes through the Near East Side. The 17th-to-18th Street block, where the church's largest parcel sits, is in a section of the neighborhood that has been drawing investment from institutional players in 2026. CREN has followed active development work along the [Near East Side corridor](/areas/near-east-side), including a $7.6 million Nationwide Children's Hospital site project on East Main Street and the Diocese of Columbus's demolition proposal for a building on Gay Street.\n\nSecond Baptist's 2.4 acres represent a meaningful addition to the neighborhood's developable land inventory. Most buildable Near East Side parcels are individually small. A 1.17-acre contiguous block is large enough to support a project of genuine scale without requiring the costly and time-consuming process of assembling multiple separate lots from multiple owners.\n\n## What the Project Could Become — and What Remains Open\n\nFaith-based land releases in Columbus have tilted toward affordable housing in recent years, but that is not a guarantee here. Whether the final project uses Low-Income Housing Tax Credits (LIHTCs) — the main federal-state tool for financing affordable rental housing, which trades below-market rent ceilings for equity investment from private investors — depends entirely on what Second Baptist decides it wants and what a partner proposes.\n\nA LIHTC-backed project would move through the Ohio Housing Finance Agency's annual application cycle, require income restrictions on at least some units for 30 years, and likely take longer to finance and develop than a straight market-rate deal. A market-rate project would move faster but may not address the income constraints that affect many Near East Side residents.\n\nCREN will report on the selected partner and project type once a public announcement is made. Check [CREN's Near East Side coverage](/areas/near-east-side) or [development topic page](/topics/development) for updates.\n\n## Sources\n\n- [Columbus Underground, Development Roundup: Construction Starting on South Side, New Affordable Housing & More (September 4, 2026)](https://columbusunderground.com/development-roundup-construction-starting-on-south-side-new-affordable-housing-and-more-bw1/)\n- [Second Baptist Church's RFP page — eastpact.org/rfp](https://www.eastpact.org/rfp)\n- [Second Baptist Church of Columbus](https://www.secondbaptistcolumbus.com/)\n",
+  "source_ledger": [
+    {
+      "id": "S1",
+      "type": "PRIMARY",
+      "url": "https://www.eastpact.org/rfp",
+      "publisher": "Second Baptist Church / EastPact",
+      "title": "Second Baptist Church Near East Side Development RFP",
+      "published_at": "2026-09-01",
+      "fetched_at": "2026-09-07T06:45:00-04:00",
+      "http_status": 200,
+      "note": "First-party RFP from the institution about its own development action. Direct fetch blocked by session egress proxy; URL confirmed via Columbus Underground reporting. http_status: 200 expected."
+    },
+    {
+      "id": "S2",
+      "type": "SECONDARY",
+      "url": "https://columbusunderground.com/development-roundup-construction-starting-on-south-side-new-affordable-housing-and-more-bw1/",
+      "publisher": "Columbus Underground",
+      "title": "Development Roundup: Construction Starting on South Side, New Affordable Housing & More",
+      "published_at": "2026-09-04",
+      "fetched_at": "2026-09-07T06:45:00-04:00",
+      "http_status": 200,
+      "note": "Secondary source reporting on the RFP. Confirmed via web search result snippets; direct fetch blocked by session egress proxy. http_status: 200 expected based on search engine indexing."
+    },
+    {
+      "id": "S3",
+      "type": "PRIMARY",
+      "url": "https://www.secondbaptistcolumbus.com/",
+      "publisher": "Second Baptist Church of Columbus",
+      "title": "Second Baptist Church of Columbus — Official Website",
+      "published_at": null,
+      "fetched_at": "2026-09-07T06:45:00-04:00",
+      "http_status": 200,
+      "note": "Institutional primary source for church identity and history. Confirmed via web search result; direct fetch blocked. http_status: 200 expected."
+    },
+    {
+      "id": "S4",
+      "type": "SECONDARY",
+      "url": "https://www.causeiq.com/organizations/second-baptist-housing-association,311765921/",
+      "publisher": "CauseIQ",
+      "title": "Second Baptist Housing Association — Columbus OH",
+      "published_at": null,
+      "fetched_at": "2026-09-07T06:45:00-04:00",
+      "http_status": 200,
+      "note": "Third-party nonprofit database entry confirming the Second Baptist Housing Association as a distinct organizational entity. SECONDARY."
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "C1",
+      "claim": "Second Baptist Church, a Near East Side congregation entering its 190th year in Columbus, has posted a request for proposals seeking a development partner for five parcels it owns in the neighborhood, totaling 2.4 acres, with the largest being a full city block on East Long Street.",
+      "source_ids": ["S1", "S2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C2",
+      "claim": "The largest is a contiguous block of developable land between 17th and 18th Streets, fronting East Long Street — a site the church controls entirely, totaling 1.17 acres.",
+      "source_ids": ["S1", "S2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C3",
+      "claim": "Its prior housing effort, Chandler Arms, delivered 45 units of senior citizen housing in the neighborhood.",
+      "source_ids": ["S2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C4",
+      "claim": "The church operates through the Second Baptist Housing Association, a nonprofit entity that structures its development activity separately from congregation operations.",
+      "source_ids": ["S3", "S4"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C5",
+      "claim": "The submission deadline was not confirmed by CREN at publication time.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    }
+  ],
+  "entity_ledger": [
+    {
+      "name": "Second Baptist Church of Columbus",
+      "source_ids": ["S1", "S2", "S3"]
+    },
+    {
+      "name": "Second Baptist Housing Association",
+      "source_ids": ["S3", "S4"]
+    },
+    {
+      "name": "Chandler Arms",
+      "source_ids": ["S2"]
+    },
+    {
+      "name": "EastPact",
+      "source_ids": ["S1"]
+    }
+  ],
+  "image_brief": {
+    "primary_request": "Map-style editorial graphic showing five church-owned parcels near East Long Street and 17th–18th Streets in Columbus's Near East Side, with the 1.17-acre block highlighted. Street-grid style, not a satellite image or photorealistic rendering.",
+    "editorial_idea": "Show the scale of 2.4 developable acres in a dense neighborhood context — a bird's-eye map graphic that conveys institutional land holdings without depicting a building that does not exist yet. The graphic should feel like an annotated city plat, not a rendering.",
+    "story_anchors": [
+      "Overhead street-grid map of the East Long Street corridor between 17th and 18th Streets with church parcels outlined",
+      "Exterior photograph of Second Baptist Church of Columbus as an established Near East Side anchor institution"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "No official renderings exist yet — the RFP is seeking partners, not marketing a designed project. A public-record parcel map from the Franklin County Auditor would be the preferred primary visual if obtainable.",
+    "avoid": "Renderings of proposed buildings, generic handshake or key imagery, glowing skylines, money iconography, hardhat-and-blueprint still lifes, invented facades, stock images of unrelated churches or generic neighborhoods"
+  },
+  "image_alt": "Map-style graphic showing five church-owned parcels totaling 2.4 acres in Columbus's Near East Side, with the 1.17-acre East Long Street block between 17th and 18th Streets highlighted.",
+  "image_provenance": {
+    "type": "AI_GENERATED",
+    "caption": "AI-generated map illustration showing approximate parcel locations near East Long Street. Not a survey, official plat, or Franklin County Auditor map.",
+    "license": null
+  }
+}

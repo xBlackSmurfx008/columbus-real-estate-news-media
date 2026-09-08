@@ -1,10 +1,42 @@
 {
   "_meta": {
-    "generated_at": "2026-09-07T16:16:28.841Z",
+    "generated_at": "2026-09-08T16:16:15.187Z",
     "market_fingerprint": "84fbd3f5f01666747265ba9a2f830f2e",
     "note": "Last-known-good public content, served when the database is unreachable. Refresh with: node scripts/export-content-snapshot.mjs (requires DATABASE_URL). Never edit articles here by hand — this file only ever mirrors what was live in the database."
   },
   "articles": [
+    {
+      "id": "2026-09-08-columbus-brownfield-sites-120m-ohio-grant-closes-sept-11",
+      "status": "live",
+      "featured": false,
+      "category": "Development",
+      "category_class": "card-img-market",
+      "icon": "$",
+      "title": "Columbus Brownfield Sites: $120M Ohio Grant Closes Sept. 11",
+      "excerpt": "Ohio Brownfield Remediation Program closes Thursday, September 11. COCIC has secured $28.9M for six Franklin County sites and is taking discovery meeting requests.",
+      "body": "The Ohio Brownfield Remediation Program's $120 million application round closes Thursday, September 11. Franklin County's land bank, COCIC, secured $28.9 million for six county sites in prior rounds and is scheduling discovery meetings for the current cycle.\n\n## What the Program Covers\n\nThe [state remediation program](https://development.ohio.gov/community/redevelopment/brownfield-remediation-program), run by the Ohio Department of Development, offers grant funding to help local governments clean up industrial, commercial, and institutional properties that are abandoned, idled, or underutilized because of known or potential contamination from hazardous substances or petroleum. Applications for the current round opened August 11; the deadline to submit is 5 p.m. on Thursday, September 11.\n\nSince the program launched in 2021, Ohio has distributed more than $780 million to support more than 840 brownfield projects across 87 counties. The $120 million available in this round is among the larger single allocations since the program began.\n\nLocal governments are the eligible lead applicants. Counties and municipalities submit grant requests; private developers and nonprofits typically partner with a local government sponsor rather than applying directly.\n\n## Franklin County's Track Record\n\n[COCIC](https://cocic.org/grants/), the Central Ohio Community Improvement Corporation and Franklin County's designated land bank, has built a track record with this program across several rounds. In prior rounds, COCIC received $28.9 million as lead grantee for six Franklin County sites.\n\nThree of those sites are in Columbus. [COCIC received $2,022,409 for the Eastland Mall site](https://cocic.org/cocic-announces-three-sub-recipients-of-the-odod-brownfield-remediation-program-grant/), covering asbestos abatement and demolition of eight dilapidated structures on the former mall property. The Weinland Park Apartments project received $1,632,017 to address contamination and remediate two vacant structures on a site now planned for two seven-story residential buildings with 186 apartment units, retail, and structured parking. Woda Cooper Companies received $1 million to complete asbestos abatement, lead-based paint mitigation, and selective demolition inside the historic former downtown Columbus YMCA building at 40 Long Street.\n\nFor the current round, [COCIC is scheduling discovery meetings](https://cocic.org/grants/) to assess whether Franklin County sites are ready for direct remediation grants or first need a Phase II environmental assessment. Interested parties can contact the land bank at [email protected].\n\n## The Data Center Connection\n\nBrownfield sites have emerged as a target for data center development in Ohio. [An April 2026 Ohio Farm Bureau report](https://ofbf.org/2026/04/27/data-centers-brownfield-remediation-top-of-mind-for-members/) documented data centers and brownfield remediation as increasingly converging issues for Ohio communities. About 200 data centers now operate in Ohio, with more than half in the Columbus region.\n\nAligned Data Centers has built facilities on two former brownfield sites: a 200-acre Coshocton County tract near the former AEP Conesville Power Plant and a 130-acre Erie County site that once held an auto factory. Neither site is in Franklin County, but the examples illustrate a pattern that state officials and site selectors have begun to discuss publicly.\n\nWhether that trend reaches Columbus-area brownfields is uncertain. Urban Franklin County sites tend toward smaller parcels in residential or mixed-use neighborhoods — different from the large rural and industrial tracts that have attracted data center interest elsewhere in Ohio.\n\n## Program Mechanics and Limitations\n\nThe Ohio Department of Development reviews applications by county and allocates funding against each county's set-aside allocation. No public list of applicants is released before award announcements; CREN has not confirmed which specific Franklin County sites are in this cycle's pool. COCIC did not provide comment by publication time.\n\nCOCIC's discovery meeting process runs independently of the annual state deadline. The land bank reviews each submitted site to determine whether it qualifies for direct remediation funding or first needs a Phase II environmental assessment.\n\n## What Comes Next\n\nOhio DOD will announce awards from this round after the September 11 deadline, typically within several months. Sites that do not receive funding in this cycle can reapply in future rounds.\n\nThe brownfield grants fund assessment and remediation costs, not construction. A property that receives cleanup funding still needs separate financing — tax credit equity, conventional debt, or public subsidy — to complete a development project. Cleanup removes a documented cost barrier; it does not place a site on a construction schedule on its own.",
+      "author": "CREN Newsroom",
+      "date": "2026-09-08",
+      "read_time": "4 min read",
+      "area_slug": "columbus-citywide",
+      "topic_slug": "development",
+      "image_url": null,
+      "created_at": "2026-09-08T16:10:05.301Z",
+      "updated_at": "2026-09-08T16:10:05.301Z",
+      "meta_description": "Ohio Brownfield Remediation Program closes Thursday, September 11. COCIC has secured $28.9M for six Franklin County sites and is taking discovery meeting requests.",
+      "image_alt": "Editorial illustration showing a contaminated brownfield site next to a residential development under construction in a Columbus neighborhood, representing Ohio's brownfield remediation grant program.",
+      "image_caption": "AI-generated editorial illustration representing brownfield site remediation and redevelopment in Franklin County, Ohio.",
+      "fact_checked_at": "2026-09-08T10:45:00.000Z",
+      "tags": [
+        "columbus-ohio",
+        "central-ohio-real-estate",
+        "development",
+        "brownfield",
+        "franklin-county",
+        "economic-development"
+      ],
+      "canonical_slug": "columbus-brownfield-sites-120m-ohio-grant-closes-sept-11"
+    },
     {
       "id": "2026-09-07-second-baptist-opens-2-4-acres-on-columbus-near-east-side-to-developers",
       "status": "live",
@@ -3738,37 +3770,37 @@
   ],
   "tickers": [
     {
-      "id": 229,
-      "text": "Second Baptist Church seeks development partner for 2.4 acres on Near East Side, including full block on E. Long St.",
+      "id": 235,
+      "text": "Ohio's $120M brownfield remediation grant round closes Thursday, Sept. 11; Franklin County land bank COCIC has secured $28.9M for six sites in prior rounds",
       "active": true,
       "sort_order": 0
     },
     {
-      "id": 230,
-      "text": "The NRP Group breaks ground on 150-unit Stone Ridge affordable apartments on Columbus's South Side",
+      "id": 236,
+      "text": "Second Baptist Church seeks development partner for 2.4 acres on Near East Side, including full block on E. Long St.",
       "active": true,
       "sort_order": 1
     },
     {
-      "id": 231,
-      "text": "Trader Joe's files permits for its third Central Ohio store at Polaris, first new location in 20-plus years",
+      "id": 237,
+      "text": "The NRP Group breaks ground on 150-unit Stone Ridge affordable apartments on Columbus's South Side",
       "active": true,
       "sort_order": 2
     },
     {
-      "id": 232,
-      "text": "Franklin County's informal 2026 property value review sessions closed Sept. 5; final values expected December",
+      "id": 238,
+      "text": "Trader Joe's files permits for its third Central Ohio store at Polaris, first new location in 20-plus years",
       "active": true,
       "sort_order": 3
     },
     {
-      "id": 233,
+      "id": 239,
       "text": "German Village's Cedar Square wins contested 3-2 commission approval; bylaws dispute may follow",
       "active": true,
       "sort_order": 4
     },
     {
-      "id": 234,
+      "id": 240,
       "text": "Columbus Diocese files to demolish 1908 Gay St. building for surface parking (Downtown Commission vote Sept. 22)",
       "active": true,
       "sort_order": 5

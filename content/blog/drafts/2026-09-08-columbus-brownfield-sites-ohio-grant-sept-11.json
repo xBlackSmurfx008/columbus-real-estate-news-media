@@ -1,0 +1,209 @@
+{
+  "prompt_version": "cren-article-v1.0.0",
+  "title": "Columbus Brownfield Sites: $120M Ohio Grant Closes Sept. 11",
+  "slug": "columbus-brownfield-sites-ohio-grant-sept-11",
+  "category": "Development",
+  "topic_slug": "development",
+  "area_slug": "columbus-citywide",
+  "author": "CREN Newsroom",
+  "date": "2026-09-08",
+  "excerpt": "Ohio Brownfield Remediation Program closes Thursday, September 11. COCIC has secured $28.9M for six Franklin County sites and is taking discovery meeting requests.",
+  "answer_summary": "The Ohio Brownfield Remediation Program's $120 million application round closes Thursday, September 11. Franklin County's land bank, COCIC, secured $28.9 million for six county sites in prior rounds and is scheduling discovery meetings for the current cycle.",
+  "primary_keyword": "ohio brownfield remediation program",
+  "meta_description": "Ohio Brownfield Remediation Program closes Thursday, September 11. COCIC has secured $28.9M for six Franklin County sites and is taking discovery meeting requests.",
+  "canonical_event_key": "ohio-brownfield-remediation-program-2026-q3",
+  "fact_checked_at": "2026-09-08T10:45:00Z",
+  "read_time": "4 min read",
+  "featured": false,
+  "image_url": null,
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "development",
+    "brownfield",
+    "franklin-county",
+    "economic-development"
+  ],
+  "location": {
+    "name": "Columbus",
+    "state": "OH"
+  },
+  "body": "The Ohio Brownfield Remediation Program's $120 million application round closes Thursday, September 11. Franklin County's land bank, COCIC, secured $28.9 million for six county sites in prior rounds and is scheduling discovery meetings for the current cycle.\n\n## What the Program Covers\n\nThe [state remediation program](https://development.ohio.gov/community/redevelopment/brownfield-remediation-program), run by the Ohio Department of Development, offers grant funding to help local governments clean up industrial, commercial, and institutional properties that are abandoned, idled, or underutilized because of known or potential contamination from hazardous substances or petroleum. Applications for the current round opened August 11; the deadline to submit is 5 p.m. on Thursday, September 11.\n\nSince the program launched in 2021, Ohio has distributed more than $780 million to support more than 840 brownfield projects across 87 counties. The $120 million available in this round is among the larger single allocations since the program began.\n\nLocal governments are the eligible lead applicants. Counties and municipalities submit grant requests; private developers and nonprofits typically partner with a local government sponsor rather than applying directly.\n\n## Franklin County's Track Record\n\n[COCIC](https://cocic.org/grants/), the Central Ohio Community Improvement Corporation and Franklin County's designated land bank, has built a track record with this program across several rounds. In prior rounds, COCIC received $28.9 million as lead grantee for six Franklin County sites.\n\nThree of those sites are in Columbus. [COCIC received $2,022,409 for the Eastland Mall site](https://cocic.org/cocic-announces-three-sub-recipients-of-the-odod-brownfield-remediation-program-grant/), covering asbestos abatement and demolition of eight dilapidated structures on the former mall property. The Weinland Park Apartments project received $1,632,017 to address contamination and remediate two vacant structures on a site now planned for two seven-story residential buildings with 186 apartment units, retail, and structured parking. Woda Cooper Companies received $1 million to complete asbestos abatement, lead-based paint mitigation, and selective demolition inside the historic former downtown Columbus YMCA building at 40 Long Street.\n\nFor the current round, [COCIC is scheduling discovery meetings](https://cocic.org/grants/) to assess whether Franklin County sites are ready for direct remediation grants or first need a Phase II environmental assessment. Interested parties can contact the land bank at [email protected].\n\n## The Data Center Connection\n\nBrownfield sites have emerged as a target for data center development in Ohio. [An April 2026 Ohio Farm Bureau report](https://ofbf.org/2026/04/27/data-centers-brownfield-remediation-top-of-mind-for-members/) documented data centers and brownfield remediation as increasingly converging issues for Ohio communities. About 200 data centers now operate in Ohio, with more than half in the Columbus region.\n\nAligned Data Centers has built facilities on two former brownfield sites: a 200-acre Coshocton County tract near the former AEP Conesville Power Plant and a 130-acre Erie County site that once held an auto factory. Neither site is in Franklin County, but the examples illustrate a pattern that state officials and site selectors have begun to discuss publicly.\n\nWhether that trend reaches Columbus-area brownfields is uncertain. Urban Franklin County sites tend toward smaller parcels in residential or mixed-use neighborhoods — different from the large rural and industrial tracts that have attracted data center interest elsewhere in Ohio.\n\n## Program Mechanics and Limitations\n\nThe Ohio Department of Development reviews applications by county and allocates funding against each county's set-aside allocation. No public list of applicants is released before award announcements; CREN has not confirmed which specific Franklin County sites are in this cycle's pool. COCIC did not provide comment by publication time.\n\nCOCIC's discovery meeting process runs independently of the annual state deadline. The land bank reviews each submitted site to determine whether it qualifies for direct remediation funding or first needs a Phase II environmental assessment.\n\n## What Comes Next\n\nOhio DOD will announce awards from this round after the September 11 deadline, typically within several months. Sites that do not receive funding in this cycle can reapply in future rounds.\n\nThe brownfield grants fund assessment and remediation costs, not construction. A property that receives cleanup funding still needs separate financing — tax credit equity, conventional debt, or public subsidy — to complete a development project. Cleanup removes a documented cost barrier; it does not place a site on a construction schedule on its own.",
+  "source_ledger": [
+    {
+      "id": "S1",
+      "type": "PRIMARY",
+      "url": "https://development.ohio.gov/community/redevelopment/brownfield-remediation-program",
+      "publisher": "Ohio Department of Development",
+      "title": "Brownfield Remediation Program",
+      "published_at": null,
+      "fetched_at": "2026-09-08T10:30:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "S2",
+      "type": "PRIMARY",
+      "url": "https://cocic.org/grants/",
+      "publisher": "COCIC Franklin County Land Bank",
+      "title": "Grants | COCIC Franklin County Land Bank",
+      "published_at": null,
+      "fetched_at": "2026-09-08T10:30:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "S3",
+      "type": "PRIMARY",
+      "url": "https://cocic.org/cocic-announces-three-sub-recipients-of-the-odod-brownfield-remediation-program-grant/",
+      "publisher": "COCIC Franklin County Land Bank",
+      "title": "COCIC Announces Three Sub-Recipients of the ODOD Brownfield Remediation Program Grant",
+      "published_at": null,
+      "fetched_at": "2026-09-08T10:30:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "S4",
+      "type": "SECONDARY",
+      "url": "https://ofbf.org/2026/04/27/data-centers-brownfield-remediation-top-of-mind-for-members/",
+      "publisher": "Ohio Farm Bureau",
+      "title": "Data centers, brownfield remediation top-of-mind for members",
+      "published_at": "2026-04-27",
+      "fetched_at": "2026-09-08T10:30:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "S5",
+      "type": "SECONDARY",
+      "url": "https://www.limaohio.com/news/2026/08/10/king-announces-brownfield-funding-applications-opening/",
+      "publisher": "Lima Ohio News",
+      "title": "King announces brownfield funding applications opening",
+      "published_at": "2026-08-10",
+      "fetched_at": "2026-09-08T10:30:00Z",
+      "http_status": 200
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "C1",
+      "claim": "The Ohio Brownfield Remediation Program's $120 million application round closes Thursday, September 11.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C2",
+      "claim": "Franklin County's land bank, COCIC, secured $28.9 million for six county sites in prior rounds and is scheduling discovery meetings for the current cycle.",
+      "source_ids": ["S2", "S3"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C3",
+      "claim": "Applications for the current round opened August 11; the deadline to submit is 5 p.m. on Thursday, September 11.",
+      "source_ids": ["S1", "S5"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C4",
+      "claim": "Since the program launched in 2021, Ohio has distributed more than $780 million to support more than 840 brownfield projects across 87 counties.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C5",
+      "claim": "The $120 million available in this round is among the larger single allocations since the program began.",
+      "source_ids": ["S1"],
+      "kind": "COMPARISON"
+    },
+    {
+      "id": "C6",
+      "claim": "In prior rounds, COCIC received $28.9 million as lead grantee for six Franklin County sites.",
+      "source_ids": ["S2", "S3"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C7",
+      "claim": "COCIC received $2,022,409 for the Eastland Mall site, covering asbestos abatement and demolition of eight dilapidated structures on the former mall property.",
+      "source_ids": ["S3"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C8",
+      "claim": "The Weinland Park Apartments project received $1,632,017 to address contamination and remediate two vacant structures on a site now planned for two seven-story residential buildings with 186 apartment units, retail, and structured parking.",
+      "source_ids": ["S3"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C9",
+      "claim": "Woda Cooper Companies received $1 million to complete asbestos abatement, lead-based paint mitigation, and selective demolition inside the historic former downtown Columbus YMCA building at 40 Long Street.",
+      "source_ids": ["S3"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C10",
+      "claim": "About 200 data centers now operate in Ohio, with more than half in the Columbus region.",
+      "source_ids": ["S4"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C11",
+      "claim": "Aligned Data Centers has built facilities on two former brownfield sites: a 200-acre Coshocton County tract near the former AEP Conesville Power Plant and a 130-acre Erie County site that once held an auto factory.",
+      "source_ids": ["S4"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C12",
+      "claim": "An April 2026 Ohio Farm Bureau report documented data centers and brownfield remediation as increasingly converging issues for Ohio communities.",
+      "source_ids": ["S4"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C13",
+      "claim": "Ohio DOD will announce awards from this round after the September 11 deadline, typically within several months.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    }
+  ],
+  "entity_ledger": [
+    {
+      "name": "Ohio Department of Development",
+      "source_ids": ["S1"]
+    },
+    {
+      "name": "COCIC",
+      "source_ids": ["S2", "S3"]
+    },
+    {
+      "name": "Eastland Mall",
+      "source_ids": ["S3"]
+    },
+    {
+      "name": "Weinland Park Apartments",
+      "source_ids": ["S3"]
+    },
+    {
+      "name": "Woda Cooper Companies",
+      "source_ids": ["S3"]
+    },
+    {
+      "name": "Aligned Data Centers",
+      "source_ids": ["S4"]
+    },
+    {
+      "name": "Ohio Farm Bureau",
+      "source_ids": ["S4"]
+    }
+  ],
+  "image_brief": {
+    "editorial_idea": "A split-frame editorial illustration contrasting a contaminated brownfield site — chain-link fence, derelict structures, hazmat warning tape — with an emerging residential development in a Columbus neighborhood, representing the transformation that Ohio's brownfield remediation grants enable.",
+    "story_anchors": [
+      "The former Eastland Mall property in Columbus, where COCIC used brownfield grant funding to demolish eight dilapidated structures as part of a remediation and redevelopment effort.",
+      "The Weinland Park Apartments site, where a contaminated vacant parcel is being readied for 186 residential units in two seven-story buildings through a COCIC-managed brownfield remediation award."
+    ],
+    "source_asset_considered": true,
+    "avoid_list": "Do not show people in distress or health crisis imagery. Do not use imagery implying active contamination at any named Columbus site. Do not show completed new buildings that misrepresent current project status. Avoid generic Columbus skyline; the illustration should suggest neighborhood-scale urban redevelopment, not downtown skyline."
+  },
+  "image_alt": "Editorial illustration showing a contaminated brownfield site next to a residential development under construction in a Columbus neighborhood, representing Ohio's brownfield remediation grant program.",
+  "image_provenance": {
+    "type": "AI_GENERATED",
+    "caption": "AI-generated editorial illustration representing brownfield site remediation and redevelopment in Franklin County, Ohio.",
+    "credit": "CRE News"
+  }
+}

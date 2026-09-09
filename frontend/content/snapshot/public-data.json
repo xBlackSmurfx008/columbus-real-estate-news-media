@@ -1,10 +1,42 @@
 {
   "_meta": {
-    "generated_at": "2026-09-08T16:16:15.187Z",
+    "generated_at": "2026-09-09T16:11:05.119Z",
     "market_fingerprint": "84fbd3f5f01666747265ba9a2f830f2e",
     "note": "Last-known-good public content, served when the database is unreachable. Refresh with: node scripts/export-content-snapshot.mjs (requires DATABASE_URL). Never edit articles here by hand — this file only ever mirrors what was live in the database."
   },
   "articles": [
+    {
+      "id": "2026-09-09-columbus-brewery-district-106-unit-building-approved-at-former-wwcd-site",
+      "status": "live",
+      "featured": false,
+      "category": "Neighborhoods",
+      "category_class": "card-img-market",
+      "icon": "$",
+      "title": "Columbus Brewery District: 106-Unit Building Approved at Former WWCD Site",
+      "excerpt": "Columbus HRC approved a 106-unit, six-story apartment complex at 1036 S. Front St. in the Brewery District, clearing the former WWCD radio building, built in 1962.",
+      "body": "Columbus's Historic Resources Commission voted 5-2 in September 2026 to approve demolition of the former WWCD radio building at 1036 S. Front St. and allow Arcadia Development to build a 106-unit, six-story apartment complex there — the latest step in a broader transformation of the Brewery District's South Front Street corridor.\n\n## The Building Coming Down\n\nThe structure at 1036 S. Front St. is a Swiss Chalet–style commercial building that dates to 1962. For decades it served as the home of WWCD 92.9 FM — the Columbus alternative radio station that many listeners knew as CD102.5 — before the station went off the air in early 2024. [NBC4 reported](https://www.nbc4i.com/news/local-news/columbus/former-wwcd-radio-building-to-be-demolished-for-new-apartment-complex/) that a public auction offered memorabilia from the building to fans ahead of the commission vote.\n\nThe site falls within the [Historic Resources Commission](https://www.columbus.gov/Building-Zoning/Boards-Commissions/Historic-Resources-Commission)'s jurisdiction because the Brewery District is a locally designated historic district — a designation that requires HRC review before a demolition permit can issue.\n\n## What Arcadia Development Is Building\n\nArcadia Development, described in commission records as a local firm, submitted plans for a six-story building with 106 apartments. According to [Columbus Underground](https://columbusunderground.com/demolition-and-six-story-development-in-brewery-district-approved-bw1/), the design includes a second-floor pool deck and a first-floor parking garage with 51 spaces.\n\nAt six stories, the project is one floor above what the Urban Center zoning district permits by right. Columbus's Urban Center standard allows up to five stories without special permission; buildings may reach seven stories when a qualifying number of affordable units are included. Whether Arcadia's plan meets that threshold was not disclosed in public records available at publication.\n\n## The Commission Vote\n\nThe Historic Resources Commission approved the demolition and development plans at its September 2026 meeting, 5-2. The commission conditioned its approval: Arcadia must submit lighting and signage plans to city staff for a final administrative sign-off. The Board of Zoning Adjustment had previously granted a separate variance for the project.\n\nThe divided vote reflects a standing tension in how the Brewery District weighs development against preservation. The Swiss Chalet–style building is not individually landmarked, but it represents a mid-century commercial type that is disappearing from a district whose older industrial character remains visible on surrounding blocks. The two dissenting commissioners' specific objections were not reported in available records.\n\n## The Brewery District's Transition\n\nThe Brewery District runs roughly from Mound Street south to Greenlawn Avenue along South Front Street and South High Street, one of Columbus's oldest industrial-residential neighborhoods. German brewing operations gave the area its name in the nineteenth century. The former WWCD site has been vacant since the station went off the air, and the broader South Front Street corridor has seen growing developer interest driven by proximity to downtown and the South High Bus Rapid Transit line.\n\n## Next Steps\n\nWith Historic Resources Commission approval secured, Arcadia's next milestone is final design and a permit application with the Columbus Department of Building and Zoning Services. Site work is expected to begin in spring, though no construction start date has been formally committed. Leasing terms have not been disclosed. The lighting and signage plans still require staff review before the approval is fully finalized.\n\n",
+      "author": "CREN Newsroom",
+      "date": "Sep 9, 2026",
+      "read_time": "5 min read",
+      "area_slug": "brewery-district",
+      "topic_slug": "development",
+      "image_url": null,
+      "created_at": "2026-09-09T16:10:30.107Z",
+      "updated_at": "2026-09-09T16:10:30.107Z",
+      "meta_description": "Columbus HRC votes 5-2 to approve a 106-unit apartment building at 1036 S. Front St. in the Brewery District, clearing the former WWCD radio site.",
+      "image_alt": "Former WWCD radio building at 1036 S. Front St. in Columbus's Brewery District, a 1962 Swiss Chalet–style structure approved for demolition to make way for a 106-unit apartment complex.",
+      "image_caption": "AI-generated editorial illustration of the former WWCD radio building site at 1036 S. Front St. in the Brewery District. A licensed photograph from a credentialed photographer on site is needed for permanent publication use.",
+      "fact_checked_at": "2026-09-09T14:33:00.000Z",
+      "tags": [
+        "columbus-ohio",
+        "central-ohio-real-estate",
+        "brewery-district",
+        "development",
+        "multifamily",
+        "neighborhood"
+      ],
+      "canonical_slug": "columbus-brewery-district-106-unit-building-approved-at-former-wwcd-site"
+    },
     {
       "id": "2026-09-08-columbus-brownfield-sites-120m-ohio-grant-closes-sept-11",
       "status": "live",

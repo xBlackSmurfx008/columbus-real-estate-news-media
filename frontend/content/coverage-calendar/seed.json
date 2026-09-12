@@ -199,6 +199,25 @@
       "match_keywords": ["realpage", "claim"]
     },
     {
+      "id": "reserve-at-maryland-buildings-3-4-open",
+      "event_date": "2026-10-16",
+      "date_precision": "day",
+      "confidence": "reported",
+      "headline": "Reserve at Maryland Buildings 3 and 4 open on Near East Side",
+      "summary": "Connect Housing Blocks' four-building modular affordable housing complex at 1728 Maryland Ave. completes with two final buildings opening Oct. 16. All 84 units reserved for households at ≤60% AMI.",
+      "area_slug": "near-east-side",
+      "area_label": "Near East Side, Columbus",
+      "lane": "real-estate",
+      "neighborhood_candidate": true,
+      "priority": 2,
+      "source_url": "https://columbusunderground.com/developers-2nd-modular-complex-taking-shape-on-near-east-side-bw1/",
+      "source_label": "Columbus Underground, September 2026",
+      "source_article_id": null,
+      "source_brief": "briefs/2026-09-12.md",
+      "note": "The Sept. 16 Building 2 opening is the prior checkpoint. The Oct. 16 Buildings 3 and 4 date is from the Columbus Underground report. Confirm on or just before Oct. 16 with a fresh check of the developer's leasing status. A completion story should include full lease-up data for all four buildings.",
+      "match_keywords": ["reserve at maryland", "connect housing blocks", "modular"]
+    },
+    {
       "id": "franklin-county-board-of-revision-deadline",
       "event_date": "2027-03-31",
       "date_precision": "day",

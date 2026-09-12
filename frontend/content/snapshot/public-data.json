@@ -1,10 +1,42 @@
 {
   "_meta": {
-    "generated_at": "2026-09-11T21:38:20.235Z",
+    "generated_at": "2026-09-12T16:15:28.595Z",
     "market_fingerprint": "a74da97997564c26793de2b8d92303b6",
     "note": "Last-known-good public content, served when the database is unreachable. Refresh with: node scripts/export-content-snapshot.mjs (requires DATABASE_URL). Never edit articles here by hand — this file only ever mirrors what was live in the database."
   },
   "articles": [
+    {
+      "id": "2026-09-12-columbus-near-east-side-affordable-modular-apartments-open-sept-16",
+      "status": "live",
+      "featured": false,
+      "category": "Development",
+      "category_class": "card-img-market",
+      "icon": "$",
+      "title": "Columbus Near East Side Affordable Modular Apartments Open Sept. 16",
+      "excerpt": "The Reserve at Maryland's second modular building opens Sept. 16 on Columbus's Near East Side — 84 units total at 60% AMI, buildings 3 and 4 follow Oct. 16.",
+      "body": "Connect Housing Blocks will open the second building of its Reserve at Maryland affordable apartment complex on the Near East Side on September 16, with 84 units across four buildings priced for households earning up to 60 percent of the Columbus area median income.\n\n## How the Linden factory builds apartments\n\n[Connect Housing Blocks](https://www.10tv.com/article/news/local/boomtown-ohio/columbus-based-manufacturer-assembles-apartments-indoors-connect-housing-blocks/530-4c4cfa3c-7070-4e2e-bdf6-b9a0e8306020) is a subsidiary of Columbus developer Connect Real Estate. The company manufactures apartment units from start to finish at its 630,000-square-foot facility in the Linden neighborhood on Westerville Road. Steel-framed modules leave the plant fully finished: drywall, plumbing, wiring, insulation, windows, and fixtures all installed before the unit reaches a building site. Once trucked to the address, a crane stacks modules into floors and workers connect utilities between them.\n\nConnect Housing Blocks says its process cuts construction time by roughly a third and trims costs by a comparable margin compared to conventional site-built construction. The company employs up to 165 full-time workers at the Linden plant. Both figures are the company's own estimates as reported by local news outlets; no independent third-party audit of cost or schedule comparisons across completed projects has been published.\n\n## Reserve at Maryland: project details\n\nThe four-building complex at [1728 Maryland Ave.](https://www.apartments.com/the-reserve-at-maryland-avenue-columbus-oh/5fm4ytp/) in the Near East Side's 43203 zip code will reach 84 units when complete, with one-, two-, and three-bedroom layouts available.\n\nBuilding 1 is already fully leased. Building 2 opens September 16 and is expected to reach full occupancy by the end of the month, according to [Columbus Underground](https://columbusunderground.com/developers-2nd-modular-complex-taking-shape-on-near-east-side-bw1/) and [Hoodline](https://hoodline.com/2026/09/reserve-at-maryland-s-second-building-nears-full-lease-up-on-near-east-side/). Buildings 3 and 4 are scheduled to open October 16. Monthly rents run from $1,078 to $1,464, with all units reserved for households earning no more than 60 percent of the HUD-defined area median income for the Columbus metropolitan area.\n\n## Near East Side context\n\nMaryland Avenue sits in the Near East Side, a historically underinvested corridor east of downtown roughly bounded by the interstate to the south and Alum Creek Drive to the east. The neighborhood was once a dense working-class community; decades of urban renewal and highway construction reduced population and private investment, and it has not recovered to its earlier density.\n\nMultiple affordable and workforce housing projects are now active nearby. CREN previously reported that [Second Baptist Church issued a Request for Proposals](https://columbusrealestatenews.com/blog/second-baptist-church-near-east-side-rfp) for several Near East Side sites near Maryland Avenue, seeking development partners with an affordable focus.\n\nIf Connect Housing Blocks can deliver affordable units without the volume of public capital that conventional Low Income Housing Tax Credit deals typically require, it could change how housing developers approach future Near East Side sites. The financing structure behind the Reserve at Maryland has not been disclosed in detail, so that case has not yet been established — but the pace of leasing in the buildings already open will be early evidence.\n\n## Connect Housing Blocks' first project\n\nThe company's first completed modular project, The Station at Trolley District, opened in 2025 across from the [East Market](https://columbusfinance.org/projects/trolley-district-apartments-by-connect-real-estate/) in the Near East Side. That project included 41 homes, a 4,000-square-foot community center, a community garden, and green space. The Columbus-Franklin County Finance Authority provided financing assistance for the Trolley District project; [Finance Fund](https://www.financefund.org/project/connect-housing-blocks/) extended New Markets Tax Credit financing for Connect Housing Blocks' manufacturing capacity at the Linden plant. Reserve at Maryland is the second project to use the factory-built system.\n\n## What to watch next\n\nThe next milestone to watch is the second building's opening later this month. If the remaining buildings open as scheduled, the complex will be complete — a pace that, if it holds, would demonstrate a replicable production cycle rather than a one-time proof of concept.\n\nOpen questions: whether Connect Housing Blocks has secured a third project site in Columbus, and the full financing stack behind the Reserve at Maryland — specifically whether Low Income Housing Tax Credits are involved alongside the New Markets Tax Credit financing used at the Linden factory. Columbus city officials have cited factory-built production as one scalable path toward the city's housing goals; the Reserve at Maryland, once fully leased, will be an early test of that argument at current Columbus rents.\n\n---\n\n**Sources:** [Columbus Underground](https://columbusunderground.com/developers-2nd-modular-complex-taking-shape-on-near-east-side-bw1/) · [NBC4](https://www.nbc4i.com/news/local-news/columbus/columbus-modular-apartment-complex-project-nears-completion/) · [10TV](https://www.10tv.com/article/news/local/boomtown-ohio/columbus-based-manufacturer-assembles-apartments-indoors-connect-housing-blocks/530-4c4cfa3c-7070-4e2e-bdf6-b9a0e8306020) · [Finance Fund](https://www.financefund.org/project/connect-housing-blocks/) · [Columbus-Franklin County Finance Authority](https://columbusfinance.org/projects/trolley-district-apartments-by-connect-real-estate/) · [Hoodline](https://hoodline.com/2026/09/reserve-at-maryland-s-second-building-nears-full-lease-up-on-near-east-side/) · [ApartmentFinder listing](https://www.apartmentfinder.com/Ohio/Columbus-Apartments/The-Reserve-At-Maryland-Avenue-Apartments-dgmbttk)",
+      "author": "CREN Newsroom",
+      "date": "2026-09-12",
+      "read_time": "5 min",
+      "area_slug": "near-east-side",
+      "topic_slug": "development",
+      "image_url": null,
+      "created_at": "2026-09-12T16:11:28.328Z",
+      "updated_at": "2026-09-12T16:11:28.328Z",
+      "meta_description": "The Reserve at Maryland's second modular building opens Sept. 16 on Columbus's Near East Side — 84 units total at 60% AMI, buildings 3 and 4 follow Oct. 16.",
+      "image_alt": "Modular apartment buildings at the Reserve at Maryland complex on the Near East Side of Columbus, Ohio, with factory-built modules visible in the completed structure at 1728 Maryland Ave.",
+      "image_caption": "AI-generated editorial illustration. No photographic source for this specific Columbus site was available at time of publication.",
+      "fact_checked_at": "2026-09-12T06:33:00.000Z",
+      "tags": [
+        "columbus-ohio",
+        "central-ohio-real-estate",
+        "near-east-side",
+        "affordable-housing",
+        "modular-housing",
+        "development"
+      ],
+      "canonical_slug": "columbus-near-east-side-affordable-modular-apartments-open-sept-16"
+    },
     {
       "id": "2026-09-11-columbus-mass-timber-tower-tops-out-near-ohio-state-tallest-in-us",
       "status": "live",
@@ -3867,37 +3899,37 @@
   ],
   "tickers": [
     {
-      "id": 241,
-      "text": "INTRO Columbus, a 13-story mass timber student-housing tower at High & 9th near Ohio State, topped out Sept. 8 — ten weeks early and the tallest of its kind in the U.S.",
+      "id": 247,
+      "text": "Connect Housing Blocks opens the second modular building at Reserve at Maryland on the Near East Side Sept. 16; 84 units total across four buildings at 60% AMI",
       "active": true,
       "sort_order": 0
     },
     {
-      "id": 242,
-      "text": "Columbus's $267M Lower Olentangy Tunnel enters its final construction weeks; substantial completion is targeted for the end of September",
+      "id": 248,
+      "text": "INTRO Columbus, a 13-story mass timber student-housing tower at High & 9th near Ohio State, topped out Sept. 8 — ten weeks early and the tallest of its kind in the U.S.",
       "active": true,
       "sort_order": 1
     },
     {
-      "id": 243,
-      "text": "Ohio's $120M brownfield remediation grant round closes Thursday, Sept. 11; Franklin County land bank COCIC has secured $28.9M for six sites in prior rounds",
+      "id": 249,
+      "text": "Columbus's $267M Lower Olentangy Tunnel enters its final construction weeks; substantial completion is targeted for the end of September",
       "active": true,
       "sort_order": 2
     },
     {
-      "id": 244,
-      "text": "Columbus HRC approves a 106-unit, six-story apartment building at 1036 S. Front St. in the Brewery District, replacing the 1962 former WWCD building",
+      "id": 250,
+      "text": "Ohio's $120M brownfield remediation grant round closed Sept. 11; Franklin County land bank COCIC has secured $28.9M for six sites in prior rounds",
       "active": true,
       "sort_order": 3
     },
     {
-      "id": 245,
-      "text": "Second Baptist Church seeks a development partner for 2.4 acres on the Near East Side, including a full block on E. Long St.",
+      "id": 251,
+      "text": "Columbus HRC approves a 106-unit, six-story apartment building at 1036 S. Front St. in the Brewery District, replacing the 1962 former WWCD building",
       "active": true,
       "sort_order": 4
     },
     {
-      "id": 246,
+      "id": 252,
       "text": "Columbus Diocese seeks to demolish its 1908 Gay St. building for surface parking; Downtown Commission vote set for Sept. 22",
       "active": true,
       "sort_order": 5

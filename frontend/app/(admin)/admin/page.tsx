@@ -9,9 +9,12 @@ interface DashboardStats {
   liveArticles: number;
   activeAds: number;
   totalInterviews: number;
+  newLeads: number;
+  oldestNewLeadDays: number | null;
 }
 
 type StatusRecord = { status?: string };
+type LeadRecord = { status?: string; is_test?: boolean; created_at?: string };
 
 function StatCard({ label, value, icon, color }: { label: string; value: number | string; icon: React.ReactNode; color: string }) {
   return (
@@ -35,31 +38,46 @@ export default function AdminDashboard() {
     liveArticles: 0,
     activeAds: 0,
     totalInterviews: 0,
+    newLeads: 0,
+    oldestNewLeadDays: null,
   });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [articlesRes, adsRes, interviewsRes] = await Promise.all([
+        const [articlesRes, adsRes, interviewsRes, leadsRes] = await Promise.all([
           fetch('/api/admin/articles', { credentials: 'include' }),
           fetch('/api/admin/ads', { credentials: 'include' }),
           fetch('/api/admin/interviews', { credentials: 'include' }),
+          fetch('/api/admin/leads', { credentials: 'include' }),
         ]);
 
         const articlesData = await articlesRes.json();
         const adsData = await adsRes.json();
         const interviewsData = await interviewsRes.json();
+        const leadsData = await leadsRes.json();
 
         const articles: StatusRecord[] = articlesData.articles || [];
         const ads: StatusRecord[] = adsData.ads || [];
         const interviews = interviewsData.interviews || [];
+        const newLeads: LeadRecord[] = (leadsData.leads || []).filter(
+          (lead: LeadRecord) => lead.status === 'new' && lead.is_test !== true
+        );
+        const oldestNewLeadDays = newLeads.reduce<number | null>((oldest, lead) => {
+          const created = lead.created_at ? Date.parse(lead.created_at) : NaN;
+          if (Number.isNaN(created)) return oldest;
+          const days = Math.floor((Date.now() - created) / (24 * 60 * 60 * 1000));
+          return oldest === null || days > oldest ? days : oldest;
+        }, null);
 
         setStats({
           totalArticles: articles.length,
           liveArticles: articles.filter((article) => article.status === 'live').length,
           activeAds: ads.filter((ad) => ad.status === 'active').length,
           totalInterviews: interviews.length,
+          newLeads: newLeads.length,
+          oldestNewLeadDays,
         });
       } catch (error) {
         console.error('Failed to fetch stats:', error);
@@ -88,6 +106,34 @@ export default function AdminDashboard() {
 
         {/* Content */}
         <div className="p-8">
+          {/* Unanswered-lead alert: leads are revenue priority #1 and every
+              submission promises a reply within 1 business day, so an
+              unanswered lead outranks everything else on this screen. */}
+          {!isLoading && stats.newLeads > 0 && (
+            <Link
+              href="/admin/leads"
+              className="mb-8 flex items-center justify-between gap-4 rounded-lg border-2 border-red-600 bg-red-50 px-6 py-4 shadow-sm transition hover:bg-red-100"
+            >
+              <div className="flex items-center gap-4">
+                <span className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-red-600 text-lg font-bold text-white">
+                  {stats.newLeads}
+                </span>
+                <div>
+                  <p className="font-bold text-red-800">
+                    {stats.newLeads === 1 ? '1 lead is' : `${stats.newLeads} leads are`} waiting for a first response
+                    {stats.oldestNewLeadDays !== null && stats.oldestNewLeadDays >= 1 && (
+                      <> — oldest has waited {stats.oldestNewLeadDays} day{stats.oldestNewLeadDays === 1 ? '' : 's'}</>
+                    )}
+                  </p>
+                  <p className="text-sm text-red-700">
+                    The form promises a reply within 1 business day. Open the lead queue and respond.
+                  </p>
+                </div>
+              </div>
+              <span className="flex-shrink-0 font-semibold text-red-700">Open lead queue →</span>
+            </Link>
+          )}
+
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <StatCard
@@ -107,6 +153,12 @@ export default function AdminDashboard() {
               value={isLoading ? '...' : stats.activeAds}
               icon={<svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>}
               color="text-orange-600"
+            />
+            <StatCard
+              label="New Leads (unanswered)"
+              value={isLoading ? '...' : stats.newLeads}
+              icon={<svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>}
+              color="text-red-600"
             />
             <StatCard
               label="Total Interviews"

@@ -4,6 +4,7 @@ import { requireAuth } from "@/lib/auth";
 import bcrypt from "bcryptjs";
 import { setMemberSessionCookie, signMemberToken } from "@/lib/member-auth";
 import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
+import { sendEmailInquiry } from "@/lib/email";
 import { FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 import { recordConsentEventSafely } from "@/lib/compliance/consent-events";
 import { isTestTraffic } from "@/scripts/test-traffic-lib.mjs";
@@ -98,14 +99,15 @@ export async function POST(request: NextRequest) {
 
     await setMemberSessionCookie(await signMemberToken({ userId: member.id, email: member.email }));
 
-    await sendTelegramInquiry({
-      kind: 'membership',
+    const inquiry = {
+      kind: 'membership' as const,
       recordId: member.id,
       name: cleanName,
       email: normalizedEmail,
       interests: cleanInterests,
       source: cleanSource,
-    });
+    };
+    await Promise.all([sendTelegramInquiry(inquiry), sendEmailInquiry(inquiry)]);
 
     return NextResponse.json({ ok: true, profile: member }, { status: 201 });
   } catch (error) {

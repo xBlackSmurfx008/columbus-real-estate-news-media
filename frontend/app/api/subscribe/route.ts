@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
+import { sendEmailInquiry } from "@/lib/email";
 import { FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 import { recordConsentEventSafely } from "@/lib/compliance/consent-events";
 import { isTestTraffic } from "@/scripts/test-traffic-lib.mjs";
@@ -108,8 +109,8 @@ export async function POST(request: NextRequest) {
         WHERE id = ${existing[0].id}
         RETURNING id
       `;
-      await sendTelegramInquiry({
-        kind: "newsletter",
+      const profileInquiry = {
+        kind: "newsletter" as const,
         recordId: subscriber.id,
         email,
         area,
@@ -121,7 +122,8 @@ export async function POST(request: NextRequest) {
         commuteAnchor,
         interests: interests.join(", ") || null,
         source: sourceValue,
-      });
+      };
+      await Promise.all([sendTelegramInquiry(profileInquiry), sendEmailInquiry(profileInquiry)]);
       return NextResponse.json({ ok: true, step: "profile" }, { status: 200 });
     }
 
@@ -156,8 +158,8 @@ export async function POST(request: NextRequest) {
       compensationDisclosureCategory: "none",
     });
 
-    await sendTelegramInquiry({
-      kind: 'newsletter',
+    const inquiry = {
+      kind: 'newsletter' as const,
       recordId: subscriberId,
       email,
       area,
@@ -169,7 +171,8 @@ export async function POST(request: NextRequest) {
       commuteAnchor,
       interests: interests.join(', ') || null,
       source: sourceValue,
-    });
+    };
+    await Promise.all([sendTelegramInquiry(inquiry), sendEmailInquiry(inquiry)]);
 
     return NextResponse.json({ ok: true, step: "signup" }, { status: 201 });
   } catch (error) {

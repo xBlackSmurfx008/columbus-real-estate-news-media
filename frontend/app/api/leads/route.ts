@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { requireAuth } from "@/lib/auth";
 import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
+import { sendEmailInquiry } from "@/lib/email";
 import { FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 import { recordConsentEventSafely } from "@/lib/compliance/consent-events";
 import { mirrorLeadIntakeSafely } from "@/lib/compliance/intake-records";
@@ -157,8 +158,10 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    await sendTelegramInquiry({
-      kind: 'lead',
+    // Owner notification on both channels; each degrades to a logged no-op
+    // when unconfigured, and neither can roll back the stored lead.
+    const inquiry = {
+      kind: 'lead' as const,
       recordId: lead.id,
       persona,
       name: name.trim(),
@@ -167,7 +170,8 @@ export async function POST(request: NextRequest) {
       area: typeof area === "string" ? area.slice(0, 120) : null,
       source: cleanSource,
       message: summarizeDetails(details),
-    });
+    };
+    await Promise.all([sendTelegramInquiry(inquiry), sendEmailInquiry(inquiry)]);
 
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch (error) {

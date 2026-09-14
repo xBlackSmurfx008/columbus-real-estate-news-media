@@ -54,6 +54,10 @@ export default function AdminLeadsPage() {
   const [toast, setToast] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [noteDraft, setNoteDraft] = useState('');
+  const [replyId, setReplyId] = useState<number | null>(null);
+  const [replySubject, setReplySubject] = useState('');
+  const [replyMessage, setReplyMessage] = useState('');
+  const [replySending, setReplySending] = useState(false);
 
   const showToast = useCallback((message: string) => {
     setToast(message);
@@ -95,6 +99,33 @@ export default function AdminLeadsPage() {
       showToast('Lead updated');
     } catch {
       showToast('Update failed');
+    }
+  }
+
+  async function sendReply(id: number) {
+    if (!replySubject.trim() || !replyMessage.trim()) {
+      showToast('Subject and message are both required');
+      return;
+    }
+    setReplySending(true);
+    try {
+      const res = await fetch(`/api/admin/leads/${id}/reply`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subject: replySubject, message: replyMessage }),
+        credentials: 'include',
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Send failed');
+      setLeads((ls) => ls.map((l) => (l.id === id ? { ...l, ...data.lead } : l)));
+      setReplyId(null);
+      setReplySubject('');
+      setReplyMessage('');
+      showToast('Reply sent — lead marked contacted');
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Send failed');
+    } finally {
+      setReplySending(false);
     }
   }
 
@@ -190,6 +221,56 @@ export default function AdminLeadsPage() {
                               <span className="text-gray-400">{k.replace(/_/g, ' ')}:</span> {v}
                             </div>
                           ))}
+                        </div>
+                      )}
+
+                      {replyId === lead.id ? (
+                        <div className="mt-4 space-y-2 rounded-lg border border-gray-200 bg-gray-50 p-4">
+                          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                            Email reply to {lead.email}
+                          </p>
+                          <input
+                            value={replySubject}
+                            onChange={(e) => setReplySubject(e.target.value)}
+                            placeholder="Subject"
+                            className="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-sm"
+                          />
+                          <textarea
+                            value={replyMessage}
+                            onChange={(e) => setReplyMessage(e.target.value)}
+                            placeholder="Write your reply… (sent as plain text from the site's address; their answer lands in your inbox via Reply-To)"
+                            rows={6}
+                            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+                          />
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => sendReply(lead.id)}
+                              disabled={replySending}
+                              className="rounded-lg bg-green-700 px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
+                            >
+                              {replySending ? 'Sending…' : 'Send reply'}
+                            </button>
+                            <button
+                              onClick={() => setReplyId(null)}
+                              disabled={replySending}
+                              className="rounded-lg border border-gray-300 px-4 py-1.5 text-sm text-gray-600"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="mt-3">
+                          <button
+                            onClick={() => {
+                              setReplyId(lead.id);
+                              setReplySubject(lead.status === 'new' ? 'Your Columbus Real Estate News request' : 'Following up on your request');
+                              setReplyMessage(`Hi ${lead.name.split(' ')[0]},\n\n`);
+                            }}
+                            className="rounded-lg bg-gray-900 px-3 py-1.5 text-sm font-medium text-white"
+                          >
+                            ✉ Reply by email{lead.status === 'new' ? ' (marks contacted)' : ''}
+                          </button>
                         </div>
                       )}
 

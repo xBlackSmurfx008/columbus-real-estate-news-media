@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { sendTelegramInquiry } from "@/lib/telegram-inquiry";
+import { sendEmailInquiry } from "@/lib/email";
 import { FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 import { recordConsentEventSafely } from "@/lib/compliance/consent-events";
 import { mirrorAdvertisingInquirySafely } from "@/lib/compliance/intake-records";
@@ -89,8 +90,8 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    await sendTelegramInquiry({
-      kind: isAdvertising ? 'advertising' : 'general',
+    const inquiry = {
+      kind: isAdvertising ? ('advertising' as const) : ('general' as const),
       recordId: contact.id,
       name: name.trim(),
       email,
@@ -99,7 +100,8 @@ export async function POST(request: NextRequest) {
       packageInterest: cleanPackage,
       budget: cleanBudget,
       message: cleanMessage,
-    });
+    };
+    await Promise.all([sendTelegramInquiry(inquiry), sendEmailInquiry(inquiry)]);
 
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch (error) {

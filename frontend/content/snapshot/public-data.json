@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated_at": "2026-09-13T16:11:56.424Z",
+    "generated_at": "2026-09-14T16:27:24.934Z",
     "market_fingerprint": "a74da97997564c26793de2b8d92303b6",
     "note": "Last-known-good public content, served when the database is unreachable. Refresh with: node scripts/export-content-snapshot.mjs (requires DATABASE_URL). Never edit articles here by hand — this file only ever mirrors what was live in the database."
   },
@@ -20,12 +20,12 @@
       "read_time": "5 min",
       "area_slug": "near-east-side",
       "topic_slug": "development",
-      "image_url": null,
+      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-09-12-columbus-near-east-side-affordable-modular-apartments-open-sept-16/b26d24cb-016c-41f8-ab3b-ce389e948345/hero-aa7c96971b8aadb2.webp",
       "created_at": "2026-09-12T16:11:28.328Z",
-      "updated_at": "2026-09-12T16:11:28.328Z",
+      "updated_at": "2026-09-14T13:35:34.464Z",
       "meta_description": "The Reserve at Maryland's second modular building opens Sept. 16 on Columbus's Near East Side — 84 units total at 60% AMI, buildings 3 and 4 follow Oct. 16.",
-      "image_alt": "Modular apartment buildings at the Reserve at Maryland complex on the Near East Side of Columbus, Ohio, with factory-built modules visible in the completed structure at 1728 Maryland Ave.",
-      "image_caption": "AI-generated editorial illustration. No photographic source for this specific Columbus site was available at time of publication.",
+      "image_alt": "AI-generated contextual view of steel-framed apartment modules with exposed wall studs and installed windows inside a factory.",
+      "image_caption": "AI-generated contextual image of apartment modules in a factory. This is not a photograph of the Reserve at Maryland, the Connect Housing Blocks factory, or the reported opening event.",
       "fact_checked_at": "2026-09-12T06:33:00.000Z",
       "tags": [
         "columbus-ohio",
@@ -35,7 +35,8 @@
         "modular-housing",
         "development"
       ],
-      "canonical_slug": "columbus-near-east-side-affordable-modular-apartments-open-sept-16"
+      "canonical_slug": "columbus-near-east-side-affordable-modular-apartments-open-sept-16",
+      "published_at": null
     },
     {
       "id": "2026-09-11-columbus-mass-timber-tower-tops-out-near-ohio-state-tallest-in-us",
@@ -52,12 +53,12 @@
       "read_time": "5 min",
       "area_slug": "university-district",
       "topic_slug": "development",
-      "image_url": null,
+      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-09-11-columbus-mass-timber-tower-tops-out-near-ohio-state-tallest-in-us/658bbfa2-2d28-46b1-8d6b-e064a7d2b5f2/hero-141b659b317a6b89.webp",
       "created_at": "2026-09-11T16:11:45.481Z",
-      "updated_at": "2026-09-11T16:11:45.481Z",
+      "updated_at": "2026-09-14T13:51:01.620Z",
       "meta_description": "INTRO Columbus topped out Sept. 8 — ten weeks early. The 13-story mass timber tower at High and 9th is the tallest mass timber student housing building in the U.S.",
-      "image_alt": "INTRO Columbus, a 13-story mass timber student housing tower at High Street and 9th Avenue in Columbus Ohio, seen under construction during the September 8 2026 topping-out ceremony.",
-      "image_caption": "AI-generated editorial illustration concept for INTRO Columbus topping out, September 2026. Actual construction photography may be available from DLR Group or Columbus Underground.",
+      "image_alt": "AI-generated view of an unfinished timber interior with exposed wood ceiling panels, large timber columns, bolted steel connections and temporary safety rails.",
+      "image_caption": "AI-generated contextual image of an anonymous mass-timber construction interior. Not a photograph of INTRO Columbus or the reported topping-out event.",
       "fact_checked_at": "2026-09-11T10:45:00.000Z",
       "tags": [
         "columbus-ohio",
@@ -68,7 +69,8 @@
         "mass-timber",
         "construction"
       ],
-      "canonical_slug": "columbus-mass-timber-tower-tops-out-near-ohio-state-tallest-in-us"
+      "canonical_slug": "columbus-mass-timber-tower-tops-out-near-ohio-state-tallest-in-us",
+      "published_at": null
     },
     {
       "id": "2026-09-10-columbus-lower-olentangy-tunnel-267m-project-reaches-final-weeks",
@@ -85,12 +87,12 @@
       "read_time": "5 min read",
       "area_slug": "near-west-side",
       "topic_slug": "development",
-      "image_url": null,
+      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-09-10-columbus-lower-olentangy-tunnel-267m-project-reaches-final-weeks/e24c68a5-bb83-4904-b97a-e4c413a92486/hero-1ad377e50dfd3e59.webp",
       "created_at": "2026-09-11T16:09:40.472Z",
-      "updated_at": "2026-09-11T16:09:40.472Z",
+      "updated_at": "2026-09-14T13:57:30.909Z",
       "meta_description": "The $267M Lower Olentangy Tunnel is completing this month in Columbus. What the five-year sewer project means for basement flooding and Near West Side neighborhoods.",
-      "image_alt": "Editorial illustration of the Olentangy River corridor in Columbus's Near West Side, representing the underground Lower Olentangy Tunnel infrastructure project completing in September 2026.",
-      "image_caption": "The Lower Olentangy Tunnel runs beneath the Near West Side of Columbus, with construction completing in September 2026. AI-generated editorial illustration: CREN.",
+      "image_alt": "Archival photograph of the John H. Herrick Drive Bridge over the Olentangy River in Columbus in October 2018.",
+      "image_caption": "Archival context: John H. Herrick Drive Bridge over the Olentangy River, October 17, 2018. Not a photograph of the tunnel or its 2026 construction. Photo: [Antony-22 / Wikimedia Commons](https://commons.wikimedia.org/wiki/File:John_H._Herrick_Drive_Bridge_Columbus_2018.jpg), [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Cropped and resized; adaptation shared under the same license.",
       "fact_checked_at": "2026-09-10T07:15:00.000Z",
       "tags": [
         "columbus-ohio",
@@ -100,7 +102,8 @@
         "harrison-west",
         "flooding"
       ],
-      "canonical_slug": "columbus-lower-olentangy-tunnel-267m-project-reaches-final-weeks"
+      "canonical_slug": "columbus-lower-olentangy-tunnel-267m-project-reaches-final-weeks",
+      "published_at": null
     },
     {
       "id": "2026-09-09-columbus-brewery-district-106-unit-building-approved-at-former-wwcd-site",
@@ -117,12 +120,12 @@
       "read_time": "5 min read",
       "area_slug": "brewery-district",
       "topic_slug": "development",
-      "image_url": null,
+      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-09-09-columbus-brewery-district-106-unit-building-approved-at-former-wwcd-site/b385314b-9c0c-4f99-b6df-7545a3bc7ea0/hero-b940c8475b42d920.webp",
       "created_at": "2026-09-09T16:10:30.107Z",
-      "updated_at": "2026-09-09T16:10:30.107Z",
+      "updated_at": "2026-09-14T14:06:45.035Z",
       "meta_description": "Columbus HRC votes 5-2 to approve a 106-unit apartment building at 1036 S. Front St. in the Brewery District, clearing the former WWCD radio site.",
-      "image_alt": "Former WWCD radio building at 1036 S. Front St. in Columbus's Brewery District, a 1962 Swiss Chalet–style structure approved for demolition to make way for a 106-unit apartment complex.",
-      "image_caption": "AI-generated editorial illustration of the former WWCD radio building site at 1036 S. Front St. in the Brewery District. A licensed photograph from a credentialed photographer on site is needed for permanent publication use.",
+      "image_alt": "AI-generated scene of an older red-brick warehouse facade beside a newer apartment building, with a tree-lined sidewalk and parked cars.",
+      "image_caption": "AI-generated contextual image of older brick industrial architecture beside a newer apartment building. Not a photograph of the reported WWCD property, proposed development or approval event in Columbus.",
       "fact_checked_at": "2026-09-09T14:33:00.000Z",
       "tags": [
         "columbus-ohio",
@@ -132,7 +135,8 @@
         "multifamily",
         "neighborhood"
       ],
-      "canonical_slug": "columbus-brewery-district-106-unit-building-approved-at-former-wwcd-site"
+      "canonical_slug": "columbus-brewery-district-106-unit-building-approved-at-former-wwcd-site",
+      "published_at": null
     },
     {
       "id": "2026-09-08-columbus-brownfield-sites-120m-ohio-grant-closes-sept-11",
@@ -149,12 +153,12 @@
       "read_time": "4 min read",
       "area_slug": "columbus-citywide",
       "topic_slug": "development",
-      "image_url": null,
+      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-09-08-columbus-brownfield-sites-120m-ohio-grant-closes-sept-11/b6631940-e8a5-4485-a29a-993e8bdf1a77/hero-3a67d2f561e4046f.webp",
       "created_at": "2026-09-08T16:10:05.301Z",
-      "updated_at": "2026-09-08T16:10:05.301Z",
+      "updated_at": "2026-09-14T14:06:44.706Z",
       "meta_description": "Ohio Brownfield Remediation Program closes Thursday, September 11. COCIC has secured $28.9M for six Franklin County sites and is taking discovery meeting requests.",
-      "image_alt": "Editorial illustration showing a contaminated brownfield site next to a residential development under construction in a Columbus neighborhood, representing Ohio's brownfield remediation grant program.",
-      "image_caption": "AI-generated editorial illustration representing brownfield site remediation and redevelopment in Franklin County, Ohio.",
+      "image_alt": "Cracked asphalt and weeds behind a chain-link fence, with a low weathered brick warehouse under an overcast sky.",
+      "image_caption": "AI-generated contextual image of an unused industrial parcel with cracked pavement, weeds and a brick warehouse. Not a photograph of the actual property, project or event reported in this article.",
       "fact_checked_at": "2026-09-08T10:45:00.000Z",
       "tags": [
         "columbus-ohio",
@@ -164,7 +168,8 @@
         "franklin-county",
         "economic-development"
       ],
-      "canonical_slug": "columbus-brownfield-sites-120m-ohio-grant-closes-sept-11"
+      "canonical_slug": "columbus-brownfield-sites-120m-ohio-grant-closes-sept-11",
+      "published_at": null
     },
     {
       "id": "2026-09-07-second-baptist-opens-2-4-acres-on-columbus-near-east-side-to-developers",
@@ -181,12 +186,12 @@
       "read_time": "4 min read",
       "area_slug": "near-east-side",
       "topic_slug": "development",
-      "image_url": null,
+      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-09-07-second-baptist-opens-2-4-acres-on-columbus-near-east-side-to-developers/a4c1f767-88f8-4fbf-a159-30d589de3ee4/hero-4b65b8f17216bf39.webp",
       "created_at": "2026-09-07T16:12:33.571Z",
-      "updated_at": "2026-09-07T16:12:33.571Z",
+      "updated_at": "2026-09-14T14:03:34.852Z",
       "meta_description": "Second Baptist Church seeks a development partner for five Near East Side parcels totaling 2.4 acres, including a 1.17-acre block on East Long Street.",
-      "image_alt": "Map-style graphic showing five church-owned parcels totaling 2.4 acres in Columbus's Near East Side, with the 1.17-acre East Long Street block between 17th and 18th Streets highlighted.",
-      "image_caption": "AI-generated illustration showing approximate parcel locations near East Long Street. Not a survey, official plat, or Franklin County Auditor map.",
+      "image_alt": "Grass-covered vacant lot and worn asphalt parking spaces beside a brick building, with houses and bare trees beneath a cloudy sky.",
+      "image_caption": "AI-generated contextual image of a vacant neighborhood lot beside a brick building. It is not a photograph of Second Baptist Church, its parcels, or the reported development proposal.",
       "fact_checked_at": "2026-09-07T10:45:00.000Z",
       "tags": [
         "columbus-ohio",
@@ -196,7 +201,8 @@
         "affordable-housing",
         "neighborhood"
       ],
-      "canonical_slug": "second-baptist-opens-2-4-acres-on-columbus-near-east-side-to-developers"
+      "canonical_slug": "second-baptist-opens-2-4-acres-on-columbus-near-east-side-to-developers",
+      "published_at": null
     },
     {
       "id": "2026-09-06-south-side-columbus-breaks-ground-on-150-unit-affordable-apartments",
@@ -213,12 +219,12 @@
       "read_time": "4 min",
       "area_slug": "south-side",
       "topic_slug": "development",
-      "image_url": null,
+      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-09-06-south-side-columbus-breaks-ground-on-150-unit-affordable-apartments/17944a42-ae39-43e0-8a0b-fead364a588a/hero-645cb93e85f2d78c.webp",
       "created_at": "2026-09-06T16:17:21.304Z",
-      "updated_at": "2026-09-06T16:17:21.304Z",
+      "updated_at": "2026-09-14T14:04:28.403Z",
       "meta_description": "The NRP Group broke ground Aug. 25 on Stone Ridge at High Street, a 150-unit affordable apartment community on Columbus's South Side, set to open in 2028.",
-      "image_alt": "Early-stage construction at the Stone Ridge at High Street affordable housing site on Columbus's South Side, near South High Street.",
-      "image_caption": "AI-generated illustration of construction underway on Columbus's South Side. Not an official NRP Group rendering or site photograph.",
+      "image_alt": "AI-generated contextual view of an excavator, graded soil and foundation work behind temporary chain-link fencing beside older neighborhood houses.",
+      "image_caption": "AI-generated contextual image of early construction beside older neighborhood houses. Not a photograph of Stone Ridge at High Street, the reported property or groundbreaking event.",
       "fact_checked_at": "2026-09-06T16:30:00.000Z",
       "tags": [
         "columbus-ohio",
@@ -227,7 +233,8 @@
         "development",
         "neighborhood"
       ],
-      "canonical_slug": "south-side-columbus-breaks-ground-on-150-unit-affordable-apartments"
+      "canonical_slug": "south-side-columbus-breaks-ground-on-150-unit-affordable-apartments",
+      "published_at": null
     },
     {
       "id": "2026-09-06-columbus-polaris-permits-filed-for-third-central-ohio-trader-joe-s",
@@ -244,12 +251,12 @@
       "read_time": "4 min",
       "area_slug": "polaris-area",
       "topic_slug": "development",
-      "image_url": null,
+      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-09-06-columbus-polaris-permits-filed-for-third-central-ohio-trader-joe-s/1ba65666-23da-4b4e-8a1c-c32c587342da/hero-db6f643f37e24023.webp",
       "created_at": "2026-09-06T16:10:43.155Z",
-      "updated_at": "2026-09-07T01:45:48.950Z",
+      "updated_at": "2026-09-14T14:02:01.362Z",
       "meta_description": "Columbus’s first new Trader Joe’s in over 20 years is planned for 2109 Ikea Way in Polaris. A plumbing permit was issued July 21 for the 12,500-sq-ft store.",
-      "image_alt": "The undeveloped 2109 Ikea Way site in the Polaris corridor, Columbus, Ohio, where an interior fit-out permit has been filed for a new 12,500-square-foot Trader Joe's store.",
-      "image_caption": "AI-generated editorial illustration of the Polaris corridor and 2109 Ikea Way site. Not an official Trader Joe's or NP Limited Partnership rendering.",
+      "image_alt": "AI-generated contextual view of an unbranded retail shell under construction, with unfinished walls, bare soil, temporary fencing and a paved road edge.",
+      "image_caption": "AI-generated contextual image of an anonymous retail shell construction site. Not a photograph of the reported 2109 Ikea Way property, Trader Joe’s project or event.",
       "fact_checked_at": "2026-09-06T06:33:00.000Z",
       "tags": [
         "columbus-ohio",
@@ -259,7 +266,8 @@
         "northwest-columbus",
         "development"
       ],
-      "canonical_slug": "columbus-polaris-permits-filed-for-third-central-ohio-trader-joe-s"
+      "canonical_slug": "columbus-polaris-permits-filed-for-third-central-ohio-trader-joe-s",
+      "published_at": null
     },
     {
       "id": "2026-09-05-franklin-county-s-informal-property-value-review-closes-today",
@@ -276,12 +284,12 @@
       "read_time": "4 min",
       "area_slug": "columbus-citywide",
       "topic_slug": "market-trends",
-      "image_url": null,
+      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-09-05-franklin-county-s-informal-property-value-review-closes-today/bfded62f-ca4e-4478-89fb-7222161469b8/hero-b5d7c45e625564ad.webp",
       "created_at": "2026-09-05T16:13:13.870Z",
-      "updated_at": "2026-09-05T16:13:13.870Z",
+      "updated_at": "2026-09-14T14:00:13.915Z",
       "meta_description": "Today, Sept. 5, is the last day for Franklin County's informal property value review sessions ahead of the 2026 triennial update. Here's what happens next.",
-      "image_alt": "Exterior of a Franklin County government office building in downtown Columbus, Ohio.",
-      "image_caption": "AI-generated illustration of a Franklin County government office building. Not a photograph of the Auditor's actual office.",
+      "image_alt": "A brick ranch house and a gray two-story house beside lawns, mature trees and a concrete sidewalk.",
+      "image_caption": "AI-generated contextual image of a residential streetscape. It is not a photograph of Franklin County properties or the reported property value review sessions.",
       "fact_checked_at": "2026-09-05T16:30:00.000Z",
       "tags": [
         "columbus-ohio",
@@ -290,7 +298,8 @@
         "market-trends",
         "property-tax"
       ],
-      "canonical_slug": "franklin-county-s-informal-property-value-review-closes-today"
+      "canonical_slug": "franklin-county-s-informal-property-value-review-closes-today",
+      "published_at": null
     },
     {
       "id": "2026-09-04-columbus-german-village-cedar-square-wins-contested-3-2-vote",
@@ -307,12 +316,12 @@
       "read_time": "5 min",
       "area_slug": "german-village",
       "topic_slug": "development",
-      "image_url": null,
+      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-09-04-columbus-german-village-cedar-square-wins-contested-3-2-vote/fad8031e-ec66-4c17-aab6-aa71630484bc/hero-2cd86ea6183fbc54.webp",
       "created_at": "2026-09-04T16:08:47.971Z",
-      "updated_at": "2026-09-04T17:49:28.108Z",
+      "updated_at": "2026-09-14T13:58:59.950Z",
       "meta_description": "German Village commissioners voted 3-2 on Sept. 3 to approve Cedar Square's 52-unit concept at 251 E. Livingston, with opponents citing scale and a bylaws dispute.",
-      "image_alt": "The existing office building and parking lot at 251 East Livingston Avenue in Columbus's German Village Historic District, the site of the proposed Cedar Square residential development.",
-      "image_caption": "AI-generated editorial illustration of the 251 E. Livingston Avenue site and surrounding German Village streetscape. Not a rendering of the proposed Cedar Square building.",
+      "image_alt": "AI-generated contextual view of brick homes beside an older low-rise office building and surface parking on an anonymous urban block.",
+      "image_caption": "AI-generated contextual image of an anonymous urban block with brick homes, an older office building and surface parking. Not a photograph of 251 East Livingston Avenue, Cedar Square, or the reported place or event.",
       "fact_checked_at": "2026-09-04T06:33:00.000Z",
       "tags": [
         "columbus-ohio",
@@ -323,7 +332,8 @@
         "historic-preservation",
         "neighborhood"
       ],
-      "canonical_slug": "columbus-german-village-cedar-square-wins-contested-3-2-vote"
+      "canonical_slug": "columbus-german-village-cedar-square-wins-contested-3-2-vote",
+      "published_at": null
     },
     {
       "id": "2026-09-03-columbus-diocese-plans-to-demolish-1908-gay-st-building",
@@ -340,12 +350,12 @@
       "read_time": "5 min",
       "area_slug": "downtown-columbus",
       "topic_slug": "development",
-      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-09-03-columbus-diocese-plans-to-demolish-1908-gay-st-building/hero-ce38f8d495f9f10c.webp",
+      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-09-03-columbus-diocese-plans-to-demolish-1908-gay-st-building/3cf3f828-00b4-4525-978b-8d63c240ec24/hero-4dd9b006a58fd3ce.webp",
       "created_at": "2026-09-03T16:09:14.081Z",
-      "updated_at": "2026-09-04T17:49:28.108Z",
+      "updated_at": "2026-09-14T13:59:01.296Z",
       "meta_description": "The Diocese of Columbus filed to demolish its 1908 building at 197 E. Gay St. for surface parking. The Downtown Commission votes September 22, 2026.",
-      "image_alt": "Five-story 1908 Diocese of Columbus office building at 197 E. Gay Street in downtown Columbus, subject of a September 2026 demolition application before the Downtown Commission.",
-      "image_caption": "AI-generated editorial illustration of a five-story early-twentieth-century brick commercial building in Columbus's downtown historic district. AI-generated image for editorial use only; does not depict the actual structure at 197 E. Gay Street.",
+      "image_alt": "AI-generated contextual view of a weathered brick building with pale stone trim, tall windows, a recessed doorway and a narrow side alley.",
+      "image_caption": "AI-generated contextual image of an anonymous older brick building with stone trim and a side alley. It is not a photograph of 197 E. Gay Street or the reported demolition proposal.",
       "fact_checked_at": "2026-09-03T06:33:00.000Z",
       "tags": [
         "columbus-ohio",
@@ -355,7 +365,8 @@
         "development",
         "institutional-real-estate"
       ],
-      "canonical_slug": "columbus-diocese-plans-to-demolish-1908-gay-st-building"
+      "canonical_slug": "columbus-diocese-plans-to-demolish-1908-gay-st-building",
+      "published_at": null
     },
     {
       "id": "2026-09-02-nationwide-children-s-buys-7-6m-east-main-street-block-no-plans-yet",
@@ -372,12 +383,12 @@
       "read_time": "5 min",
       "area_slug": "near-east-side",
       "topic_slug": "development",
-      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-09-02-nationwide-children-s-buys-7-6m-east-main-street-block-no-plans-yet/hero-801126a05053ff76.webp",
+      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-09-02-nationwide-children-s-buys-7-6m-east-main-street-block-no-plans-yet/ce76b92f-f7b9-4d56-bf5e-f92ea9cf3c5b/hero-9661eafc941cacc5.webp",
       "created_at": "2026-09-02T16:14:46.331Z",
-      "updated_at": "2026-09-04T17:49:28.108Z",
+      "updated_at": "2026-09-14T13:57:10.965Z",
       "meta_description": "Nationwide Children's paid $7.6M for a Near East Side block on E. Main St., closing Aug. 7. No plans announced for the 3.62-acre site north of I-70.",
-      "image_alt": "Vacant block at 818 E. Main Street in Columbus's Near East Side, purchased by Nationwide Children's Hospital for $7.6 million in August 2026, with no development announced.",
-      "image_caption": "AI-generated editorial illustration representing the vacant 3.62-acre block at 818 E. Main St., Columbus, acquired by Nationwide Children's Hospital for $7.6 million. Not a photograph of the actual site.",
+      "image_alt": "AI-generated scene of a grassy vacant lot beside a concrete sidewalk, with older brick buildings, leafy trees and utility poles in daylight.",
+      "image_caption": "AI-generated contextual image of a grassy vacant urban lot. It is not a photograph of the reported East Main Street property or acquisition event.",
       "fact_checked_at": "2026-09-02T06:33:00.000Z",
       "tags": [
         "columbus-ohio",
@@ -387,7 +398,8 @@
         "healthcare-real-estate",
         "institutional-investment"
       ],
-      "canonical_slug": "nationwide-children-s-buys-7-6m-east-main-street-block-no-plans-yet"
+      "canonical_slug": "nationwide-children-s-buys-7-6m-east-main-street-block-no-plans-yet",
+      "published_at": null
     },
     {
       "id": "2026-09-01-downtown-columbus-office-tower-wins-2026-redevelopment-of-the-year",
@@ -404,12 +416,12 @@
       "read_time": "4 min",
       "area_slug": "downtown-columbus",
       "topic_slug": "development",
-      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-09-01-downtown-columbus-office-tower-wins-2026-redevelopment-of-the-year/hero-9a6ea3d3d4e732ed.webp",
+      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-09-01-downtown-columbus-office-tower-wins-2026-redevelopment-of-the-year/9cb9fbcd-32a3-431a-9e20-c5eda6f5b6da/hero-9e57ec939af9370e.webp",
       "created_at": "2026-09-01T16:11:12.933Z",
-      "updated_at": "2026-09-02T11:11:19.074Z",
+      "updated_at": "2026-09-14T13:55:55.175Z",
       "meta_description": "The Bernstein Cos. converted 150 E. Gay St.'s former Continental Centre into 409 apartments downtown. CoStar named it Columbus's 2026 Redevelopment of the Year.",
-      "image_alt": "Continental Tower at 150 East Gay Street in downtown Columbus, Ohio — a 26-story office-to-apartment conversion by The Bernstein Cos., completed in 2026.",
-      "image_caption": "AI-generated illustration of Continental Tower, 150 E. Gay St., downtown Columbus — for placeholder use only until licensed photography is obtained.",
+      "image_alt": "AI-generated view of an unfinished hallway with metal partition framing, concrete columns, stacked drywall and windows facing brick buildings.",
+      "image_caption": "AI-generated contextual image of an anonymous office-to-apartment conversion interior. Not a photograph of Continental Tower or the reported place or event.",
       "fact_checked_at": "2026-09-01T06:45:00.000Z",
       "tags": [
         "columbus-ohio",
@@ -419,7 +431,8 @@
         "office-conversion",
         "multifamily"
       ],
-      "canonical_slug": "downtown-columbus-office-tower-wins-2026-redevelopment-of-the-year"
+      "canonical_slug": "downtown-columbus-office-tower-wins-2026-redevelopment-of-the-year",
+      "published_at": null
     },
     {
       "id": "2026-08-31-old-hilliard-bank-building-becomes-lira-italian-kitchen",
@@ -436,12 +449,12 @@
       "read_time": "4 min read",
       "area_slug": "hilliard",
       "topic_slug": "events-lifestyle",
-      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-08-31-old-hilliard-bank-building-becomes-lira-italian-kitchen/hero-a180fc91625fee87.webp",
+      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-08-31-old-hilliard-bank-building-becomes-lira-italian-kitchen/103f92b3-4fb2-447b-8124-5cf1173cf5ca/hero-95901783313f6d23.webp",
       "created_at": "2026-08-31T16:31:40.004Z",
-      "updated_at": "2026-09-04T17:49:28.108Z",
+      "updated_at": "2026-09-14T13:55:09.776Z",
       "meta_description": "Hilliard developer Westwood Collective is turning a historic bank building on Main Street into Lira Italian Kitchen, with luxury apartments planned nearby.",
-      "image_alt": "Exterior of a preserved historic bank building on Main Street in Old Hilliard, Ohio, being converted into an Italian restaurant.",
-      "image_caption": "AI-generated illustration",
+      "image_alt": "AI-generated contextual interior of an older brick commercial space with a vault doorway, unfinished floor and restaurant service counter under construction.",
+      "image_caption": "AI-generated contextual image of an anonymous commercial interior being fitted out as a restaurant. It is not a photograph of Lira Italian Kitchen, the bank at 4056 East Main Street, or the reported project or event.",
       "fact_checked_at": "2026-08-31T16:30:20.000Z",
       "tags": [
         "columbus-ohio",
@@ -451,7 +464,8 @@
         "restaurants",
         "adaptive-reuse"
       ],
-      "canonical_slug": "old-hilliard-bank-building-becomes-lira-italian-kitchen"
+      "canonical_slug": "old-hilliard-bank-building-becomes-lira-italian-kitchen",
+      "published_at": null
     },
     {
       "id": "2026-08-31-grove-city-columbus-add-240-affordable-assisted-living-units",
@@ -468,12 +482,12 @@
       "read_time": "4 min read",
       "area_slug": "columbus-citywide",
       "topic_slug": "development",
-      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-08-31-grove-city-columbus-add-240-affordable-assisted-living-units/hero-58e2bec20a32754a.webp",
+      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-08-31-grove-city-columbus-add-240-affordable-assisted-living-units/4d8ab42d-d387-4c16-a54e-534dd77dd500/hero-3e893387455e5069.webp",
       "created_at": "2026-08-31T16:27:31.901Z",
-      "updated_at": "2026-09-04T17:49:28.108Z",
+      "updated_at": "2026-09-14T13:53:04.162Z",
       "meta_description": "Chicago-based Evergreen Real Estate Group is building 240 new affordable assisted living units for seniors in Grove City and Columbus, opening in 2027.",
-      "image_alt": "Exterior rendering of a low-rise affordable assisted living building similar to Green Oaks of Walnut Creek in Columbus, Ohio.",
-      "image_caption": "AI-generated illustration",
+      "image_alt": "AI-generated contextual view of a low-rise brick-and-siding building with a covered entrance, handrails, shrubs and a concrete sidewalk.",
+      "image_caption": "AI-generated contextual image of a modest assisted-living-style building. Not a photograph of Green Oaks of Grove City, Green Oaks of Walnut Creek, or the reported groundbreaking; it does not depict either project's design or construction status.",
       "fact_checked_at": "2026-08-31T16:22:16.000Z",
       "tags": [
         "columbus-ohio",
@@ -483,7 +497,8 @@
         "senior-housing",
         "grove-city"
       ],
-      "canonical_slug": "grove-city-columbus-add-240-affordable-assisted-living-units"
+      "canonical_slug": "grove-city-columbus-add-240-affordable-assisted-living-units",
+      "published_at": null
     },
     {
       "id": "2026-08-30-northwest-bank-plans-new-dublin-headquarters-at-bridge-north",
@@ -500,12 +515,12 @@
       "read_time": "4 min read",
       "area_slug": "dublin",
       "topic_slug": "development",
-      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-08-30-northwest-bank-plans-new-dublin-headquarters-at-bridge-north/hero-f1f0067063279656.webp",
+      "image_url": "https://offhuf0vpabiiaxq.public.blob.vercel-storage.com/cren/articles/2026-08-30-northwest-bank-plans-new-dublin-headquarters-at-bridge-north/71508fac-91ca-4b40-b2fe-40fbeea545cd/hero-b30ab6bb8674e61f.webp",
       "created_at": "2026-08-30T16:14:21.923Z",
-      "updated_at": "2026-08-31T11:11:17.479Z",
+      "updated_at": "2026-09-14T13:53:03.930Z",
       "meta_description": "Dublin City Council approved incentives for Northwest Bank's new 75,000-square-foot Bridge North headquarters, with a 2029 move and 300 jobs by 2034.",
-      "image_alt": "Editorial illustration of a suburban corporate office building representing Northwest Bank's planned Dublin headquarters.",
-      "image_caption": "CREN editorial illustration based on Dublin's economic development agreement for the project.",
+      "image_alt": "An office-campus access road beside a grassy vacant parcel, with low-rise office buildings in the distance under an overcast sky.",
+      "image_caption": "AI-generated contextual image of a suburban office-campus road and grassy parcel. Not a photograph of Northwest Bank's planned headquarters, Bridge North, or the actual property, project or event reported in this article.",
       "fact_checked_at": "2026-08-30T16:11:07.000Z",
       "tags": [
         "columbus-ohio",
@@ -514,7 +529,8 @@
         "dublin",
         "office-development"
       ],
-      "canonical_slug": "northwest-bank-plans-new-dublin-headquarters-at-bridge-north"
+      "canonical_slug": "northwest-bank-plans-new-dublin-headquarters-at-bridge-north",
+      "published_at": null
     },
     {
       "id": "2026-08-29-upper-arlington-s-shops-on-lane-avenue-splits-old-anchor-into-three-tenants",
@@ -546,7 +562,8 @@
         "retail-leasing",
         "shopping-center-redevelopment"
       ],
-      "canonical_slug": "upper-arlington-s-shops-on-lane-avenue-splits-old-anchor-into-three-tenants"
+      "canonical_slug": "upper-arlington-s-shops-on-lane-avenue-splits-old-anchor-into-three-tenants",
+      "published_at": null
     },
     {
       "id": "2026-08-28-columbus-rental-due-diligence-starts-before-the-tour",
@@ -578,7 +595,8 @@
         "renters",
         "due-diligence"
       ],
-      "canonical_slug": "columbus-rental-due-diligence-starts-before-the-tour"
+      "canonical_slug": "columbus-rental-due-diligence-starts-before-the-tour",
+      "published_at": null
     },
     {
       "id": "2026-08-28-columbus-buyer-price-bands-need-monthly-cost-checks",
@@ -610,7 +628,8 @@
         "price-bands",
         "due-diligence"
       ],
-      "canonical_slug": "columbus-buyer-price-bands-need-monthly-cost-checks"
+      "canonical_slug": "columbus-buyer-price-bands-need-monthly-cost-checks",
+      "published_at": null
     },
     {
       "id": "2026-08-28-dublin-ohio-christmas-market-opens-nov-21-at-riverside-crossing-park",
@@ -641,7 +660,8 @@
         "dublin",
         "holiday-market"
       ],
-      "canonical_slug": "dublin-ohio-christmas-market-opens-nov-21-at-riverside-crossing-park"
+      "canonical_slug": "dublin-ohio-christmas-market-opens-nov-21-at-riverside-crossing-park",
+      "published_at": null
     },
     {
       "id": "2026-08-28-columbus-state-breaks-ground-on-166-unit-housing-in-discovery-district",
@@ -672,7 +692,8 @@
         "discovery-district",
         "affordable-housing"
       ],
-      "canonical_slug": "columbus-state-breaks-ground-on-166-unit-housing-in-discovery-district"
+      "canonical_slug": "columbus-state-breaks-ground-on-166-unit-housing-in-discovery-district",
+      "published_at": null
     },
     {
       "id": "2026-08-27-downtown-columbus-s-preston-park-still-isn-t-open-developer-says",
@@ -704,7 +725,8 @@
         "neighborhood",
         "edwards-companies"
       ],
-      "canonical_slug": "downtown-columbus-s-preston-park-still-isn-t-open-developer-says"
+      "canonical_slug": "downtown-columbus-s-preston-park-still-isn-t-open-developer-says",
+      "published_at": null
     },
     {
       "id": "2026-08-25-sugar-opens-aug-27-at-504-park-st-in-columbus-arena-district",
@@ -736,7 +758,8 @@
         "food-drink",
         "one-hospitality"
       ],
-      "canonical_slug": "sugar-opens-aug-27-at-504-park-st-in-columbus-arena-district"
+      "canonical_slug": "sugar-opens-aug-27-at-504-park-st-in-columbus-arena-district",
+      "published_at": null
     },
     {
       "id": "2026-08-24-columbus-july-home-sales-climb-6-as-inventory-hits-decade-high",
@@ -767,7 +790,8 @@
         "housing-report",
         "residential"
       ],
-      "canonical_slug": "columbus-july-home-sales-climb-6-as-inventory-hits-decade-high"
+      "canonical_slug": "columbus-july-home-sales-climb-6-as-inventory-hits-decade-high",
+      "published_at": null
     },
     {
       "id": "2026-08-23-columbus-zone-in-phase-2-draft-releases-public-comment-opens-aug-25",
@@ -800,7 +824,8 @@
         "zone-in",
         "columbus-planning"
       ],
-      "canonical_slug": "columbus-zone-in-phase-2-draft-releases-public-comment-opens-aug-25"
+      "canonical_slug": "columbus-zone-in-phase-2-draft-releases-public-comment-opens-aug-25",
+      "published_at": null
     },
     {
       "id": "2026-08-21-the-fitzgerald-opens-226-apartments-on-bexley-s-main-street",
@@ -833,7 +858,8 @@
         "mixed-use",
         "neighborhood"
       ],
-      "canonical_slug": "the-fitzgerald-opens-226-apartments-on-bexley-s-main-street"
+      "canonical_slug": "the-fitzgerald-opens-226-apartments-on-bexley-s-main-street",
+      "published_at": null
     },
     {
       "id": "2026-08-20-959-579-sf-spec-warehouse-breaks-ground-in-columbus-s-rickenbacker-area",
@@ -866,7 +892,8 @@
         "logistics",
         "rickenbacker"
       ],
-      "canonical_slug": "959-579-sf-spec-warehouse-breaks-ground-in-columbus-s-rickenbacker-area"
+      "canonical_slug": "959-579-sf-spec-warehouse-breaks-ground-in-columbus-s-rickenbacker-area",
+      "published_at": null
     },
     {
       "id": "2026-08-19-aldi-will-build-a-downtown-columbus-grocery-store-by-2028",
@@ -898,7 +925,8 @@
         "retail",
         "columbus-state-community-college"
       ],
-      "canonical_slug": "aldi-will-build-a-downtown-columbus-grocery-store-by-2028"
+      "canonical_slug": "aldi-will-build-a-downtown-columbus-grocery-store-by-2028",
+      "published_at": null
     },
     {
       "id": "2026-08-18-columbus-reverses-250-fee-at-northland-s-new-kilbourne-run-sports-park",
@@ -930,7 +958,8 @@
         "parks-and-recreation",
         "city-investment"
       ],
-      "canonical_slug": "columbus-reverses-250-fee-at-northland-s-new-kilbourne-run-sports-park"
+      "canonical_slug": "columbus-reverses-250-fee-at-northland-s-new-kilbourne-run-sports-park",
+      "published_at": null
     },
     {
       "id": "2026-08-17-former-garver-ymca-site-sold-to-cmha-for-216-affordable-units",
@@ -962,7 +991,8 @@
         "neighborhood",
         "development"
       ],
-      "canonical_slug": "former-garver-ymca-site-sold-to-cmha-for-216-affordable-units"
+      "canonical_slug": "former-garver-ymca-site-sold-to-cmha-for-216-affordable-units",
+      "published_at": null
     },
     {
       "id": "2026-08-16-chicago-firm-snaps-up-polaris-retail-center-for-15-5-million",
@@ -994,7 +1024,8 @@
         "commercial-real-estate",
         "development"
       ],
-      "canonical_slug": "chicago-firm-snaps-up-polaris-retail-center-for-15-5-million"
+      "canonical_slug": "chicago-firm-snaps-up-polaris-retail-center-for-15-5-million",
+      "published_at": null
     },
     {
       "id": "2026-08-15-columbus-inventory-up-7-what-a-quieter-summer-market-means",
@@ -1024,7 +1055,8 @@
         "market-trends",
         "housing-inventory"
       ],
-      "canonical_slug": "central-ohio-inventory-rose-7-as-june-prices-held-firm"
+      "canonical_slug": "central-ohio-inventory-rose-7-as-june-prices-held-firm",
+      "published_at": null
     },
     {
       "id": "2026-08-14-hilliard-s-new-pickleball-kingdom-club-opens-late-august-with-15-courts",
@@ -1056,7 +1088,8 @@
         "pickleball",
         "retail"
       ],
-      "canonical_slug": "hilliard-pickleball-club-still-says-coming-soon-before-target"
+      "canonical_slug": "hilliard-pickleball-club-still-says-coming-soon-before-target",
+      "published_at": null
     },
     {
       "id": "2026-08-14-dublin-s-bridge-park-breaks-ground-on-89-condos-starting-at-400k",
@@ -1088,7 +1121,8 @@
         "bridge-park",
         "condominiums"
       ],
-      "canonical_slug": "the-ellis-starts-construction-after-dublin-approved-block-j-plan"
+      "canonical_slug": "the-ellis-starts-construction-after-dublin-approved-block-j-plan",
+      "published_at": null
     },
     {
       "id": "2026-08-13-ohio-opens-45-6m-welcome-home-round-for-columbus-nonprofits",
@@ -1121,7 +1155,8 @@
         "affordable-housing",
         "local-politics"
       ],
-      "canonical_slug": "ohio-opens-45-6m-welcome-home-round-for-columbus-nonprofits"
+      "canonical_slug": "ohio-opens-45-6m-welcome-home-round-for-columbus-nonprofits",
+      "published_at": null
     },
     {
       "id": "2026-08-13-gahanna-industrial-campus-near-airport-sells-for-42-million",
@@ -1154,7 +1189,8 @@
         "development",
         "neighborhood"
       ],
-      "canonical_slug": "gahanna-industrial-campus-near-airport-sells-for-42-million"
+      "canonical_slug": "gahanna-industrial-campus-near-airport-sells-for-42-million",
+      "published_at": null
     },
     {
       "id": "2026-08-12-micro-center-columbus-flagship-reopens-aug-22-after-big-remodel",
@@ -1184,7 +1220,8 @@
         "events-lifestyle",
         "retail"
       ],
-      "canonical_slug": "micro-center-sets-aug-22-debut-for-remodeled-columbus-store"
+      "canonical_slug": "micro-center-sets-aug-22-debut-for-remodeled-columbus-store",
+      "published_at": null
     },
     {
       "id": "2026-08-12-franklin-county-home-sales-cool-as-mortgage-rates-hit-a-yearlong-high",
@@ -1215,7 +1252,8 @@
         "franklin-county",
         "mortgage-rates"
       ],
-      "canonical_slug": "franklin-county-weekly-sales-need-context-as-rates-rise"
+      "canonical_slug": "franklin-county-weekly-sales-need-context-as-rates-rise",
+      "published_at": null
     },
     {
       "id": "2026-08-11-ohio-s-120-million-brownfield-fund-opens-for-columbus-applications",
@@ -1247,7 +1285,8 @@
         "housing-policy",
         "franklin-county"
       ],
-      "canonical_slug": "ohio-s-120-million-brownfield-fund-opens-for-columbus-applications"
+      "canonical_slug": "ohio-s-120-million-brownfield-fund-opens-for-columbus-applications",
+      "published_at": null
     },
     {
       "id": "2026-08-10-the-line-a-job-training-restaurant-nears-an-august-opening-downtown",
@@ -1278,7 +1317,8 @@
         "downtown-columbus",
         "workforce-training"
       ],
-      "canonical_slug": "the-line-training-restaurant-still-lists-opening-as-coming-soon"
+      "canonical_slug": "the-line-training-restaurant-still-lists-opening-as-coming-soon",
+      "published_at": null
     },
     {
       "id": "2026-08-10-nrp-group-breaks-ground-on-336-unit-osu-east-apartments-in-columbus",
@@ -1308,7 +1348,8 @@
         "development",
         "columbus"
       ],
-      "canonical_slug": "nrp-group-breaks-ground-on-336-unit-osu-east-apartments-in-columbus"
+      "canonical_slug": "nrp-group-breaks-ground-on-336-unit-osu-east-apartments-in-columbus",
+      "published_at": null
     },
     {
       "id": "2026-08-10-gahanna-creekside-site-is-cleared-but-plans-are-still-early",
@@ -1338,7 +1379,8 @@
         "development",
         "gahanna"
       ],
-      "canonical_slug": "gahanna-creekside-site-is-cleared-but-plans-are-still-early"
+      "canonical_slug": "gahanna-creekside-site-is-cleared-but-plans-are-still-early",
+      "published_at": null
     },
     {
       "id": "2026-08-07-clintonville-s-harvest-bar-kitchen-reopens-after-two-fires-in-two-years",
@@ -1369,7 +1411,8 @@
         "clintonville",
         "correction"
       ],
-      "canonical_slug": "harvest-clintonville-reopened-in-2024-not-after-a-2026-fire"
+      "canonical_slug": "harvest-clintonville-reopened-in-2024-not-after-a-2026-fire",
+      "published_at": null
     },
     {
       "id": "2026-08-07-columbus-region-needs-20-000-new-homes-a-year-leaders-say",
@@ -1399,7 +1442,8 @@
         "local-politics",
         "housing-policy"
       ],
-      "canonical_slug": "columbus-housing-goal-is-a-target-not-a-measured-deficit"
+      "canonical_slug": "columbus-housing-goal-is-a-target-not-a-measured-deficit",
+      "published_at": null
     },
     {
       "id": "2026-08-06-chase-rice-s-welcome-to-the-farm-country-bar-opens-aug-22-in-columbus-s-short-no",
@@ -1429,7 +1473,8 @@
         "events-lifestyle",
         "short-north"
       ],
-      "canonical_slug": "welcome-to-the-farm-sets-august-22-short-north-opening"
+      "canonical_slug": "welcome-to-the-farm-sets-august-22-short-north-opening",
+      "published_at": null
     },
     {
       "id": "2026-08-06-columbus-s-arena-district-could-get-242-new-apartments-on-a-gravel-lot-near-nort",
@@ -1459,7 +1504,8 @@
         "arena-district",
         "development"
       ],
-      "canonical_slug": "arena-district-242-unit-plan-remains-in-early-design"
+      "canonical_slug": "arena-district-242-unit-plan-remains-in-early-design",
+      "published_at": null
     },
     {
       "id": "2026-08-05-columbus-food-truck-festival-returns-to-hilliard-aug-14-15-with-45-plus-trucks",
@@ -1489,7 +1535,8 @@
         "events-lifestyle",
         "hilliard"
       ],
-      "canonical_slug": "columbus-food-truck-festival-continues-in-hilliard-through-tonight"
+      "canonical_slug": "columbus-food-truck-festival-continues-in-hilliard-through-tonight",
+      "published_at": null
     },
     {
       "id": "2026-08-05-columbus-s-new-albany-data-center-corridor-gets-a-grid-boost-from-ohio-s-biggest",
@@ -1520,7 +1567,8 @@
         "new-albany",
         "energy-infrastructure"
       ],
-      "canonical_slug": "flint-grid-battery-starts-construction-near-new-albany"
+      "canonical_slug": "flint-grid-battery-starts-construction-near-new-albany",
+      "published_at": null
     },
     {
       "id": "2026-08-04-columbus-s-east-side-bagel-shop-reopens-as-anything-bagel-keeping-block-s-origin",
@@ -1550,7 +1598,8 @@
         "events-lifestyle",
         "east-columbus"
       ],
-      "canonical_slug": "anything-bagel-opens-in-former-block-s-east-columbus-shop"
+      "canonical_slug": "anything-bagel-opens-in-former-block-s-east-columbus-shop",
+      "published_at": null
     },
     {
       "id": "2026-08-04-licking-county-s-500-home-heath-hills-project-collapses-fueling-ohio-annexation-",
@@ -1581,7 +1630,8 @@
         "licking-county",
         "annexation"
       ],
-      "canonical_slug": "m-i-homes-withdraws-heath-hills-as-annexation-debate-continues"
+      "canonical_slug": "m-i-homes-withdraws-heath-hills-as-annexation-debate-continues",
+      "published_at": null
     },
     {
       "id": "2026-08-03-columbus-s-arena-district-hosts-three-leagues-cup-matches-this-week-as-astor-par",
@@ -1612,7 +1662,8 @@
         "downtown-columbus",
         "columbus-crew"
       ],
-      "canonical_slug": "crew-advances-from-leagues-cup-astor-park-is-a-separate-story"
+      "canonical_slug": "crew-advances-from-leagues-cup-astor-park-is-a-separate-story",
+      "published_at": null
     },
     {
       "id": "2026-08-03-gahanna-clears-mill-street-for-100-million-creekside-apartment-and-hotel-project",
@@ -1642,7 +1693,8 @@
         "gahanna",
         "development"
       ],
-      "canonical_slug": "gahanna-clears-creekside-sites-but-construction-is-unset"
+      "canonical_slug": "gahanna-clears-creekside-sites-but-construction-is-unset",
+      "published_at": null
     },
     {
       "id": "2026-08-02-columbus-s-newest-metro-park-lands-in-lockbourne-with-a-100-foot-slide-and-a-10-",
@@ -1673,7 +1725,8 @@
         "lockbourne",
         "parks"
       ],
-      "canonical_slug": "bank-run-event-center-opens-while-metro-park-work-continues"
+      "canonical_slug": "bank-run-event-center-opens-while-metro-park-work-continues",
+      "published_at": null
     },
     {
       "id": "2026-08-02-columbus-s-olde-towne-east-to-get-65-affordable-apartments-from-ex-nfl-player-s-",
@@ -1704,7 +1757,8 @@
         "olde-towne-east",
         "affordable-housing"
       ],
-      "canonical_slug": "mercy-on-main-wins-conditional-credits-for-65-columbus-homes"
+      "canonical_slug": "mercy-on-main-wins-conditional-credits-for-65-columbus-homes",
+      "published_at": null
     },
     {
       "id": "2026-08-01-columbus-cancels-335-million-downtown-courthouse-picks-renovation-instead",
@@ -1735,7 +1789,8 @@
         "downtown-columbus",
         "public-finance"
       ],
-      "canonical_slug": "columbus-stops-new-courthouse-plan-and-turns-to-renovation"
+      "canonical_slug": "columbus-stops-new-courthouse-plan-and-turns-to-renovation",
+      "published_at": null
     },
     {
       "id": "2026-07-31-columbus-s-pelotonia-ride-weekend-returns-downtown-with-8-000-riders-aug-1-2",
@@ -1766,7 +1821,8 @@
         "downtown-columbus",
         "pelotonia"
       ],
-      "canonical_slug": "pelotonia-s-2026-ride-used-a-new-short-route-totals-are-pending"
+      "canonical_slug": "pelotonia-s-2026-ride-used-a-new-short-route-totals-are-pending",
+      "published_at": null
     },
     {
       "id": "2026-07-31-columbus-s-upper-arlington-homes-lead-franklin-county-s-priciest-sales-at-3-36-m",
@@ -1797,7 +1853,8 @@
         "market-trends",
         "neighborhood"
       ],
-      "canonical_slug": "upper-arlington-led-one-week-of-high-price-county-sales"
+      "canonical_slug": "upper-arlington-led-one-week-of-high-price-county-sales",
+      "published_at": null
     },
     {
       "id": "2026-07-30-columbus-festival-latino-moves-downtown-to-columbus-commons-for-29th-year",
@@ -1828,7 +1885,8 @@
         "downtown-columbus",
         "festival-latino"
       ],
-      "canonical_slug": "festival-latino-columbus-move-changes-downtown-visitor-plan"
+      "canonical_slug": "festival-latino-columbus-move-changes-downtown-visitor-plan",
+      "published_at": null
     },
     {
       "id": "2026-07-30-columbus-home-values-jump-10-in-franklin-county-s-2026-reassessment-how-to-chall",
@@ -1858,7 +1916,8 @@
         "local-politics",
         "property-taxes"
       ],
-      "canonical_slug": "franklin-county-tentative-home-values-rise-about-10"
+      "canonical_slug": "franklin-county-tentative-home-values-rise-about-10",
+      "published_at": null
     },
     {
       "id": "2026-07-29-dublin-irish-festival-returns-for-its-39th-year-at-coffman-park-july-31-aug-2",
@@ -1888,7 +1947,8 @@
         "events-lifestyle",
         "dublin"
       ],
-      "canonical_slug": "dublin-irish-festival-completed-its-39th-year-at-coffman-park"
+      "canonical_slug": "dublin-irish-festival-completed-its-39th-year-at-coffman-park",
+      "published_at": null
     },
     {
       "id": "2026-07-29-obetz-breaks-ground-on-190-960-square-foot-warehouse-near-rickenbacker-airport",
@@ -1919,7 +1979,8 @@
         "obetz",
         "industrial-real-estate"
       ],
-      "canonical_slug": "merus-starts-190-960-square-foot-obetz-industrial-project"
+      "canonical_slug": "merus-starts-190-960-square-foot-obetz-industrial-project",
+      "published_at": null
     },
     {
       "id": "2026-07-28-ohio-state-fair-opens-july-29-with-new-buildings-amphitheater-and-carousel",
@@ -1949,7 +2010,8 @@
         "events-lifestyle",
         "public-facilities"
       ],
-      "canonical_slug": "ohio-state-fair-opens-with-two-new-exhibition-buildings"
+      "canonical_slug": "ohio-state-fair-opens-with-two-new-exhibition-buildings",
+      "published_at": null
     },
     {
       "id": "2026-07-28-columbus-rickenbacker-industrial-building-sells-for-49-million-to-boyd-watterson",
@@ -1979,7 +2041,8 @@
         "development",
         "industrial-real-estate"
       ],
-      "canonical_slug": "columbus-rickenbacker-warehouse-sale-reported-at-49-million"
+      "canonical_slug": "columbus-rickenbacker-warehouse-sale-reported-at-49-million",
+      "published_at": null
     },
     {
       "id": "2026-07-26-canal-winchester-industrial-campus-breaks-ground-898-500-square-feet-and-400-job",
@@ -2010,7 +2073,8 @@
         "canal-winchester",
         "industrial"
       ],
-      "canonical_slug": "canal-crossing-starts-construction-but-400-jobs-remain-a-forecast"
+      "canonical_slug": "canal-crossing-starts-construction-but-400-jobs-remain-a-forecast",
+      "published_at": null
     },
     {
       "id": "2026-07-26-reynoldsburg-approves-summit-crossing-664-townhomes-and-apartments-on-summit-roa",
@@ -2040,7 +2104,8 @@
         "reynoldsburg",
         "development"
       ],
-      "canonical_slug": "summit-crossing-remains-a-664-home-reynoldsburg-plan"
+      "canonical_slug": "summit-crossing-remains-a-664-home-reynoldsburg-plan",
+      "published_at": null
     },
     {
       "id": "2026-07-17-dublin-approves-bridge-north-296-homes-a-hotel-and-offices-near-bridge-park",
@@ -2071,7 +2136,8 @@
         "dublin",
         "mixed-use"
       ],
-      "canonical_slug": "dublin-approves-bridge-north-plan-with-296-homes"
+      "canonical_slug": "dublin-approves-bridge-north-plan-with-296-homes",
+      "published_at": null
     },
     {
       "id": "2026-07-17-columbus-short-north-lands-tonchin-a-tokyo-ramen-brand-on-high-street",
@@ -2101,7 +2167,8 @@
         "events-lifestyle",
         "short-north"
       ],
-      "canonical_slug": "tonchin-plans-first-ohio-ramen-shop-in-columbus-short-north"
+      "canonical_slug": "tonchin-plans-first-ohio-ramen-shop-in-columbus-short-north",
+      "published_at": null
     },
     {
       "id": "2026-07-10-columbus-olde-towne-east-home-tour-opens-11-historic-homes-and-gardens-july-12",
@@ -2131,7 +2198,8 @@
         "events-lifestyle",
         "olde-towne-east"
       ],
-      "canonical_slug": "olde-towne-east-s-2026-home-tour-featured-11-stops"
+      "canonical_slug": "olde-towne-east-s-2026-home-tour-featured-11-stops",
+      "published_at": null
     },
     {
       "id": "2026-07-10-columbus-releases-adu-handbook-as-report-says-sewer-rules-keep-backyard-home-cos",
@@ -2161,7 +2229,8 @@
         "development",
         "accessory-dwelling-units"
       ],
-      "canonical_slug": "columbus-adu-guide-clarifies-rules-but-sewer-question-remains"
+      "canonical_slug": "columbus-adu-guide-clarifies-rules-but-sewer-question-remains",
+      "published_at": null
     },
     {
       "id": "2026-07-09-columbus-jazz-rib-fest-returns-to-the-scioto-mile-july-24-26-with-free-admission",
@@ -2191,7 +2260,8 @@
         "downtown-columbus",
         "events-lifestyle"
       ],
-      "canonical_slug": "jazz-rib-fest-sets-three-day-scioto-mile-schedule"
+      "canonical_slug": "jazz-rib-fest-sets-three-day-scioto-mile-schedule",
+      "published_at": null
     },
     {
       "id": "2026-07-09-columbus-discovery-district-deal-turns-downtown-parking-lots-into-518-apartments",
@@ -2222,7 +2292,8 @@
         "discovery-district",
         "downtown-columbus"
       ],
-      "canonical_slug": "columbus-discovery-district-deal-authorizes-talks-not-construction"
+      "canonical_slug": "columbus-discovery-district-deal-authorizes-talks-not-construction",
+      "published_at": null
     },
     {
       "id": "2026-07-08-columbus-opens-its-21st-metro-park-along-the-scioto-river-on-the-south-side",
@@ -2253,7 +2324,8 @@
         "south-side",
         "parks"
       ],
-      "canonical_slug": "great-southern-opens-as-central-ohio-s-21st-metro-park"
+      "canonical_slug": "great-southern-opens-as-central-ohio-s-21st-metro-park",
+      "published_at": null
     },
     {
       "id": "2026-07-08-schmidt-s-columbus-oktoberfest-returns-september-11-13-with-roots-in-german-vill",
@@ -2284,7 +2356,8 @@
         "german-village",
         "oktoberfest"
       ],
-      "canonical_slug": "columbus-oktoberfest-returns-but-it-does-not-prove-home-demand"
+      "canonical_slug": "columbus-oktoberfest-returns-but-it-does-not-prove-home-demand",
+      "published_at": null
     },
     {
       "id": "2026-07-08-cota-s-new-line-30-will-link-dublin-hilliard-and-upper-arlington-to-ohio-state",
@@ -2315,7 +2388,8 @@
         "hilliard",
         "transit"
       ],
-      "canonical_slug": "cota-line-30-will-serve-hilliard-not-dublin-in-september"
+      "canonical_slug": "cota-line-30-will-serve-hilliard-not-dublin-in-september",
+      "published_at": null
     },
     {
       "id": "2026-07-08-a-new-riverfront-restaurant-called-amara-is-coming-to-downtown-s-scioto-mile",
@@ -2345,7 +2419,8 @@
         "events-lifestyle",
         "downtown-columbus"
       ],
-      "canonical_slug": "amara-brings-mediterranean-dining-back-to-the-scioto-mile"
+      "canonical_slug": "amara-brings-mediterranean-dining-back-to-the-scioto-mile",
+      "published_at": null
     },
     {
       "id": "2026-07-08-columbus-rolls-out-500-million-plan-to-build-more-affordable-homes",
@@ -2375,7 +2450,8 @@
         "local-politics",
         "affordable-housing"
       ],
-      "canonical_slug": "columbus-begins-deploying-500-million-housing-bond"
+      "canonical_slug": "columbus-begins-deploying-500-million-housing-bond",
+      "published_at": null
     },
     {
       "id": "2026-07-08-columbus-zone-in-reform-could-open-room-for-88-000-new-homes",
@@ -2406,7 +2482,8 @@
         "development",
         "zoning"
       ],
-      "canonical_slug": "zone-in-adds-capacity-not-88-000-built-columbus-homes"
+      "canonical_slug": "zone-in-adds-capacity-not-88-000-built-columbus-homes",
+      "published_at": null
     },
     {
       "id": "2026-07-08-ohio-hits-pause-on-data-center-tax-breaks-after-costs-explode",
@@ -2437,7 +2514,8 @@
         "data-centers",
         "tax-policy"
       ],
-      "canonical_slug": "ohio-pauses-new-data-center-tax-deals-not-existing-benefits"
+      "canonical_slug": "ohio-pauses-new-data-center-tax-deals-not-existing-benefits",
+      "published_at": null
     },
     {
       "id": "2026-07-08-mortgage-rates-slip-to-a-seven-week-low-what-it-means-for-columbus-buyers",
@@ -2467,7 +2545,8 @@
         "market-trends",
         "mortgage-rates"
       ],
-      "canonical_slug": "columbus-mortgage-rate-story-went-stale-within-one-week"
+      "canonical_slug": "columbus-mortgage-rate-story-went-stale-within-one-week",
+      "published_at": null
     },
     {
       "id": "2026-07-08-central-ohio-home-prices-keep-climbing-as-more-homes-hit-the-market",
@@ -2497,7 +2576,8 @@
         "market-trends",
         "housing-inventory"
       ],
-      "canonical_slug": "central-ohio-added-listings-while-may-home-prices-rose"
+      "canonical_slug": "central-ohio-added-listings-while-may-home-prices-rose",
+      "published_at": null
     },
     {
       "id": "2026-07-08-bexley-home-values-rose-3-while-homes-sold-faster-in-early-2026",
@@ -2528,7 +2608,8 @@
         "bexley",
         "neighborhood"
       ],
-      "canonical_slug": "bexley-spring-sales-rose-but-one-month-is-not-a-trend"
+      "canonical_slug": "bexley-spring-sales-rose-but-one-month-is-not-a-trend",
+      "published_at": null
     },
     {
       "id": "2026-07-08-upper-arlington-schools-put-a-285-million-building-plan-on-the-november-ballot",
@@ -2559,7 +2640,8 @@
         "upper-arlington",
         "tax-policy"
       ],
-      "canonical_slug": "upper-arlington-ballot-combines-273-5m-bond-and-4-9-mills"
+      "canonical_slug": "upper-arlington-ballot-combines-273-5m-bond-and-4-9-mills",
+      "published_at": null
     },
     {
       "id": "2026-07-08-german-village-prices-hold-steady-in-2026-as-historic-charm-keeps-buyers-coming",
@@ -2590,7 +2672,8 @@
         "german-village",
         "neighborhood"
       ],
-      "canonical_slug": "german-village-data-show-higher-prices-but-slower-sales-in-2026"
+      "canonical_slug": "german-village-data-show-higher-prices-but-slower-sales-in-2026",
+      "published_at": null
     },
     {
       "id": "2026-07-08-clintonville-homes-sold-in-just-10-days-in-may-even-as-prices-cooled",
@@ -2621,7 +2704,8 @@
         "clintonville",
         "neighborhood"
       ],
-      "canonical_slug": "clintonville-market-reports-disagree-on-may-sales-pace"
+      "canonical_slug": "clintonville-market-reports-disagree-on-may-sales-pace",
+      "published_at": null
     },
     {
       "id": "2026-07-08-downtown-hilliard-s-old-chase-bank-set-for-restaurant-and-apartments",
@@ -2652,7 +2736,8 @@
         "hilliard",
         "mixed-use"
       ],
-      "canonical_slug": "hilliard-selects-mixed-use-concept-for-former-chase-site"
+      "canonical_slug": "hilliard-selects-mixed-use-concept-for-former-chase-site",
+      "published_at": null
     },
     {
       "id": "2026-07-08-stark-enterprises-to-break-ground-on-build-to-rent-community-in-canal-winchester",
@@ -2683,7 +2768,8 @@
         "canal-winchester",
         "rental-housing"
       ],
-      "canonical_slug": "canal-winchester-lock-pointe-advances-with-120-unit-limit"
+      "canonical_slug": "canal-winchester-lock-pointe-advances-with-120-unit-limit",
+      "published_at": null
     },
     {
       "id": "2026-07-08-hilltop-rise-moves-to-renovate-two-historic-west-broad-buildings",
@@ -2715,7 +2801,8 @@
         "neighborhood",
         "affordable-housing"
       ],
-      "canonical_slug": "hilltop-rise-purchase-is-funded-renovation-outcomes-need-proof"
+      "canonical_slug": "hilltop-rise-purchase-is-funded-renovation-outcomes-need-proof",
+      "published_at": null
     },
     {
       "id": "2026-07-08-cmha-opens-82-unit-senior-complex-in-grove-city-backs-125m-housing-push",
@@ -2746,7 +2833,8 @@
         "grove-city",
         "affordable-housing"
       ],
-      "canonical_slug": "cmha-opens-82-home-senior-community-in-grove-city"
+      "canonical_slug": "cmha-opens-82-home-senior-community-in-grove-city",
+      "published_at": null
     },
     {
       "id": "2026-07-08-dublin-s-new-bishop-elementary-opens-this-august-what-it-signals-for-homebuyers",
@@ -2777,7 +2865,8 @@
         "dublin",
         "neighborhood"
       ],
-      "canonical_slug": "dublin-bishop-elementary-is-already-open-boundaries-still-matter"
+      "canonical_slug": "dublin-bishop-elementary-is-already-open-boundaries-still-matter",
+      "published_at": null
     },
     {
       "id": "2026-07-08-westerville-homes-sold-in-9-days-in-may-but-two-price-gauges-disagree",
@@ -2808,7 +2897,8 @@
         "westerville",
         "housing-data"
       ],
-      "canonical_slug": "westerville-housing-gauges-disagree-because-their-methods-differ"
+      "canonical_slug": "westerville-housing-gauges-disagree-because-their-methods-differ",
+      "published_at": null
     },
     {
       "id": "2026-07-08-meta-s-prometheus-data-center-nears-launch-in-new-albany-and-your-power-bill-is-",
@@ -2839,7 +2929,8 @@
         "new-albany",
         "data-centers"
       ],
-      "canonical_slug": "meta-prometheus-advances-but-household-bill-claims-need-evidence"
+      "canonical_slug": "meta-prometheus-advances-but-household-bill-claims-need-evidence",
+      "published_at": null
     },
     {
       "id": "2026-07-08-dublin-green-light-20-million-dollar-homes-coming-to-bright-road-reserve",
@@ -2870,7 +2961,8 @@
         "dublin",
         "housing"
       ],
-      "canonical_slug": "dublin-bright-road-plan-advances-but-price-effects-are-unproven"
+      "canonical_slug": "dublin-bright-road-plan-advances-but-price-effects-are-unproven",
+      "published_at": null
     },
     {
       "id": "2026-07-08-arena-district-office-tower-to-become-148-columbus-apartments-in-nationwide-conv",
@@ -2900,7 +2992,8 @@
         "development",
         "arena-district"
       ],
-      "canonical_slug": "nationwide-details-148-home-columbus-conversion-at-280-north-high"
+      "canonical_slug": "nationwide-details-148-home-columbus-conversion-at-280-north-high",
+      "published_at": null
     },
     {
       "id": "2026-07-08-italian-village-state-library-site-to-become-419-unit-columbus-apartment-complex",
@@ -2931,7 +3024,8 @@
         "italian-village",
         "housing"
       ],
-      "canonical_slug": "italian-village-rezoning-allows-419-units-construction-is-not-set"
+      "canonical_slug": "italian-village-rezoning-allows-419-units-construction-is-not-set",
+      "published_at": null
     },
     {
       "id": "2026-07-08-downtown-columbus-north-market-tower-set-to-open-in-2026-with-174-apartments",
@@ -2962,7 +3056,8 @@
         "downtown-columbus",
         "north-market"
       ],
-      "canonical_slug": "columbus-north-market-tower-program-now-lists-142-residences"
+      "canonical_slug": "columbus-north-market-tower-program-now-lists-142-residences",
+      "published_at": null
     },
     {
       "id": "2026-07-08-franklinton-gets-235-new-apartments-as-westrich-opens-on-west-rich-street",
@@ -2993,7 +3088,8 @@
         "franklinton",
         "mixed-income-housing"
       ],
-      "canonical_slug": "franklinton-westrich-opens-with-234-units-and-mixed-income-goals"
+      "canonical_slug": "franklinton-westrich-opens-with-234-units-and-mixed-income-goals",
+      "published_at": null
     },
     {
       "id": "2026-07-08-columbus-book-festival-brings-120-authors-downtown-july-11-12-with-free-admissio",
@@ -3023,7 +3119,8 @@
         "downtown-columbus",
         "events-lifestyle"
       ],
-      "canonical_slug": "columbus-book-festival-confirms-120-plus-author-lineup"
+      "canonical_slug": "columbus-book-festival-confirms-120-plus-author-lineup",
+      "published_at": null
     },
     {
       "id": "2026-07-08-columbus-near-east-side-affordable-housing-10m-state-tax-credit-backs-380-apartm",
@@ -3054,7 +3151,8 @@
         "development",
         "affordable-housing"
       ],
-      "canonical_slug": "state-credit-advances-380-unit-sawyer-boulevard-proposal"
+      "canonical_slug": "state-credit-advances-380-unit-sawyer-boulevard-proposal",
+      "published_at": null
     },
     {
       "id": "a6",
@@ -3084,7 +3182,8 @@
         "development",
         "office-market"
       ],
-      "canonical_slug": "columbus-office-recovery-is-led-by-class-a-leasing"
+      "canonical_slug": "columbus-office-recovery-is-led-by-class-a-leasing",
+      "published_at": null
     },
     {
       "id": "a5",
@@ -3114,7 +3213,8 @@
         "market-trends",
         "rental-market"
       ],
-      "canonical_slug": "columbus-apartment-supply-is-pressuring-downtown-vacancy"
+      "canonical_slug": "columbus-apartment-supply-is-pressuring-downtown-vacancy",
+      "published_at": null
     },
     {
       "id": "a4",
@@ -3145,7 +3245,8 @@
         "new-albany",
         "licking-county"
       ],
-      "canonical_slug": "intel-ohio-delay-leaves-land-value-claims-hard-to-prove"
+      "canonical_slug": "intel-ohio-delay-leaves-land-value-claims-hard-to-prove",
+      "published_at": null
     },
     {
       "id": "a3",
@@ -3176,7 +3277,8 @@
         "german-village",
         "neighborhood"
       ],
-      "canonical_slug": "german-village-home-prices-are-high-but-the-sample-is-small"
+      "canonical_slug": "german-village-home-prices-are-high-but-the-sample-is-small",
+      "published_at": null
     },
     {
       "id": "a2",
@@ -3207,7 +3309,8 @@
         "franklinton",
         "neighborhood"
       ],
-      "canonical_slug": "franklinton-development-is-spreading-beyond-one-megaproject"
+      "canonical_slug": "franklinton-development-is-spreading-beyond-one-megaproject",
+      "published_at": null
     },
     {
       "id": "a1",
@@ -3237,7 +3340,8 @@
         "market-trends",
         "housing-inventory"
       ],
-      "canonical_slug": "columbus-inventory-rose-in-2025-but-prices-kept-climbing"
+      "canonical_slug": "columbus-inventory-rose-in-2025-but-prices-kept-climbing",
+      "published_at": null
     }
   ],
   "ads": [],
@@ -3899,37 +4003,37 @@
   ],
   "tickers": [
     {
-      "id": 247,
-      "text": "Connect Housing Blocks opens the second modular building at Reserve at Maryland on the Near East Side Sept. 16; 84 units total across four buildings at 60% AMI",
+      "id": 253,
+      "text": "Ohio State will move its Moritz College of Law downtown into the historic Huntington Bank building at 17 S. High St. on a 30-year lease, with an option to buy and a fall 2029 opening",
       "active": true,
       "sort_order": 0
     },
     {
-      "id": 248,
-      "text": "INTRO Columbus, a 13-story mass timber student-housing tower at High & 9th near Ohio State, topped out Sept. 8 — ten weeks early and the tallest of its kind in the U.S.",
+      "id": 254,
+      "text": "Connect Housing Blocks opens the second modular building at Reserve at Maryland on the Near East Side Sept. 16; 84 units total across four buildings at 60% AMI",
       "active": true,
       "sort_order": 1
     },
     {
-      "id": 249,
-      "text": "Columbus's $267M Lower Olentangy Tunnel enters its final construction weeks; substantial completion is targeted for the end of September",
+      "id": 255,
+      "text": "INTRO Columbus, a 13-story mass timber student-housing tower at High & 9th near Ohio State, topped out Sept. 8 — ten weeks early and the tallest of its kind in the U.S.",
       "active": true,
       "sort_order": 2
     },
     {
-      "id": 250,
-      "text": "Ohio's $120M brownfield remediation grant round closed Sept. 11; Franklin County land bank COCIC has secured $28.9M for six sites in prior rounds",
+      "id": 256,
+      "text": "Columbus's $267M Lower Olentangy Tunnel enters its final construction weeks; substantial completion is targeted for the end of September",
       "active": true,
       "sort_order": 3
     },
     {
-      "id": 251,
+      "id": 257,
       "text": "Columbus HRC approves a 106-unit, six-story apartment building at 1036 S. Front St. in the Brewery District, replacing the 1962 former WWCD building",
       "active": true,
       "sort_order": 4
     },
     {
-      "id": 252,
+      "id": 258,
       "text": "Columbus Diocese seeks to demolish its 1908 Gay St. building for surface parking; Downtown Commission vote set for Sept. 22",
       "active": true,
       "sort_order": 5

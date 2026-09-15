@@ -6,7 +6,7 @@ import { CrenPage } from "@/components/cren/cren-page";
 import { getArticles, DbArticle } from "@/lib/public-data";
 import { getArticlePath } from "@/lib/article-routing";
 import { CoverImage } from "@/components/cren/cover-image";
-import { composeDescription } from "@/lib/page-metadata";
+import { composeDescription, titleMetadata } from "@/lib/page-metadata";
 import { absoluteUrl } from "@/lib/site";
 
 export const revalidate = 300;
@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const topic = getTopicBySlug(slug);
   if (!topic) return {};
   return {
-    title: `${topic.name} in Columbus`,
+    title: titleMetadata(`${topic.name} in Columbus`),
     // Longest truthful tail that keeps the description inside 165 characters —
     // the fixed one-sentence template left the shortest topic blurbs at 119.
     description: composeDescription(topic.description, [

@@ -41,7 +41,7 @@ every skip into a blocking failure when you need proof of full coverage.
 | `links-external` | advisory | Outbound source links in articles resolve. **Off by default** — CLAUDE.md forbids hammering other outlets. `--external-links`. |
 | `indexability` | yes | robots.txt, the sitemap and each page's meta robots agree. A sitemap URL that serves `noindex` is a contradiction. |
 | `canonicals` | yes | Exactly one canonical per page, absolute, right host, and a cross-pointing canonical must resolve. Missing canonicals are advisory. |
-| `metadata` | yes | No two indexable pages share a `<title>` or a meta description, and none is missing. Length outside CLAUDE.md's conventions (title 45–75, description 140–165) and a brand repeated inside one title are advisory. |
+| `metadata` | yes | No two indexable pages share a `<title>` or a meta description, and none is missing. Length outside CLAUDE.md's conventions (title 30–65 — Bing Webmaster Tools fails any `<title>` over 65 — description 140–165) and a brand repeated inside one title are advisory. |
 | `schema` | yes | Every `ld+json` block parses; article pages carry a valid `NewsArticle` and `BreadcrumbList`. The homepage must declare an `Organization` and a `WebSite`. Coverage gaps are advisory. |
 | `disclosure-policy-pages` | yes | `/lead-disclosure`, `/editorial-standards`, `/privacy`, `/terms` resolve. |
 | `disclosure-funnel` | yes | `components/funnel-disclosure.tsx` renders on all four funnel pages. |

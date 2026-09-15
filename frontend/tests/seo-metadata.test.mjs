@@ -17,17 +17,14 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { organizationNode, websiteNode, publisherGraph } from "../lib/publisher-schema.ts";
+import { composeTitle, renderTitle, TITLE_MAX, TITLE_MIN, TITLE_SUFFIX } from "../lib/page-metadata.ts";
 
 const FRONTEND = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const APP_DIR = path.join(FRONTEND, "app");
 
-// The root layout's title template. A page title that already ends in the brand
-// renders it twice, e.g. "Join Free | CREN | CREN".
+// `renderTitle` appends the brand when it fits. A page title that already ends
+// in the brand renders it twice, e.g. "Join Free | CREN | CREN".
 const BRAND = "Columbus Real Estate News";
-const BRAND_SUFFIX = ` | ${BRAND}`;
-
-const TITLE_MIN = 45;
-const TITLE_MAX = 75;
 const DESCRIPTION_MIN = 140;
 const DESCRIPTION_MAX = 165;
 
@@ -143,7 +140,7 @@ test("titles and descriptions are unique across the site", () => {
 test("titles and descriptions sit inside the CLAUDE.md SEO bands", () => {
   const problems = [];
   for (const page of pages) {
-    const rendered = `${page.title}${BRAND_SUFFIX}`;
+    const rendered = renderTitle(page.title);
     if (rendered.length < TITLE_MIN || rendered.length > TITLE_MAX) {
       problems.push(`${page.route} rendered title is ${rendered.length} chars (want ${TITLE_MIN}-${TITLE_MAX}): ${rendered}`);
     }
@@ -156,9 +153,43 @@ test("titles and descriptions sit inside the CLAUDE.md SEO bands", () => {
 
 test("no page repeats the brand the layout template already appends", () => {
   const doubled = pages
-    .map((page) => ({ route: page.route, rendered: `${page.title}${BRAND_SUFFIX}` }))
+    .map((page) => ({ route: page.route, rendered: renderTitle(page.title) }))
     .filter((page) => page.rendered.split(BRAND).length - 1 > 1);
   assert.deepEqual(doubled.map((page) => `${page.route}: ${page.rendered}`), []);
+});
+
+test("renderTitle never exceeds Bing's 65-character limit and keeps the brand when it fits", () => {
+  // Bing Webmaster Tools rule SEO050 fails any <title> over 65 characters; its
+  // 2026-09-15 scan flagged 149 pages on this site.
+  assert.equal(renderTitle("Join CREN Free and Follow Your Areas"), `Join CREN Free and Follow Your Areas${TITLE_SUFFIX}`);
+  assert.equal(renderTitle("Sell Your Columbus Home Without an Agent"), "Sell Your Columbus Home Without an Agent");
+  assert.equal(renderTitle("  Columbus   Housing  Guide "), `Columbus Housing Guide${TITLE_SUFFIX}`);
+
+  const clause = "Columbus Zone In Phase 2 Draft Releases — Public Comment Opens Aug. 25";
+  assert.equal(renderTitle(clause), "Columbus Zone In Phase 2 Draft Releases");
+  const comma = "Nationwide Children's Buys $7.6M East Main Street Block, No Plans Yet";
+  assert.equal(renderTitle(comma), "Nationwide Children's Buys $7.6M East Main Street Block");
+  const noBreak = "Upper Arlington's Shops on Lane Avenue Splits Old Anchor Into Three Tenants";
+  const shortened = renderTitle(noBreak);
+  assert.ok(shortened.length <= TITLE_MAX, shortened);
+  assert.ok(shortened.endsWith("…"), shortened);
+  assert.ok(noBreak.startsWith(shortened.slice(0, -1)), shortened);
+
+  for (const headline of [clause, comma, noBreak, "x".repeat(200), "Bexley"]) {
+    assert.ok(renderTitle(headline).length <= TITLE_MAX, `${headline} renders ${renderTitle(headline).length} chars`);
+  }
+});
+
+test("composeTitle prefers the longest phrasing that still fits with the brand", () => {
+  const candidates = (name) => [`${name} Housing & Local Living Guide`, `${name} Housing Guide`, `${name} Guide`];
+  assert.equal(composeTitle(candidates("Bexley")), "Bexley Housing & Local Living Guide");
+  assert.equal(renderTitle(composeTitle(candidates("Bexley"))).length <= TITLE_MAX, true);
+  // "…area Housing Guide" (44) only fits bare; "…area Guide" (36) still fits WITH the brand, so it wins.
+  assert.equal(composeTitle(candidates("The Ohio State University area")), "The Ohio State University area Guide");
+  // Nothing fits with the brand, so the longest bare-fitting phrasing wins.
+  assert.equal(composeTitle(["x".repeat(60), "x".repeat(50)]), "x".repeat(60));
+  // Nothing fits at all: the last candidate is the caller's shortest.
+  assert.equal(composeTitle(["x".repeat(90), "x".repeat(80)]), "x".repeat(80));
 });
 
 test("the homepage publisher graph asserts only facts the site publishes", () => {

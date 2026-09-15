@@ -11,6 +11,7 @@ import { ArticleCtaSection } from "@/components/article-cta";
 import { resolveArticleCta } from "@/lib/article-cta";
 import { getAreaFollowPromise } from "@/lib/consumer-insights";
 import { absoluteUrl, safeJsonLd } from '@/lib/site';
+import { titleMetadata } from '@/lib/page-metadata';
 
 export const revalidate = 300;
 
@@ -139,7 +140,7 @@ export async function generateMetadata({
   }
   if (!article && blogPost) {
     return {
-      title: blogPost.title,
+      title: titleMetadata(blogPost.title),
       description: blogPost.excerpt,
       alternates: { canonical: `/blog/${blogPost.slug}` },
     };
@@ -150,7 +151,7 @@ export async function generateMetadata({
   const publishedTime = toIsoDateTime(article.created_at);
   const modifiedTime = toIsoDateTime(article.updated_at) ?? publishedTime;
   return {
-    title: article.title,
+    title: titleMetadata(article.title),
     description,
     alternates: { canonical: canonicalUrl },
     openGraph: {

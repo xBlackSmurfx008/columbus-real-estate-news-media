@@ -11,18 +11,18 @@ import { absoluteUrl } from './site.ts';
 // in three different shapes. A helper makes the correct shape the cheap one.
 //
 // Rules encoded here:
-//  - `title` is the bare page title. The root layout appends the brand, so
-//    never write it twice.
+//  - `title` is the bare page title. `renderTitle` decides whether the brand
+//    suffix fits and emits an absolute <title>, so never write the brand twice.
 //  - the canonical is always absolute and always self-referencing, built from
 //    `absoluteUrl` so there is one definition of the site origin.
 //  - per-visitor utility pages pass `noindex: true`. Those pages must also stay
-//    out of `app/sitemap.ts`; `tests/page-metadata.test.mjs` fails the build if
+//    out of `app/sitemap.ts`; `tests/seo-metadata.test.mjs` fails the build if
 //    a noindex path is listed there.
 
 export type PageMetadataInput = {
   /** Site-root-relative path, e.g. `/sell/your-home`. */
   path: string;
-  /** Page title WITHOUT the brand suffix — the root layout template adds it. */
+  /** Page title WITHOUT the brand suffix — `renderTitle` appends it when it fits. */
   title: string;
   /** Meta description. CLAUDE.md's SEO convention is 140-165 characters. */
   description: string;
@@ -34,23 +34,85 @@ export type PageMetadataInput = {
 export const DESCRIPTION_MIN = 140;
 export const DESCRIPTION_MAX = 165;
 
-/** The root layout appends this to every page title. */
+/** The brand a rendered <title> carries whenever there is room for it. */
 export const TITLE_SUFFIX = ' | Columbus Real Estate News';
-export const TITLE_MAX = 75;
 
 /**
- * Longest candidate title whose RENDERED length (with the brand suffix the
- * layout adds) still fits. Generated hubs interpolate a place name, so a
- * template that is comfortable for "Bexley" runs past the limit for "The Ohio
- * State University area"; this picks a shorter phrasing for the long names
- * instead of letting the results page cut one.
+ * Bing Webmaster Tools' SEO analyzer fails any <title> over 65 characters
+ * (rule SEO050, "Title too long"). Its 2026-09-15 scan of the site flagged 149
+ * pages: every article, 27 area hubs and a dozen hand-authored pages. The
+ * previous ceiling here was 75, and the 28-character brand suffix made even
+ * that unreachable for any headline longer than 37 characters.
+ */
+export const TITLE_MAX = 65;
+/** Below roughly 25 characters Bing may substitute a heading for the title. */
+export const TITLE_MIN = 30;
+
+function normalise(value: string): string {
+  return value.trim().replace(/\s+/g, ' ');
+}
+
+/**
+ * The exact <title> a page serves, from its bare title:
+ *  1. `${title} | Columbus Real Estate News` when that fits in TITLE_MAX;
+ *  2. the bare title when only it fits — the brand still reaches the crawler
+ *     through og:site_name and the publisher schema, and result pages show the
+ *     site name on their own;
+ *  3. a shortened title as a last resort: cut at a clause break (" — ", ": ",
+ *     ", ") when the leading clause keeps at least 60% of the budget, else at
+ *     a word boundary with an ellipsis. The h1 and og:title keep the full
+ *     headline; only the browser/SERP title is shortened.
+ */
+export function renderTitle(title: string): string {
+  const base = normalise(title);
+  if (base.length + TITLE_SUFFIX.length <= TITLE_MAX) return `${base}${TITLE_SUFFIX}`;
+  if (base.length <= TITLE_MAX) return base;
+  return truncateTitle(base, TITLE_MAX);
+}
+
+/**
+ * Next.js `title` value that bypasses the root layout's `%s | brand` template.
+ * `renderTitle` has already decided whether the brand fits, so the template
+ * must not append it a second time.
+ */
+export function titleMetadata(title: string): { absolute: string } {
+  return { absolute: renderTitle(title) };
+}
+
+/**
+ * Longest candidate title that fits WITH the brand suffix; failing that, the
+ * longest that fits on its own; failing that, the last (shortest) candidate.
+ * Generated hubs interpolate a place name, so a template that is comfortable
+ * for "Bexley" runs past the limit for "The Ohio State University area"; this
+ * picks a shorter phrasing for the long names instead of letting the results
+ * page cut one.
  */
 export function composeTitle(candidates: string[]): string {
-  const fitting = candidates
-    .map((candidate) => candidate.trim().replace(/\s+/g, ' '))
-    .filter((candidate) => candidate.length + TITLE_SUFFIX.length <= TITLE_MAX)
-    .sort((a, b) => b.length - a.length)[0];
-  return fitting ?? candidates[candidates.length - 1].trim();
+  const cleaned = candidates.map(normalise);
+  const longest = (fits: (candidate: string) => boolean) =>
+    cleaned.filter(fits).sort((a, b) => b.length - a.length)[0];
+  return (
+    longest((candidate) => candidate.length + TITLE_SUFFIX.length <= TITLE_MAX) ??
+    longest((candidate) => candidate.length <= TITLE_MAX) ??
+    cleaned[cleaned.length - 1]
+  );
+}
+
+const CLAUSE_BREAKS = [' — ', ' – ', ': ', '; ', ', '];
+
+/** Shorten at the latest clause break that keeps most of the headline, else at a word. */
+function truncateTitle(value: string, max: number): string {
+  const floor = Math.ceil(max * 0.6);
+  let cut = -1;
+  for (const separator of CLAUSE_BREAKS) {
+    let at = value.indexOf(separator);
+    while (at !== -1) {
+      if (at >= floor && at <= max && at > cut) cut = at;
+      at = value.indexOf(separator, at + 1);
+    }
+  }
+  if (cut !== -1) return value.slice(0, cut).trim();
+  return truncateAtWord(value, max);
 }
 
 function truncateAtWord(value: string, max: number): string {
@@ -75,9 +137,9 @@ function truncateAtWord(value: string, max: number): string {
  * than gaining filler that says nothing.
  */
 export function composeDescription(lead: string, tails: string[], max: number = DESCRIPTION_MAX): string {
-  const base = lead.trim().replace(/\s+/g, ' ');
+  const base = normalise(lead);
   const candidates = tails
-    .map((tail) => `${base} ${tail.trim()}`.replace(/\s+/g, ' ').trim())
+    .map((tail) => normalise(`${base} ${tail}`))
     .filter((candidate) => candidate.length <= max)
     .sort((a, b) => b.length - a.length);
   if (candidates.length > 0) return candidates[0];
@@ -87,7 +149,7 @@ export function composeDescription(lead: string, tails: string[], max: number = 
 export function pageMetadata({ path, title, description, noindex = false }: PageMetadataInput): Metadata {
   const url = absoluteUrl(path);
   return {
-    title,
+    title: titleMetadata(title),
     description,
     alternates: { canonical: url },
     openGraph: { title, description, url },

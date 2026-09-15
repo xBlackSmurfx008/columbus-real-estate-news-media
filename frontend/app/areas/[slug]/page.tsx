@@ -9,7 +9,7 @@ import { formatPeriod, getCanonicalMarketData, selectAreaMetrics, type MarketMet
 import { getArticlePath } from "@/lib/article-routing";
 import { CoverImage } from "@/components/cren/cover-image";
 import { GuideCard, RepresentativeImageNote } from "@/components/guide-card";
-import { composeDescription, composeTitle } from "@/lib/page-metadata";
+import { composeDescription, composeTitle, titleMetadata } from "@/lib/page-metadata";
 import { absoluteUrl } from "@/lib/site";
 import { getAreaGuide, OFFICIAL_ACTIVITY_SOURCES } from "@/lib/area-guides";
 import { AreaFollowForm } from "@/components/area-follow-form";
@@ -37,13 +37,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const releasePolicy = getAreaReleasePolicy(area);
   const realityCheck: FlagshipRealityCheck | null = getAreaRealityCheck(area) ?? getFlagshipRealityCheck(area.slug);
   return {
-    title: realityCheck
-      ? composeTitle([`${area.name} Area Reality Check`, `${area.name} Reality Check`])
-      : composeTitle([
-          `${area.name} Housing & Local Living Guide`,
-          `${area.name} Housing Guide`,
-          `${area.name} Guide`,
-        ]),
+    title: titleMetadata(
+      realityCheck
+        ? composeTitle([`${area.name} Area Reality Check`, `${area.name} Reality Check`])
+        : composeTitle([
+            `${area.name} Housing & Local Living Guide`,
+            `${area.name} Housing Guide`,
+            `${area.name} Guide`,
+          ]),
+    ),
     // composeDescription keeps the hub blurb inside the 165-character
     // convention: the old `${blurb} ${one fixed sentence}` template ran to 199
     // characters on the areas with a long blurb, so Google truncated the

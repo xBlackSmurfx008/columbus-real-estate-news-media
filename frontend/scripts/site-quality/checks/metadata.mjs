@@ -13,16 +13,17 @@
 // title/description it shares with another indexable page. Those are duplicate
 // content signals, not style opinions.
 //
-// Advisory half: CLAUDE.md's length conventions (title 45-75, meta description
-// 140-165) and a brand repeated inside one title. Real defects, but a long
-// title costs a truncated snippet rather than an indexing decision.
+// Advisory half: the length conventions (title 30-65, the ceiling Bing Webmaster
+// Tools enforces as rule SEO050; meta description 140-165) and a brand repeated
+// inside one title. Real defects, but a long title costs a truncated snippet
+// and a Bing SEO finding rather than an indexing decision.
 
 import { decodeEntities, metaContent, title as documentTitle } from "../html.mjs";
 import { htmlPages } from "../pages.mjs";
 import { fail, pass, skip } from "../result.mjs";
+import { TITLE_MAX, TITLE_MIN } from "../../../lib/page-metadata.ts";
 
-export const TITLE_MIN = 45;
-export const TITLE_MAX = 75;
+export { TITLE_MAX, TITLE_MIN };
 export const DESCRIPTION_MIN = 140;
 export const DESCRIPTION_MAX = 165;
 export const BRAND = "Columbus Real Estate News";
@@ -37,22 +38,14 @@ export function duplicates(entries) {
   return [...byValue.entries()].filter((entry) => entry[1].length > 1);
 }
 
-/**
- * Article `<title>`s are the published headline plus the brand suffix. The
- * headline is an editorial decision governed by `publish-article.mjs`, and
- * `schema` already checks it against Google's 110-character truncation, so
- * measuring it against a template convention here would put a permanent,
- * unactionable note on every article page and train people to ignore the whole
- * check. Descriptions ARE checked everywhere: those are metadata, not copy.
- */
-export function titleLengthApplies(path) {
-  return !(path.startsWith("/blog/") && path !== "/blog/");
-}
+// Article titles are measured like every other page. Bing's 2026-09-15 scan
+// failed all 104 article pages on title length, so `renderTitle` now caps the
+// served <title> at TITLE_MAX; a note here means an article bypassed it.
 
 /** Length and brand-repetition notes for one page. Returns strings. */
 export function lengthNotes(path, title, description) {
   const notes = [];
-  if (title && titleLengthApplies(path) && (title.length < TITLE_MIN || title.length > TITLE_MAX)) {
+  if (title && (title.length < TITLE_MIN || title.length > TITLE_MAX)) {
     notes.push(`${path} title is ${title.length} chars (convention is ${TITLE_MIN}-${TITLE_MAX}): "${title}"`);
   }
   if (description && (description.length < DESCRIPTION_MIN || description.length > DESCRIPTION_MAX)) {

@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated_at": "2026-09-14T16:27:24.934Z",
+    "generated_at": "2026-09-15T16:20:11.478Z",
     "market_fingerprint": "a74da97997564c26793de2b8d92303b6",
     "note": "Last-known-good public content, served when the database is unreachable. Refresh with: node scripts/export-content-snapshot.mjs (requires DATABASE_URL). Never edit articles here by hand — this file only ever mirrors what was live in the database."
   },

@@ -177,6 +177,11 @@ export interface ArticleSlugResolution {
 const snapshot = snapshotJson as unknown as PublicSiteData;
 const legacyArticleSlugRedirects: Record<string, string> = {
   "columbus-zone-in-phase-2-commercial-industrial-rezoning": "zone-in-adds-capacity-not-88-000-built-columbus-homes",
+  // Bing's 2026-09-15 site scan: three live articles cross-linked these slugs,
+  // which were never the published URLs, so every crawl of them was a 404.
+  "columbus-zone-in-phase-2-public-comment": "columbus-zone-in-phase-2-draft-releases-public-comment-opens-aug-25",
+  "second-baptist-church-near-east-side-rfp": "second-baptist-opens-2-4-acres-on-columbus-near-east-side-to-developers",
+  "nrp-group-breaks-ground-on-336-unit-columbus-apartments": "nrp-group-breaks-ground-on-336-unit-osu-east-apartments-in-columbus",
 };
 
 function snapshotArticles(): DbArticle[] {

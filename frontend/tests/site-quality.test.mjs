@@ -311,13 +311,16 @@ test("titles and descriptions inside the convention produce no notes", () => {
   assert.deepEqual(lengthNotes("/sell/your-home", "x".repeat(60), "y".repeat(150)), []);
 });
 
-test("an editorial headline is not measured against the template title convention", () => {
+test("an over-long editorial headline is measured like any other page", () => {
+  // Bing fails article titles over 65 characters too, and renderTitle caps
+  // them, so a long served title on /blog/* is a real defect rather than noise.
   const headline = `${"x".repeat(70)} | Columbus Real Estate News`;
-  assert.deepEqual(lengthNotes("/blog/a-long-columbus-headline", headline, "y".repeat(150)), []);
-  // ...but the same length on a hand-authored page still is.
+  assert.equal(lengthNotes("/blog/a-long-columbus-headline", headline, "y".repeat(150)).length, 1);
   assert.equal(lengthNotes("/resources", headline, "y".repeat(150)).length, 1);
+  // A 65-character served title is the ceiling, not a defect.
+  assert.deepEqual(lengthNotes("/blog/a-columbus-headline", "x".repeat(65), "y".repeat(150)), []);
   // ...and a description is measured everywhere, article or not.
-  assert.equal(lengthNotes("/blog/a-long-columbus-headline", headline, "y".repeat(199)).length, 1);
+  assert.equal(lengthNotes("/blog/a-long-columbus-headline", headline, "y".repeat(199)).length, 2);
 });
 
 test("a local target maps the production URLs its own sitemap emits", () => {

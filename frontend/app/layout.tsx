@@ -28,6 +28,10 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  // Pages built through lib/page-metadata.ts emit an absolute <title> and skip
+  // this template: `renderTitle` only appends the brand when the result stays
+  // inside Bing's 65-character limit. The template remains as the fallback for
+  // any segment that still sets a plain string title.
   title: {
     default: `${SITE_NAME} | Local Housing & Living Intelligence`,
     template: `%s | ${SITE_NAME}`,

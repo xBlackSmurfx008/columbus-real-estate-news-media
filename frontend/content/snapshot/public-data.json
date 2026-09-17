@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated_at": "2026-09-16T16:15:31.301Z",
+    "generated_at": "2026-09-17T16:18:35.031Z",
     "market_fingerprint": "3fff2cb0876b4faeee9c7c08726f7b7f",
     "note": "Last-known-good public content, served when the database is unreachable. Refresh with: node scripts/export-content-snapshot.mjs (requires DATABASE_URL). Never edit articles here by hand — this file only ever mirrors what was live in the database."
   },
@@ -4003,38 +4003,38 @@
   ],
   "tickers": [
     {
-      "id": 253,
-      "text": "Ohio State will move its Moritz College of Law downtown into the historic Huntington Bank building at 17 S. High St. on a 30-year lease, with an option to buy and a fall 2029 opening",
+      "id": 259,
+      "text": "Italian Village Commission approves Merus's 428-unit apartment complex at the former State Library of Ohio site, 274 E. First Ave.; groundbreaking tentatively early 2027",
       "active": true,
       "sort_order": 0
     },
     {
-      "id": 254,
-      "text": "Connect Housing Blocks opens the second modular building at Reserve at Maryland on the Near East Side Sept. 16; 84 units total across four buildings at 60% AMI",
+      "id": 260,
+      "text": "Columbus Diocese seeks to demolish its 1908 Gay St. building for surface parking; Downtown Commission vote set for Sept. 22",
       "active": true,
       "sort_order": 1
     },
     {
-      "id": 255,
-      "text": "INTRO Columbus, a 13-story mass timber student-housing tower at High & 9th near Ohio State, topped out Sept. 8 — ten weeks early and the tallest of its kind in the U.S.",
+      "id": 261,
+      "text": "Columbus City Council's Zone In Phase 2 zoning reform heads toward a Q4 2026 vote",
       "active": true,
       "sort_order": 2
     },
     {
-      "id": 256,
-      "text": "Columbus's $267M Lower Olentangy Tunnel enters its final construction weeks; substantial completion is targeted for the end of September",
+      "id": 262,
+      "text": "Ohio Housing Finance Agency awards $39.1 million in 2026 9% tax credits statewide, including Mercy on Main — 65 affordable apartments in Olde Towne East",
       "active": true,
       "sort_order": 3
     },
     {
-      "id": 257,
-      "text": "Columbus HRC approves a 106-unit, six-story apartment building at 1036 S. Front St. in the Brewery District, replacing the 1962 former WWCD building",
+      "id": 263,
+      "text": "Connect Housing Blocks opens the second modular building at Reserve at Maryland on the Near East Side; 84 units total across four buildings at 60% AMI",
       "active": true,
       "sort_order": 4
     },
     {
-      "id": 258,
-      "text": "Columbus Diocese seeks to demolish its 1908 Gay St. building for surface parking; Downtown Commission vote set for Sept. 22",
+      "id": 264,
+      "text": "Columbus's $267M Lower Olentangy Tunnel enters its final construction weeks; substantial completion targeted for end of September",
       "active": true,
       "sort_order": 5
     }

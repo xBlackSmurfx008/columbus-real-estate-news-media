@@ -368,6 +368,25 @@
       "source_brief": "briefs/2026-05-21.md",
       "note": "briefs/2026-08-24-social-listener.md records the same lease expiry and notes the Italian Village Commission has no hearing date yet — the hearing, not the lease date, is the likelier peg.",
       "match_keywords": ["state library", "italian village"]
+    },
+    {
+      "id": "zone-in-phase-2-public-comment-close",
+      "event_date": "2026-10-24",
+      "date_precision": "day",
+      "confidence": "confirmed",
+      "headline": "Zone In Phase 2's 60-day public comment window closes",
+      "summary": "City released the Zone In Phase 2 draft Aug. 20 covering roughly 40-41% of Columbus's land in nine new zoning districts (mixed-use corridors, industrial/warehouse, campus edges). Public comment runs Aug. 25-Oct. 24; a council vote is expected before year-end 2026.",
+      "area_slug": "columbus-citywide",
+      "area_label": "Columbus citywide",
+      "lane": "real-estate",
+      "neighborhood_candidate": false,
+      "priority": 3,
+      "source_url": "https://www.columbusnavigator.com/columbus-zoning-changes-zone-in-phase-two/",
+      "source_label": "Columbus Navigator, cited in the Sept. 19 brief",
+      "source_article_id": "2026-08-23-columbus-zone-in-phase-2-draft-releases-public-comment-opens-aug-25",
+      "source_brief": "briefs/2026-09-19.md",
+      "note": "CREN already published the draft-release story Aug. 23 (id above). Do NOT re-cover the comment-period opening — this entry exists only to peg the Oct. 24 close and a possible council-vote follow-up before year-end.",
+      "match_keywords": ["zone in", "zoning reform", "zone in phase 2"]
     }
   ]
 }

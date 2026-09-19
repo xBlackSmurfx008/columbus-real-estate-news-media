@@ -247,6 +247,48 @@ if (newTokens.size > 0) {
 }
 // ---------------------------------------------------------------------------
 
+// --- Hero resolution (must run BEFORE the insert) --------------------------
+// The `articles_live_image_required` constraint is checked by the INSERT
+// itself, so a hero attached afterwards is never seen by it. Resolve the hero
+// first: use the supplied image when there is one, otherwise attach a branded
+// editorial card when this session can host it durably. When it cannot, the
+// article still publishes imageless and list-missing-images.mjs picks it up
+// for the durable image job — images never block publication (CLAUDE.md).
+let heroUrl = article.image_url ?? null;
+let heroAlt = article.image_alt;
+let heroCaption = article.image_provenance.caption;
+
+if (!heroUrl) {
+  if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const hosted = await hostPlaceholderCard({
+      id,
+      title: article.title,
+      category: article.category,
+      area_slug: article.area_slug,
+    });
+    // Never persist the local-disk fallback: /images/heroes/<id>.webp is a
+    // relative path that only resolves after a deploy, so it is not a
+    // publication image (CLAUDE.md) and cannot satisfy the https constraint.
+    if (hosted.deployNeeded) {
+      console.warn(
+        `Placeholder card written to ${hosted.url}, but it only serves after a deploy, so it was NOT recorded as the hero. `
+        + "Do NOT work around this with --allow-deploy-lag; it writes a hero URL that 404s until a deploy happens. "
+        + "Publishing imageless and leaving the article for the durable image job."
+      );
+    } else {
+      heroUrl = hosted.url;
+      heroAlt = `Editorial graphic: ${article.title}`;
+      heroCaption = PLACEHOLDER_CAPTION;
+      console.log(`Hero placeholder resolved before insert: ${hosted.url}`);
+    }
+  } else {
+    console.warn(
+      "Publishing without a hero: BLOB_READ_WRITE_TOKEN is not set, so no placeholder can be hosted durably from this session. "
+      + "This does not block publication. scripts/list-missing-images.mjs will queue the article for the durable image job."
+    );
+  }
+}
+
 const [row] = await sql`
   INSERT INTO articles (
     id, canonical_slug, status, featured, category, category_class, icon,
@@ -258,8 +300,8 @@ const [row] = await sql`
     ${article.title}, ${article.excerpt ?? null}, ${article.body ?? null}, ${article.author}, ${article.date},
     ${article.read_time ?? "5 min read"}, ${article.area_slug ?? null}, ${article.topic_slug ?? null},
     ${JSON.stringify(article.tags ?? [])}::jsonb,
-    ${article.image_url ?? null}, ${article.meta_description}, ${article.image_alt},
-    ${article.image_provenance.caption}, ${article.fact_checked_at}
+    ${heroUrl}, ${article.meta_description}, ${heroAlt},
+    ${heroCaption}, ${article.fact_checked_at}
   )
   ON CONFLICT (id) DO NOTHING
   RETURNING *
@@ -286,29 +328,13 @@ if (article.image_url && imageFingerprint) {
   `;
 }
 
-// If no image_url was supplied, attach a branded editorial card so the live
-// article isn't imageless; the durable image job replaces it with a real
-// hero later. A missing hero never blocks publication either way.
+// The hero is resolved before the insert above. If none could be hosted from
+// this session the article is live and imageless, which is allowed: the
+// durable image workflow backfills it.
 if (!row.image_url) {
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
-    const hosted = await hostPlaceholderCard({ id, title: article.title, category: article.category, area_slug: article.area_slug });
-    await sql`
-      UPDATE articles
-      SET image_url = ${hosted.url},
-          image_alt = ${`Editorial graphic: ${article.title}`},
-          image_caption = ${PLACEHOLDER_CAPTION},
-          updated_at = NOW()
-      WHERE id = ${id} AND image_url IS NULL
-    `;
-    row.image_url = hosted.url;
-    console.log(`Hero placeholder attached: ${hosted.url}`);
-  } else {
-    console.warn(
-      "WARNING: article published live without a hero and BLOB_READ_WRITE_TOKEN is not set, so no placeholder can be attached from this session. "
-      + "Do NOT work around this with --allow-deploy-lag; it can write a hero URL that is not reachable until a deploy happens. "
-      + "Set BLOB_READ_WRITE_TOKEN in this environment and re-run scripts/generate-placeholder-heroes.mjs, or leave the article imageless for the durable image job to fill."
-    );
-  }
+  console.warn(
+    `Article ${id} is live without a hero. scripts/list-missing-images.mjs will queue it for the durable image job.`
+  );
 }
 
 // Close the coverage-calendar loop (see frontend/docs/COVERAGE_CALENDAR.md).

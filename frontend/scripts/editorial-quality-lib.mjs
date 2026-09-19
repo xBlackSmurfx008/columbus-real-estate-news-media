@@ -91,6 +91,25 @@ function sourceDomains(sources) {
   return domains;
 }
 
+// CREN's own coverage is never an independent source for a new story: citing
+// ourselves is circular, and a date or figure we published does not become
+// verified by being republished. Internal links in the body stay encouraged
+// (cren-copywriting asks for one), but the source ledger must carry outside
+// evidence only, so own-domain records are excluded from the source floor.
+const CREN_OWN_DOMAINS = new Set(['columbusrealestatenews.com']);
+
+function isOwnDomain(value) {
+  try {
+    return CREN_OWN_DOMAINS.has(new URL(value).hostname.replace(/^www\./, ''));
+  } catch {
+    return false;
+  }
+}
+
+function independentSources(sources) {
+  return sources.filter((source) => !isOwnDomain(source.url));
+}
+
 function normalizeUrl(value) {
   try {
     const url = new URL(value);
@@ -169,7 +188,8 @@ export function evaluateArticle(article) {
   const keyword = String(article.primary_keyword ?? '').trim().toLowerCase();
   const bodyWords = wordCount(plainText(body));
   const bodyLinks = new Set(markdownLinkUrls(body));
-  const visiblyCitedSources = sources.filter((source) => bodyLinks.has(normalizeUrl(source.url)));
+  const visiblyCitedSources = independentSources(sources)
+    .filter((source) => bodyLinks.has(normalizeUrl(source.url)));
   const visibleSourceDomains = sourceDomains(visiblyCitedSources);
   const hasRawCitationTokens = /\[(?:(?=[^\]]*\d)[a-z0-9_-]{1,20}|calc)\](?!\()/i.test(body);
   const keywordUses = keyword ? normalizedBody.split(normalizeClaim(keyword)).length - 1 : 0;
@@ -202,9 +222,14 @@ export function evaluateArticle(article) {
     check('A3_ANSWER_FIRST', answerWords >= 30 && answerWords <= 60 && answerSentences <= 2
       && !THROAT_CLEARING_PATTERNS.some((pattern) => pattern.test(answer)) && firstParagraph.includes(plainText(answer)),
     'A 30–60 word, two-sentence maximum answer summary must be the first paragraph.'),
-    check('A4_SOURCE_FLOOR', sources.length >= 2 && sourceDomains(sources).size >= 2
-      && sources.some((source) => source.type === 'PRIMARY') && validSourceRecords,
-    'Use two independent fetched sources, including one primary record or direct source.'),
+    check('A4_SOURCE_FLOOR', independentSources(sources).length >= 2
+      && sourceDomains(independentSources(sources)).size >= 2
+      && independentSources(sources).some((source) => source.type === 'PRIMARY') && validSourceRecords,
+    'Use two independent fetched sources, including one primary record or direct source. '
+    + "CREN's own published coverage does not count toward the source floor.",
+    sources.length !== independentSources(sources).length
+      ? { self_cited_sources: sources.filter((source) => isOwnDomain(source.url)).map((source) => source.url) }
+      : undefined),
     check('A4B_READER_VISIBLE_SOURCES', visiblyCitedSources.length >= 2 && visibleSourceDomains.size >= 2,
       'Link at least two independent source-ledger records in the article body so readers can inspect the evidence.'),
     check('A5_CLAIM_TRACEABILITY', claims.length > 0 && allClaimSourcesExist,

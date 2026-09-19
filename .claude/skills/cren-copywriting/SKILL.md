@@ -32,6 +32,7 @@ brokerage funnel, or press-release rewrite. Never insert lead-generation copy or
 ## Verification
 
 - Use at least two independent fetched sources and at least one primary record, official filing/release, or direct interview.
+- CREN's own published coverage is never a source. A fact we printed does not become verified by being reprinted, and a date carried forward from our own archive is still single-sourced to whoever reported it first. Go back to that original source and re-fetch it. This is enforced: `A4_SOURCE_FLOOR` and `A4B_READER_VISIBLE_SOURCES` ignore any `source_ledger` record on columbusrealestatenews.com. Internal links in the body are a separate thing and still expected — link prior coverage for the reader, cite the outside record for the claim.
 - If a claim is single-sourced, say so plainly in the piece (e.g., "According to [Source], ...") rather than presenting it as independently confirmed.
 - Do not state a number or date you can't trace back to a specific source.
 - Submit `source_ledger`, `claim_ledger`, and `entity_ledger` metadata with the article JSON. Every material numeric or status claim must appear verbatim in the claim ledger and map to a source ID.

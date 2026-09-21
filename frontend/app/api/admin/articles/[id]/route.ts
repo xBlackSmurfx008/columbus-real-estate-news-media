@@ -11,6 +11,7 @@ import {
 import { evaluateArticle } from "@/scripts/editorial-quality-lib.mjs";
 import { validateHumanReview } from "@/lib/editorial-review";
 import { mergePublicationCandidate } from "@/lib/publication-candidate";
+import { editorialCandidateHash, type EditorialCandidate } from "@/lib/editorial-email-review";
 
 // PUT: Update article by id
 export async function PUT(
@@ -119,9 +120,37 @@ export async function PUT(
         }, { status: 409 });
       }
 
-      humanReview = validateHumanReview(body.human_scores);
-      reviewer = typeof body.reviewer === "string" ? body.reviewer.trim().slice(0, 200) : "";
-      if (body.human_decision !== "APPROVED" || !reviewer || !humanReview.passed) {
+      let humanDecision = body.human_decision;
+      if (body.use_email_approval === true) {
+        const [emailApproval] = await sql`
+          SELECT candidate_hash, proposed_human_scores, reviewer
+          FROM editorial_email_reviews
+          WHERE article_id = ${id} AND status = 'APPROVED'
+          ORDER BY version DESC
+          LIMIT 1
+        `;
+        const provenance = reviewedSubmission.image_provenance && typeof reviewedSubmission.image_provenance === "object"
+          ? reviewedSubmission.image_provenance as Record<string, unknown>
+          : {};
+        const exactCandidate = {
+          ...reviewedSubmission,
+          id,
+          image_url: candidateImageUrl,
+          image_caption: body.image_caption ?? existing[0].image_caption ?? provenance.caption ?? null,
+        } as EditorialCandidate;
+        if (!emailApproval || editorialCandidateHash(exactCandidate) !== emailApproval.candidate_hash) {
+          return NextResponse.json({
+            error: "The email approval is missing or applies to an older candidate. Send the exact current proof again.",
+          }, { status: 409 });
+        }
+        humanReview = validateHumanReview(emailApproval.proposed_human_scores);
+        reviewer = typeof emailApproval.reviewer === "string" ? emailApproval.reviewer.slice(0, 200) : "";
+        humanDecision = "APPROVED";
+      } else {
+        humanReview = validateHumanReview(body.human_scores);
+        reviewer = typeof body.reviewer === "string" ? body.reviewer.trim().slice(0, 200) : "";
+      }
+      if (humanDecision !== "APPROVED" || !reviewer || !humanReview.passed) {
         return NextResponse.json({
           error: "Explicit editorial approval requires a reviewer and a passing 10-part scorecard (17/20 minimum; accuracy, fairness, originality, and visible evidence must score 2).",
           humanReview,
@@ -197,6 +226,10 @@ export async function PUT(
         UPDATE article_image_jobs SET status = 'PUBLISHED', updated_at = NOW()
         WHERE article_id = ${id}
       `;
+      await sql`
+        UPDATE editorial_email_reviews SET status = 'PUBLISHED', published_at = NOW(), updated_at = NOW()
+        WHERE article_id = ${id} AND status = 'APPROVED'
+      `.catch(() => undefined);
       await sql`
         UPDATE newsroom_runs SET
           published_count = (

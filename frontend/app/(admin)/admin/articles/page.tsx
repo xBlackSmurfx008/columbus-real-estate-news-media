@@ -31,6 +31,12 @@ interface Article {
   human_scores?: Record<string, number> | null;
   reviewer?: string | null;
   review_status?: string | null;
+  email_review_status?: string | null;
+  email_review_version?: number | null;
+  email_review_reply_text?: string | null;
+  email_review_reviewer?: string | null;
+  email_review_sent_at?: string | null;
+  email_review_replied_at?: string | null;
   submission?: Partial<Article> & {
     image_provenance?: { caption?: string };
   } | null;
@@ -54,6 +60,7 @@ export default function ArticlesPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [reviewer, setReviewer] = useState('');
+  const [isSendingProof, setIsSendingProof] = useState(false);
   const [humanScores, setHumanScores] = useState<Record<string, number>>(
     Object.fromEntries(HUMAN_REVIEW_ITEMS.map((item) => [item.id, 0])),
   );
@@ -123,13 +130,18 @@ export default function ArticlesPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const emailApproved = editingId
+      ? articles.find((article) => article.id === editingId)?.email_review_status === 'APPROVED'
+      : false;
     const payload = {
       ...formData,
       read_time: parseInt(String(formData.read_time || 5)),
       ...(formData.status === 'live' ? {
-        human_decision: 'APPROVED',
-        human_scores: humanScores,
-        reviewer,
+        ...(emailApproved ? { use_email_approval: true } : {
+          human_decision: 'APPROVED',
+          human_scores: humanScores,
+          reviewer,
+        }),
       } : {}),
     };
 
@@ -185,6 +197,35 @@ export default function ArticlesPage() {
       showToast('Article deleted successfully', 'success');
     } catch {
       showToast('Failed to delete article', 'error');
+    }
+  };
+
+  const handleEmailProof = async () => {
+    if (!editingId) return;
+    setIsSendingProof(true);
+    try {
+      const save = await fetch(`/api/admin/articles/${editingId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, status: 'draft' }),
+        credentials: 'include',
+      });
+      if (!save.ok) {
+        const errorBody = await save.json().catch(() => ({}));
+        throw new Error(errorBody.error || 'Failed to save the draft before emailing it');
+      }
+      const response = await fetch(`/api/admin/articles/${editingId}/email-review`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Failed to send publication proof');
+      await fetchArticles();
+      showToast(`Publication proof v${result.version} sent to ${result.recipient}`, 'success');
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Failed to send publication proof', 'error');
+    } finally {
+      setIsSendingProof(false);
     }
   };
 
@@ -431,10 +472,35 @@ export default function ArticlesPage() {
                         <div className="mt-6"><BodyPreview body={formData.body || ''} /></div>
                       </div>
                     </article>
+                    <div className="mt-5 rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-950">
+                      <p className="font-semibold">Email review: {articles.find((article) => article.id === editingId)?.email_review_status ?? 'NOT_SENT'}</p>
+                      {articles.find((article) => article.id === editingId)?.email_review_reply_text && (
+                        <p className="mt-2 whitespace-pre-wrap"><strong>Requested edits:</strong> {articles.find((article) => article.id === editingId)?.email_review_reply_text}</p>
+                      )}
+                      <button
+                        type="button"
+                        onClick={handleEmailProof}
+                        disabled={isSendingProof || !formData.image_url}
+                        className="mt-3 rounded-lg bg-blue-700 px-4 py-2 font-medium text-white transition hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {isSendingProof ? 'Sending proof…' : 'Save draft and email publication proof'}
+                      </button>
+                      <p className="mt-2 text-xs text-blue-800">Any prior proof is superseded. Edits arrive here; an APPROVE reply applies only to the exact emailed version.</p>
+                    </div>
                   </section>
                 )}
 
-                {editingId && formData.status === 'live' && (
+                {editingId && formData.status === 'live' && articles.find((article) => article.id === editingId)?.email_review_status === 'APPROVED' && (
+                  <section className="rounded-xl border border-green-300 bg-green-50 p-5">
+                    <h3 className="text-lg font-semibold text-green-950">Approved by email</h3>
+                    <p className="mt-1 text-sm text-green-900">
+                      {articles.find((article) => article.id === editingId)?.email_review_reviewer} approved this exact candidate.
+                      Saving as live will recheck the candidate fingerprint, machine gate, hero, and email scorecard before publication.
+                    </p>
+                  </section>
+                )}
+
+                {editingId && formData.status === 'live' && articles.find((article) => article.id === editingId)?.email_review_status !== 'APPROVED' && (
                   <section className="rounded-xl border border-amber-300 bg-amber-50 p-5">
                     <h3 className="text-lg font-semibold text-gray-950">Editorial approval</h3>
                     <p className="mt-1 text-sm text-gray-700">

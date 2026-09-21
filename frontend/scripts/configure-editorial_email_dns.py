@@ -65,7 +65,10 @@ def relative_name(name: str, zone: str) -> str:
 def receiving_records(domain_data: dict, zone: str) -> list[dict[str, str]]:
     records: list[dict[str, str]] = []
     for source in domain_data.get("records", []):
-        if source.get("record") != "Receiving":
+        # Resend currently requires its generated DKIM record before it moves a
+        # receiving-only domain from pending to verified, even though sending
+        # is disabled. Both names are isolated beneath the review subdomain.
+        if source.get("record") not in {"Receiving", "DKIM"}:
             continue
         record_type = str(source.get("type", "")).upper()
         if record_type not in {"MX", "TXT", "CNAME"}:
@@ -80,7 +83,7 @@ def receiving_records(domain_data: dict, zone: str) -> list[dict[str, str]]:
             }
         )
     if not records:
-        raise RuntimeError("Resend returned no Receiving DNS records.")
+        raise RuntimeError("Resend returned no receiving-domain DNS records.")
     return records
 
 

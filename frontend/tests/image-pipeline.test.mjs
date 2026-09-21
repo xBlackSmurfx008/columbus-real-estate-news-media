@@ -109,3 +109,15 @@ test("image preparation is draft-only and stops at review", async () => {
   assert.doesNotMatch(cloudSource, /UPDATE articles SET[\s\S]{0,200}status = 'live'/);
   assert.doesNotMatch(cloudSource, /publishCandidate/);
 });
+
+test("production schedules an independent newsroom health monitor", async () => {
+  const [vercelConfig, routeSource] = await Promise.all([
+    readFile(new URL("../vercel.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../app/api/cron/newsroom-health/route.ts", import.meta.url), "utf8"),
+  ]);
+  assert.ok(vercelConfig.crons.some((cron) =>
+    cron.path === "/api/cron/newsroom-health" && cron.schedule === "30 18 * * *"));
+  assert.match(routeSource, /assessNewsroomAutomationHealth/);
+  assert.match(routeSource, /sendTelegramAlert/);
+  assert.match(routeSource, /status: report\.ok \? 200 : 503/);
+});

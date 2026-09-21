@@ -66,4 +66,6 @@ The cloud routine starts and finishes a `newsroom_runs` record with `scripts/new
 
 `npm run newsroom:automation-health` fails when a run is missing or stuck, a draft is stuck, a run failed after the
 last completion, or publication exceeds its configured freshness threshold. The scheduled GitHub workflow preserves
-the report and opens or updates a repository issue on failure.
+the report and opens or updates a repository issue on failure when GitHub runners are available. The production Vercel
+cron independently calls `/api/cron/newsroom-health` every day and sends a Telegram alert on an unhealthy result, so
+the monitor does not depend on GitHub Actions availability.

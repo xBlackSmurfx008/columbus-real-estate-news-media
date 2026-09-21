@@ -26,8 +26,8 @@ Two files, on purpose.
 | `coverage_calendar` (NeonDB) | the **operating copy**, read and written daily |
 
 A flat file alone would not work: the calendar has a writer that is not a human
-editing a file. `publish-article.mjs` closes an entry the moment a story
-covering it goes live, and that write has to survive in the same place the
+editing a file. The authenticated admin publication route closes an entry only
+after a reviewed draft goes live, and that write has to survive in the same place the
 routine already authenticates to, be readable later by the weekly scorecard, and
 not produce a git merge conflict between two runs on the same day. `briefs/*.md`
 are immutable per-day records — a brief written on Sept. 4 cannot learn on
@@ -156,12 +156,11 @@ whether any of this is working.
 
 ## Closing the loop
 
-**Covered.** `publish-article.mjs` marks an entry covered after a successful
-publish. It is wired in exactly like `publication-gate-log.mjs`: it runs after
-the gate has decided, the whole block is wrapped, and neither a module that
-fails to load nor a write that fails can change the exit code or the article
-that was published. Worst case, nothing is recorded and the entry is closed by
-hand.
+**Covered.** The authenticated admin publication route marks an entry covered
+only after the reviewed article has successfully transitioned to `live`. The
+calendar write is best-effort and cannot roll back an otherwise successful
+publication. If it fails, the article remains live and the entry must be closed
+by hand.
 
 Two ways an entry gets matched:
 

@@ -29,10 +29,11 @@ const rows = await withRetry(() => sql`
   FROM articles
   JOIN editorial_review_jobs ON editorial_review_jobs.article_id = articles.id
   LEFT JOIN article_image_jobs ON article_image_jobs.article_id = articles.id
-  WHERE articles.status = 'live'
+  WHERE articles.status = 'draft'
     AND (articles.image_url IS NULL OR articles.image_url LIKE '/images/heroes/%' OR articles.image_url LIKE '%/placeholder-%')
     AND (article_image_jobs.status IS NULL OR article_image_jobs.status IN ('PENDING', 'FAILED', 'READY_FOR_REVIEW'))
     AND editorial_review_jobs.machine_score = editorial_review_jobs.machine_possible
+    AND editorial_review_jobs.status IN ('AWAITING_IMAGE', 'READY_FOR_AUTOMATION', 'AWAITING_HUMAN_REVIEW')
   ORDER BY articles.created_at DESC
 `);
 const selected = [];

@@ -1,9 +1,8 @@
 import { isDurableArticleImageUrl } from './article-image.ts';
 import { evaluateArticle } from '../scripts/editorial-quality-lib.mjs';
 
-export const AUTO_PUBLICATION_REVIEW_STATUSES = [
-  'READY_FOR_AUTOMATION',
-  'AWAITING_HUMAN_REVIEW',
+export const REVIEWABLE_PUBLICATION_STATUSES = [
+  'READY_FOR_REVIEW',
 ] as const;
 
 const PUBLICATION_FIELDS = [
@@ -44,7 +43,7 @@ export function publicationCopyMatches(
     comparableValue(field, article[field]) === comparableValue(field, submission[field]));
 }
 
-export function validateAutoPublicationCandidate(input: {
+export function validateReviewedPublicationCandidate(input: {
   article: PublicationRecord;
   reviewStatus: unknown;
   submission: unknown;
@@ -58,7 +57,7 @@ export function validateAutoPublicationCandidate(input: {
   const reasons: string[] = [];
 
   if (input.article.status !== 'draft') reasons.push('ARTICLE_NOT_DRAFT');
-  if (!AUTO_PUBLICATION_REVIEW_STATUSES.includes(input.reviewStatus as never)) {
+  if (!REVIEWABLE_PUBLICATION_STATUSES.includes(input.reviewStatus as never)) {
     reasons.push('REVIEW_JOB_NOT_READY');
   }
   if (!submission) reasons.push('STAGED_SUBMISSION_MISSING');

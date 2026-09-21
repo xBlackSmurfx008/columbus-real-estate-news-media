@@ -1,81 +1,69 @@
 # CREN editorial gate
 
-## Current status — September 4, 2026 (owner-directed update)
+## Current policy — September 21, 2026
 
-Owner decision (given live in-session, 2026-09-04): `scripts/publish-article.mjs` now inserts
-new articles with `status='live'` immediately once the deterministic gate passes — there is no
-separate image-gated staging step and no pre-publish approval queue for the daily automated
-newsroom. This supersedes the "Draft contract" / "Automatic publication decision" sections below,
-which described the prior two-phase flow (stage as `draft`, wait for a durable verified hero image,
-then auto-publish). That flow had left three consecutive days of gate-passed articles (Sep 2, 3, 4)
-sitting as non-public drafts, which is what prompted this change. A missing hero never blocks
-publication either way — old or new flow — the durable image job fills it in after the fact.
-The `validateAutoPublicationCandidate` machinery (`lib/auto-publication.ts`) and the
-`editorial_review_jobs` / image-fingerprint gate in the admin `PUT /api/admin/articles/[id]` route
-are unchanged and still apply to any article an admin edits or promotes manually through the admin
-panel; they just no longer sit in the path of the daily automated publish.
+CREN uses a three-boundary publication process:
 
-## Prior status — August 29, 2026 (superseded above)
+1. The cloud newsroom researches and stages a non-public `draft` through `scripts/publish-article.mjs`.
+2. The image worker attaches a durable, reachable, unique hero and moves the review job to `READY_FOR_REVIEW`.
+3. An authenticated editor inspects and scores the exact copy-image pair. Only the admin route can change the article to `live`.
 
-The fail-closed automatic gate is deployed at `3fc9ba8`. Production currently
-has 87 live articles, including 73 historically approved repair rows and one
-recorded automatic publication. The gate remains the publication authority.
-Readiness is still being reconciled for four near-duplicate image assets with
-failed replacement jobs and 13 live rows with legacy queued review statuses.
-
-CREN uses a fail-closed automatic publication process. Automation may research, draft, run deterministic checks, prepare
-an image, and make the finished article public without a separate approval queue.
-
-All automated drafting must follow `prompts/ARTICLE_WRITING.md`. The newsroom sequence is research and source
-classification, evidence mapping, original reporting, drafting, skeptical editing, deterministic validation, verified
-image attachment, and automatic publication. If the reporting is insufficient, the drafting step returns `NEEDS_REPORTING`
-instead of manufacturing a complete-looking article.
-
-Every submission records `prompt_version: "cren-article-v1.0.0"` so the newsroom can identify which standard produced
-and reviewed a draft.
+The production `articles_live_image_required` database constraint remains in place. It is the final database backstop,
+not the primary workflow. Neither the cloud text routine nor an image worker has publication authority.
 
 ## Draft contract
 
-`scripts/publish-article.mjs` accepts Markdown plus structured metadata. In addition to the display fields, every draft
-must include:
+Every automated submission must follow `prompts/ARTICLE_WRITING.md` and include:
 
-- `answer_summary`, `primary_keyword`, `meta_description`, `fact_checked_at`, and `canonical_event_key`
-- `location: { name, state: "OH" }`
-- `source_ledger`: two fetched, independent sources with IDs, fetch times, HTTP status, titles, publishers, and at least
-  one semantically correct `PRIMARY` source; important analysis should normally use three or more independent origins
-- `claim_ledger`: exact material sentences and the source IDs supporting them
-- `entity_ledger`: named people, organizations, projects, and their source IDs
-- `image_brief`: the editorial idea, two story-specific anchors, source-asset consideration, and explicit avoid list
-- `image_alt` and `image_provenance`, including a visible `AI-generated illustration` caption when applicable
+- `prompt_version`, `answer_summary`, `primary_keyword`, `meta_description`, `fact_checked_at`, and `canonical_event_key`
+- an exact Columbus-area `location`
+- source, claim, and entity ledgers
+- reader-visible inline evidence links
+- a story-specific image brief, image alt text, and truthful provenance caption
 
-The staging command rejects bodies under 350 words, HTML, raw citation tokens, invisible source ledgers, promotional
-lead-generation copy, pressure/hype language, untraceable numeric or project-status claims, weak source structure,
-formulaic investor advice, and incomplete metadata. At least two independent ledger sources must appear as reader-visible
-Markdown links in the body. As of the September 4, 2026 update above, passing articles are inserted directly with
-`status='live'` plus a durable machine report in `editorial_review_jobs` (still recorded as `READY_FOR_AUTOMATION`
-for the historical audit trail). The legacy `AWAITING_HUMAN_REVIEW` value is accepted only so already-staged work
-predating this change can drain.
+The deterministic gate blocks thin copy, unsupported numbers or statuses, raw citation tokens, promotional language,
+weak source structure, missing metadata, and untraceable claims. Passing creates a draft and a durable machine report;
+it does not publish.
 
-## Automatic publication decision (legacy path — admin-edited/manually-staged articles only)
+## Image gate
 
-This section describes the two-phase flow that still applies to any article staged as `draft` through the admin panel
-or an older tool, not to the daily `publish-article.mjs` newsroom run (see the September 4, 2026 update above).
+The image worker may operate only on a machine-passed draft. It normalizes the hero to 1600×900 WebP, verifies the
+public Blob URL, stores SHA-256 and perceptual fingerprints, and rejects exact or near duplicates. A successful job
+updates both the article and staged submission, then records `READY_FOR_REVIEW`. It never changes article status to live.
 
-The cloud image job re-runs all 18 deterministic checks against the exact staged submission after the final image URL is
-attached. It also requires the database draft to match that submission, a durable HTTPS hero, a successful reachability
-check, and stored SHA-256 and perceptual fingerprints with no exact or near duplicate in the corpus.
+## Human gate
 
-Only that exact article-image pair can transition from `draft` to `live` through this path. A changed draft, failed
-source/copy check, missing image, unreachable Blob, missing fingerprint, or duplicate image leaves the article
-non-public. Successful runs record `AUTO_PUBLISHED`, `human_decision='NOT_REQUIRED'`, and the automation identity
-instead of manufacturing human scores.
+The editor reviews the rendered candidate and scores all ten items in `lib/editorial-review.ts`. Approval requires:
 
-## Image policy
+- at least 17/20 overall
+- every blocking item above zero
+- accuracy, fairness, originality, and reader-visible evidence at 2/2
+- an accountable reviewer identity
+- an explicit `APPROVED` decision
 
-Prefer licensed real photography, official plans/renderings, public-record maps, or CREN-made graphics. Subscription
-image generation is a fallback for explanatory editorial illustration. Generated work uses one consistent CREN house
-style and is never labeled as a photograph or used to imply an unverified property, person, design, or project status.
+At publication time, the server rebuilds the candidate from the staged evidence package, the currently persisted draft,
+and any edits in the approval request. It then re-runs the deterministic gate, verifies the hero URL and fingerprints,
+rejects duplicates, and validates the scorecard. A concurrent change, stale review state, missing image, unreachable
+image, failed score, or missing reviewer remains non-public.
 
-The cloud image job processes only machine-passed drafts. Its temporary `READY_FOR_REVIEW` state means the durable image
-has been attached and is ready for the final automatic gate; it is not a request for human approval. After publication
-the job records `PUBLISHED`. The workflow cannot attach or replace an image on a live article.
+Successful publication records review status `APPROVED`, the human scores, reviewer, and timestamp. The image job moves
+to `PUBLISHED`.
+
+## Non-negotiable safeguards
+
+- Never write a live row directly.
+- Never weaken or bypass `articles_live_image_required`.
+- Never infer approval from silence, a machine score, or a generated image.
+- Never reuse an image URL or matching content fingerprint.
+- Never publish changed copy against an older review.
+- Re-report stale candidates before staging or approval.
+
+## Run observability
+
+The cloud routine starts and finishes a `newsroom_runs` record with `scripts/newsroom-run.mjs`. A completed
+`NO_QUALIFYING_STORY` run is healthy; a missing, failed, or stuck run is not. Install the additive table with
+`npm run newsroom:migrate-runs` after first checking with `npm run newsroom:migrate-runs -- --check`.
+
+`npm run newsroom:automation-health` fails when a run is missing or stuck, a draft is stuck, a run failed after the
+last completion, or publication exceeds its configured freshness threshold. The scheduled GitHub workflow preserves
+the report and opens or updates a repository issue on failure.

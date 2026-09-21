@@ -839,7 +839,7 @@ say();
 if (!gateCur.available || gateCur.allTime === 0) {
   say(
     `**Failed publication gates: 0, and that zero is real but young.** Gate-block logging is active in ` +
-    `\`scripts/publish-article.mjs\` — every gate that stops a publish writes a row to ` +
+    `\`scripts/publish-article.mjs\` — every gate that stops a draft from being staged writes a row to ` +
     `\`publication_gate_events\` with the gate name and the exact failed checks. No publish attempt has ` +
     `been blocked since logging shipped on 2026-09-04, so this reads "nothing was blocked", not "nothing ` +
     `was watched".`,

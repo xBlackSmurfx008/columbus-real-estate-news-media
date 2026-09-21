@@ -1,9 +1,7 @@
 #!/usr/bin/env node
-// Publishes one article live immediately after it passes the deterministic
-// editorial checks (owner policy, 2026-08-25): no pre-publish human approval
-// gate. Review and corrections happen post-publish via the admin panel.
-// A missing hero image never blocks publication — the durable image workflow
-// attaches or replaces the hero after the fact.
+// Stages one non-public draft after deterministic editorial checks. A separate
+// image worker attaches a durable, unique hero. Publication then requires an
+// authenticated editor to approve the exact copy-image pair.
 // Usage: DATABASE_URL=... node scripts/publish-article.mjs path/to/article.json
 //
 // article.json shape:
@@ -35,10 +33,10 @@ import {
   fingerprintArticleImageUrl,
   isDurableArticleImageUrl,
 } from './article-image-policy.mjs';
-import { hostPlaceholderCard, PLACEHOLDER_CAPTION } from "./editorial-card-lib.mjs";
 import { APPROVED_AUTHORS, canonicalizeAuthor, isApprovedAuthor } from "./newsroom-authors.mjs";
 import { sendTelegramAlert } from "./telegram-alert.mjs";
 import { PUBLICATION_GATES, recordGateBlock } from "./publication-gate-log.mjs";
+import { assertNewsroomRunRunning, recordRunFailure, recordRunStagedArticle } from "./newsroom-run-store.mjs";
 
 const filePath = process.argv[2];
 if (!filePath) {
@@ -55,6 +53,9 @@ if (!databaseUrl) {
 // The client is constructed here (not after the gates) purely so a blocked
 // attempt can be recorded. neon() opens no connection until a query runs.
 const sql = neon(databaseUrl);
+const runIdIndex = process.argv.indexOf("--run-id");
+const newsroomRunId = runIdIndex >= 0 ? process.argv[runIdIndex + 1] : process.env.CREN_NEWSROOM_RUN_ID;
+if (newsroomRunId) await assertNewsroomRunRunning(sql, newsroomRunId);
 
 /**
  * Block publication and leave a durable trace (owner plan item 11: "failed
@@ -72,6 +73,9 @@ async function blockPublication(gate, message, detail = {}) {
     articleTitle: detail.articleTitle ?? null,
     detail: detail.extra ?? {},
   });
+  if (newsroomRunId) {
+    await recordRunFailure(sql, newsroomRunId, detail.reason ?? message.split("\n")[0]).catch(() => undefined);
+  }
   process.exit(1);
 }
 
@@ -241,7 +245,7 @@ if (newTokens.size > 0) {
   }
   if (worst.jac >= 0.3) {
     console.warn(
-      `Warning: title overlaps ${(worst.jac * 100).toFixed(0)}% with existing "${worst.title}" (${worst.shared.join(", ")}). Publishing anyway — confirm it is a distinct story.`
+      `Warning: title overlaps ${(worst.jac * 100).toFixed(0)}% with existing "${worst.title}" (${worst.shared.join(", ")}). Staging anyway — confirm it is a distinct story.`
     );
   }
 }
@@ -253,7 +257,7 @@ const [row] = await sql`
     title, excerpt, body, author, date, read_time,
     area_slug, topic_slug, tags, image_url, meta_description, image_alt, image_caption, fact_checked_at
   ) VALUES (
-    ${id}, ${slug}, 'live', ${article.featured ?? false},
+    ${id}, ${slug}, 'draft', ${article.featured ?? false},
     ${article.category}, ${article.category_class ?? "card-img-market"}, ${article.icon ?? "$"},
     ${article.title}, ${article.excerpt ?? null}, ${article.body ?? null}, ${article.author}, ${article.date},
     ${article.read_time ?? "5 min read"}, ${article.area_slug ?? null}, ${article.topic_slug ?? null},
@@ -286,79 +290,24 @@ if (article.image_url && imageFingerprint) {
   `;
 }
 
-// If no image_url was supplied, attach a branded editorial card so the live
-// article isn't imageless; the durable image job replaces it with a real
-// hero later. A missing hero never blocks publication either way.
-if (!row.image_url) {
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
-    const hosted = await hostPlaceholderCard({ id, title: article.title, category: article.category, area_slug: article.area_slug });
-    await sql`
-      UPDATE articles
-      SET image_url = ${hosted.url},
-          image_alt = ${`Editorial graphic: ${article.title}`},
-          image_caption = ${PLACEHOLDER_CAPTION},
-          updated_at = NOW()
-      WHERE id = ${id} AND image_url IS NULL
-    `;
-    row.image_url = hosted.url;
-    console.log(`Hero placeholder attached: ${hosted.url}`);
-  } else {
-    console.warn(
-      "WARNING: article published live without a hero and BLOB_READ_WRITE_TOKEN is not set, so no placeholder can be attached from this session. "
-      + "Do NOT work around this with --allow-deploy-lag; it can write a hero URL that is not reachable until a deploy happens. "
-      + "Set BLOB_READ_WRITE_TOKEN in this environment and re-run scripts/generate-placeholder-heroes.mjs, or leave the article imageless for the durable image job to fill."
-    );
-  }
+if (newsroomRunId) {
+  await recordRunStagedArticle(sql, newsroomRunId, id);
 }
 
-// Close the coverage-calendar loop (see frontend/docs/COVERAGE_CALENDAR.md).
-// Wired in exactly like publication-gate-log.mjs: the gate has already decided
-// by the time this runs, the whole thing is wrapped, and neither the module
-// failing to load nor the write failing can change the exit code or the
-// article that was just published. Worst case we log nothing and the entry is
-// closed out by hand with `coverage-calendar.mjs cover`.
-try {
-  const { closeCalendarLoop } = await import("./coverage-calendar-store.mjs");
-  const calendar = await closeCalendarLoop(sql, {
-    articleId: id,
-    title: article.title,
-    body: article.body ?? "",
-    publishedOn: isoPrefix,
-    explicitEntryId: article.coverage_calendar_id ?? null,
-  });
-  if (calendar.status === "covered") {
-    console.log(`Coverage calendar: marked "${calendar.entryIds[0]}" covered by this article.`);
-  } else if (calendar.status === "ambiguous") {
-    console.warn(
-      `Coverage calendar: ${calendar.entryIds.length} entries match this article `
-      + `(${calendar.entryIds.join(", ")}). Nothing marked — close the right one with `
-      + `\`node scripts/coverage-calendar.mjs cover <id> --article ${id}\`.`,
-    );
-  } else if (calendar.status === "unknown-id") {
-    console.warn(`Coverage calendar: coverage_calendar_id "${calendar.explicitEntryId}" is not a known entry.`);
-  } else if (calendar.status === "error") {
-    console.warn(`Coverage calendar not updated (article still published): ${calendar.error}`);
-  }
-} catch (error) {
-  console.warn(
-    `Coverage calendar not updated (article still published): ${error instanceof Error ? error.message : String(error)}`,
-  );
-}
-
-// Owner notification per publish (CMO directive 2026-08-17 P2). Best-effort:
-// a Telegram outage must never roll back or block a publish.
+// Owner notification per staged candidate. Best-effort: notification failure
+// must not remove a valid draft from the review queue.
+const reviewStatus = article.image_url ? "READY_FOR_REVIEW" : "AWAITING_IMAGE";
 const telegram = await sendTelegramAlert({
-  status: "COMPLETED",
-  summary: `Published live: ${article.title} (${article.category}, quality ${qualityReport.score}/${qualityReport.possible})`,
+  status: reviewStatus,
+  summary: `Staged draft: ${article.title} (${article.category}, quality ${qualityReport.score}/${qualityReport.possible}). ${article.image_url ? "Ready for explicit editorial review." : "A durable hero is still required before editorial review."}`,
   articles: [{ id, title: article.title }],
-  linkMode: "live",
+  linkMode: "review",
 });
-if (!telegram.ok) console.warn(`Telegram publish alert not delivered: ${telegram.error}`);
+if (!telegram.ok) console.warn(`Telegram draft alert not delivered: ${telegram.error}`);
 
-console.log("Published live:");
+console.log("Staged for image preparation and editorial review:");
 console.log(JSON.stringify({
   article: row,
   quality: { score: qualityReport.score, possible: qualityReport.possible },
-  live_url: `https://columbusrealestatenews.com/blog/${slug}`,
   review_url: `https://columbusrealestatenews.com/admin/articles?edit=${encodeURIComponent(id)}`,
 }, null, 2));

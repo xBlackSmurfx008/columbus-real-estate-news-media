@@ -55,7 +55,7 @@ function validArticle() {
   };
 }
 
-test('complete, sourced draft passes the automatic publication gate', () => {
+test('complete, sourced draft passes the deterministic staging gate', () => {
   const report = evaluateArticle(validArticle());
   assert.equal(report.passed, true, report.failedCodes.join(','));
   assert.equal(report.humanReviewRequired, false);

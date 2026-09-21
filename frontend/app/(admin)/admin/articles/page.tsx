@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { AdminSidebar } from '@/components/admin/admin-sidebar';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
+import { HUMAN_REVIEW_ITEMS } from '@/lib/editorial-review';
 
 interface Article {
   id: string;
@@ -27,6 +28,8 @@ interface Article {
   machine_score?: number | null;
   machine_possible?: number | null;
   human_decision?: string | null;
+  human_scores?: Record<string, number> | null;
+  reviewer?: string | null;
   review_status?: string | null;
   submission?: Partial<Article> & {
     image_provenance?: { caption?: string };
@@ -50,6 +53,10 @@ export default function ArticlesPage() {
   const [showForm, setShowForm] = useState(isNewMode);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [reviewer, setReviewer] = useState('');
+  const [humanScores, setHumanScores] = useState<Record<string, number>>(
+    Object.fromEntries(HUMAN_REVIEW_ITEMS.map((item) => [item.id, 0])),
+  );
 
   const [formData, setFormData] = useState<Partial<Article>>({
     title: '',
@@ -71,7 +78,7 @@ export default function ArticlesPage() {
   }, []);
 
   const handleEdit = useCallback((article: Article) => {
-    const pending = ['READY_FOR_AUTOMATION', 'AWAITING_HUMAN_REVIEW'].includes(article.review_status ?? '')
+    const pending = ['AWAITING_IMAGE', 'READY_FOR_REVIEW', 'READY_FOR_AUTOMATION', 'AWAITING_HUMAN_REVIEW'].includes(article.review_status ?? '')
       ? article.submission
       : null;
     setFormData(pending ? {
@@ -83,6 +90,11 @@ export default function ArticlesPage() {
       image_caption: pending.image_provenance?.caption ?? article.image_caption,
     } : article);
     setEditingId(article.id);
+    setReviewer(article.reviewer ?? '');
+    setHumanScores(Object.fromEntries(HUMAN_REVIEW_ITEMS.map((item) => [
+      item.id,
+      article.human_scores?.[item.id] ?? 0,
+    ])));
     setShowForm(true);
   }, []);
 
@@ -114,6 +126,11 @@ export default function ArticlesPage() {
     const payload = {
       ...formData,
       read_time: parseInt(String(formData.read_time || 5)),
+      ...(formData.status === 'live' ? {
+        human_decision: 'APPROVED',
+        human_scores: humanScores,
+        reviewer,
+      } : {}),
     };
 
     try {
@@ -177,7 +194,7 @@ export default function ArticlesPage() {
 
     if (currentStatus === 'draft') {
       handleEdit(article);
-      showToast('Drafts publish automatically after the copy gate and image checks pass', 'success');
+      showToast('Review the exact copy and hero, complete the scorecard, then approve publication', 'success');
       return;
     }
     if (!confirm('Move this live article back to draft?')) return;
@@ -206,7 +223,7 @@ export default function ArticlesPage() {
       const res = await fetch(`/api/admin/articles/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...article, featured: !currentFeatured }),
+        body: JSON.stringify({ featured: !currentFeatured }),
         credentials: 'include',
       });
 
@@ -331,7 +348,7 @@ export default function ArticlesPage() {
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none"
                     >
                       <option value="draft">Draft</option>
-                      <option value="live">Live after automated checks</option>
+                      <option value="live">Live after explicit approval</option>
                     </select>
                   </div>
                 </div>
@@ -389,7 +406,7 @@ export default function ArticlesPage() {
                   <section className="rounded-xl border border-gray-300 bg-white p-5">
                     <h3 className="text-lg font-semibold text-gray-950">Reader preview</h3>
                     <p className="mt-1 text-sm text-gray-600">
-                      Preview only. The cloud newsroom publishes automatically after the exact copy and verified image pass all checks.
+                      Preview the exact copy and hero that will be approved. Saving as live requires the scorecard below.
                     </p>
                     <article className="mx-auto mt-5 max-w-3xl overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
                       {formData.image_url ? (
@@ -414,6 +431,46 @@ export default function ArticlesPage() {
                         <div className="mt-6"><BodyPreview body={formData.body || ''} /></div>
                       </div>
                     </article>
+                  </section>
+                )}
+
+                {editingId && formData.status === 'live' && (
+                  <section className="rounded-xl border border-amber-300 bg-amber-50 p-5">
+                    <h3 className="text-lg font-semibold text-gray-950">Editorial approval</h3>
+                    <p className="mt-1 text-sm text-gray-700">
+                      Score the exact copy and hero above. Publication requires at least 17/20, every blocking item above zero,
+                      and accuracy, fairness, originality, and reader-visible evidence at 2.
+                    </p>
+                    <div className="mt-4 space-y-3">
+                      {HUMAN_REVIEW_ITEMS.map((item) => (
+                        <label key={item.id} className="grid gap-2 rounded-lg border border-amber-200 bg-white p-3 md:grid-cols-[1fr_8rem]">
+                          <span>
+                            <span className="block text-sm font-semibold text-gray-950">{item.id}: {item.label}{item.blocking ? ' (blocking)' : ''}</span>
+                            <span className="mt-1 block text-xs text-gray-600">{item.description}</span>
+                          </span>
+                          <select
+                            value={humanScores[item.id] ?? 0}
+                            onChange={(event) => setHumanScores({ ...humanScores, [item.id]: Number(event.target.value) })}
+                            className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm"
+                          >
+                            <option value={0}>0 — fails</option>
+                            <option value={1}>1 — passes</option>
+                            <option value={2}>2 — excellent</option>
+                          </select>
+                        </label>
+                      ))}
+                    </div>
+                    <label className="mt-4 block text-sm font-medium text-gray-800">
+                      Reviewer identity
+                      <input
+                        type="text"
+                        value={reviewer}
+                        onChange={(event) => setReviewer(event.target.value)}
+                        className="mt-2 w-full rounded-lg border border-gray-300 bg-white px-4 py-2"
+                        placeholder="Name or accountable editor ID"
+                        required
+                      />
+                    </label>
                   </section>
                 )}
 

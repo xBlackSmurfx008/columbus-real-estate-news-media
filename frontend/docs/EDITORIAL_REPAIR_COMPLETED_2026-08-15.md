@@ -4,9 +4,9 @@ Status: **Completed and published**
 Completion date: **August 15, 2026 (America/New_York)**  
 Writing-system version: **`cren-article-v1.0.0`**
 
-> Operational update (August 24, 2026): the owner explicitly replaced the future human-approval queue with fail-closed
-> automatic publication. The historical repair described below still records its original approvals. Current drafts go
-> live automatically only after the exact copy passes all 18 checks and the final image is reachable, fingerprinted, and unique.
+> Operational update (September 21, 2026): the owner restored explicit pre-publication review after the direct-live
+> routine diverged from the production image constraint. Automation now stages drafts, prepares a durable unique hero,
+> and stops at `READY_FOR_REVIEW`. Only an authenticated editor can approve the exact copy-image pair and publish it.
 
 > Current status (August 29, 2026): the historical 73-article repair remains complete. Production now has 87 live
 > articles; uptime passes and the public image audit reports 87/87 live images reachable with no missing or broken
@@ -90,10 +90,11 @@ Run commands from `frontend/`.
    node --env-file=.env.local scripts/verify-article-revision-queue.mjs
    ```
 
-7. Let the cloud newsroom attach the final image and revalidate the exact article-image pair. Passing work publishes
-   immediately; failed work remains a draft with a machine-readable error.
+7. Let the image worker attach the final image and revalidate the exact article-image pair. Passing work moves to
+   `READY_FOR_REVIEW`; failed work remains a draft with a machine-readable error.
 
-8. Verify the live public API, rerun the public-image audit, tests, build, and `git diff --check`.
+8. An authenticated editor must inspect the rendered copy and hero, complete the human scorecard, and explicitly
+   approve publication. Then verify the live public API, rerun the public-image audit, tests, build, and `git diff --check`.
 
 ## Publication safeguards that must not be bypassed
 

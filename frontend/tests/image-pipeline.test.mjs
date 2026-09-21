@@ -84,22 +84,28 @@ test("a hero URL that only resolves after a deploy is never attached to a live a
   assert.ok(updateIndex > guardIndex, "the deployNeeded guard must precede the UPDATE");
   assert.match(source, /NON_DURABLE_URL_NOT_PERSISTED/);
 
-  // And nothing should still be advertising the escape hatch as a fix.
+  // The staging command must never persist a live article or attach a temporary
+  // placeholder after the insert.
   const publish = await readFile(
     new URL("../scripts/publish-article.mjs", import.meta.url),
     "utf8",
   );
-  assert.doesNotMatch(publish, /--allow-deploy-lag plus a deploy/);
-  assert.match(publish, /Do NOT work around this with --allow-deploy-lag/);
+  assert.match(publish, /\$\{id\}, \$\{slug\}, 'draft'/);
+  assert.doesNotMatch(publish, /\$\{id\}, \$\{slug\}, 'live'/);
+  assert.doesNotMatch(publish, /hostPlaceholderCard/);
 });
 
-test("live placeholder heroes are included in the guarded replacement path", async () => {
-  const [listSource, startSource, attachSource] = await Promise.all([
+test("image preparation is draft-only and stops at review", async () => {
+  const [listSource, startSource, attachSource, cloudSource] = await Promise.all([
     readFile(new URL("../scripts/list-missing-images.mjs", import.meta.url), "utf8"),
     readFile(new URL("../scripts/record-image-start.mjs", import.meta.url), "utf8"),
     readFile(new URL("../scripts/attach-article-image.mjs", import.meta.url), "utf8"),
+    readFile(new URL("../workflows/newsroom-images.ts", import.meta.url), "utf8"),
   ]);
-  assert.match(listSource, /image_url LIKE '%\/placeholder-%'/);
-  assert.match(startSource, /image_url LIKE '%\/placeholder-%'/);
-  assert.match(attachSource, /image_url LIKE '%\/placeholder-%'/);
+  assert.match(listSource, /articles\.status = 'draft'/);
+  assert.match(startSource, /status = 'draft'/);
+  assert.match(attachSource, /status = 'draft'/);
+  assert.match(attachSource, /status = 'READY_FOR_REVIEW'/);
+  assert.doesNotMatch(cloudSource, /UPDATE articles SET[\s\S]{0,200}status = 'live'/);
+  assert.doesNotMatch(cloudSource, /publishCandidate/);
 });

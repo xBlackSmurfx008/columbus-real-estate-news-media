@@ -1,9 +1,10 @@
 # Site quality gates (product layer)
 
-Owner plan 2026-09-04, item 12. The newsroom is already fail-closed at the
-editorial layer: `scripts/publish-article.mjs` refuses to publish an article
-that does not pass a deterministic gate. This is the same posture for the
-product — one command that decides whether the site is fit to deploy.
+The newsroom is fail-closed at the editorial layer: `scripts/publish-article.mjs`
+can only stage a machine-passed draft, image preparation stops at review, and
+the authenticated admin publication path requires a verified hero plus explicit
+human approval. This is the same posture for the product — one command that
+decides whether the site is fit to deploy.
 
 ```bash
 cd frontend

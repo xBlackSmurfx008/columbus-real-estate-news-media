@@ -20,6 +20,9 @@
     "newsroom:neighborhood-report": "node scripts/neighborhood-coverage-report.mjs",
     "newsroom:coverage-calendar": "node scripts/coverage-calendar.mjs",
     "newsroom:migrate-runs": "node scripts/migrate-newsroom-runs.mjs",
+    "newsroom:migrate-email-reviews": "node scripts/migrate-editorial-email-reviews.mjs",
+    "newsroom:configure-email-dns": "python3 scripts/configure-editorial_email_dns.py",
+    "newsroom:email-review": "node --experimental-strip-types scripts/editorial-email-review.mjs",
     "newsroom:run": "node scripts/newsroom-run.mjs",
     "newsroom:automation-health": "node scripts/newsroom-automation-health.mjs",
     "newsroom:migrate-coverage-calendar": "node scripts/migrate-coverage-calendar.mjs",
@@ -76,6 +79,7 @@
     "react": "latest",
     "react-dom": "latest",
     "sharp": "^0.35.3",
+    "svix": "^1.99.1",
     "tailwind-merge": "^3.5.0",
     "workflow": "^4.8.4"
   },

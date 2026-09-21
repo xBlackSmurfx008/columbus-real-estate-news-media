@@ -1,4 +1,4 @@
-import { formatTelegramInquiry, type TelegramInquiry } from '@/lib/telegram-inquiry';
+import { formatTelegramInquiry, type TelegramInquiry } from './telegram-inquiry.ts';
 
 // Resend transport for all outbound site email (owner notifications, lead
 // replies, CRM sequences). Same contract as the Telegram path: best-effort,

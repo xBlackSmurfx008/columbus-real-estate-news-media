@@ -69,3 +69,29 @@ last completion, or publication exceeds its configured freshness threshold. The 
 the report and opens or updates a repository issue on failure when GitHub runners are available. The production Vercel
 cron independently calls `/api/cron/newsroom-health` every day and sends a Telegram alert on an unhealthy result, so
 the monitor does not depend on GitHub Actions availability.
+
+## Email proof, corrections, and approval
+
+After a candidate reaches `READY_FOR_REVIEW`, send the exact copy-image pair to the accountable editor with:
+
+```bash
+DATABASE_URL=... CREN_EDITOR_REVIEW_EMAIL=... CREN_EDITOR_REVIEW_DOMAIN=... RESEND_API_KEY=... \
+  npm run newsroom:email-review -- send --article-id <id> --confirm send-editorial-proof
+```
+
+The email contains the complete article, hero, and proposed ten-part scorecard. Its unique Reply-To address routes
+signed Resend `email.received` webhooks to `/api/webhooks/resend/editorial-review`. A reply containing edits is stored
+as `CHANGES_REQUESTED`; it never publishes. Apply those edits to the source package and draft, rerun the deterministic
+gate, and send a new proof. Every new proof supersedes all earlier versions.
+
+Outbound proof delivery uses `RESEND_API_KEY` for CREN's verified sender. Inbound retrieval uses the separately scoped
+`RESEND_RECEIVING_API_KEY` for the dedicated receiving subdomain. Never substitute one key for the other implicitly.
+
+Only a standalone `APPROVE` or `APPROVE THIS VERSION` reply from the configured editor can mark the exact candidate
+fingerprint `APPROVED`. Publication still requires an authenticated admin action, which rechecks the candidate hash,
+machine gate, hero reachability and uniqueness, sender identity, and email-approved scorecard. Inspect the current
+state and stored correction request with:
+
+```bash
+DATABASE_URL=... npm run newsroom:email-review -- status --article-id <id>
+```

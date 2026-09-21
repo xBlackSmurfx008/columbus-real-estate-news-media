@@ -19,9 +19,22 @@ export async function GET(request: NextRequest) {
         editorial_review_jobs.human_decision,
         editorial_review_jobs.reviewer,
         editorial_review_jobs.status AS review_status,
-        editorial_review_jobs.submission
+        editorial_review_jobs.submission,
+        email_review.status AS email_review_status,
+        email_review.version AS email_review_version,
+        email_review.reply_text AS email_review_reply_text,
+        email_review.reviewer AS email_review_reviewer,
+        email_review.sent_at AS email_review_sent_at,
+        email_review.replied_at AS email_review_replied_at
       FROM articles
       LEFT JOIN editorial_review_jobs ON editorial_review_jobs.article_id = articles.id
+      LEFT JOIN LATERAL (
+        SELECT status, version, reply_text, reviewer, sent_at, replied_at
+        FROM editorial_email_reviews
+        WHERE editorial_email_reviews.article_id = articles.id
+        ORDER BY version DESC
+        LIMIT 1
+      ) AS email_review ON TRUE
       ORDER BY articles.created_at DESC
     `;
     return NextResponse.json({ articles });

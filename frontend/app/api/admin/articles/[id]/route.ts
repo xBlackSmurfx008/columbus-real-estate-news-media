@@ -9,25 +9,8 @@ import {
   type ArticleImageFingerprint,
 } from "@/lib/article-image-fingerprint";
 import { evaluateArticle } from "@/scripts/editorial-quality-lib.mjs";
-
-const SUBMISSION_FIELDS = [
-  "title", "category", "excerpt", "body", "author", "date", "read_time", "area_slug", "topic_slug", "tags",
-  "image_url", "meta_description", "image_alt", "fact_checked_at",
-] as const;
-
-function candidateSubmission(staged: Record<string, unknown>, edits: Record<string, unknown>) {
-  const candidate = structuredClone(staged);
-  for (const field of SUBMISSION_FIELDS) {
-    if (Object.hasOwn(edits, field)) candidate[field] = edits[field];
-  }
-  if (Object.hasOwn(edits, "image_caption")) {
-    const provenance = candidate.image_provenance && typeof candidate.image_provenance === "object"
-      ? candidate.image_provenance as Record<string, unknown>
-      : {};
-    candidate.image_provenance = { ...provenance, caption: edits.image_caption };
-  }
-  return candidate;
-}
+import { validateHumanReview } from "@/lib/editorial-review";
+import { mergePublicationCandidate } from "@/lib/publication-candidate";
 
 // PUT: Update article by id
 export async function PUT(
@@ -43,7 +26,14 @@ export async function PUT(
 
     const sql = getDb();
 
-    const existing = await sql`SELECT id, status, image_url FROM articles WHERE id = ${id}`;
+    const existing = await sql`
+      SELECT
+        id, status, featured, category, title, excerpt, body, author, date,
+        read_time, area_slug, topic_slug, tags, image_url, meta_description,
+        image_alt, image_caption, fact_checked_at, updated_at
+      FROM articles
+      WHERE id = ${id}
+    `;
     if (existing.length === 0) {
       return NextResponse.json({ error: "Article not found" }, { status: 404 });
     }
@@ -64,16 +54,30 @@ export async function PUT(
     let machineReview;
     let reviewedSubmission;
     let approvedImageFingerprint: ArticleImageFingerprint | null = null;
+    let humanReview;
+    let reviewer: string | null = null;
     if (requiresPublicationGate) {
       const [review] = await sql`
-        SELECT submission
+        SELECT status, submission
         FROM editorial_review_jobs
         WHERE article_id = ${id}
       `;
       if (!review?.submission || typeof review.submission !== "object") {
         return NextResponse.json({ error: "Stage this article through the CREN editorial gate before publishing" }, { status: 409 });
       }
-      reviewedSubmission = candidateSubmission(review.submission, body);
+      if (review.status !== "READY_FOR_REVIEW") {
+        return NextResponse.json({
+          error: `The article is not ready for approval (review status: ${review.status ?? "missing"})`,
+        }, { status: 409 });
+      }
+      // Review the exact persisted draft plus the edits in this request. An
+      // editor may save draft changes before publishing; evaluating only the
+      // original staging payload would allow those saved changes to bypass the
+      // machine gate on a later status-only publication request.
+      reviewedSubmission = mergePublicationCandidate(
+        mergePublicationCandidate(review.submission, existing[0]),
+        body,
+      );
       machineReview = evaluateArticle(reviewedSubmission);
       if (!machineReview.passed) {
         return NextResponse.json({
@@ -112,6 +116,15 @@ export async function PUT(
       if (duplicateImage) {
         return NextResponse.json({
           error: `That hero duplicates the image assigned to article ${duplicateImage.article_id}`,
+        }, { status: 409 });
+      }
+
+      humanReview = validateHumanReview(body.human_scores);
+      reviewer = typeof body.reviewer === "string" ? body.reviewer.trim().slice(0, 200) : "";
+      if (body.human_decision !== "APPROVED" || !reviewer || !humanReview.passed) {
+        return NextResponse.json({
+          error: "Explicit editorial approval requires a reviewer and a passing 10-part scorecard (17/20 minimum; accuracy, fairness, originality, and visible evidence must score 2).",
+          humanReview,
         }, { status: 409 });
       }
     }
@@ -154,22 +167,28 @@ export async function PUT(
         image_caption = COALESCE(${body.image_caption ?? null}, image_caption),
         fact_checked_at = COALESCE(${body.fact_checked_at ?? null}, fact_checked_at),
         updated_at = NOW()
-      WHERE id = ${id}
+      WHERE id = ${id} AND updated_at = ${existing[0].updated_at}
       RETURNING *
     `;
 
-    if (requiresPublicationGate && machineReview && reviewedSubmission) {
+    if (result.length === 0) {
+      return NextResponse.json({
+        error: "The article changed while it was being reviewed. Reload it and review the current candidate before publishing.",
+      }, { status: 409 });
+    }
+
+    if (requiresPublicationGate && machineReview && reviewedSubmission && humanReview && reviewer) {
       await sql`
         UPDATE editorial_review_jobs SET
-          status = 'AUTO_PUBLISHED',
+          status = 'APPROVED',
           machine_score = ${machineReview.score},
           machine_possible = ${machineReview.possible},
           machine_report = ${JSON.stringify(machineReview)}::jsonb,
           submission = ${JSON.stringify(reviewedSubmission)}::jsonb,
-          human_score = NULL,
-          human_scores = NULL,
-          human_decision = 'NOT_REQUIRED',
-          reviewer = 'admin-auto-gate',
+          human_score = ${humanReview.total},
+          human_scores = ${JSON.stringify(humanReview.scores)}::jsonb,
+          human_decision = 'APPROVED',
+          reviewer = ${reviewer},
           reviewed_at = NOW(),
           updated_at = NOW()
         WHERE article_id = ${id}
@@ -178,6 +197,39 @@ export async function PUT(
         UPDATE article_image_jobs SET status = 'PUBLISHED', updated_at = NOW()
         WHERE article_id = ${id}
       `;
+      await sql`
+        UPDATE newsroom_runs SET
+          published_count = (
+            SELECT COUNT(*)::int
+            FROM jsonb_array_elements_text(staged_article_ids) AS staged(article_id)
+            JOIN articles ON articles.id = staged.article_id
+            WHERE articles.status = 'live'
+          ),
+          updated_at = NOW()
+        WHERE staged_article_ids ? ${id}
+      `.catch(() => undefined);
+
+      try {
+        const { closeCalendarLoop } = await import("@/scripts/coverage-calendar-store.mjs");
+        const dateParts = new Intl.DateTimeFormat("en-US", {
+          timeZone: "America/New_York",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        }).formatToParts(new Date());
+        const dateValues = Object.fromEntries(dateParts.map((part) => [part.type, part.value]));
+        await closeCalendarLoop(sql, {
+          articleId: id,
+          title: String(reviewedSubmission.title ?? result[0].title),
+          body: String(reviewedSubmission.body ?? result[0].body ?? ""),
+          publishedOn: `${dateValues.year}-${dateValues.month}-${dateValues.day}`,
+          explicitEntryId: typeof reviewedSubmission.coverage_calendar_id === "string"
+            ? reviewedSubmission.coverage_calendar_id
+            : null,
+        });
+      } catch (calendarError) {
+        console.warn("Coverage calendar not updated after publication", calendarError);
+      }
     }
 
     return NextResponse.json(result[0]);

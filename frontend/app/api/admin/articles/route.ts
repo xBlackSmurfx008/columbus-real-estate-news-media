@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
         editorial_review_jobs.machine_possible,
         editorial_review_jobs.human_scores,
         editorial_review_jobs.human_decision,
+        editorial_review_jobs.reviewer,
         editorial_review_jobs.status AS review_status,
         editorial_review_jobs.submission
       FROM articles

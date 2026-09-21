@@ -1,8 +1,8 @@
-// Durable record of blocked publication attempts (owner plan 2026-09-04, item
-// 11: "failed publication gates" is a weekly scorecard signal).
+// Durable record of blocked staging attempts (original owner plan 2026-09-04,
+// item 11: "failed publication gates" remains the weekly scorecard label).
 //
 // WHY THIS EXISTS: scripts/publish-article.mjs enforces a deterministic
-// editorial gate and, until now, a block was a console message and exit code 1
+// editorial staging gate and, until now, a block was a console message and exit code 1
 // — it left no trace. A scorecard row that can only ever print 0 is not a
 // measurement, it is decoration. This module gives every block a row, so the
 // weekly review can see which gate is actually catching things and whether the

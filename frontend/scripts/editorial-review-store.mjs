@@ -7,7 +7,7 @@ export async function ensureEditorialReviewTable(sql) {
   await sql`
     CREATE TABLE IF NOT EXISTS editorial_review_jobs (
       article_id TEXT PRIMARY KEY REFERENCES articles(id) ON DELETE CASCADE,
-      status TEXT NOT NULL DEFAULT 'READY_FOR_AUTOMATION',
+      status TEXT NOT NULL DEFAULT 'AWAITING_IMAGE',
       machine_score INTEGER NOT NULL,
       machine_possible INTEGER NOT NULL,
       machine_report JSONB NOT NULL,
@@ -21,21 +21,22 @@ export async function ensureEditorialReviewTable(sql) {
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     )
   `;
-  await sql`ALTER TABLE editorial_review_jobs ALTER COLUMN status SET DEFAULT 'READY_FOR_AUTOMATION'`;
+  await sql`ALTER TABLE editorial_review_jobs ALTER COLUMN status SET DEFAULT 'AWAITING_IMAGE'`;
   await sql`ALTER TABLE editorial_review_jobs ADD COLUMN IF NOT EXISTS human_scores JSONB`;
 }
 
 export async function saveEditorialReview(sql, articleId, article, report) {
   await ensureEditorialReviewTable(sql);
+  const nextStatus = article.image_url ? 'READY_FOR_REVIEW' : 'AWAITING_IMAGE';
   await sql`
     INSERT INTO editorial_review_jobs (
       article_id, status, machine_score, machine_possible, machine_report, submission, updated_at
     ) VALUES (
-      ${articleId}, 'READY_FOR_AUTOMATION', ${report.score}, ${report.possible},
+      ${articleId}, ${nextStatus}, ${report.score}, ${report.possible},
       ${JSON.stringify(report)}::jsonb, ${JSON.stringify(article)}::jsonb, NOW()
     )
     ON CONFLICT (article_id) DO UPDATE SET
-      status = 'READY_FOR_AUTOMATION',
+      status = EXCLUDED.status,
       machine_score = EXCLUDED.machine_score,
       machine_possible = EXCLUDED.machine_possible,
       machine_report = EXCLUDED.machine_report,

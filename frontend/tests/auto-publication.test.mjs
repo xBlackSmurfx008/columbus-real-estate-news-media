@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { validateAutoPublicationCandidate } from '../lib/auto-publication.ts';
+import { validateReviewedPublicationCandidate } from '../lib/auto-publication.ts';
+import { mergePublicationCandidate } from '../lib/publication-candidate.ts';
 
 const answerSummary = 'A Columbus housing permit entered early city review this week. The filing matters because it shows how a vacant commercial site could change, while key design, approval, cost, and construction questions remain open.';
 const contextParagraph = 'City records give readers a useful starting point, but they do not settle the project’s final shape. The review can change after staff comments, public meetings, engineering work, or a new submission. CREN should explain that process in everyday language, name the record being used, and separate the applicant’s stated goal from what the city has decided. That distinction gives nearby residents, property owners, and civic watchers a clear account without pretending an early filing is a finished plan.';
@@ -56,15 +57,15 @@ function candidate(overrides = {}) {
   const staged = submission();
   return {
     article: { ...staged, status: 'draft' },
-    reviewStatus: 'READY_FOR_AUTOMATION',
+    reviewStatus: 'READY_FOR_REVIEW',
     submission: staged,
     fingerprint: { image_url: imageUrl, sha256: 'abc', perceptual_hash: '123' },
     ...overrides,
   };
 }
 
-test('a machine-passed exact draft with a verified durable image is ready to publish', () => {
-  const result = validateAutoPublicationCandidate(candidate());
+test('a machine-passed exact draft with a verified durable image is ready for human review', () => {
+  const result = validateReviewedPublicationCandidate(candidate());
   assert.equal(result.ready, true, result.reasons.join(','));
   assert.equal(result.machineReport.passed, true);
 });
@@ -72,18 +73,39 @@ test('a machine-passed exact draft with a verified durable image is ready to pub
 test('a changed article cannot publish against a stale staged submission', () => {
   const input = candidate();
   input.article = { ...input.article, title: 'Changed after the machine gate' };
-  const result = validateAutoPublicationCandidate(input);
+  const result = validateReviewedPublicationCandidate(input);
   assert.equal(result.ready, false);
   assert.ok(result.reasons.includes('ARTICLE_DOES_NOT_MATCH_STAGED_SUBMISSION'));
 });
 
 test('a missing image fingerprint fails closed', () => {
-  const result = validateAutoPublicationCandidate(candidate({ fingerprint: null }));
+  const result = validateReviewedPublicationCandidate(candidate({ fingerprint: null }));
   assert.equal(result.ready, false);
   assert.ok(result.reasons.includes('IMAGE_FINGERPRINT_NOT_VERIFIED'));
 });
 
-test('legacy queued drafts can drain into the new automatic path', () => {
-  const result = validateAutoPublicationCandidate(candidate({ reviewStatus: 'AWAITING_HUMAN_REVIEW' }));
-  assert.equal(result.ready, true, result.reasons.join(','));
+test('legacy queued drafts cannot bypass the explicit review-ready state', () => {
+  const result = validateReviewedPublicationCandidate(candidate({ reviewStatus: 'AWAITING_HUMAN_REVIEW' }));
+  assert.equal(result.ready, false);
+  assert.ok(result.reasons.includes('REVIEW_JOB_NOT_READY'));
+});
+
+test('saved draft edits are part of the exact candidate reviewed at publication', () => {
+  const staged = submission();
+  const persistedDraft = {
+    title: 'Saved editor title',
+    body: `${staged.body}\n\nSaved editor context.`,
+    image_caption: 'Saved editor caption.',
+  };
+  const requestEdits = { excerpt: 'Final excerpt supplied with the approval request.' };
+  const merged = mergePublicationCandidate(
+    mergePublicationCandidate(staged, persistedDraft),
+    requestEdits,
+  );
+
+  assert.equal(merged.title, persistedDraft.title);
+  assert.equal(merged.body, persistedDraft.body);
+  assert.equal(merged.excerpt, requestEdits.excerpt);
+  assert.equal(merged.image_provenance.caption, persistedDraft.image_caption);
+  assert.deepEqual(merged.source_ledger, staged.source_ledger);
 });

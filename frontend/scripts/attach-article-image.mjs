@@ -90,7 +90,7 @@ try {
   const [updated] = await withRetry(() => sql`
     UPDATE articles
     SET image_url = ${blob.url}, updated_at = NOW()
-    WHERE id = ${articleId} AND status IN ('draft', 'live')
+    WHERE id = ${articleId} AND status = 'draft'
       AND (image_url IS NULL OR image_url LIKE '/images/heroes/%' OR image_url LIKE '%/placeholder-%')
     RETURNING id, title
   `);
@@ -112,6 +112,24 @@ try {
       updated_at = NOW()
     WHERE article_id = ${articleId}
   `).catch(() => undefined);
+  await withRetry(() => sql`
+    UPDATE editorial_review_jobs
+    SET submission = jsonb_set(submission, '{image_url}', to_jsonb(${blob.url}::text), true),
+        status = 'READY_FOR_REVIEW',
+        updated_at = NOW()
+    WHERE article_id = ${articleId}
+  `);
+  await sql`
+    UPDATE newsroom_runs SET
+      image_ready_count = (
+        SELECT COUNT(*)::int
+        FROM jsonb_array_elements_text(staged_article_ids) AS staged(article_id)
+        JOIN article_image_jobs ON article_image_jobs.article_id = staged.article_id
+        WHERE article_image_jobs.status IN ('READY_FOR_REVIEW', 'PUBLISHED')
+      ),
+      updated_at = NOW()
+    WHERE staged_article_ids ? ${articleId}
+  `.catch(() => undefined);
   process.stdout.write(`${JSON.stringify({ ok: true, articleId, status: 'READY_FOR_REVIEW', title: updated.title, imageUrl: blob.url, artifactPath })}\n`);
 } catch (error) {
   if (blobUrl && !articleAttached) {

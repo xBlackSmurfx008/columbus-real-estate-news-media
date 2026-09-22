@@ -130,18 +130,13 @@ export default function ArticlesPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const emailApproved = editingId
-      ? articles.find((article) => article.id === editingId)?.email_review_status === 'APPROVED'
-      : false;
     const payload = {
       ...formData,
       read_time: parseInt(String(formData.read_time || 5)),
       ...(formData.status === 'live' ? {
-        ...(emailApproved ? { use_email_approval: true } : {
-          human_decision: 'APPROVED',
-          human_scores: humanScores,
-          reviewer,
-        }),
+        human_decision: 'APPROVED',
+        human_scores: humanScores,
+        reviewer,
       } : {}),
     };
 
@@ -475,7 +470,7 @@ export default function ArticlesPage() {
                     <div className="mt-5 rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-950">
                       <p className="font-semibold">Email review: {articles.find((article) => article.id === editingId)?.email_review_status ?? 'NOT_SENT'}</p>
                       {articles.find((article) => article.id === editingId)?.email_review_reply_text && (
-                        <p className="mt-2 whitespace-pre-wrap"><strong>Requested edits:</strong> {articles.find((article) => article.id === editingId)?.email_review_reply_text}</p>
+                        <p className="mt-2 whitespace-pre-wrap"><strong>Latest email reply:</strong> {articles.find((article) => article.id === editingId)?.email_review_reply_text}</p>
                       )}
                       <button
                         type="button"
@@ -485,7 +480,20 @@ export default function ArticlesPage() {
                       >
                         {isSendingProof ? 'Sending proof…' : 'Save draft and email publication proof'}
                       </button>
-                      <p className="mt-2 text-xs text-blue-800">Any prior proof is superseded. Edits arrive here; an APPROVE reply applies only to the exact emailed version.</p>
+                      <button type="button" className="mt-3 ml-3 rounded-lg border border-blue-700 px-4 py-2" onClick={async () => {
+                        const response = await fetch(`/api/admin/articles/${editingId}/email-review`);
+                        const data = await response.json();
+                        if (!response.ok) { showToast(data.error ?? 'Could not load email review', 'error'); return; }
+                        const event = data.events?.find((entry: { version: number; decision: string; action?: string; approvalRecoveryAvailable?: boolean }) =>
+                          entry.version === data.reviews?.[0]?.version && ((entry.decision === 'APPROVED' && !entry.action) || entry.approvalRecoveryAvailable));
+                        if (!event) { showToast('No pending email approval is available', 'error'); return; }
+                        if (!confirm(`Retry publication checks for email-approved proof version ${event.version}?\n\nThe provider will reverify your email. The exact approved article publishes if all checks pass.`)) return;
+                        const result = await fetch(`/api/admin/articles/${editingId}/email-review`, { method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ emailId: event.email_id, confirm: 'retry-verified-email-publication' }) });
+                        const detail = await result.json();
+                        showToast(result.ok ? 'Email-approved article published' : detail.error ?? 'Publication checks did not pass', result.ok ? 'success' : 'error');
+                        await fetchArticles();
+                      }}>Retry failed email publication</button>
+                      <p className="mt-2 text-xs text-blue-800">Reply APPROVE or APPROVED to publish this exact proof after sender, article and image checks pass. No additional admin confirmation or scorecard is required. Edits require a corrected proof and a new approval. The retry button is only for failed checks.</p>
                     </div>
                   </section>
                 )}
@@ -495,12 +503,12 @@ export default function ArticlesPage() {
                     <h3 className="text-lg font-semibold text-green-950">Approved by email</h3>
                     <p className="mt-1 text-sm text-green-900">
                       {articles.find((article) => article.id === editingId)?.email_review_reviewer} approved this exact candidate.
-                      Saving as live will recheck the candidate fingerprint, machine gate, hero, and email scorecard before publication.
+                      Saving as live will recheck the candidate fingerprint, machine gate, hero, and your separately completed editorial scorecard before publication.
                     </p>
                   </section>
                 )}
 
-                {editingId && formData.status === 'live' && articles.find((article) => article.id === editingId)?.email_review_status !== 'APPROVED' && (
+                {editingId && formData.status === 'live' && (
                   <section className="rounded-xl border border-amber-300 bg-amber-50 p-5">
                     <h3 className="text-lg font-semibold text-gray-950">Editorial approval</h3>
                     <p className="mt-1 text-sm text-gray-700">

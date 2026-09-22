@@ -2,6 +2,8 @@
 import { buildHeroPrompt, selectMissingArticles } from "./image-pipeline-lib.mjs";
 import { ensureImageJobTable, getSql, withRetry } from "./image-job-store.mjs";
 import { ensureEditorialReviewTable } from './editorial-review-store.mjs';
+import { planEditorialImage } from './editorial-image-policy.mjs';
+import { createHash } from 'node:crypto';
 
 const limitIndex = process.argv.indexOf("--limit");
 const limit = limitIndex >= 0 ? Number(process.argv[limitIndex + 1]) : 4;
@@ -23,6 +25,7 @@ const rows = await withRetry(() => sql`
     articles.area_slug,
     articles.topic_slug,
     articles.created_at,
+    editorial_review_jobs.submission,
     editorial_review_jobs.submission->'image_brief' AS image_brief,
     editorial_review_jobs.submission->'image_provenance' AS image_provenance,
     editorial_review_jobs.submission->'location'->>'name' AS location_name
@@ -40,9 +43,11 @@ const selected = [];
 const ordered = selectMissingArticles(rows, rows.length);
 for (const article of ordered) {
   if (selected.length >= limit) break;
-  const imagePrompt = buildHeroPrompt(article);
+  const acquisition = planEditorialImage(article);
+  article.base_submission_sha256 = createHash('sha256').update(JSON.stringify(article.submission)).digest('hex');
+  const imagePrompt = acquisition.mode === 'AI_FALLBACK' ? buildHeroPrompt(article) : null;
   if (!claim) {
-    selected.push({ ...article, imagePrompt });
+    selected.push({ ...article, acquisition, imagePrompt });
     continue;
   }
   const [claimed] = await withRetry(() => sql`
@@ -58,7 +63,7 @@ for (const article of ordered) {
        OR article_image_jobs.started_at < NOW() - INTERVAL '60 minutes'
     RETURNING article_id
   `);
-  if (claimed) selected.push({ ...article, imagePrompt });
+  if (claimed) selected.push({ ...article, acquisition, imagePrompt });
 }
 
 process.stdout.write(`${JSON.stringify({

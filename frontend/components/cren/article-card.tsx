@@ -23,18 +23,21 @@ export function ArticleCard({ article, featured = false }: { article: ArticleCar
         data-item-id={article.id}
       >
         {article.imageUrl ? (
-          <div className={`relative mb-4 overflow-hidden rounded-[var(--radius-sm)] ${featured ? "aspect-[16/8]" : "aspect-[16/9]"}`}>
+          <div className="relative mb-4 aspect-[16/9] overflow-hidden rounded-[var(--radius-sm)]">
             <CoverImage
               src={article.imageUrl}
-              alt={article.title}
+              alt={article.imageAlt || article.title}
               thumbnail
-              aspect={featured ? 2 : 16 / 9}
+              aspect={16 / 9}
             />
           </div>
         ) : (
           featured && (
-            <div className="mb-4 aspect-[16/8] overflow-hidden rounded-[var(--radius-sm)] bg-gradient-to-br from-[color:var(--green)]/15 via-[color:var(--gold)]/10 to-transparent" />
+            <div className="mb-4 aspect-[16/9] overflow-hidden rounded-[var(--radius-sm)] bg-gradient-to-br from-[color:var(--green)]/15 via-[color:var(--gold)]/10 to-transparent" />
           )
+        )}
+        {article.imageUrl && article.imageDisclosure && (
+          <p className="mb-3 text-xs text-[color:var(--text-muted)]">{article.imageDisclosure}</p>
         )}
         <div className="mb-2 flex flex-wrap items-center gap-2">
           <span className="inline-block rounded-full bg-[color:var(--green)]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--green)]">

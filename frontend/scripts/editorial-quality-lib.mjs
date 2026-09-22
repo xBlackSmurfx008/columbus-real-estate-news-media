@@ -1,3 +1,5 @@
+import { planEditorialImage } from './editorial-image-policy.mjs';
+
 const REQUIRED_FIELDS = [
   'prompt_version',
   'title',
@@ -189,8 +191,8 @@ export function evaluateArticle(article) {
       || (tags.includes('neighborhood') && article.area_slug && article.area_slug !== 'columbus-citywide'));
 
   const checks = [
-    check('A0_PROMPT_VERSION', article.prompt_version === 'cren-article-v1.0.0',
-      'Use the current versioned CREN article-writing system.'),
+    check('A0_PROMPT_VERSION', ['cren-article-v1.0.0', 'cren-article-v1.0.1', 'cren-article-v1.0.2'].includes(article.prompt_version),
+      'Use a supported versioned CREN article-writing system; new drafts use v1.0.2.'),
     check('A1_REQUIRED_FIELDS', REQUIRED_FIELDS.every((field) => {
       const value = article[field];
       return Array.isArray(value) ? value.length > 0 : value && (typeof value !== 'object' || Object.keys(value).length > 0);
@@ -247,8 +249,9 @@ export function evaluateArticle(article) {
       && Array.isArray(article.image_brief?.story_anchors) && article.image_brief.story_anchors.length >= 2
       && article.image_brief?.source_asset_considered === true
       && Boolean(article.image_provenance?.type) && Boolean(imageCaption)
+      && (article.prompt_version !== 'cren-article-v1.0.2' || planEditorialImage(article).mode !== 'NEEDS_RESEARCH')
       && (!imageAi || /AI-generated (?:editorial )?(?:illustration|visualization|image)/i.test(imageCaption)),
-    'The brief needs an editorial idea, two story anchors, source-asset consideration, and truthful AI disclosure.'),
+    'The brief needs story anchors and truthful disclosure; v1.0.2 requires recorded real-photo research and source rights/context or an explicitly justified AI fallback.'),
   ];
 
   const failed = checks.filter((item) => !item.passed);
@@ -258,8 +261,8 @@ export function evaluateArticle(article) {
     possible: checks.length,
     checks,
     failedCodes: failed.map((item) => item.id),
-    humanReviewRequired: false,
-    publicationPolicy: 'AUTO_PUBLISH_WHEN_COMPLETE',
+    humanReviewRequired: true,
+    publicationPolicy: 'OWNER_APPROVAL_REQUIRED',
   };
 }
 

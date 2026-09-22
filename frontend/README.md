@@ -82,6 +82,14 @@ KPI totals.
 
 ## Operational checks
 
+September 22 repair release (verified owner email approval is the final publication decision; no second admin click): see
+[`docs/SUPERVISED_OPERATIONS_HANDOFF_2026-09-22.md`](docs/SUPERVISED_OPERATIONS_HANDOFF_2026-09-22.md)
+for migration/configuration order, verified boundaries, and remaining activation work.
+Image policy: [real photos first](docs/IMAGE_POLICY.md), with recorded permission/context and explicitly labeled,
+natural photographic-style AI fallback. Both image workers share the policy; existing live heroes stay unchanged.
+Public signup now requires a server-validated challenge and explicit mailbox confirmation;
+do not deploy the new routes before configuring and testing those dependencies.
+
 Use these before release work:
 
 ```bash
@@ -117,8 +125,10 @@ Vercel, otherwise the existing `ADMIN_JWT_SECRET` is used for the member cookie.
 
 Valid public submission smoke tests intentionally leave `codex-smoke` records
 until an approved cleanup. Run smoke only at the end of a release cycle.
-Cleanup requires `--delete --confirm=codex-smoke`; fingerprint sync writes
-unless `--dry-run` is present.
+Cleanup requires `--delete --confirm=codex-smoke`; fingerprint sync is read-only
+by default (`--dry-run` remains supported). Only explicitly authorized `--apply`
+refreshes fingerprints, after checking the complete current corpus. A failed image,
+duplicate, stale snapshot or missing publication-fence migration blocks all writes.
 
 ## Next phases
 

@@ -126,19 +126,22 @@ export async function executeSequenceStep(enrollmentId: string): Promise<Sequenc
     return upsert(sequenceEnrollmentsStore, enrollment);
   }
 
+  let delivery: { ok: boolean; providerMessageId: string };
   if (step.channel === "social_dm") {
-    await socialDmGateway.send({
+    delivery = await socialDmGateway.send({
       toHandle: contact.email,
       provider: "staged",
       body: step.templateBody,
     });
   } else {
-    await emailGateway.send({
+    delivery = await emailGateway.send({
       to: contact.email,
       subject: step.templateSubject,
       body: step.templateBody,
     });
   }
+
+  if (!delivery.ok || !delivery.providerMessageId) throw new Error('SEQUENCE_NOT_DELIVERED');
 
   crmAdapter.addActivity({
     entityType: "contact",

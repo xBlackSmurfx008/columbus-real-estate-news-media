@@ -1,4 +1,5 @@
 "use client";
+import { IntakeSecurityFields, securityFields } from './intake-security-fields';
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
@@ -11,7 +12,6 @@ const PACKAGE_OPTIONS = ADVERTISING_PACKAGE_OPTIONS;
 export function AdvertisingInquiryForm({
   source = "advertise-page",
   submitLabel = "Send advertising inquiry",
-  successMessage = "Thanks. Your advertising inquiry is in the queue, and the newsroom has been notified.",
 }: {
   source?: string;
   submitLabel?: string;
@@ -25,12 +25,14 @@ export function AdvertisingInquiryForm({
     event.preventDefault();
     setError(null);
     setSending(true);
-    const data = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const data = new FormData(form);
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
+          ...securityFields(data),
           inquiry_type: "advertising",
           source,
           name: data.get("name"),
@@ -50,11 +52,12 @@ export function AdvertisingInquiryForm({
         setError(body.error ?? "Something went wrong. Please try again.");
         return;
       }
-      trackEvent("generate_lead", { method: source, inquiry_type: "advertising", conversion: true });
+      trackEvent("intake_pending", { method: source, inquiry_type: "advertising", conversion: false });
       setSubmitted(true);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
+      form.dispatchEvent(new Event('intake-complete'));
       setSending(false);
     }
   }
@@ -62,13 +65,14 @@ export function AdvertisingInquiryForm({
   if (submitted) {
     return (
       <p className="rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--green-pale)] p-5 text-sm text-[color:var(--text-secondary)]">
-        {successMessage}
+        Check your email and confirm your advertising inquiry before it enters our review queue.
       </p>
     );
   }
 
   return (
     <form className="grid gap-4" onSubmit={onSubmit}>
+      <IntakeSecurityFields kind="contact" />
       <div className="grid gap-4 md:grid-cols-2">
         <label className="grid gap-1 text-sm text-[color:var(--text-secondary)]">
           Name

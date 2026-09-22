@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { getDb } from "@/lib/db";
 import snapshotJson from "@/content/snapshot/public-data.json";
-import { generateArticleSlug, getArticleSlug } from "@/lib/article-routing";
+import { generateArticleSlug, getArticleSlug, LEGACY_ARTICLE_SLUG_REDIRECTS } from "@/lib/article-routing";
 import { getBlogPostBySlug } from "@/lib/blog";
 
 // ============================================================
@@ -175,9 +175,6 @@ export interface ArticleSlugResolution {
 }
 
 const snapshot = snapshotJson as unknown as PublicSiteData;
-const legacyArticleSlugRedirects: Record<string, string> = {
-  "columbus-zone-in-phase-2-commercial-industrial-rezoning": "zone-in-adds-capacity-not-88-000-built-columbus-homes",
-};
 
 function snapshotArticles(): DbArticle[] {
   return Array.isArray(snapshot.articles) ? snapshot.articles : [];
@@ -274,9 +271,10 @@ export const getArticleById = cache(async (id: string): Promise<DbArticle | null
 
 /** Resolve a canonical or historical article slug without loading every body. */
 export const resolveArticleSlug = cache(async (slug: string): Promise<ArticleSlugResolution | null> => {
-  const redirectedSlug = legacyArticleSlugRedirects[slug];
+  const redirectedSlug = Object.hasOwn(LEGACY_ARTICLE_SLUG_REDIRECTS, slug) ? LEGACY_ARTICLE_SLUG_REDIRECTS[slug] : undefined;
   if (redirectedSlug) {
-    return resolveArticleSlug(redirectedSlug);
+    const resolved = await resolveArticleSlug(redirectedSlug);
+    return resolved ? { ...resolved, shouldRedirect: true } : null;
   }
 
   try {

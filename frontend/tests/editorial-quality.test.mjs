@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { evaluateArticle } from '../scripts/editorial-quality-lib.mjs';
 import { validateHumanReview } from '../lib/editorial-review.ts';
+import { AI_IMAGE_CAPTION, IMAGE_POLICY_VERSION } from '../scripts/editorial-image-policy.mjs';
 
 const answerSummary = 'A Columbus housing permit entered early city review this week. The filing matters because it shows how a vacant commercial site could change, while key design, approval, cost, and construction questions remain open.';
 const contextParagraph = 'City records give readers a useful starting point, but they do not settle the project’s final shape. The review can change after staff comments, public meetings, engineering work, or a new submission. CREN should explain that process in everyday language, name the record being used, and separate the applicant’s stated goal from what the city has decided. That distinction gives nearby residents, property owners, and civic watchers a clear account without pretending an early filing is a finished plan.';
@@ -19,7 +20,7 @@ const body = [
 
 function validArticle() {
   return {
-    prompt_version: 'cren-article-v1.0.0',
+    prompt_version: 'cren-article-v1.0.1',
     title: 'Columbus Housing Permit Enters Early City Review',
     category: 'Development',
     author: 'CREN Newsroom',
@@ -58,8 +59,29 @@ function validArticle() {
 test('complete, sourced draft passes the deterministic staging gate', () => {
   const report = evaluateArticle(validArticle());
   assert.equal(report.passed, true, report.failedCodes.join(','));
-  assert.equal(report.humanReviewRequired, false);
-  assert.equal(report.publicationPolicy, 'AUTO_PUBLISH_WHEN_COMPLETE');
+  assert.equal(report.humanReviewRequired, true);
+  assert.equal(report.publicationPolicy, 'OWNER_APPROVAL_REQUIRED');
+});
+
+test('legacy versioned drafts remain reviewable but never bypass owner approval', () => {
+  const report = evaluateArticle({ ...validArticle(), prompt_version: 'cren-article-v1.0.0' });
+  assert.equal(report.passed, true);
+  assert.equal(report.humanReviewRequired, true);
+  assert.equal(report.publicationPolicy, 'OWNER_APPROVAL_REQUIRED');
+});
+
+test('new prompt version requires real-photo research before an explicitly disclosed fallback', () => {
+  const article = validArticle();
+  article.prompt_version = 'cren-article-v1.0.2';
+  assert.ok(evaluateArticle(article).failedCodes.includes('A15_ORIGINALITY_AND_DISCLOSURE'));
+  article.image_brief.image_policy_version = IMAGE_POLICY_VERSION;
+  article.image_brief.source_asset_note = 'No reusable photo was available from the inspected project source.';
+  article.image_brief.source_review = [{ url: 'https://www.columbus.gov/example', outcome: 'UNAVAILABLE', note: 'The checked record provides text and no site photo.' }];
+  article.image_provenance.caption = AI_IMAGE_CAPTION;
+  article.image_alt = 'AI-generated illustration of a generic low-rise commercial parcel and sidewalk.';
+  assert.equal(evaluateArticle(article).passed, true);
+  article.image_brief.source_review[0].outcome = 'SELECTED';
+  assert.ok(evaluateArticle(article).failedCodes.includes('A15_ORIGINALITY_AND_DISCLOSURE'));
 });
 
 test('generic promotional HTML copy is blocked before it reaches the draft queue', () => {

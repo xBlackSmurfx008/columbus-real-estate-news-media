@@ -8,7 +8,7 @@ function xml(value) {
   return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 }
 
-export function buildImageBackfillPlist({ frontendPath, nodePath, codexBinPath }) {
+export function buildImageBackfillPlist({ frontendPath, nodePath, codexBinPath, envFilePath }) {
   const path = [codexBinPath, nodePath.slice(0, nodePath.lastIndexOf("/")), "/opt/homebrew/bin", "/usr/local/bin", "/usr/bin", "/bin"]
     .filter((value, index, values) => value && values.indexOf(value) === index)
     .join(":");
@@ -23,6 +23,7 @@ export function buildImageBackfillPlist({ frontendPath, nodePath, codexBinPath }
     <string>${xml(`${frontendPath}/scripts/run-image-backfill.mjs`)}</string>
   </array>
   <key>WorkingDirectory</key><string>${xml(frontendPath)}</string>
+  ${envFilePath ? `<key>EnvironmentVariables</key><dict><key>CREN_IMAGE_ENV_FILE</key><string>${xml(envFilePath)}</string></dict>` : ''}
   <key>StartCalendarInterval</key><array>${entries}
   </array>
   <key>ThrottleInterval</key><integer>60</integer>

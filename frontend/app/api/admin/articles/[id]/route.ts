@@ -12,6 +12,8 @@ import { evaluateArticle } from "@/scripts/editorial-quality-lib.mjs";
 import { validateHumanReview } from "@/lib/editorial-review";
 import { mergePublicationCandidate } from "@/lib/publication-candidate";
 import { editorialCandidateHash, type EditorialCandidate } from "@/lib/editorial-email-review";
+import { publishEditorialCandidate } from "@/lib/editorial-publication";
+import { reconcileEditorialPublication } from "@/lib/editorial-publication-bookkeeping";
 
 // PUT: Update article by id
 export async function PUT(
@@ -31,7 +33,7 @@ export async function PUT(
       SELECT
         id, status, featured, category, title, excerpt, body, author, date,
         read_time, area_slug, topic_slug, tags, image_url, meta_description,
-        image_alt, image_caption, fact_checked_at, updated_at
+        image_alt, image_caption, fact_checked_at, updated_at::text AS updated_at
       FROM articles
       WHERE id = ${id}
     `;
@@ -45,7 +47,7 @@ export async function PUT(
     }
 
     const editorialFields = [
-      "title", "excerpt", "body", "author", "date", "read_time", "area_slug", "topic_slug", "tags",
+      "title", "category", "excerpt", "body", "author", "date", "read_time", "area_slug", "topic_slug", "tags",
       "image_url", "meta_description", "image_alt", "image_caption", "fact_checked_at",
     ];
     const changesEditorialContent = editorialFields.some((field) => Object.hasOwn(body, field));
@@ -57,6 +59,7 @@ export async function PUT(
     let approvedImageFingerprint: ArticleImageFingerprint | null = null;
     let humanReview;
     let reviewer: string | null = null;
+    let ownerApproval: { version: number; hash: string; candidate: EditorialCandidate; staged: unknown } | null = null;
     if (requiresPublicationGate) {
       const [review] = await sql`
         SELECT status, submission
@@ -120,12 +123,12 @@ export async function PUT(
         }, { status: 409 });
       }
 
-      let humanDecision = body.human_decision;
-      if (body.use_email_approval === true) {
+      const humanDecision = body.human_decision;
+      {
         const [emailApproval] = await sql`
-          SELECT candidate_hash, proposed_human_scores, reviewer
+          SELECT version, status, candidate_hash, reviewer
           FROM editorial_email_reviews
-          WHERE article_id = ${id} AND status = 'APPROVED'
+          WHERE article_id = ${id}
           ORDER BY version DESC
           LIMIT 1
         `;
@@ -134,19 +137,20 @@ export async function PUT(
           : {};
         const exactCandidate = {
           ...reviewedSubmission,
+          title: String(reviewedSubmission.title), excerpt: String(reviewedSubmission.excerpt),
+          body: String(reviewedSubmission.body), author: String(reviewedSubmission.author),
+          date: String(reviewedSubmission.date), category: String(reviewedSubmission.category),
           id,
           image_url: candidateImageUrl,
           image_caption: body.image_caption ?? existing[0].image_caption ?? provenance.caption ?? null,
+          image_sha256: approvedImageFingerprint.sha256,
         } as EditorialCandidate;
-        if (!emailApproval || editorialCandidateHash(exactCandidate) !== emailApproval.candidate_hash) {
+        if (!emailApproval || emailApproval.status !== 'APPROVED' || editorialCandidateHash(exactCandidate) !== emailApproval.candidate_hash) {
           return NextResponse.json({
             error: "The email approval is missing or applies to an older candidate. Send the exact current proof again.",
           }, { status: 409 });
         }
-        humanReview = validateHumanReview(emailApproval.proposed_human_scores);
-        reviewer = typeof emailApproval.reviewer === "string" ? emailApproval.reviewer.slice(0, 200) : "";
-        humanDecision = "APPROVED";
-      } else {
+        ownerApproval = { version: Number(emailApproval.version), hash: String(emailApproval.candidate_hash), candidate: exactCandidate, staged: review.submission };
         humanReview = validateHumanReview(body.human_scores);
         reviewer = typeof body.reviewer === "string" ? body.reviewer.trim().slice(0, 200) : "";
       }
@@ -158,23 +162,13 @@ export async function PUT(
       }
     }
 
-    if (requiresPublicationGate && approvedImageFingerprint) {
-      const candidateImageUrl = body.image_url ?? existing[0].image_url;
-      await sql`
-        INSERT INTO article_image_fingerprints (article_id, image_url, sha256, perceptual_hash, verified_at)
-        VALUES (
-          ${id}, ${candidateImageUrl}, ${approvedImageFingerprint.sha256},
-          ${approvedImageFingerprint.perceptualHash}, NOW()
-        )
-        ON CONFLICT (article_id) DO UPDATE SET
-          image_url = EXCLUDED.image_url,
-          sha256 = EXCLUDED.sha256,
-          perceptual_hash = EXCLUDED.perceptual_hash,
-          verified_at = NOW()
-      `;
-    }
-
-    const result = await sql`
+    const result = requiresPublicationGate && ownerApproval && machineReview && humanReview && reviewer && approvedImageFingerprint
+      ? await publishEditorialCandidate(sql, {
+        id, version: ownerApproval.version, hash: ownerApproval.hash, candidate: ownerApproval.candidate,
+        updatedAt: existing[0].updated_at, stagedSubmission: ownerApproval.staged,
+        reviewer, humanScores: humanReview.scores, humanTotal: humanReview.total,
+        machineReport: machineReview, image: approvedImageFingerprint,
+      }) : await sql`
       UPDATE articles SET
         status = COALESCE(${requestedStatus ?? null}, status),
         featured = COALESCE(${body.featured ?? null}, featured),
@@ -207,61 +201,10 @@ export async function PUT(
     }
 
     if (requiresPublicationGate && machineReview && reviewedSubmission && humanReview && reviewer) {
-      await sql`
-        UPDATE editorial_review_jobs SET
-          status = 'APPROVED',
-          machine_score = ${machineReview.score},
-          machine_possible = ${machineReview.possible},
-          machine_report = ${JSON.stringify(machineReview)}::jsonb,
-          submission = ${JSON.stringify(reviewedSubmission)}::jsonb,
-          human_score = ${humanReview.total},
-          human_scores = ${JSON.stringify(humanReview.scores)}::jsonb,
-          human_decision = 'APPROVED',
-          reviewer = ${reviewer},
-          reviewed_at = NOW(),
-          updated_at = NOW()
-        WHERE article_id = ${id}
-      `;
-      await sql`
-        UPDATE article_image_jobs SET status = 'PUBLISHED', updated_at = NOW()
-        WHERE article_id = ${id}
-      `;
-      await sql`
-        UPDATE editorial_email_reviews SET status = 'PUBLISHED', published_at = NOW(), updated_at = NOW()
-        WHERE article_id = ${id} AND status = 'APPROVED'
-      `.catch(() => undefined);
-      await sql`
-        UPDATE newsroom_runs SET
-          published_count = (
-            SELECT COUNT(*)::int
-            FROM jsonb_array_elements_text(staged_article_ids) AS staged(article_id)
-            JOIN articles ON articles.id = staged.article_id
-            WHERE articles.status = 'live'
-          ),
-          updated_at = NOW()
-        WHERE staged_article_ids ? ${id}
-      `.catch(() => undefined);
-
       try {
-        const { closeCalendarLoop } = await import("@/scripts/coverage-calendar-store.mjs");
-        const dateParts = new Intl.DateTimeFormat("en-US", {
-          timeZone: "America/New_York",
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        }).formatToParts(new Date());
-        const dateValues = Object.fromEntries(dateParts.map((part) => [part.type, part.value]));
-        await closeCalendarLoop(sql, {
-          articleId: id,
-          title: String(reviewedSubmission.title ?? result[0].title),
-          body: String(reviewedSubmission.body ?? result[0].body ?? ""),
-          publishedOn: `${dateValues.year}-${dateValues.month}-${dateValues.day}`,
-          explicitEntryId: typeof reviewedSubmission.coverage_calendar_id === "string"
-            ? reviewedSubmission.coverage_calendar_id
-            : null,
-        });
-      } catch (calendarError) {
-        console.warn("Coverage calendar not updated after publication", calendarError);
+        await reconcileEditorialPublication(sql, id);
+      } catch {
+        console.warn("EDITORIAL_PUBLICATION_BOOKKEEPING_RETRY");
       }
     }
 

@@ -70,7 +70,8 @@ async function sendViaResend(message: EmailOutbound): Promise<{ ok: boolean; pro
   if (!delivery.ok) {
     throw new Error(`Resend send failed (${delivery.error}${delivery.detail ? `: ${delivery.detail}` : ""})`);
   }
-  return { ok: true, providerMessageId: delivery.id ?? `resend_${Date.now()}` };
+  if (!delivery.id) throw new Error('EMAIL_PROVIDER_RECEIPT_MISSING');
+  return { ok: true, providerMessageId: delivery.id };
 }
 
 // Provider abstraction. Resend is the production provider whenever
@@ -78,6 +79,11 @@ async function sendViaResend(message: EmailOutbound): Promise<{ ok: boolean; pro
 // the staged in-memory mailbox remain for tests and local work.
 export const emailGateway = {
   async send(message: EmailOutbound): Promise<{ ok: boolean; providerMessageId: string }> {
+    // The Map-backed pilot has no durable per-message authority/outbox. A
+    // configured provider key alone is never permission to send marketing.
+    if (process.env.NODE_ENV === 'production' || process.env.EMAIL_MODE === 'resend' || process.env.RESEND_API_KEY || process.env.GOOGLE_GMAIL_MODE === 'api') {
+      throw new Error('LEGACY_AGENT_EXTERNAL_SEND_DISABLED');
+    }
     if (process.env.EMAIL_MODE === "resend" || (process.env.RESEND_API_KEY?.trim() && process.env.GOOGLE_GMAIL_MODE !== "api")) {
       return sendViaResend(message);
     }
@@ -92,7 +98,7 @@ export const emailGateway = {
       sentAt: new Date().toISOString(),
     });
     return {
-      ok: true,
+      ok: false,
       providerMessageId,
     };
   },

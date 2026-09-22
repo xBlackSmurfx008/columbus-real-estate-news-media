@@ -218,6 +218,15 @@ export const MISSING_UNIT_ECONOMICS = [
  * or one falsely bleak figure.
  */
 export function northStarValuePerThousand({ revenueCents, sessions, recordedSources = [], unitEconomicsKnown = false }) {
+  if (revenueCents === null || revenueCents === undefined || !Number.isFinite(Number(revenueCents))) {
+    return {
+      key: "value_per_1k", label: "Revenue / value per 1,000 sessions", display: "n/a", value: null,
+      basis: "Collected cash is unverified; signed contracts and lead values are not payment receipts.",
+      note: "Connect and reconcile a payment ledger before reporting cash. Media revenue and acquisition outcomes must remain separate.",
+      recordedRevenueCents: null,
+      recordedRevenuePerThousand: { value: null, display: "n/a", reason: "Collected cash is unverified" },
+    };
+  }
   const cash = perThousand(revenueCents, sessions, { denominatorLabel: "sessions" });
   const inspected = recordedSources.map((source) => `${source.label}: ${formatNumber(source.rows)} row(s)`).join("; ");
 

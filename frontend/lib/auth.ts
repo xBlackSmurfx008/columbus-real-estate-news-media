@@ -1,34 +1,10 @@
-import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "./db";
+import { verifyToken } from "./admin-token";
+export { signToken, verifyToken } from "./admin-token";
 
 const COOKIE_NAME = "cren_admin_token";
-
-function getJwtSecret(): Uint8Array {
-  const secret = process.env.ADMIN_JWT_SECRET;
-  if (!secret) {
-    throw new Error("ADMIN_JWT_SECRET is required");
-  }
-  return new TextEncoder().encode(secret);
-}
-
-export async function signToken(payload: { userId: number; email: string; role: string }) {
-  return new SignJWT(payload)
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime("7d")
-    .sign(getJwtSecret());
-}
-
-export async function verifyToken(token: string) {
-  try {
-    const { payload } = await jwtVerify(token, getJwtSecret());
-    return payload as { userId: number; email: string; role: string };
-  } catch {
-    return null;
-  }
-}
 
 export async function getSession() {
   const cookieStore = await cookies();

@@ -1,4 +1,5 @@
 "use client";
+import { IntakeSecurityFields, securityFields } from './intake-security-fields';
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
@@ -22,6 +23,7 @@ export function ContactForm({ source }: { source: string }) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          ...securityFields(data),
           name: data.get("name"),
           email: data.get("email"),
           message: data.get("message"),
@@ -37,11 +39,12 @@ export function ContactForm({ source }: { source: string }) {
         setError(body.error ?? "Something went wrong. Please try again.");
         return;
       }
-      trackEvent("contact_request", { method: source, conversion: true });
+      trackEvent("intake_pending", { method: source, conversion: false });
       setSubmitted(true);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
+      form.dispatchEvent(new Event('intake-complete'));
       setSending(false);
     }
   }
@@ -49,7 +52,7 @@ export function ContactForm({ source }: { source: string }) {
   if (submitted) {
     return (
       <p className="mt-8 rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--green-pale)] p-4 text-sm text-[color:var(--text-secondary)]">
-        Thanks for reaching out. This inbox is monitored for editorial tips, corrections, partnerships, and general questions.
+        Check your email and confirm your request before it enters our review queue.
         For sponsorship, start on the{" "}
         <Link href="/advertise" className="cren-text-link">
           Advertise
@@ -62,6 +65,7 @@ export function ContactForm({ source }: { source: string }) {
   return (
     <div className="form-box mt-8">
       <form className="grid gap-4" onSubmit={onSubmit}>
+        <IntakeSecurityFields kind="contact" />
         <input type="hidden" name="contact_source" value={source} />
         <label className="grid gap-1 text-sm text-[color:var(--text-secondary)]">
           Name

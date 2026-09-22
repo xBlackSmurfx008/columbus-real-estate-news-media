@@ -1,9 +1,8 @@
 #!/usr/bin/env node
-// Rows written by this script MUST stay separable from real audience: it uses
-// the `codex-smoke:` source marker and `@example.com` emails, both of which the
-// canonical predicate in scripts/test-traffic-lib.mjs recognises, so the API
-// routes flag them `is_test = true` on write. See docs/TEST_TRAFFIC_CONVENTION.md
-// before changing any marker below.
+// Valid intake now requires a browser Turnstile challenge and mailbox ownership.
+// Client source/test markers never grant trusted test status. This helper may
+// execute invalid-payload checks only; valid fixtures are documentation, not a
+// bypass or proof of delivery. Use the isolated PostgreSQL fixture for writes.
 import { randomBytes } from "node:crypto";
 import { fileURLToPath } from "node:url";
 
@@ -27,7 +26,7 @@ function usage() {
   return [
     "Usage: node scripts/submission-smoke.mjs [options]",
     "",
-    "Dry-run is the default. Use --execute to send controlled public submissions.",
+    "Dry-run is the default. --execute requires --invalid-payload; valid intake needs browser + email confirmation.",
     "",
     "Options:",
     "  --base-url <url>       Target origin. Default: CREN_SMOKE_BASE_URL or http://localhost:3000",
@@ -80,7 +79,7 @@ export function buildSmokeRequests({ runId = createRunId(), routes = ROUTE_ORDER
     {
       route: "contact",
       endpoint: "/api/contact",
-      expectedStatus: invalidPayload ? 400 : 201,
+      expectedStatus: invalidPayload ? 400 : 202,
       email: invalidPayload ? invalidEmail("contact") : smokeEmail(cleanRunId, "contact"),
       source: sourceMarker(cleanRunId, "contact"),
       payload: {
@@ -98,7 +97,7 @@ export function buildSmokeRequests({ runId = createRunId(), routes = ROUTE_ORDER
     {
       route: "subscribe",
       endpoint: "/api/subscribe",
-      expectedStatus: invalidPayload ? 400 : 201,
+      expectedStatus: invalidPayload ? 400 : 202,
       email: invalidPayload ? invalidEmail("subscribe") : smokeEmail(cleanRunId, "subscribe"),
       source: sourceMarker(cleanRunId, "subscribe"),
       payload: {
@@ -120,7 +119,7 @@ export function buildSmokeRequests({ runId = createRunId(), routes = ROUTE_ORDER
     {
       route: "leads",
       endpoint: "/api/leads",
-      expectedStatus: invalidPayload ? 400 : 201,
+      expectedStatus: invalidPayload ? 400 : 202,
       email: invalidPayload ? invalidEmail("leads") : smokeEmail(cleanRunId, "leads"),
       source: sourceMarker(cleanRunId, "leads"),
       payload: {
@@ -144,7 +143,7 @@ export function buildSmokeRequests({ runId = createRunId(), routes = ROUTE_ORDER
     {
       route: "members",
       endpoint: "/api/members",
-      expectedStatus: invalidPayload ? 400 : 201,
+      expectedStatus: invalidPayload ? 400 : 202,
       email: invalidPayload ? invalidEmail("members") : smokeEmail(cleanRunId, "members"),
       source: sourceMarker(cleanRunId, "members"),
       payload: {
@@ -257,6 +256,7 @@ export function assertExecutionAllowed(options) {
   if (!isLocalBaseUrl(options.baseUrl) && !options.allowRemote) {
     throw new Error("Refusing to execute against a non-local base URL without --allow-remote.");
   }
+  if (!options.invalidPayload) throw new Error('Valid intake requires a browser Turnstile challenge and mailbox confirmation; this helper only executes --invalid-payload.');
 }
 
 export function redactSensitiveText(value) {
@@ -279,6 +279,7 @@ async function postJson({ baseUrl, request, fetchImpl = fetch, timeoutMs }) {
       method: "POST",
       headers: {
         "content-type": "application/json",
+        origin: new URL(baseUrl).origin,
         "user-agent": "CRENSubmissionSmoke/1.0",
       },
       body: JSON.stringify(request.payload),
@@ -366,8 +367,8 @@ function printPlan(options, requests) {
   console.log(`CREN public submission smoke (${options.execute ? "execute" : "dry-run"})`);
   console.log(`Base URL: ${options.baseUrl}`);
   console.log(`Run ID: ${options.runId}`);
-  console.log(`Payload mode: ${options.invalidPayload ? "invalid-payload validation (expects no records)" : "valid codex-smoke records"}`);
-  console.log("This script never deletes records; valid executed smoke rows remain until a separately approved cleanup.");
+  console.log(`Payload mode: ${options.invalidPayload ? "invalid-payload validation (expects no audience or lead records)" : "valid fixture preview ONLY; execution blocked"}`);
+  console.log('A 202 means pending verification, not a subscriber, sales lead, delivery receipt or successful end-to-end workflow.');
   for (const request of requests) {
     console.log(`- ${request.route}: POST ${request.endpoint} -> ${request.expectedStatus} | ${request.email} | ${request.source}`);
   }
@@ -404,6 +405,7 @@ function printSummary(summary) {
 }
 
 export async function runSubmissionSmoke(options, deps = {}) {
+  assertExecutionAllowed(options);
   const requests = buildSmokeRequests({
     runId: options.runId,
     routes: options.routes,

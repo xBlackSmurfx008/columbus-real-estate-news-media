@@ -1,8 +1,8 @@
 "use client";
+import { IntakeSecurityFields, securityFields } from './intake-security-fields';
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { trackEvent } from "@/lib/analytics-client";
 import { CONSENT_COPY, FORM_VERSIONS } from "@/lib/compliance/policy-versions";
 
@@ -15,7 +15,7 @@ const INTEREST_OPTIONS = [
 ];
 
 export function JoinForm({ source }: { source: string }) {
-  const router = useRouter();
+  const [submitted,setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
   const [picked, setPicked] = useState<string[]>([]);
@@ -29,12 +29,14 @@ export function JoinForm({ source }: { source: string }) {
     setError(null);
     setSending(true);
 
-    const data = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const data = new FormData(form);
     try {
       const res = await fetch("/api/members", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          ...securityFields(data),
           email: data.get("email"),
           name: data.get("name"),
           password: data.get("password"),
@@ -53,18 +55,21 @@ export function JoinForm({ source }: { source: string }) {
         setError(body.error ?? "Something went wrong. Please try again.");
         return;
       }
-      trackEvent("sign_up", { method: source, membership: true, conversion: true });
-      router.push("/profile?welcome=1");
+      trackEvent("intake_pending", { method: source, membership: true, conversion: false });
+      setSubmitted(true);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
+      form.dispatchEvent(new Event('intake-complete'));
       setSending(false);
     }
   }
 
+  if (submitted) return <p role="status" className="my-8">Check your email to confirm your account, then sign in. No newsletter or acquisition list is activated by this submission.</p>;
   return (
     <div className="form-box mt-8">
       <form className="grid gap-4" onSubmit={onSubmit}>
+        <IntakeSecurityFields kind="member" />
         <div className="grid gap-4 md:grid-cols-2">
           <label className="grid gap-1 text-sm text-[color:var(--text-secondary)]">
             Name

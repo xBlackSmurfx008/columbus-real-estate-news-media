@@ -1,4 +1,5 @@
 "use client";
+import { IntakeSecurityFields, securityFields } from './intake-security-fields';
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
@@ -21,7 +22,8 @@ export function AreaFollowForm({ areaName, areaSlug, followPromise, source }: Ar
     setError(null);
     setSending(true);
 
-    const data = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const data = new FormData(form);
     const cadence = String(data.get("cadence") ?? "weekly");
 
     trackEvent("area_follow_start", {
@@ -36,6 +38,8 @@ export function AreaFollowForm({ areaName, areaSlug, followPromise, source }: Ar
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          ...securityFields(data),
+          consent: data.get('consent') === 'on',
           email: data.get("email"),
           area: areaName,
           topic: "Area Alerts",
@@ -51,23 +55,19 @@ export function AreaFollowForm({ areaName, areaSlug, followPromise, source }: Ar
         return;
       }
 
-      trackEvent("preference_saved", {
+      trackEvent("intake_pending", {
         area_slug: areaSlug,
         area_name: areaName,
         topic: "Area Alerts",
         method: source,
         cadence,
-        conversion: true,
-      });
-      trackEvent("activation_step", {
-        step: "area_follow",
-        area_slug: areaSlug,
-        method: source,
+        conversion: false,
       });
       setSubmitted(true);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
+      form.dispatchEvent(new Event('intake-complete'));
       setSending(false);
     }
   }
@@ -86,7 +86,7 @@ export function AreaFollowForm({ areaName, areaSlug, followPromise, source }: Ar
 
         {submitted ? (
           <div className="rounded-[var(--radius-sm)] border border-[color:var(--border)] bg-[color:var(--bg-surface)] p-4 text-sm">
-            <p className="font-semibold text-[color:var(--text-hero)]">Your area preference is saved.</p>
+            <p className="font-semibold text-[color:var(--text-hero)]">Check your email to confirm your area newsletter.</p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Link href="/areas" className="cren-action-chip">Compare nearby areas</Link>
               <Link href="/rent/before-you-sign" className="cren-action-chip">Open renter checklist</Link>
@@ -94,6 +94,8 @@ export function AreaFollowForm({ areaName, areaSlug, followPromise, source }: Ar
           </div>
         ) : (
           <form className="grid gap-3" onSubmit={onSubmit}>
+            <IntakeSecurityFields kind="subscribe" />
+            <label className="text-sm"><input type="checkbox" name="consent" required /> I agree to receive CREN area newsletters. I can unsubscribe at any time.</label>
             <label className="grid gap-1 text-sm text-[color:var(--text-secondary)]">
               Email
               <input className="form-input" name="email" type="email" autoComplete="email" placeholder="you@email.com" required />

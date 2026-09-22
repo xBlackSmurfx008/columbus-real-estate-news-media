@@ -20,8 +20,6 @@ const discoveryCards: GuideCardData[] = [
     title: "Parks, trails and nature programs",
     description: "Search city and Metro Parks destinations, playgrounds, nature centers, accessible trails, programs, and seasonal closures.",
     href: "https://www.metroparks.net/parks-and-trails/",
-    image: GUIDE_IMAGES.parks,
-    imageAlt: "Representative editorial image of families enjoying a park",
     external: true,
   },
   {
@@ -29,8 +27,6 @@ const discoveryCards: GuideCardData[] = [
     title: "Family activities for daytime and weekends",
     description: "Start with library programs, museums, recreation centers, indoor play, nature activities, and current family-event calendars.",
     href: "https://www.experiencecolumbus.com/things-to-do/things-to-do-with-kids/",
-    image: GUIDE_IMAGES.parks,
-    imageAlt: "Representative editorial image of a family day out",
     external: true,
   },
   {
@@ -38,16 +34,12 @@ const discoveryCards: GuideCardData[] = [
     title: "Neighborhood food, coffee and local hot spots",
     description: "Use area hubs to search current restaurants, bakeries, coffee, breweries, patios, markets, and late-night options near each place.",
     href: "/areas",
-    image: GUIDE_IMAGES.food,
-    imageAlt: "Representative editorial image of a neighborhood restaurant patio",
   },
   {
     eyebrow: "Arts & entertainment",
     title: "Museums, music, theater, sports and festivals",
     description: "Browse current events plus permanent attractions, community arts, markets, sports, and recurring annual activities.",
     href: "https://www.experiencecolumbus.com/events/?sort=date&view=list",
-    image: GUIDE_IMAGES.arts,
-    imageAlt: "Representative editorial image of a community arts event",
     external: true,
   },
 ];

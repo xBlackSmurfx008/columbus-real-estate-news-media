@@ -11,6 +11,7 @@ export function AdminSidebar() {
 
   const navItems = [
     { name: 'Dashboard', href: '/admin', icon: 'LayoutDashboard' },
+    { name: 'Operations', href: '/admin/operations', icon: 'Activity' },
     { name: 'Activation', href: '/admin/activation', icon: 'Activity' },
     { name: 'Response Queue', href: '/admin/queue', icon: 'Clock' },
     { name: 'Leads', href: '/admin/leads', icon: 'Users' },

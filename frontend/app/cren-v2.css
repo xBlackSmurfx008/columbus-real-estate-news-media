@@ -558,7 +558,6 @@ a.btn-subscribe {
 .local-living-section { padding: 64px 0; background: #f3eee5; border-block: 1px solid var(--border); }
 .local-living-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
 .local-living-grid .bento-card { min-width: 0; }
-.local-living-grid .bento-img { height: 150px; }
 .home-hood-grid { grid-template-columns: repeat(3, 1fr); }
 .community-question {
   display: flex;
@@ -865,12 +864,11 @@ a.journey-tab.active {
 .bento-full { grid-column: span 12; }
 
 .bento-img {
-  flex-shrink: 0; height: 200px; position: relative; overflow: hidden;
+  /* Preserve the reviewed 16:9 frame at every card width, including mobile. */
+  flex-shrink: 0; aspect-ratio: 16 / 9; height: auto; position: relative; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
   font-size: 56px;
 }
-.bento-lg .bento-img { height: 280px; }
-.bento-sm .bento-img { height: 140px; }
 .bento-img-bg {
   position: absolute; inset: 0;
 }

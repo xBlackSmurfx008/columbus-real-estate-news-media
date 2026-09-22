@@ -1,9 +1,13 @@
 import { generateImage } from 'ai';
 import OpenAI from 'openai';
 import { getVercelOidcToken } from '@vercel/oidc';
-import { put, del } from '@vercel/blob';
+import { put } from '@vercel/blob';
 import { neon } from '@neondatabase/serverless';
 import sharp from 'sharp';
+import { claimCloudImage, recordCloudImageHold as recordImageHold } from '../scripts/cloud-image-jobs.mjs';
+import { planEditorialImage } from '../scripts/editorial-image-policy.mjs';
+import { stageReviewedImage } from '../scripts/stage-reviewed-image.mjs';
+import { prepareCloudSourceImage } from '@/lib/cloud-source-image';
 import {
   buildCloudHeroPrompt,
   CREN_IMAGE_MODEL,
@@ -41,7 +45,7 @@ async function preflight(): Promise<{ ready: boolean; missing: string[] }> {
   const hasImageService = Boolean(
     process.env.NEWSROOM_IMAGE_SERVICE_URL && process.env.NEWSROOM_IMAGE_SERVICE_SECRET,
   );
-  let hasImageCredential = Boolean(
+  let hasImageCredential = process.env.CREN_CLOUD_AI_IMAGES_ENABLED !== 'true' || Boolean(
     process.env.AI_GATEWAY_API_KEY
     || process.env.VERCEL_OIDC_TOKEN
     || process.env.OPENAI_API_KEY
@@ -160,9 +164,9 @@ async function selectCandidates(): Promise<Candidate[]> {
       AND (
         (
           (a.image_url IS NULL OR a.image_url LIKE '/images/heroes/%' OR a.image_url LIKE '%/placeholder-%')
-          AND (j.status IS NULL OR j.status IN ('PENDING', 'FAILED', 'READY_FOR_REVIEW'))
+          AND (j.status IS NULL OR (j.status IN ('PENDING', 'FAILED') AND j.attempts < 3)
+            OR (j.status = 'GENERATING' AND j.attempts < 3 AND j.started_at < NOW() - INTERVAL '10 minutes'))
         )
-        OR (j.status = 'READY_FOR_REVIEW' AND j.image_url = a.image_url)
       )
     ORDER BY a.created_at ASC
     LIMIT 2
@@ -177,12 +181,13 @@ async function processCandidate(candidate: Candidate): Promise<{
 }> {
   'use step';
   const sql = db();
-  let blobUrl: string | undefined;
   let articleAttached = false;
+  let leaseToken: string | null = null;
 
   try {
     const [current] = await sql`
-      SELECT a.id, a.title, a.area_slug, a.image_url, a.status, r.submission
+      SELECT a.id, a.title, a.area_slug, a.image_url, a.status, r.submission,
+        a.updated_at::text AS article_updated_at, r.updated_at::text AS review_updated_at
       FROM articles a
       JOIN editorial_review_jobs r ON r.article_id = a.id
       WHERE a.id = ${candidate.articleId}
@@ -190,40 +195,48 @@ async function processCandidate(candidate: Candidate): Promise<{
     if (!current || current.status !== 'draft') {
       return { attached: false, readyForReview: false, reason: 'ARTICLE_NOT_ELIGIBLE' };
     }
+    const acquisition = planEditorialImage(current.submission);
+    if (acquisition.mode === 'NEEDS_RESEARCH') {
+      await recordImageHold(sql, candidate.articleId, acquisition.reason);
+      return { attached: false, readyForReview: false, reason: acquisition.reason };
+    }
+    if (acquisition.mode === 'AI_FALLBACK' && process.env.CREN_CLOUD_AI_IMAGES_ENABLED !== 'true') {
+      await recordImageHold(sql, candidate.articleId, 'PAID_CLOUD_IMAGE_GENERATION_DISABLED');
+      return { attached: false, readyForReview: false, reason: 'PAID_CLOUD_IMAGE_GENERATION_DISABLED' };
+    }
     const currentImage = String(current.image_url ?? '');
     if (currentImage && !currentImage.startsWith('/images/heroes/') && !currentImage.includes('/placeholder-')) {
-      await sql`
-        UPDATE editorial_review_jobs
-        SET status = 'READY_FOR_REVIEW', updated_at = NOW()
-        WHERE article_id = ${candidate.articleId}
-      `;
-      return { attached: false, readyForReview: true };
+      return { attached: false, readyForReview: false, reason: 'IMAGE_ALREADY_ATTACHED_REQUIRES_EXACT_REVIEW' };
     }
 
     const imageBrief = current.submission?.image_brief ?? null;
+    const imageCaption = String(current.submission.image_provenance.caption);
+    const originalAlt = String(current.submission.image_alt ?? 'Generic Central Ohio residential streetscape.');
+    const imageAlt = (acquisition.mode === 'SOURCE_ASSET' || /^AI-generated illustration/i.test(originalAlt)
+      ? originalAlt : `AI-generated illustration: ${originalAlt}`).slice(0, 160);
     const prompt = buildCloudHeroPrompt({
       title: current.title,
       areaSlug: current.area_slug,
       imageBrief,
     });
-    const model = selectedImageModel();
-    await sql`
-      INSERT INTO article_image_jobs (article_id, status, prompt, model, attempts, started_at, updated_at)
-      VALUES (${candidate.articleId}, 'GENERATING', ${prompt}, ${model}, 1, NOW(), NOW())
-      ON CONFLICT (article_id) DO UPDATE SET
-        status = 'GENERATING',
-        prompt = EXCLUDED.prompt,
-        model = EXCLUDED.model,
-        attempts = article_image_jobs.attempts + 1,
-        last_error_code = NULL,
-        started_at = NOW(),
-        updated_at = NOW()
-    `;
-
-    const generated = await generateCloudImage(prompt);
+    const model = acquisition.mode === 'SOURCE_ASSET' ? 'verified-source-asset' : selectedImageModel();
+    leaseToken = await claimCloudImage(sql,{articleId:candidate.articleId,prompt,model});
+    if (!leaseToken) return { attached: false, readyForReview: false, reason: 'IMAGE_JOB_ALREADY_CLAIMED_OR_COMPLETE' };
+    let sourceBytes: Uint8Array | undefined;
+    if (acquisition.mode === 'SOURCE_ASSET') {
+      const [receipt] = await sql`SELECT source_commit FROM cren_cloud_draft_imports WHERE article_id = ${candidate.articleId}`;
+      if (!receipt) {
+        await recordImageHold(sql, candidate.articleId, 'CLOUD_IMAGE_IMPORT_RECEIPT_REQUIRED', leaseToken);
+        return { attached: false, readyForReview: false, reason: 'CLOUD_IMAGE_IMPORT_RECEIPT_REQUIRED' };
+      }
+      const prepared = await prepareCloudSourceImage({ articleId: candidate.articleId,
+        submission: current.submission, importCommitSha: String(receipt.source_commit) });
+      sourceBytes = prepared.sourceBytes;
+    }
+    const generated = sourceBytes ?? await generateCloudImage(prompt);
     const normalized = await sharp(Buffer.from(generated))
       .rotate()
-      .resize(1600, 900, { fit: 'cover', position: 'attention' })
+      .resize(1600, 900, { fit: 'cover', position: sourceBytes ? 'centre' : 'attention' })
       .webp({ quality: 86, effort: 5 })
       .toBuffer();
     const fingerprint = await fingerprintArticleImageBytes(normalized);
@@ -241,65 +254,23 @@ async function processCandidate(candidate: Candidate): Promise<{
       normalized,
       {
         access: 'public',
-        addRandomSuffix: false,
-        allowOverwrite: true,
+        addRandomSuffix: true,
+        allowOverwrite: false,
         contentType: 'image/webp',
         cacheControlMaxAge: 31_536_000,
       },
     );
-    blobUrl = blob.url;
     const verification = await fetch(blob.url, { method: 'HEAD', signal: AbortSignal.timeout(10_000) });
     if (!verification.ok || verification.headers.get('content-type')?.startsWith('image/') !== true) {
       throw new Error('BLOB_VERIFICATION_FAILED');
     }
 
-    await sql`
-      INSERT INTO article_image_fingerprints (article_id, image_url, sha256, perceptual_hash, verified_at)
-      VALUES (
-        ${candidate.articleId}, ${blob.url}, ${fingerprint.sha256},
-        ${fingerprint.perceptualHash}, NOW()
-      )
-      ON CONFLICT (article_id) DO UPDATE SET
-        image_url = EXCLUDED.image_url,
-        sha256 = EXCLUDED.sha256,
-        perceptual_hash = EXCLUDED.perceptual_hash,
-        verified_at = NOW()
-    `;
-    const updated = await sql`
-      UPDATE articles
-      SET image_url = ${blob.url}, updated_at = NOW()
-      WHERE id = ${candidate.articleId}
-        AND status = ${current.status}
-        AND (image_url IS NULL OR image_url LIKE '/images/heroes/%' OR image_url LIKE '%/placeholder-%')
-      RETURNING id
-    `;
-    if (updated.length === 0) {
-      await sql`
-        DELETE FROM article_image_fingerprints
-        WHERE article_id = ${candidate.articleId} AND image_url = ${blob.url}
-      `;
-      await del(blob.url).catch(() => undefined);
-      return { attached: false, readyForReview: false, reason: 'ARTICLE_CHANGED_DURING_GENERATION' };
-    }
+    const submission = { ...current.submission, id: candidate.articleId, image_url: blob.url,
+      image_sha256: fingerprint.sha256, image_caption: imageCaption, image_alt: imageAlt };
+    await stageReviewedImage(sql, { articleId: candidate.articleId,
+      snapshot: { article_updated_at: current.article_updated_at, review_updated_at: current.review_updated_at, submission: current.submission },
+      candidate: submission, fingerprint, model, cloudLeaseToken: leaseToken });
     articleAttached = true;
-
-    await sql`
-      UPDATE editorial_review_jobs
-      SET submission = jsonb_set(submission, '{image_url}', to_jsonb(${blob.url}::text), true),
-          status = 'READY_FOR_REVIEW',
-          updated_at = NOW()
-      WHERE article_id = ${candidate.articleId}
-    `;
-    await sql`
-      UPDATE article_image_jobs SET
-        status = 'READY_FOR_REVIEW',
-        source_sha256 = ${fingerprint.sha256},
-        image_url = ${blob.url},
-        last_error_code = NULL,
-        completed_at = NOW(),
-        updated_at = NOW()
-      WHERE article_id = ${candidate.articleId}
-    `;
     await sql`
       UPDATE newsroom_runs SET
         image_ready_count = (
@@ -313,14 +284,9 @@ async function processCandidate(candidate: Candidate): Promise<{
     `.catch(() => undefined);
     return { attached: true, readyForReview: true };
   } catch (error) {
-    const reason = error instanceof Error ? error.message.slice(0, 100) : 'IMAGE_WORKFLOW_FAILED';
-    if (blobUrl && !articleAttached) {
-      await sql`
-        DELETE FROM article_image_fingerprints
-        WHERE article_id = ${candidate.articleId} AND image_url = ${blobUrl}
-      `.catch(() => undefined);
-      await del(blobUrl).catch(() => undefined);
-    }
+    const reason = error instanceof Error && /^[A-Z][A-Z0-9_]{0,99}$/.test(error.message)
+      ? error.message : 'IMAGE_WORKFLOW_FAILED';
+    // Retain an uncommitted Blob for reconciliation; never delete potentially referenced bytes on an ambiguous response.
     if (articleAttached) {
       await sql`
         UPDATE article_image_jobs
@@ -328,11 +294,8 @@ async function processCandidate(candidate: Candidate): Promise<{
         WHERE article_id = ${candidate.articleId}
       `.catch(() => undefined);
     } else {
-      await sql`
-        UPDATE article_image_jobs
-        SET status = 'FAILED', last_error_code = ${reason}, updated_at = NOW()
-        WHERE article_id = ${candidate.articleId}
-      `.catch(() => undefined);
+      await recordImageHold(sql, candidate.articleId, reason, leaseToken,
+        ['CLOUD_IMAGE_FETCH_FAILED','IMAGE_WORKFLOW_FAILED','BLOB_VERIFICATION_FAILED'].includes(reason)).catch(() => undefined);
     }
     throw error;
   }

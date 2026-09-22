@@ -17,6 +17,8 @@ const configurations = {
     file: '../prompts/CLAUDE_SOCIAL_LISTENER.md', version: 'v2 leads-only' },
   weekly: { id: 'trig_016rhF74yLz6VhLQLvhJ3p35', name: 'cre-news-weekly-seo',
     file: '../prompts/CLAUDE_WEEKLY_SEO.md', version: 'v2 live-corpus' },
+  monthly: { id: 'trig_014fQXTnGRGStYeFdeZXSvED', name: 'cre-news-monthly-review',
+    file: '../prompts/CLAUDE_MONTHLY_REVIEW.md', version: 'v1 planning-only' },
 };
 const configuration = configurations[routineKey];
 if (!configuration) throw new Error('KNOWN_ROUTINE_REQUIRED');

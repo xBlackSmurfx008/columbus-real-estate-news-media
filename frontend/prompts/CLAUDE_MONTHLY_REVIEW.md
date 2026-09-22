@@ -10,5 +10,11 @@ separated CREN property-inquiry opportunities; next-month experiments; and an ow
 coverage independent from sponsors and acquisition leads. Never perform outreach, publish, spend, alter credentials,
 or invent revenue, traffic, ranking, lead or conversion figures.
 
-Save exactly one report to `briefs/YYYY-MM-DD-monthly-operating-review.md`, commit it to the existing main branch, and
-save the same report to `CRE News / monthly-reviews / YYYY-MM-DD.md` in Drive. Recommendations are planning inputs only.
+Save exactly one report to `briefs/YYYY-MM-DD-monthly-operating-review.md` and the same report to
+`CRE News / monthly-reviews / YYYY-MM-DD.md` in Drive. Recommendations are planning inputs only.
+
+Claude Code may place the commit on an automatic `claude/*` branch. Before success, fetch `origin/main`, verify
+`git diff --name-status origin/main...HEAD` contains only the one report above, push the branch, open a pull request to
+`main`, inspect the PR file list, merge it, then fetch `origin/main` and verify the exact report blob is present. Use the
+available GitHub CLI/API; do not force-push or bypass branch protection. If any step or the Drive save fails, report
+`HANDOFF_BLOCKED` with the branch/PR reference instead of claiming delivery.

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
+import { readIntakeJson, limitRequest, intakeErrorResponse } from '@/lib/intake-security';
 import {
   requireAuth,
   getSession,
@@ -12,17 +13,18 @@ import {
 // POST: Login endpoint
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await readIntakeJson(request);
     const { email, password } = body;
+    const sql = getDb();
+    await limitRequest(sql, request, 'admin-login', typeof email === 'string' ? email : '');
 
-    if (!email || !password) {
+    if (typeof email !== 'string' || email.length > 320 || typeof password !== 'string' || !password || password.length > 128) {
       return NextResponse.json(
         { error: "Email and password are required" },
         { status: 400 }
       );
     }
 
-    const sql = getDb();
     const users = await sql`
       SELECT id, email, password_hash, role FROM admin_users WHERE email = ${email}
     `;
@@ -54,8 +56,7 @@ export async function POST(request: NextRequest) {
     await setSessionCookie(token);
     return response;
   } catch (error) {
-    const err = error instanceof Error ? error.message : String(error);
-    return NextResponse.json({ error: err }, { status: 500 });
+    return intakeErrorResponse(error);
   }
 }
 

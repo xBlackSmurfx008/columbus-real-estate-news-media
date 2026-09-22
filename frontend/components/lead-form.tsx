@@ -1,4 +1,5 @@
 "use client";
+import { IntakeSecurityFields, securityFields } from './intake-security-fields';
 
 import { FormEvent, useRef, useState } from "react";
 import Link from "next/link";
@@ -21,7 +22,6 @@ export function LeadForm({
   source,
   fields,
   submitLabel = "Send my request",
-  successMessage = "Got it. You'll hear from us within 1 business day.",
 }: {
   persona: "fsbo_seller" | "investor_seller" | "capital_partner" | "renter" | "rental_listing" | "directory_listing" | "profile_claim";
   source: string;
@@ -51,7 +51,8 @@ export function LeadForm({
     setError(null);
     setSending(true);
 
-    const data = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const data = new FormData(form);
     const details: Record<string, string> = {};
     for (const f of fields) {
       const v = data.get(f.name);
@@ -63,6 +64,9 @@ export function LeadForm({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          ...securityFields(data),
+          acquisitionConsent: data.get('acquisitionConsent') === 'on',
+          acquisitionEntity: process.env.NEXT_PUBLIC_CREN_ACQUISITION_ENTITY_NAME,
           persona,
           source,
           name: data.get("name"),
@@ -74,7 +78,6 @@ export function LeadForm({
           formVersion: FORM_VERSIONS.lead,
           consentVersion: consentCopy.version,
           consent: data.get("consent") === "on",
-          company: data.get("company"), // honeypot
           // Funnel attribution travels with the submission so the server can
           // write form_submit already joined to article, area and campaign.
           attribution: { ...currentAttribution(), placement: source },
@@ -85,11 +88,12 @@ export function LeadForm({
         setError(body.error ?? "Something went wrong. Please try again.");
         return;
       }
-      trackEvent("generate_lead", { method: source, persona, conversion: true });
+      trackEvent("intake_pending", { method: source, persona, conversion: false });
       setSubmitted(true);
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
+      form.dispatchEvent(new Event('intake-complete'));
       setSending(false);
     }
   }
@@ -97,7 +101,7 @@ export function LeadForm({
   if (submitted) {
     return (
       <div className="mt-8 rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--green-pale)] p-5 text-sm text-[color:var(--text-secondary)]">
-        <p className="font-semibold text-[color:var(--text-hero)]">{successMessage}</p>
+        <p className="font-semibold text-[color:var(--text-hero)]">Check your email and confirm your request before our team reviews it.</p>
         <p className="mt-2">
           Want Columbus market updates while you wait?{" "}
           <a href="/subscribe?source=lead-success" className="cren-text-link">
@@ -120,7 +124,7 @@ export function LeadForm({
         {/* Honeypot — hidden from real visitors */}
         <input
           type="text"
-          name="company"
+          name="legacy_unused_honeypot"
           tabIndex={-1}
           autoComplete="off"
           aria-hidden="true"
@@ -189,7 +193,15 @@ export function LeadForm({
             {error}
           </p>
         )}
-        <button type="submit" className="form-submit mt-2 w-full md:w-auto" disabled={sending}>
+        <IntakeSecurityFields kind="lead" />
+        {['fsbo_seller','investor_seller'].includes(persona) && <label className="text-sm">
+          <input type="checkbox" name="acquisitionConsent" required />{' '}
+          {process.env.NEXT_PUBLIC_CREN_ACQUISITION_ENTITY_NAME
+            ? `I request contact from ${process.env.NEXT_PUBLIC_CREN_ACQUISITION_ENTITY_NAME}'s property-acquisition service about my property. This permission is separate from CREN's independent newsroom and newsletter services.`
+            : 'Property-acquisition requests are temporarily unavailable pending business disclosure.'}
+        </label>}
+        {['fsbo_seller','investor_seller'].includes(persona) && process.env.NEXT_PUBLIC_CREN_ACQUISITION_INTAKE_ENABLED !== 'true' && <p role="status" className="text-sm">CREN property-acquisition requests are not open yet. Newsroom and newsletter services remain separate.</p>}
+        <button type="submit" className="form-submit mt-2 w-full md:w-auto" disabled={sending || (['fsbo_seller','investor_seller'].includes(persona) && (process.env.NEXT_PUBLIC_CREN_ACQUISITION_INTAKE_ENABLED !== 'true' || !process.env.NEXT_PUBLIC_CREN_ACQUISITION_ENTITY_NAME))}>
           {sending ? "Sending…" : submitLabel}
         </button>
       </form>

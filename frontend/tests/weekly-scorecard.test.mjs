@@ -176,6 +176,15 @@ test("north star 3 never extrapolates a one-week figure", () => {
   assert.ok(!/annual|year|project|forecast|run rate/i.test(`${star.display} ${star.basis} ${star.note}`));
 });
 
+test("unknown collections are never reported as zero cash or signed order value", () => {
+  for (const revenueCents of [null, undefined, NaN]) {
+    const star = northStarValuePerThousand({ revenueCents, sessions: 100, unitEconomicsKnown: true });
+    assert.equal(star.recordedRevenueCents, null);
+    assert.equal(star.display, "n/a");
+    assert.match(star.basis, /not payment receipts/);
+  }
+});
+
 /* -------------------------------------------------- traffic-to-action rollup */
 
 test("summarizeArticleOutcomes counts actions, not impressions", () => {

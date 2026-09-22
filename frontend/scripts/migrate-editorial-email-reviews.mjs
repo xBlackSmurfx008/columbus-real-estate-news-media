@@ -1,35 +1,26 @@
 #!/usr/bin/env node
 import { neon } from '@neondatabase/serverless';
-
-if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL_NOT_CONFIGURED');
-const sql = neon(process.env.DATABASE_URL);
-await sql`
-  CREATE TABLE IF NOT EXISTS editorial_email_reviews (
-    article_id TEXT NOT NULL REFERENCES articles(id) ON DELETE CASCADE,
-    version INTEGER NOT NULL,
-    review_token TEXT NOT NULL UNIQUE,
-    status TEXT NOT NULL,
-    recipient_email TEXT NOT NULL,
-    reply_address TEXT NOT NULL,
-    candidate_hash TEXT NOT NULL,
-    candidate JSONB NOT NULL,
-    proposed_human_scores JSONB NOT NULL,
-    outbound_email_id TEXT,
-    inbound_email_id TEXT UNIQUE,
-    reply_from TEXT,
-    reply_text TEXT,
-    reviewer TEXT,
-    sent_at TIMESTAMPTZ,
-    replied_at TIMESTAMPTZ,
-    approved_at TIMESTAMPTZ,
-    published_at TIMESTAMPTZ,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    PRIMARY KEY (article_id, version),
-    CONSTRAINT editorial_email_review_status_check CHECK (
-      status IN ('SENDING', 'AWAITING_REPLY', 'CHANGES_REQUESTED', 'APPROVED', 'PUBLISHED', 'SUPERSEDED', 'DELIVERY_FAILED')
-    )
-  )
-`;
-await sql`CREATE INDEX IF NOT EXISTS editorial_email_reviews_status_idx ON editorial_email_reviews(status, updated_at DESC)`;
-process.stdout.write('{"ok":true,"migration":"editorial_email_reviews"}\n');
+import { editorialEmailSchema } from './editorial-email-schema.mjs';
+const apply = process.argv.includes('--apply');
+if (!apply && !process.argv.includes('--check')) {
+  console.log(JSON.stringify({ dryRun: true, statements: editorialEmailSchema }));
+} else {
+  if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL_NOT_CONFIGURED');
+  const sql = neon(process.env.DATABASE_URL);
+  if (apply) {
+    if (!process.argv.includes('--confirm=editorial-email-v2')) throw new Error('MIGRATION_CONFIRMATION_REQUIRED');
+    await sql.transaction(editorialEmailSchema.map((statement) => sql.query(statement)));
+    console.log(JSON.stringify({ applied: true }));
+  } else {
+    const rows = await sql`SELECT to_regclass('editorial_email_reviews') AS reviews,
+      to_regclass('editorial_email_events') AS events, to_regclass('editorial_email_event_actions') AS actions,
+      to_regclass('editorial_correction_jobs') AS jobs,
+      to_regclass('editorial_email_owner_confirmations') AS owner_confirmations,
+      to_regclass('editorial_email_publications') AS publications,
+      to_regclass('editorial_email_publication_checks') AS publication_checks,
+      to_regclass('editorial_publication_fence') AS publication_fence`;
+    const ready = Object.values(rows[0]).every(Boolean);
+    console.log(JSON.stringify({ ready, schema: rows[0] }));
+    if (!ready) process.exitCode = 1;
+  }
+}

@@ -31,5 +31,13 @@ npm run newsroom:audit-public-images
 npm run newsroom:sync-image-fingerprints
 ```
 
+Fingerprint sync defaults to read-only; `--dry-run` is still accepted. A separately
+authorized `npm run newsroom:sync-image-fingerprints -- --apply` refreshes the
+complete checked corpus atomically. It reports malformed/stale cache entries,
+fetches every current image, and refuses all writes on duplicate/invalid images,
+changed URLs/timestamps/cache rows, or a changed shared publication generation.
+It requires the existing fingerprint table and editorial publication-fence migration;
+it never creates production tables implicitly. No article copy or public image changes.
+
 Then stage one supervised draft, run the image workflow, confirm `READY_FOR_REVIEW`, approve it in the authenticated
 admin, and verify Neon, `/api/public`, the article page, image reachability, and fingerprint uniqueness.

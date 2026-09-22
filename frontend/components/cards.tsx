@@ -4,11 +4,8 @@ import { Area, ContentItem, Topic } from "@/lib/types";
 import { SaveButton } from "@/components/save-button";
 import { Badge } from "@/components/ui/badge";
 import { getTopicBySlug } from "@/lib/data";
-import { representativeAreaImage } from "@/lib/area-guides";
 
-export function AreaCard({ area, imageUrl }: { area: Area; imageUrl?: string | null }) {
-  const resolvedImage = imageUrl ?? representativeAreaImage(area);
-  const isRepresentative = !imageUrl;
+export function AreaCard({ area, imageUrl, imageAlt }: { area: Area; imageUrl?: string | null; imageAlt?: string }) {
   return (
     <article
       className="group cren-surface p-5 transition-shadow duration-300 hover:shadow-[var(--shadow-hover)]"
@@ -16,27 +13,17 @@ export function AreaCard({ area, imageUrl }: { area: Area; imageUrl?: string | n
       data-item-id={area.slug}
     >
       <Link href={`/areas/${area.slug}`} className="block text-inherit no-underline">
-        <div className="relative mb-3 aspect-[16/10] overflow-hidden rounded-[var(--radius-sm)] bg-[color:var(--green-pale)]">
-          {/*
-            Fixed-width thumbnail, not `fill` + `sizes`. /areas renders 86 of
-            these; a responsive srcset emitted ten candidate URLs per card and
-            113KB of srcset attributes in a 417KB page. A hub card is never
-            wider than ~440 CSS px, so 1x/2x describes the slot honestly.
-            See components/cren/cover-image.tsx for the same reasoning.
-          */}
-          <Image
-            src={resolvedImage}
-            alt={isRepresentative ? `Representative editorial image for ${area.name}` : `${area.name} coverage`}
-            width={600}
-            height={375}
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-          {isRepresentative && (
-            <span className="absolute bottom-2 left-2 rounded-full bg-black/65 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-white">
-              Representative image
-            </span>
-          )}
-        </div>
+        {imageUrl && imageAlt && (
+          <div className="relative mb-3 aspect-[16/10] overflow-hidden rounded-[var(--radius-sm)] bg-[color:var(--green-pale)]">
+            <Image
+              src={imageUrl}
+              alt={imageAlt}
+              width={600}
+              height={375}
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            />
+          </div>
+        )}
         <h3 className="font-[family-name:var(--serif)] text-lg font-semibold text-[color:var(--text-hero)] transition-colors group-hover:text-[color:var(--green)]">
           {area.name}
         </h3>

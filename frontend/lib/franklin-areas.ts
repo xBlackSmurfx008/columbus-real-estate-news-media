@@ -189,6 +189,7 @@ const SEEDS: Seed[] = [
   { slug: "north-campus", name: "North Campus", kind: "neighborhood" },
   { slug: "north-linden", name: "North Linden", kind: "neighborhood" },
   { slug: "northland", name: "Northland", kind: "neighborhood" },
+  { slug: "near-east-side", name: "Near East Side", kind: "neighborhood" },
   { slug: "old-north-columbus", name: "Old North Columbus", kind: "neighborhood" },
   { slug: "olde-towne-east", name: "Olde Towne East", kind: "neighborhood" },
   { slug: "san-margherita", name: "San Margherita", kind: "neighborhood" },

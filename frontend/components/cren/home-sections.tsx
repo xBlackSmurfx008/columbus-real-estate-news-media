@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { CoverImage } from '@/components/cren/cover-image';
+import { imageDisclosure } from '@/lib/image-disclosure';
 import { HomeNewsletterForm } from '@/components/cren/home-newsletter-form';
 import { GlobalSearchCombobox, type SearchSuggestion } from '@/components/global-search-combobox';
 import { getArticlePath } from '@/lib/article-routing';
@@ -61,6 +62,7 @@ function ArticleCard({ article, index, className = 'bento-sm' }: { article: DbAr
     <Link href={getArticlePath(article)} className={`bento-card ${className} no-underline`}>
       <BentoImage article={article} bg={bentoBgs[index % bentoBgs.length]!} priority={className === 'bento-lg'} />
       <div className="bento-body">
+        {article.image_url && imageDisclosure(article.image_caption) && <p className="mb-2 text-xs text-[color:var(--text-muted)]">{imageDisclosure(article.image_caption)}</p>}
         <span className={`bento-tag ${categoryTagClass[article.category] ?? 'tag-market'}`}>{article.category}</span>
         <div className="bento-title">{article.title}</div>
         {className !== 'bento-sm' && article.excerpt && <div className="bento-excerpt">{article.excerpt}</div>}
@@ -173,6 +175,7 @@ export function HomeSections({ articles = [], marketMetrics = [], neighborhoods 
                   )}
                 </div>
                 <div className="decision-lead-body">
+                  {heroArticle.image_url && imageDisclosure(heroArticle.image_caption) && <p className="text-xs">{imageDisclosure(heroArticle.image_caption)}</p>}
                   <span className="bento-tag tag-market">Today’s lead · {heroArticle.category}</span>
                   <h2>{heroArticle.title}</h2>
                   {heroArticle.excerpt && <p>{heroArticle.excerpt}</p>}

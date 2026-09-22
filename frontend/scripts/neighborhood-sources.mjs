@@ -1,5 +1,26 @@
 export const NEIGHBORHOOD_SOURCE_REGISTRY = [
   {
+    id: 'columbus-council-calendar',
+    publisher: 'City of Columbus',
+    type: 'PRIMARY',
+    beats: ['public-meetings', 'meeting-changes', 'events'],
+    url: 'https://www.columbus.gov/Government/City-Council/Council-Meeting-Resources/City-Council-Meeting-Calendar',
+  },
+  {
+    id: 'columbus-legistar-calendar',
+    publisher: 'Columbus City Clerk',
+    type: 'PRIMARY',
+    beats: ['agendas', 'public-meetings', 'meeting-results'],
+    url: 'https://columbus.legistar.com/Calendar.aspx',
+  },
+  {
+    id: 'metro-parks-events',
+    publisher: 'Columbus and Franklin County Metro Parks',
+    type: 'PRIMARY',
+    beats: ['events', 'parks', 'family-activities', 'organizer-updates'],
+    url: 'https://www.metroparks.net/events-new/',
+  },
+  {
     id: 'columbus-development-commission',
     publisher: 'City of Columbus',
     type: 'PRIMARY',

@@ -1,5 +1,6 @@
 import type { DbArticle } from '@/lib/public-data';
 import { getArticlePath } from '@/lib/article-routing';
+import { imageDisclosure } from './image-disclosure';
 
 /**
  * The only fields a listing card renders.
@@ -21,6 +22,8 @@ export type ArticleCardData = {
   date: string;
   readTime: string;
   imageUrl: string | null;
+  imageAlt?: string;
+  imageDisclosure?: string | null;
 };
 
 export function toArticleCardData(article: DbArticle): ArticleCardData {
@@ -35,6 +38,8 @@ export function toArticleCardData(article: DbArticle): ArticleCardData {
     date: article.date,
     readTime: article.read_time,
     imageUrl: article.image_url,
+    imageAlt: article.image_alt || article.title,
+    imageDisclosure: imageDisclosure(article.image_caption),
   };
 }
 

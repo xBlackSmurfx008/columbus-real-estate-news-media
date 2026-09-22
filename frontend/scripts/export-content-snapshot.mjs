@@ -11,9 +11,13 @@
 //
 // Safety: refuses to overwrite a non-empty snapshot with zero articles
 // unless --force is passed, so a flaky read can never erase the fallback.
+// Image-only cleanup: --images-only is a dry run; --images-only --apply updates
+// ONLY the existing articles' image_url/image_alt/image_caption. It never adds
+// articles or refreshes their copy, timestamps, _meta, or other snapshot data.
 
 import { neon } from "@neondatabase/serverless";
 import { marketSnapshotFingerprint } from "./market-snapshot-fingerprint.mjs";
+import { syncSnapshotImages } from "./snapshot-image-sync.mjs";
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -21,6 +25,11 @@ import { fileURLToPath } from "node:url";
 const here = dirname(fileURLToPath(import.meta.url));
 const snapshotPath = join(here, "..", "content", "snapshot", "public-data.json");
 const force = process.argv.includes("--force");
+const imagesOnly = process.argv.includes("--images-only");
+if (process.argv.includes("--apply") && !imagesOnly) throw new Error('APPLY_REQUIRES_IMAGES_ONLY');
+if (imagesOnly && process.argv.slice(2).some(arg => !['--images-only', '--apply'].includes(arg))) {
+  throw new Error('INVALID_IMAGES_ONLY_ARGUMENT');
+}
 
 const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) {
@@ -29,6 +38,18 @@ if (!databaseUrl) {
 }
 
 const sql = neon(databaseUrl);
+
+if (imagesOnly) {
+  try {
+    const report = await syncSnapshotImages(sql, snapshotPath, { apply: process.argv.includes('--apply') });
+    console.log(JSON.stringify(report, null, 2));
+  } catch (error) {
+    console.error(error instanceof Error && /^[A-Z_]+$/.test(error.message)
+      ? error.message : 'SNAPSHOT_IMAGE_SYNC_FAILED');
+    process.exitCode = 1;
+  }
+  process.exit(process.exitCode ?? 0);
+}
 
 const [articles, ads, marketSnapshot, heroStats, neighborhoods, tickers, interviews, testimonials, settingsRows, marketObservations] =
   await Promise.all([

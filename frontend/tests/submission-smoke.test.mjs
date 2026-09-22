@@ -13,7 +13,7 @@ test("submission smoke builds controlled requests for all public paths", () => {
   const requests = buildSmokeRequests({ runId: "test-run-123" });
   assert.deepEqual(requests.map((request) => request.route), ["contact", "subscribe", "leads", "members"]);
   assert.deepEqual(requests.map((request) => request.endpoint), ["/api/contact", "/api/subscribe", "/api/leads", "/api/members"]);
-  assert.ok(requests.every((request) => request.expectedStatus === 201));
+  assert.ok(requests.every((request) => request.expectedStatus === 202));
 
   const emails = new Set(requests.map((request) => request.email));
   assert.equal(emails.size, 4);
@@ -74,12 +74,13 @@ test("submission smoke refuses remote execution unless explicitly allowed", () =
   );
 
   const options = parseSmokeArgs(
-    ["--execute", "--allow-remote", "--base-url", "https://columbusrealestatenews.com"],
+    ["--execute", "--allow-remote", "--invalid-payload", "--base-url", "https://columbusrealestatenews.com"],
     {},
   );
   assert.equal(options.execute, true);
   assert.equal(options.allowRemote, true);
   assert.doesNotThrow(() => assertExecutionAllowed(options));
+  assert.throws(() => parseSmokeArgs(['--execute'],{}),/browser Turnstile/);
 });
 
 test("submission smoke refuses credential-bearing base URLs", () => {

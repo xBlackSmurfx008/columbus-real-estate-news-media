@@ -45,6 +45,9 @@ async function sendViaProviderApi(message: SocialOutbound): Promise<{ ok: boolea
 
 export const socialDmGateway = {
   async send(message: SocialOutbound): Promise<{ ok: boolean; providerMessageId: string }> {
+    if (process.env.NODE_ENV === 'production' || process.env.SOCIAL_DM_MODE === 'api') {
+      throw new Error('LEGACY_AGENT_EXTERNAL_SEND_DISABLED');
+    }
     if (process.env.SOCIAL_DM_MODE === "api") {
       return sendViaProviderApi(message);
     }
@@ -55,7 +58,7 @@ export const socialDmGateway = {
       providerMessageId,
       sentAt: new Date().toISOString(),
     });
-    return { ok: true, providerMessageId };
+    return { ok: false, providerMessageId };
   },
 
   async syncInbound(messages: SocialInbound[]): Promise<{ ok: boolean; synced: number }> {

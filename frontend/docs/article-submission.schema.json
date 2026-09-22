@@ -25,7 +25,7 @@
     "image_provenance"
   ],
   "properties": {
-    "prompt_version": { "const": "cren-article-v1.0.0" },
+    "prompt_version": { "enum": ["cren-article-v1.0.0", "cren-article-v1.0.1", "cren-article-v1.0.2"] },
     "title": { "type": "string", "minLength": 45, "maxLength": 75 },
     "category": { "type": "string" },
     "author": { "type": "string" },
@@ -120,10 +120,43 @@
         },
         "source_asset_considered": { "const": true },
         "source_asset_note": { "type": "string" },
+        "image_policy_version": { "const": "cren-image-v2-real-photo-first" },
+        "source_review": {
+          "type": "array", "minItems": 1, "maxItems": 10,
+          "items": {
+            "type": "object", "required": ["url", "outcome", "note"],
+            "properties": {
+              "url": { "type": "string", "format": "uri" },
+              "outcome": { "enum": ["SELECTED", "UNAVAILABLE", "RIGHTS_UNCLEAR", "UNSUITABLE"] },
+              "note": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
         "avoid": { "type": "string" }
       }
     },
     "image_alt": { "type": "string", "minLength": 40, "maxLength": 160 },
+    "cloud_image_asset": {
+      "type": "object",
+      "description": "Required for cloud source-photo imports; exact original bytes at the server-pinned GitHub commit, not an arbitrary URL.",
+      "required": ["path", "git_blob_sha", "source_sha256", "visual_review"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^frontend/content/images/[0-9]{4}-[0-9]{2}-[0-9]{2}-[a-z0-9-]+\\.(jpg|jpeg|png|webp)$" },
+        "git_blob_sha": { "type": "string", "pattern": "^[a-f0-9]{40}$" },
+        "source_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "visual_review": {
+          "type": "object",
+          "required": ["reviewed_by", "reviewed_at", "natural_appearance", "geometry_and_shadows", "no_synthetic_artifacts", "story_match", "truthful_caption", "mobile_crop"],
+          "properties": {
+            "reviewed_by": { "type": "string", "minLength": 1 },
+            "reviewed_at": { "type": "string", "format": "date-time" },
+            "natural_appearance": { "const": true }, "geometry_and_shadows": { "const": true },
+            "no_synthetic_artifacts": { "const": true }, "story_match": { "const": true },
+            "truthful_caption": { "const": true }, "mobile_crop": { "const": true }
+          }
+        }
+      }
+    },
     "image_provenance": {
       "type": "object",
       "required": ["type", "caption"],
@@ -139,8 +172,25 @@
         },
         "caption": { "type": "string" },
         "source": { "type": "string" },
-        "license": { "type": "string" }
+        "license": { "type": "string" },
+        "permission_evidence": { "type": "string" },
+        "credit": { "type": "string" },
+        "location_note": { "type": "string" },
+        "date_note": { "type": "string" },
+        "verified_by": { "type": "string" },
+        "verified_at": { "type": "string", "format": "date-time" }
       }
     }
-  }
+  },
+  "allOf": [{
+    "if": { "properties": { "prompt_version": { "const": "cren-article-v1.0.2" } } },
+    "then": { "properties": {
+      "image_brief": { "required": ["image_policy_version", "source_review", "source_asset_note"] },
+      "image_provenance": {
+        "if": { "properties": { "type": { "const": "AI_GENERATED" } } },
+        "then": { "properties": { "caption": { "const": "AI-generated illustration; not a photograph of the actual property or event." } } },
+        "else": { "required": ["source", "license", "permission_evidence", "credit", "location_note", "date_note", "verified_by", "verified_at"] }
+      }
+    } }
+  }]
 }

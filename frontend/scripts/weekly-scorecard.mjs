@@ -182,21 +182,11 @@ const membership = {
   membersPri: await countIn("members", PRI),
 };
 
-/**
- * "New free member" for the conversion north star = a distinct email address
- * that newly appears in EITHER `subscribers` or `members` in the window.
- * Counting the two tables and adding them would double-count anyone who did
- * both (the CRM smoke run did exactly that), which would inflate the rate.
- */
+/** A newsletter subscriber is not a member account. Keep conversions distinct. */
 async function newFreeMembers(period) {
   const row = await one(
-    `SELECT COUNT(*)::int AS n FROM (
-       SELECT LOWER(email) AS email FROM subscribers
-         WHERE ${real("subscribers")} AND created_at >= $1 AND created_at < $2
-       UNION
-       SELECT LOWER(email) AS email FROM members
-         WHERE ${real("members")} AND created_at >= $1 AND created_at < $2
-     ) joined`,
+    `SELECT COUNT(DISTINCT LOWER(email))::int AS n FROM members
+       WHERE ${real("members")} AND created_at >= $1 AND created_at < $2`,
     period,
   );
   return row?.n ?? 0;
@@ -343,9 +333,9 @@ const commercial = {
   ),
 };
 
-// Recorded revenue = money the database can actually attest to in this window.
-const recordedRevenueCents = commercial.insertionOrderSignedCents + commercial.wonLeadValueCents;
-const recordedRevenueCentsPrior = commercial.insertionOrderSignedCentsPrior + commercial.wonLeadValueCentsPrior;
+// Contracts and estimated won-lead values are not payment receipts. No reconciled
+// collection ledger is connected; unknown must never be silently converted to $0.
+const recordedRevenueCents = null;
 const revenueSources = [
   { label: "ad_campaigns", rows: commercial.adCampaignRows },
   { label: "insertion_orders", rows: commercial.insertionOrderRows },
@@ -676,7 +666,7 @@ say();
 if (funnelEventRowCount === 0) {
   say(
     `\`funnel_events\` is empty: **no funnel event has ever been recorded.** The end-to-end funnel ` +
-    `instrumentation shipped 2026-09-04 and is not deployed yet, so CTA clicks and form starts above are ` +
+    `delivery path needs verification; an empty table does not establish deployment status. CTA clicks and form starts above are ` +
     `"not yet measured". Funnel *views* and *submissions* are still real — they fall back to \`page_views\` ` +
     `and to the \`leads\` table respectively.`,
   );
@@ -709,7 +699,7 @@ say();
 say(markdownTable(
   ["Metric", "This window", "Prior window", "Change"],
   [
-    ["Recorded revenue", formatMoneyCents(recordedRevenueCents), formatMoneyCents(recordedRevenueCentsPrior), formatTrend(trend(recordedRevenueCents / 100, recordedRevenueCentsPrior / 100), { unit: " USD" })],
+    ["Collected cash (unreconciled)", "n/a — payment ledger not connected", "n/a", "n/a"],
     ["Signed insertion orders (value)", formatMoneyCents(commercial.insertionOrderSignedCents), formatMoneyCents(commercial.insertionOrderSignedCentsPrior), formatTrend(trend(commercial.insertionOrderSignedCents / 100, commercial.insertionOrderSignedCentsPrior / 100), { unit: " USD" })],
     ["Closed-won lead value", formatMoneyCents(commercial.wonLeadValueCents), formatMoneyCents(commercial.wonLeadValueCentsPrior), formatTrend(trend(commercial.wonLeadValueCents / 100, commercial.wonLeadValueCentsPrior / 100), { unit: " USD" })],
     ["Affiliate clicks (real)", formatNumber(commercial.affiliateClicksCur), formatNumber(commercial.affiliateClicksPri), formatTrend(trend(commercial.affiliateClicksCur, commercial.affiliateClicksPri))],

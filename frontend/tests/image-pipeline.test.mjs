@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 import { articleLiveUrl, buildHeroPrompt, normalizeIllustrationRequest, selectMissingArticles } from "../scripts/image-pipeline-lib.mjs";
 import { buildImageBackfillPlist } from "../scripts/image-launch-agent-lib.mjs";
 import { easternDate } from "../scripts/newsroom-health.mjs";
+import { buildCloudHeroPrompt } from '../lib/cloud-newsroom-image.ts';
 
 test("article links always use the live CREN domain", () => {
   process.env.NEXT_PUBLIC_API_BASE_URL = "http://localhost:3000";
@@ -34,18 +35,37 @@ test("hero prompts enforce the shared editorial art direction", () => {
     },
   });
   assert.match(prompt, /16:9 editorial news article hero/);
-  assert.match(prompt, /clearly an illustration/);
+  assert.match(prompt, /natural photographic appearance/);
+  assert.match(prompt, /ordinary daylight or soft overcast light/);
+  assert.match(prompt, /not a photograph of the actual property or event/);
+  assert.doesNotMatch(prompt, /Style\/medium:.*gouache|Color palette: CREN|not photorealistic/);
   assert.match(prompt, /brick warehouse bay; reused loading area/);
   assert.match(prompt, /no readable text/);
   assert.match(prompt, /artist signatures, corner marks, dashed or dotted lines, parcel outlines/);
   assert.match(prompt, /handshakes, keys in a palm/);
 });
 
-test("AI image requests cannot conflict by asking for a documentary photo", () => {
+test("natural photographic style is preserved without claiming an actual photograph", () => {
   assert.equal(
     normalizeIllustrationRequest('A photorealistic editorial photo of a construction site'),
-    'A clearly illustrative editorial illustration of a construction site',
+    'A photorealistic editorial photo of a construction site',
   );
+  assert.equal(normalizeIllustrationRequest('An actual photograph of a building'), 'An photographic-style illustration of a building');
+});
+
+test('cloud and local image workers share the same photographic-style prompt', () => {
+  const brief = { primary_request: 'Generic Ohio street', story_anchors: ['brick', 'sidewalk'] };
+  assert.equal(buildCloudHeroPrompt({ title: 'Ohio housing', areaSlug: 'columbus', imageBrief: brief }),
+    buildHeroPrompt({ title: 'Ohio housing', area_slug: 'columbus', image_brief: brief }));
+});
+
+test('image worker environment path is explicit without embedding secrets or changing schedule', () => {
+  const plist = buildImageBackfillPlist({ frontendPath: '/repair', nodePath: '/node/bin/node', codexBinPath: '/codex/bin', envFilePath: '/private/credentials.env' });
+  assert.match(plist, /CREN_IMAGE_ENV_FILE/);
+  assert.match(plist, /\/private\/credentials.env/);
+  assert.match(plist, /\/repair\/scripts\/run-image-backfill.mjs/);
+  assert.doesNotMatch(plist, /RunAtLoad|API_KEY|DATABASE_URL/);
+  assert.equal((plist.match(/<key>Hour<\/key>/g) ?? []).length, 3);
 });
 
 test("launch agent includes primary and catch-up attempts", () => {
@@ -96,16 +116,27 @@ test("a hero URL that only resolves after a deploy is never attached to a live a
 });
 
 test("image preparation is draft-only and stops at review", async () => {
-  const [listSource, startSource, attachSource, cloudSource] = await Promise.all([
+  const [listSource, startSource, attachSource, cloudSource, stageSource] = await Promise.all([
     readFile(new URL("../scripts/list-missing-images.mjs", import.meta.url), "utf8"),
     readFile(new URL("../scripts/record-image-start.mjs", import.meta.url), "utf8"),
     readFile(new URL("../scripts/attach-article-image.mjs", import.meta.url), "utf8"),
     readFile(new URL("../workflows/newsroom-images.ts", import.meta.url), "utf8"),
+    readFile(new URL('../scripts/stage-reviewed-image.mjs', import.meta.url), 'utf8'),
   ]);
   assert.match(listSource, /articles\.status = 'draft'/);
   assert.match(startSource, /status = 'draft'/);
-  assert.match(attachSource, /status = 'draft'/);
-  assert.match(attachSource, /status = 'READY_FOR_REVIEW'/);
+  assert.match(attachSource, /stageReviewedImage/);
+  assert.match(stageSource, /status = 'draft'/);
+  assert.match(stageSource, /status = 'READY_FOR_REVIEW'/);
+  assert.match(attachSource, /validateImageAttachmentReview/);
+  assert.match(attachSource, /if \(!apply\)/);
+  assert.ok(attachSource.indexOf('if (!apply)') < attachSource.indexOf('await put('));
+  assert.ok(cloudSource.indexOf("acquisition.mode === 'NEEDS_RESEARCH'") < cloudSource.indexOf('await generateCloudImage(prompt)'));
+  assert.ok(cloudSource.indexOf("process.env.CREN_CLOUD_AI_IMAGES_ENABLED !== 'true'") < cloudSource.indexOf('await generateCloudImage(prompt)'));
+  assert.match(cloudSource, /sourceBytes \?\? await generateCloudImage\(prompt\)/);
+  assert.match(cloudSource, /prepareCloudSourceImage/);
+  assert.match(cloudSource, /claimCloudImage/);
+  assert.match(cloudSource, /stageReviewedImage/);
   assert.doesNotMatch(cloudSource, /UPDATE articles SET[\s\S]{0,200}status = 'live'/);
   assert.doesNotMatch(cloudSource, /publishCandidate/);
 });
@@ -117,7 +148,7 @@ test("production schedules an independent newsroom health monitor", async () => 
   ]);
   assert.ok(vercelConfig.crons.some((cron) =>
     cron.path === "/api/cron/newsroom-health" && cron.schedule === "30 18 * * *"));
-  assert.match(routeSource, /assessNewsroomAutomationHealth/);
+  assert.match(routeSource, /loadNewsroomHealth/);
   assert.match(routeSource, /sendTelegramAlert/);
   assert.match(routeSource, /status: report\.ok \? 200 : 503/);
 });

@@ -2,8 +2,20 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "crons": [
     {
+      "path": "/api/cron/newsroom-import",
+      "schedule": "5 * * * *"
+    },
+    {
+      "path": "/api/cron/editorial-review",
+      "schedule": "15 * * * *"
+    },
+    {
+      "path": "/api/cron/agent-control-tower",
+      "schedule": "0 * * * *"
+    },
+    {
       "path": "/api/cron/newsroom-images",
-      "schedule": "10 11 * * *"
+      "schedule": "10 * * * *"
     },
     {
       "path": "/api/cron/newsroom-health",

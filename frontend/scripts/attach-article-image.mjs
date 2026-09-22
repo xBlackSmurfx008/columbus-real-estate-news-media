@@ -1,150 +1,89 @@
 #!/usr/bin/env node
-import { readFile, mkdir, writeFile } from "node:fs/promises";
-import { dirname, resolve } from "node:path";
-import { del, put } from "@vercel/blob";
-import sharp from "sharp";
-import { IMAGE_MODEL, safeErrorSummary } from "./image-pipeline-lib.mjs";
-import { ensureImageJobTable, getSql, withRetry } from "./image-job-store.mjs";
-import {
-  ensureArticleImageFingerprintTable,
-  findDuplicateImageFingerprint,
-  fingerprintArticleImageBytes,
-} from './article-image-policy.mjs';
+import { readFile, mkdir, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { dirname, resolve } from 'node:path';
+import { put } from '@vercel/blob';
+import sharp from 'sharp';
+import { IMAGE_MODEL, safeErrorSummary } from './image-pipeline-lib.mjs';
+import { getSql } from './image-job-store.mjs';
+import { findDuplicateImageFingerprint, fingerprintArticleImageBytes } from './article-image-policy.mjs';
+import { validateImageAttachmentReview } from './editorial-image-policy.mjs';
+import { evaluateArticle } from './editorial-quality-lib.mjs';
+import { stageReviewedImage } from './stage-reviewed-image.mjs';
 
-function arg(name) {
-  const index = process.argv.indexOf(`--${name}`);
-  return index >= 0 ? process.argv[index + 1] : undefined;
-}
-
-const articleId = arg("article-id");
-const sourcePath = arg("file");
-if (!articleId || !sourcePath || !/^[a-z0-9-]+$/.test(articleId)) {
-  console.error("Usage: node scripts/attach-article-image.mjs --article-id <id> --file <image>");
+const arg = name => { const i = process.argv.indexOf(`--${name}`); return i >= 0 ? process.argv[i + 1] : undefined; };
+const articleId = arg('article-id');
+const sourcePath = arg('file');
+const reviewPath = arg('review');
+const apply = process.argv.includes('--apply');
+if (!articleId || !sourcePath || !reviewPath || !/^[a-z0-9-]+$/.test(articleId)
+  || (apply && arg('confirm') !== 'attach-reviewed-image')) {
+  console.error('Usage: attach-article-image.mjs --article-id ID --file IMAGE --review REVIEW.json [--apply --confirm attach-reviewed-image]');
   process.exit(1);
 }
 
-const sql = getSql();
-await withRetry(() => ensureImageJobTable(sql));
-await withRetry(() => ensureArticleImageFingerprintTable(sql));
-await withRetry(() => sql`
-  INSERT INTO article_image_jobs (article_id, status, model, attempts, started_at, updated_at)
-  VALUES (${articleId}, 'GENERATING', ${IMAGE_MODEL}, 1, NOW(), NOW())
-  ON CONFLICT (article_id) DO UPDATE SET
-    status = 'GENERATING',
-    model = EXCLUDED.model,
-    updated_at = NOW()
-`);
-
-let blobUrl;
-let articleAttached = false;
 try {
   const source = await readFile(resolve(sourcePath));
-  if (source.length < 1_000 || source.length > 25_000_000) throw new Error("IMAGE_SIZE_INVALID");
-  const sourceMetadata = await sharp(source).metadata();
-  if (!sourceMetadata.width || !sourceMetadata.height || sourceMetadata.width < 768 || sourceMetadata.height < 512) {
-    throw new Error("IMAGE_DIMENSIONS_TOO_SMALL");
-  }
-
-  const normalized = await sharp(source)
-    .rotate()
-    .resize(1600, 900, { fit: "cover", position: "attention" })
-    .webp({ quality: 86, effort: 5 })
-    .toBuffer();
+  if (source.length < 1_000 || source.length > 25_000_000) throw new Error('IMAGE_SIZE_INVALID');
+  const review = JSON.parse(await readFile(resolve(reviewPath), 'utf8'));
+  const sourceSha = createHash('sha256').update(source).digest('hex');
+  const plan = validateImageAttachmentReview(review, articleId, sourceSha);
+  const metadata = await sharp(source).metadata();
+  if (!metadata.width || !metadata.height || metadata.width < 768 || metadata.height < 512) throw new Error('IMAGE_DIMENSIONS_TOO_SMALL');
+  const normalized = await sharp(source).rotate().resize(1600, 900, { fit: 'cover', position: 'centre' })
+    .webp({ quality: 90, effort: 5 }).toBuffer();
   const fingerprint = await fingerprintArticleImageBytes(normalized);
   if (!fingerprint) throw new Error('IMAGE_FINGERPRINT_FAILED');
-  const sha256 = fingerprint.sha256;
-  const existingFingerprints = await withRetry(() => sql`
-    SELECT article_id, sha256, perceptual_hash FROM article_image_fingerprints
-  `);
-  const duplicate = findDuplicateImageFingerprint(existingFingerprints, fingerprint, articleId);
-  if (duplicate) {
-    throw new Error(`IMAGE_DUPLICATE_${duplicate.kind}_${duplicate.articleId}_${duplicate.distance}`);
+  const sql = getSql();
+  const [current] = await sql`
+    SELECT a.status, a.image_url, a.updated_at::text AS article_updated_at,
+      r.submission, r.updated_at::text AS review_updated_at
+    FROM articles a JOIN editorial_review_jobs r ON r.article_id = a.id WHERE a.id = ${articleId}
+  `;
+  if (!current || current.status !== 'draft'
+    || (current.image_url && !current.image_url.startsWith('/images/heroes/') && !current.image_url.includes('/placeholder-'))) {
+    throw new Error('DRAFT_WITH_MISSING_IMAGE_REQUIRED');
   }
-  const artifactPath = resolve("var", "cren-images", articleId, `hero-${sha256.slice(0, 16)}.webp`);
-  await mkdir(dirname(artifactPath), { recursive: true });
-  await writeFile(artifactPath, normalized);
-
-  const blob = await put(`cren/articles/${articleId}/hero-${sha256.slice(0, 16)}.webp`, normalized, {
-    access: "public",
-    addRandomSuffix: false,
-    allowOverwrite: true,
-    contentType: "image/webp",
-    cacheControlMaxAge: 31_536_000,
-  });
-  blobUrl = blob.url;
-  const check = await fetch(blob.url, { method: "HEAD", signal: AbortSignal.timeout(10_000) });
-  if (!check.ok || !check.headers.get("content-type")?.startsWith("image/")) {
-    throw new Error("BLOB_VERIFICATION_FAILED");
+  if (review.base_submission_sha256 !== createHash('sha256').update(JSON.stringify(current.submission)).digest('hex')) {
+    throw new Error('IMAGE_REVIEW_SUBMISSION_CHANGED');
   }
-
-  await withRetry(() => sql`
-    INSERT INTO article_image_fingerprints (article_id, image_url, sha256, perceptual_hash, verified_at)
-    VALUES (${articleId}, ${blob.url}, ${fingerprint.sha256}, ${fingerprint.perceptualHash}, NOW())
-    ON CONFLICT (article_id) DO UPDATE SET
-      image_url = EXCLUDED.image_url,
-      sha256 = EXCLUDED.sha256,
-      perceptual_hash = EXCLUDED.perceptual_hash,
-      verified_at = NOW()
-  `);
-
-  const [updated] = await withRetry(() => sql`
-    UPDATE articles
-    SET image_url = ${blob.url}, updated_at = NOW()
-    WHERE id = ${articleId} AND status = 'draft'
-      AND (image_url IS NULL OR image_url LIKE '/images/heroes/%' OR image_url LIKE '%/placeholder-%')
-    RETURNING id, title
-  `);
-  if (!updated) {
-    await sql`DELETE FROM article_image_fingerprints WHERE article_id = ${articleId} AND image_url = ${blob.url}`;
-    await del(blob.url).catch(() => undefined);
-    process.stdout.write(`${JSON.stringify({ ok: true, noOp: true, articleId })}\n`);
+  const submission = { ...current.submission,
+    image_brief: { ...current.submission.image_brief,
+      image_policy_version: review.image_brief.image_policy_version,
+      source_asset_considered: review.image_brief.source_asset_considered,
+      source_asset_note: review.image_brief.source_asset_note,
+      source_review: review.image_brief.source_review },
+    image_provenance: review.image_provenance, image_alt: review.image_alt,
+    image_caption: review.image_provenance.caption, image_visual_review: review.visual_review };
+  const machine = evaluateArticle(submission);
+  if (!machine.passed) throw new Error('IMAGE_CANDIDATE_GATE_FAILED');
+  const existing = await sql`SELECT article_id, sha256, perceptual_hash FROM article_image_fingerprints`;
+  if (findDuplicateImageFingerprint(existing, fingerprint, articleId)) throw new Error('IMAGE_DUPLICATE');
+  if (!apply) {
+    console.log(JSON.stringify({ ok: true, dryRun: true, articleId, acquisition: plan.mode, sourceSha256: sourceSha,
+      normalizedSha256: fingerprint.sha256, caption: submission.image_caption }));
     process.exit(0);
   }
-  articleAttached = true;
-
-  await withRetry(() => sql`
-    UPDATE article_image_jobs SET
-      status = 'READY_FOR_REVIEW',
-      source_sha256 = ${sha256},
-      image_url = ${blob.url},
-      last_error_code = NULL,
-      completed_at = NOW(),
-      updated_at = NOW()
-    WHERE article_id = ${articleId}
-  `).catch(() => undefined);
-  await withRetry(() => sql`
-    UPDATE editorial_review_jobs
-    SET submission = jsonb_set(submission, '{image_url}', to_jsonb(${blob.url}::text), true),
-        status = 'READY_FOR_REVIEW',
-        updated_at = NOW()
-    WHERE article_id = ${articleId}
-  `);
+  const artifactPath = resolve('var', 'cren-images', articleId, `hero-${fingerprint.sha256.slice(0, 16)}.webp`);
+  await mkdir(dirname(artifactPath), { recursive: true });
+  await writeFile(artifactPath, normalized);
+  const blob = await put(`cren/articles/${articleId}/hero-${fingerprint.sha256.slice(0, 16)}.webp`, normalized, {
+    access: 'public', addRandomSuffix: true, allowOverwrite: false, contentType: 'image/webp', cacheControlMaxAge: 31_536_000,
+  });
+  const response = await fetch(blob.url, { method: 'HEAD', redirect: 'error', signal: AbortSignal.timeout(10_000) });
+  if (!response.ok || !response.headers.get('content-type')?.startsWith('image/')) throw new Error('BLOB_VERIFICATION_FAILED');
+  const candidate = { ...submission, id: articleId, image_url: blob.url, image_sha256: fingerprint.sha256 };
+  const model = plan.mode === 'AI_FALLBACK' ? IMAGE_MODEL : 'verified-source-asset';
+  await stageReviewedImage(sql, { articleId, snapshot: current, candidate, fingerprint, model });
   await sql`
-    UPDATE newsroom_runs SET
-      image_ready_count = (
-        SELECT COUNT(*)::int
-        FROM jsonb_array_elements_text(staged_article_ids) AS staged(article_id)
-        JOIN article_image_jobs ON article_image_jobs.article_id = staged.article_id
-        WHERE article_image_jobs.status IN ('READY_FOR_REVIEW', 'PUBLISHED')
-      ),
-      updated_at = NOW()
-    WHERE staged_article_ids ? ${articleId}
+    UPDATE newsroom_runs SET image_ready_count = (
+      SELECT COUNT(*)::int FROM jsonb_array_elements_text(staged_article_ids) AS staged(article_id)
+      JOIN article_image_jobs ON article_image_jobs.article_id = staged.article_id
+      WHERE article_image_jobs.status IN ('READY_FOR_REVIEW','PUBLISHED')
+    ), updated_at = NOW() WHERE staged_article_ids ? ${articleId}
   `.catch(() => undefined);
-  process.stdout.write(`${JSON.stringify({ ok: true, articleId, status: 'READY_FOR_REVIEW', title: updated.title, imageUrl: blob.url, artifactPath })}\n`);
+  console.log(JSON.stringify({ ok: true, articleId, status: 'READY_FOR_REVIEW', imageUrl: blob.url, artifactPath }));
 } catch (error) {
-  if (blobUrl && !articleAttached) {
-    await sql`DELETE FROM article_image_fingerprints WHERE article_id = ${articleId} AND image_url = ${blobUrl}`
-      .catch(() => undefined);
-    await del(blobUrl).catch(() => undefined);
-  }
-  const errorCode = safeErrorSummary(error).replace(/[^A-Za-z0-9_-]+/g, "_").slice(0, 100) || "IMAGE_ATTACH_FAILED";
-  await withRetry(() => sql`
-    UPDATE article_image_jobs SET
-      status = 'FAILED',
-      last_error_code = ${errorCode},
-      updated_at = NOW()
-    WHERE article_id = ${articleId}
-  `).catch(() => undefined);
-  process.stderr.write(`${JSON.stringify({ ok: false, articleId, error: errorCode })}\n`);
-  process.exit(1);
+  console.error(JSON.stringify({ ok: false, articleId, error: safeErrorSummary(error) }));
+  process.exitCode = 1;
 }

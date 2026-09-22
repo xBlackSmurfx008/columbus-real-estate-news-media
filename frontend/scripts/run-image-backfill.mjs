@@ -4,13 +4,14 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { sendTelegramAlert } from "./telegram-alert.mjs";
 import { safeErrorSummary } from "./image-pipeline-lib.mjs";
+import { getSql } from './image-job-store.mjs';
 import { alertPublicImageGapOnce, alertZeroPublishOnce, getDailyPublicationHealth } from "./newsroom-health.mjs";
 
 const CODEX_TIMEOUT_MS = 45 * 60 * 1_000;
 const LOGIN_TIMEOUT_MS = 60_000;
 const limitArg = process.argv.indexOf("--limit");
 const limit = limitArg >= 0 ? Number(process.argv[limitArg + 1]) : 4;
-process.loadEnvFile?.(resolve(".env.local"));
+process.loadEnvFile?.(resolve(process.env.CREN_IMAGE_ENV_FILE ?? '.env.local'));
 
 function run(command, args, { timeoutMs, capture = false, env = process.env } = {}) {
   return new Promise((resolvePromise, reject) => {
@@ -87,10 +88,25 @@ async function main() {
   ], { timeoutMs: CODEX_TIMEOUT_MS, env: subscriptionEnv });
   if (agent.code !== 0) throw new Error(`CODEX_IMAGE_AGENT_EXIT_${agent.code}`);
 
-  const remaining = await listMissing(20);
-  const remainingIds = new Set(remaining.missingIds);
-  const completed = manifest.selected.filter((article) => !remainingIds.has(article.id));
-  const failed = manifest.selected.filter((article) => remainingIds.has(article.id));
+  // A claimed job disappearing from the selection query is not completion evidence.
+  const sql = getSql();
+  const completedRows = await sql`
+    SELECT a.id FROM articles a JOIN article_image_jobs j ON j.article_id = a.id
+    JOIN editorial_review_jobs r ON r.article_id = a.id
+    WHERE a.id IN (SELECT jsonb_array_elements_text(${JSON.stringify(manifest.selected.map(article => article.id))}::jsonb))
+      AND a.image_url = j.image_url AND a.image_url = r.submission->>'image_url'
+      AND j.status IN ('READY_FOR_REVIEW','PUBLISHED') AND r.status IN ('READY_FOR_REVIEW','APPROVED')
+  `;
+  const completedIds = new Set(completedRows.map(article => article.id));
+  const completed = manifest.selected.filter(article => completedIds.has(article.id));
+  const failed = manifest.selected.filter(article => !completedIds.has(article.id));
+  // Count the actual draft backlog without selecting or claiming another batch.
+  // Claimed/in-progress jobs still count until their durable image is attached.
+  const [remaining] = await sql`
+    SELECT COUNT(*)::int AS "totalMissing" FROM articles
+    WHERE status = 'draft'
+      AND (image_url IS NULL OR image_url LIKE '/images/heroes/%' OR image_url LIKE '%/placeholder-%')
+  `;
   const status = failed.length === 0 ? "COMPLETED" : completed.length > 0 ? "PARTIAL_SUCCESS" : "FAILED";
   const telegram = await sendTelegramAlert({
     status,

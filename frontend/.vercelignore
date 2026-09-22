@@ -1,0 +1,9 @@
+# Never upload local secrets, provider exports, private rollback artifacts or test output.
+.vercel/
+.env*
+var/
+node_modules/
+.next/
+test-results/
+playwright-report/
+*.tsbuildinfo

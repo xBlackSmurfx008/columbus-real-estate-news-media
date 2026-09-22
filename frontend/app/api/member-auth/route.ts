@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
+import { readIntakeJson, limitRequest, intakeErrorResponse } from '@/lib/intake-security';
 import {
   clearMemberSessionCookie,
   getMemberSession,
@@ -15,12 +16,13 @@ function profileSelect() {
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await readIntakeJson(request);
     const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
     const password = typeof body.password === "string" ? body.password : "";
-    if (!email || !password) return NextResponse.json({ error: "Email and password are required." }, { status: 400 });
+    if (!email || email.length > 320 || !password || password.length > 128) return NextResponse.json({ error: "Email and password are required." }, { status: 400 });
 
     const sql = getDb();
+    await limitRequest(sql, request, 'member-login', email);
     const rows = await sql`
       SELECT id, email, password_hash FROM members
       WHERE email = ${email} AND status = 'active' LIMIT 1
@@ -34,8 +36,7 @@ export async function POST(request: NextRequest) {
     const [profile] = await sql.query(`SELECT ${profileSelect()} FROM members WHERE id = $1`, [member.id]);
     return NextResponse.json({ authenticated: true, profile });
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    return NextResponse.json({ error: message }, { status: 500 });
+    return intakeErrorResponse(error);
   }
 }
 

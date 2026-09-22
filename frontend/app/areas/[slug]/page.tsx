@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { getAreaBySlug } from "@/lib/data";
 import { CrenPage } from "@/components/cren/cren-page";
 import { getArticles, DbArticle } from "@/lib/public-data";
 import { formatPeriod, getCanonicalMarketData, selectAreaMetrics, type MarketMetric } from "@/lib/market-data";
 import { getArticlePath } from "@/lib/article-routing";
 import { CoverImage } from "@/components/cren/cover-image";
-import { GuideCard, RepresentativeImageNote } from "@/components/guide-card";
+import { imageDisclosure } from "@/lib/image-disclosure";
+import { GuideCard } from "@/components/guide-card";
 import { composeDescription, composeTitle } from "@/lib/page-metadata";
 import { absoluteUrl } from "@/lib/site";
 import { getAreaGuide, OFFICIAL_ACTIVITY_SOURCES } from "@/lib/area-guides";
@@ -70,10 +70,13 @@ function ArticleCard({ article }: { article: DbArticle }) {
       <div className="cren-surface overflow-hidden transition-shadow duration-300 hover:shadow-[var(--shadow-hover)]">
         {article.image_url && (
           <div className="relative aspect-[16/9] overflow-hidden">
-            <CoverImage src={article.image_url} alt={article.title} thumbnail />
+            <CoverImage src={article.image_url} alt={article.image_alt || article.title} thumbnail />
           </div>
         )}
         <div className="p-5">
+          {article.image_url && imageDisclosure(article.image_caption) && (
+            <p className="mb-2 text-xs text-[color:var(--text-muted)]">{imageDisclosure(article.image_caption)}</p>
+          )}
           <span className="mb-2 inline-block rounded-full bg-[color:var(--green)]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--green)]">
             {article.category}
           </span>
@@ -170,7 +173,6 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
     metro = [];
   }
 
-  const reportedHeroImage = local.find((a) => a.image_url)?.image_url ?? null;
   const coverageShelves = [
     {
       title: 'Housing, rents & the market',
@@ -199,13 +201,6 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
         )}
         {/* Header */}
         <div className="cren-surface overflow-hidden">
-          <div className="relative aspect-[21/9] w-full overflow-hidden bg-[color:var(--green-pale)]">
-            {reportedHeroImage ? (
-              <CoverImage src={reportedHeroImage} alt={`${area.name} local coverage`} sizes="(max-width: 1024px) 100vw, 900px" priority />
-            ) : (
-              <Image src={guide.representativeImage} alt={guide.representativeImageAlt} fill sizes="(max-width: 1024px) 100vw, 900px" priority className="object-cover" />
-            )}
-          </div>
           <div className="p-6 md:p-8">
             <div className="section-eyebrow">Neighborhood Hub</div>
             <h1 className="cren-heading-xl">{area.name}</h1>
@@ -215,7 +210,6 @@ export default async function AreaDetailPage({ params }: { params: Promise<{ slu
                 {area.multiCountyNote}
               </p>
             )}
-            {!reportedHeroImage && <RepresentativeImageNote />}
           </div>
         </div>
 

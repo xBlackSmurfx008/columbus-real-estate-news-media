@@ -323,7 +323,7 @@ export default async function BlogPostPage({
                 </div>
                 {article.image_caption && (
                   <figcaption className="px-4 py-3 text-xs text-[color:var(--text-muted)]">
-                    {article.image_caption}
+                    {renderInline(article.image_caption, 'image-caption')}
                   </figcaption>
                 )}
               </figure>

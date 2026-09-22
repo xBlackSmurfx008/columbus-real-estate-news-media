@@ -1,4 +1,5 @@
 "use client";
+import { IntakeSecurityFields, securityFields } from './intake-security-fields';
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Link from "next/link";
@@ -70,7 +71,8 @@ export function SubscribeForm({ source, initialEmail = "", initialArea = "", ini
     setError(null);
     setSending(true);
 
-    const data = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const data = new FormData(form);
     const nextEmail = String(data.get("email") ?? "");
     const nextArea = String(data.get("area") ?? "");
     const nextTopic = String(data.get("topic") ?? "");
@@ -80,6 +82,7 @@ export function SubscribeForm({ source, initialEmail = "", initialArea = "", ini
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          ...securityFields(data),
           step: "signup",
           email: nextEmail,
           area: nextArea,
@@ -99,12 +102,12 @@ export function SubscribeForm({ source, initialEmail = "", initialArea = "", ini
       setEmail(nextEmail);
       setArea(nextArea);
       setTopic(nextTopic);
-      trackEvent("membership_signup", { method: source, step: "signup", conversion: true, area: nextArea, topic: nextTopic });
-      trackEvent("sign_up", { method: source, conversion: true, area: nextArea, topic: nextTopic });
-      setStep("profile");
+      trackEvent("intake_pending", { method: source, step: "signup", conversion: false, area: nextArea, topic: nextTopic });
+      setStep("done");
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
+      form.dispatchEvent(new Event('intake-complete'));
       setSending(false);
     }
   }
@@ -172,8 +175,8 @@ export function SubscribeForm({ source, initialEmail = "", initialArea = "", ini
   if (step === "done") {
     return (
       <div className="mt-8 rounded-[var(--radius)] border border-[color:var(--border)] bg-[color:var(--green-pale)] p-4 text-sm text-[color:var(--text-secondary)]">
-        <p className="font-semibold text-[color:var(--text-hero)]">You are a CREN member.</p>
-        <p className="mt-1">We have your email and your area. Start here:</p>
+        <p className="font-semibold text-[color:var(--text-hero)]">Check your email to confirm.</p>
+        <p className="mt-1">Your newsletter signup is pending. The confirmation opens secure preferences; it does not create a member account or authorize acquisition outreach.</p>
         <div className="mt-3 flex flex-wrap gap-2">
           <Link href="/areas" className="cren-action-chip">Compare areas</Link>
           <Link href="/rent/before-you-sign" className="cren-action-chip">Open renter checklist</Link>
@@ -277,6 +280,7 @@ export function SubscribeForm({ source, initialEmail = "", initialArea = "", ini
   return (
     <div className="form-box mt-8">
       <form className="grid gap-4" onSubmit={onSignup}>
+        <IntakeSecurityFields kind="subscribe" />
         <input type="hidden" name="signup_source" value={source} />
         <label className="grid gap-1 text-sm text-[color:var(--text-secondary)]">
           Your email

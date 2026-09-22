@@ -6,6 +6,7 @@ import { CrenPage } from "@/components/cren/cren-page";
 import { getArticles, DbArticle } from "@/lib/public-data";
 import { getArticlePath } from "@/lib/article-routing";
 import { CoverImage } from "@/components/cren/cover-image";
+import { imageDisclosure } from "@/lib/image-disclosure";
 import { composeDescription } from "@/lib/page-metadata";
 import { absoluteUrl } from "@/lib/site";
 
@@ -66,10 +67,13 @@ export default async function TopicDetailPage({
                 <div className="cren-surface overflow-hidden transition-shadow duration-300 hover:shadow-[var(--shadow-hover)]">
                   {article.image_url && (
                     <div className="relative aspect-[16/9] overflow-hidden">
-                      <CoverImage src={article.image_url} alt={article.title} thumbnail />
+                      <CoverImage src={article.image_url} alt={article.image_alt || article.title} thumbnail />
                     </div>
                   )}
                   <div className="p-5">
+                    {article.image_url && imageDisclosure(article.image_caption) && (
+                      <p className="mb-2 text-xs text-[color:var(--text-muted)]">{imageDisclosure(article.image_caption)}</p>
+                    )}
                     <span className="mb-2 inline-block rounded-full bg-[color:var(--green)]/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[color:var(--green)]">
                       {article.category}
                     </span>

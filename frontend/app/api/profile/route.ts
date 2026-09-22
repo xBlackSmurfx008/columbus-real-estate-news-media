@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { requireMemberAuth } from "@/lib/member-auth";
-
-const MAX_BODY_BYTES = 8_192;
+import { readIntakeJson, limitRequest, intakeErrorResponse } from '@/lib/intake-security';
 
 function clean(value: unknown, max: number) {
   if (typeof value !== "string") return null;
@@ -39,9 +38,9 @@ export async function PATCH(request: NextRequest) {
   if (auth instanceof NextResponse) return auth;
 
   try {
-    const raw = await request.text();
-    if (raw.length > MAX_BODY_BYTES) return NextResponse.json({ error: "Profile update is too large." }, { status: 413 });
-    const body = JSON.parse(raw);
+    const sql = getDb();
+    await limitRequest(sql,request,'member-profile',auth.email);
+    const body = await readIntakeJson(request);
     const name = clean(body.name, 200);
     const interests = cleanInterests(body.interests);
     const preferredArea = clean(body.preferredArea, 120);
@@ -49,7 +48,6 @@ export async function PATCH(request: NextRequest) {
     const bio = clean(body.bio, 500);
     if (!name) return NextResponse.json({ error: "Enter your name." }, { status: 400 });
 
-    const sql = getDb();
     const [profile] = await sql`
       UPDATE members
       SET name = ${name}, interests = ${interests}, preferred_area = ${preferredArea},
@@ -59,28 +57,13 @@ export async function PATCH(request: NextRequest) {
     `;
     if (!profile) return NextResponse.json({ error: "Profile not found." }, { status: 404 });
 
-    const subscriber = await sql`SELECT id FROM subscribers WHERE email = ${profile.email} LIMIT 1`;
-    if (subscriber.length > 0) {
-      await sql`
-        UPDATE subscribers
-        SET area = ${preferredArea}, topic = ${interests}, status = 'active', updated_at = NOW()
-        WHERE id = ${subscriber[0].id}
-      `;
-    } else {
-      // Carry the member's synthetic flag onto the mirrored subscriber, so a
-      // test account cannot re-enter the audience count through this path.
-      await sql`
-        INSERT INTO subscribers (email, area, topic, source, status, is_test)
-        VALUES (
-          ${profile.email}, ${preferredArea}, ${interests}, 'member-profile', 'active',
-          COALESCE((SELECT is_test FROM members WHERE email = ${profile.email} LIMIT 1), false)
-        )
-      `;
-    }
+    // Profile edits do not grant newsletter consent or reactivate an opt-out.
+    await sql`UPDATE subscribers SET area=${preferredArea},topic=${interests},updated_at=NOW()
+      WHERE lower(email)=${String(profile.email).toLowerCase()} AND status='active'
+      AND NOT EXISTS (SELECT 1 FROM subscriber_suppressions WHERE email=${String(profile.email).toLowerCase()})`;
 
     return NextResponse.json({ profile });
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    return NextResponse.json({ error: message }, { status: 500 });
+    return intakeErrorResponse(error);
   }
 }

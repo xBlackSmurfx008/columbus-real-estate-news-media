@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import test from 'node:test';
-import { easternDate, readCloudDrafts } from '../scripts/cloud-draft-source.mjs';
+import { easternDate, readCloudDrafts, validateCloudRunReceipt } from '../scripts/cloud-draft-source.mjs';
 
 const now = new Date('2026-09-22T12:00:00Z');
 const commit = 'a'.repeat(40);
 const api = 'https://api.github.com/repos/xBlackSmurfx008/columbus-real-estate-news-media';
 const prefix = 'frontend/content/articles/';
+const runPrefix = 'frontend/content/newsroom-runs/';
 const article = { title: 'A draft only', image_url: null };
 function artifact(name = '2026-09-22-a-draft.json', value = article) {
   const bytes = Buffer.from(JSON.stringify(value));
@@ -14,14 +15,21 @@ function artifact(name = '2026-09-22-a-draft.json', value = article) {
   return { entry: { name, path: `${prefix}${name}`, type: 'file', size: bytes.length, sha },
     blob: { sha, size: bytes.length, encoding: 'base64', content: bytes.toString('base64') }, bytes };
 }
-function fixture(items = [artifact()], mutate = () => {}) {
+function runArtifact(value, name = '2026-09-22.json') {
+  const bytes = Buffer.from(JSON.stringify(value));
+  const sha = createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex');
+  return { entry: { name, path: `${runPrefix}${name}`, type: 'file', size: bytes.length, sha },
+    blob: { sha, size: bytes.length, encoding: 'base64', content: bytes.toString('base64') }, bytes };
+}
+function fixture(items = [artifact()], mutate = () => {}, runItems = []) {
   const calls = [];
   const fetcher = async (url, options) => {
     calls.push({ url, options });
     let body;
     if (url === `${api}/git/ref/heads/main`) body = { ref: 'refs/heads/main', object: { type: 'commit', sha: commit } };
     else if (url === `${api}/contents/frontend/content/articles?ref=${commit}`) body = items.map(item => item.entry);
-    else if (url.startsWith(`${api}/git/blobs/`)) body = items.find(item => url.endsWith(item.entry.sha))?.blob;
+    else if (url === `${api}/contents/frontend/content/newsroom-runs?ref=${commit}`) body = runItems.map(item => item.entry);
+    else if (url.startsWith(`${api}/git/blobs/`)) body = [...items, ...runItems].find(item => url.endsWith(item.entry.sha))?.blob;
     else throw new Error('Unexpected host or request');
     body = structuredClone(body);
     const response = mutate(body, calls.length, url);
@@ -41,8 +49,8 @@ test('reads immutable commit and verified blob with no credentials and ignores s
   const { fetcher, calls } = fixture([artifact('2026-09-21-stale.json'), target]);
   const result = await readCloudDrafts({ now, fetcher });
   assert.deepEqual(result, { date: '2026-09-22', commit, artifacts: [{ commit, path: target.entry.path, blobSha: target.entry.sha,
-    sha256: createHash('sha256').update(target.bytes).digest('hex'), article }] });
-  assert.equal(calls.length, 3);
+    sha256: createHash('sha256').update(target.bytes).digest('hex'), article }], runReceipt: null });
+  assert.equal(calls.length, 4);
   for (const { options } of calls) {
     assert.equal(options.redirect, 'error'); assert.equal(options.credentials, 'omit');
     assert.equal(options.headers.authorization, undefined); assert.ok(options.signal instanceof AbortSignal);
@@ -50,10 +58,25 @@ test('reads immutable commit and verified blob with no credentials and ignores s
 });
 
 test('no files for today returns empty, while more than two fails visibly', async () => {
-  assert.deepEqual(await readCloudDrafts({ now, fetcher: fixture([artifact('2026-09-21-old.json')]).fetcher }), { date: '2026-09-22', commit, artifacts: [] });
+  assert.deepEqual(await readCloudDrafts({ now, fetcher: fixture([artifact('2026-09-21-old.json')]).fetcher }),
+    { date: '2026-09-22', commit, artifacts: [], runReceipt: null });
   const { fetcher, calls } = fixture(['a', 'b', 'c'].map(name => artifact(`2026-09-22-${name}.json`)));
   await assert.rejects(readCloudDrafts({ now, fetcher }), /CLOUD_DRAFT_LIMIT_EXCEEDED/);
   assert.equal(calls.length, 2);
+});
+
+test('verified completion receipt binds a quiet-day outcome to the current date and exact artifact list', async () => {
+  const receipt = { schema_version: 'cren-cloud-run-v1', routine: 'cre-news-newsroom', date: '2026-09-22',
+    completed_at: '2026-09-22T11:30:00Z', story_result: 'NO_QUALIFYING_STORY', article_paths: [] };
+  const run = runArtifact(receipt);
+  const result = await readCloudDrafts({ now, fetcher: fixture([], () => {}, [run]).fetcher });
+  assert.deepEqual(result.runReceipt, { schemaVersion: 'cren-cloud-run-v1', routine: 'cre-news-newsroom', date: '2026-09-22',
+    completedAt: '2026-09-22T11:30:00.000Z', storyResult: 'NO_QUALIFYING_STORY', articlePaths: [],
+    path: run.entry.path, blobSha: run.entry.sha });
+  for (const update of [
+    { story_result: 'ARTIFACTS_COMMITTED' }, { article_paths: ['frontend/content/articles/not-present.json'] },
+    { completed_at: '2026-09-20T11:30:00Z' }, { routine: 'other' },
+  ]) assert.throws(() => validateCloudRunReceipt({ ...receipt, ...update }, { today: '2026-09-22', now, articlePaths: [] }), /CLOUD_RUN_/);
 });
 
 test('rejects traversal, wrong directory, non-ASCII filename, symlink and oversized artifact', async () => {

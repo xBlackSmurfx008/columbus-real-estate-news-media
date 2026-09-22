@@ -1127,6 +1127,18 @@ test('PostgreSQL editorial lifecycle, replay, concurrency and publication gates'
       assert.deepEqual(await importState(input), before);
       assert.deepEqual((await sql`SELECT count(*) AS count FROM cren_cloud_import_runs`)[0], runsBefore);
     });
+    await imports.test('verified quiet-day receipt creates one idempotent completed newsroom run', async () => {
+      const runReceipt = { storyResult: 'NO_QUALIFYING_STORY' as const, completedAt: now.toISOString(),
+        path: `frontend/content/newsroom-runs/${date}.json`, blobSha: 'b'.repeat(40) };
+      const source = async () => ({ date, commit: 'a'.repeat(40), artifacts: [], runReceipt });
+      const first = await runCloudImport(importSql, source, { apply: true, now });
+      const second = await runCloudImport(importSql, source, { apply: true, now });
+      assert.deepEqual(first.runReceipt, { present: true, quietRunRecorded: true });
+      assert.deepEqual(second.runReceipt, { present: true, quietRunRecorded: false });
+      const runs = await sql`SELECT * FROM newsroom_runs WHERE details->>'role'='verified-cloud-run-receipt'`;
+      assert.equal(runs.length, 1); assert.equal(runs[0].status, 'COMPLETED');
+      assert.equal(runs[0].story_result, 'NO_QUALIFYING_STORY'); assert.equal(Number(runs[0].staged_count), 0);
+    });
     await imports.test('cloud import atomically stages article, evidence, receipt and truthful run membership without publication', async () => {
       const input = artifact(); const before = await importState(input);
       const result = await runCloudImport(importSql, batch(input), { apply: true, now });

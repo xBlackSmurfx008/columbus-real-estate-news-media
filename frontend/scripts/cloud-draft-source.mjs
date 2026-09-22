@@ -2,7 +2,9 @@ import { createHash } from 'node:crypto';
 
 const API = 'https://api.github.com/repos/xBlackSmurfx008/columbus-real-estate-news-media';
 const DIRECTORY = 'frontend/content/articles';
+const RUN_DIRECTORY = 'frontend/content/newsroom-runs';
 const MAX_ARTICLE_BYTES = 256 * 1024;
+const MAX_RECEIPT_BYTES = 32 * 1024;
 const SHA = /^[a-f0-9]{40}$/;
 
 export function easternDate(now = new Date()) {
@@ -12,6 +14,29 @@ export function easternDate(now = new Date()) {
   }).formatToParts(now);
   const fields = Object.fromEntries(parts.map(({ type, value }) => [type, value]));
   return `${fields.year}-${fields.month}-${fields.day}`;
+}
+
+export function validateCloudRunReceipt(receipt, { today, now, articlePaths }) {
+  if (!receipt || Array.isArray(receipt) || typeof receipt !== 'object'
+    || receipt.schema_version !== 'cren-cloud-run-v1' || receipt.routine !== 'cre-news-newsroom'
+    || receipt.date !== today || !Array.isArray(receipt.article_paths)
+    || receipt.article_paths.some(path => typeof path !== 'string')) {
+    throw new Error('CLOUD_RUN_INVALID_RECEIPT');
+  }
+  const expected = [...articlePaths].sort();
+  const actual = [...receipt.article_paths].sort();
+  if (new Set(actual).size !== actual.length || JSON.stringify(actual) !== JSON.stringify(expected)) {
+    throw new Error('CLOUD_RUN_ARTIFACT_MISMATCH');
+  }
+  const expectedResult = expected.length ? 'ARTIFACTS_COMMITTED' : 'NO_QUALIFYING_STORY';
+  if (receipt.story_result !== expectedResult) throw new Error('CLOUD_RUN_RESULT_MISMATCH');
+  const completedAt = new Date(receipt.completed_at);
+  if (!Number.isFinite(completedAt.getTime()) || easternDate(completedAt) !== today
+    || completedAt.getTime() > now.getTime() + 300_000 || now.getTime() - completedAt.getTime() > 36 * 3_600_000) {
+    throw new Error('CLOUD_RUN_INVALID_TIME');
+  }
+  return { schemaVersion: receipt.schema_version, routine: receipt.routine, date: today,
+    completedAt: completedAt.toISOString(), storyResult: receipt.story_result, articlePaths: actual };
 }
 
 async function readJson(url, fetcher, maxBytes) {
@@ -99,5 +124,33 @@ export async function readCloudDrafts({ now = new Date(), fetcher = fetch } = {}
     if (!article || typeof article !== 'object' || Array.isArray(article)) throw new Error('CLOUD_DRAFT_INVALID_ARTICLE');
     artifacts.push({ commit, path: entry.path, blobSha, sha256: createHash('sha256').update(bytes).digest('hex'), article });
   }
-  return { date: today, commit, artifacts };
+  const runListing = await readJson(`${API}/contents/${RUN_DIRECTORY}?ref=${commit}`, fetcher, 200_000);
+  if (!Array.isArray(runListing) || runListing.length >= 1000) throw new Error('CLOUD_RUN_INVALID_LISTING');
+  const runEntries = runListing.filter(entry => entry?.name === `${today}.json`);
+  if (runEntries.length > 1) throw new Error('CLOUD_RUN_INVALID_ARTIFACT');
+  let runReceipt = null;
+  if (runEntries.length === 1) {
+    const entry = runEntries[0];
+    if (entry.path !== `${RUN_DIRECTORY}/${today}.json` || entry.type !== 'file' || !SHA.test(entry.sha ?? '')
+      || !Number.isSafeInteger(entry.size) || entry.size < 1 || entry.size > MAX_RECEIPT_BYTES) {
+      throw new Error('CLOUD_RUN_INVALID_ARTIFACT');
+    }
+    const blob = await readJson(`${API}/git/blobs/${entry.sha}`, fetcher, 64_000);
+    if (blob?.encoding !== 'base64' || blob.sha !== entry.sha || blob.size !== entry.size || typeof blob.content !== 'string') {
+      throw new Error('CLOUD_RUN_INVALID_BLOB');
+    }
+    const encoded = blob.content.replace(/[\r\n]/g, '');
+    if (encoded.length % 4 !== 0 || /[^A-Za-z0-9+/=]/.test(encoded)) throw new Error('CLOUD_RUN_INVALID_BLOB');
+    const bytes = Buffer.from(encoded, 'base64');
+    if (bytes.toString('base64') !== encoded || bytes.length !== entry.size || bytes.length > MAX_RECEIPT_BYTES
+      || createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex') !== entry.sha) {
+      throw new Error('CLOUD_RUN_INVALID_BLOB');
+    }
+    let parsed;
+    try { parsed = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(bytes)); }
+    catch { throw new Error('CLOUD_RUN_INVALID_RECEIPT'); }
+    runReceipt = { ...validateCloudRunReceipt(parsed, { today, now, articlePaths: artifacts.map(item => item.path) }),
+      path: entry.path, blobSha: entry.sha };
+  }
+  return { date: today, commit, artifacts, runReceipt };
 }

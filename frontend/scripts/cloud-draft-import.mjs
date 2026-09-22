@@ -127,10 +127,22 @@ export async function runCloudImport(sql, source, { apply = false, now = new Dat
         results.push({ status: 'HELD', path: artifact.path, code });
       }
     }
+    let quietRunRecorded = false;
+    if (apply && results.length === 0 && batch.runReceipt?.storyResult === 'NO_QUALIFYING_STORY') {
+      const receiptRunId = `github-run-${createHash('sha256').update(`${batch.runReceipt.path}:${batch.runReceipt.blobSha}`).digest('hex')}`;
+      const inserted = await sql`
+        INSERT INTO newsroom_runs(run_id,source,status,story_result,staged_count,staged_article_ids,details,completed_at)
+        VALUES (${receiptRunId},'vercel-github-import','COMPLETED','NO_QUALIFYING_STORY',0,'[]'::jsonb,
+          ${JSON.stringify({ commit: batch.commit, path: batch.runReceipt.path, role: 'verified-cloud-run-receipt' })}::jsonb,
+          ${batch.runReceipt.completedAt}::timestamptz)
+        ON CONFLICT (run_id) DO NOTHING RETURNING run_id`;
+      quietRunRecorded = inserted.length === 1;
+    }
     const status = results.some(row => row.status === 'HELD') ? 'BLOCKED' : results.length ? 'CHECKED' : 'NO_ARTIFACTS';
     if (apply) await sql`UPDATE cren_cloud_import_runs SET status = ${status},source_commit = ${batch.commit},
       results = ${JSON.stringify(results)}::jsonb,completed_at = NOW() WHERE id = ${id}`;
-    return { ok: status !== 'BLOCKED', status, commit: batch.commit, date: batch.date, results, published: 0 };
+    return { ok: status !== 'BLOCKED', status, commit: batch.commit, date: batch.date, results,
+      runReceipt: batch.runReceipt ? { present: true, quietRunRecorded } : { present: false, quietRunRecorded: false }, published: 0 };
   } catch {
     if (apply) await sql`UPDATE cren_cloud_import_runs SET status = 'FAILED',error_code = 'GITHUB_IMPORT_UNAVAILABLE',completed_at = NOW() WHERE id = ${id}`;
     throw new Error('GITHUB_IMPORT_UNAVAILABLE');

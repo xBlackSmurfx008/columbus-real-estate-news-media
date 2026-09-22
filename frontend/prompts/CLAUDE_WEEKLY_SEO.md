@@ -12,6 +12,12 @@ Report coverage by Columbus area, reader need, topic and asset class; duplicated
 publication throughput; unresolved workflow blockers; and five evidence-led assignments for the next week. Incorporate
 recent social-listener themes only as unverified leads. Include the exact source or record behind each recommendation.
 
-Save exactly one report to `briefs/YYYY-MM-DD-seo-report.md`, commit it to the existing main branch, and save the same
-report to `CRE News / seo-reports / YYYY-MM-DD.md` in Drive. Do not draft or publish articles, modify production data,
-perform outreach, spend money, or change schedules and credentials.
+Save exactly one report to `briefs/YYYY-MM-DD-seo-report.md` and the same report to
+`CRE News / seo-reports / YYYY-MM-DD.md` in Drive. Do not draft or publish articles, modify production data, perform
+outreach, spend money, or change schedules and credentials.
+
+Claude Code may place the commit on an automatic `claude/*` branch. Before success, fetch `origin/main`, verify
+`git diff --name-status origin/main...HEAD` contains only the one report above, push the branch, open a pull request to
+`main`, inspect the PR file list, merge it, then fetch `origin/main` and verify the exact report blob is present. Use the
+available GitHub CLI/API; do not force-push or bypass branch protection. If any step or the Drive save fails, report
+`HANDOFF_BLOCKED` with the branch/PR reference instead of claiming delivery.

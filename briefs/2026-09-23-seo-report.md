@@ -1,247 +1,104 @@
 # CRE News — Weekly SEO & Coverage Report
+
 **Period:** September 16–22, 2026
-**Generated:** 2026-09-23
-**Routine:** cre-news-weekly-seo v2 (live-corpus)
+**Corrected:** September 23, 2026
+**Scope:** Repository inventory and operator-supplied production evidence; not an analytics or ranking audit.
 
----
+## Evidence and limitations
 
-## Data provenance
+- The committed public-data snapshot contains **104 live articles**. It is stale relative to the operator-verified production total of **105**; do not use it as the current live count.
+- Operator-verified last publication: **2026-09-22T15:13:38.784353Z**. The number of publications within September 16–22 remains **UNMEASURED** in this report.
+- Ten dated article JSON files are committed for September 13–22; seven fall within this report's September 16–22 drafting window. File presence does not establish successful import, publication, freshness, or editorial readiness.
+- Search Console, Google Trends, rankings, traffic, conversions, comparative search volume, and social discussion volume/sentiment are **UNMEASURED**. Search-result density and prior briefs are not substitutes.
+- Source-ledger counts below describe committed metadata, not independent confirmation that sources were fetched or support the article.
+- Production facts are supplied by the operator, not independently queried by this report. Snapshot and package findings were checked against repository contents at `eca02056f1864a6801b10abb08726a8074e3bb55`.
 
-**Live corpus:** Per `frontend/content/snapshot/public-data.json` refreshed September 21 (the newest committed snapshot available to this routine), 104 articles carried `status = 'live'` at that point. September-to-date live count beyond that snapshot is UNMEASURED from this environment — the routine does not have DB or analytics access and cannot query the live publication total. Operator-verified last audited publication: **2026-09-22T15:13:38.784353Z** (read-only production DB, verified 2026-09-23T08:25Z).
+## 1. Draft inventory and editorial readiness
 
-**Committed draft packages:** 10 JSON articles are committed to the repository under `frontend/content/articles/` for dates September 13–22. Current handoff architecture is public GitHub `main` → hosted Vercel import/image/proof pipeline; the cloud routine commits JSON and source-image packages only and does not write to the Neon DB directly. A committed JSON is not a publication; import, image prep, and proof delivery are Vercel's responsibility.
+The previous report identified two duplicate-risk packages for withholding. The remaining **five are draft candidates, not five publishable stories**. No fresh gate run or complete fact-check was performed for this correction.
 
-**No Google Trends, Search Console, ranking, traffic, or conversion data is available during this run.** All search-interest characterizations are hypotheses inferred from search result density and source volume, not measured demand.
-
----
-
-## 1. Coverage audit — September 16–22, 2026
-
-### Live publications this week
-
-**Live count for Sep 16–22: UNMEASURED** — no analytics, Search Console, or DB access is available to this routine. Per operator-verified production read at 2026-09-23T08:25Z, the last audited publication timestamp is **2026-09-22T15:13:38.784353Z**. The Sep 21 snapshot (104 articles, most recent Sep 12) reflects the state before that publication and is stale for counting purposes. Total Sep 16–22 live publications cannot be confirmed from committed files alone.
-
-### Staged packages (committed to GitHub, not live)
-
-All 7 articles drafted September 16–22 are committed to the repository. Their current Vercel import/proof status is UNMEASURED from this environment except as noted in Section 4. Per operator verification at 2026-09-23T08:25Z, one draft in the Vercel queue is blocked `REAL_PHOTO_RESEARCH_REQUIRED`.
-
-| Date drafted | Slug | Area | Asset class | Content-gate status | Action |
-|---|---|---|---|---|---|
-| Sep 16 | `2026-09-16-columbus-east-side-permanently-affordable-condos-community-land-trust` | East Side | Affordable / Homeownership | PASS | Vercel import/proof status: UNMEASURED |
-| Sep 17 | `2026-09-17-italian-village-merus-428-apartments-state-library-site` | Italian Village | Multifamily | MULTIPLE FAILURES | Needs substantial rewrite; Vercel import/proof status: UNMEASURED |
-| Sep 18 | `2026-09-18-columbus-olde-towne-east-mercy-on-main-affordable-housing` | Near East Side | Affordable | DO NOT PUBLISH | Duplicate of Aug 2 live article; also has malformed JSON |
-| Sep 19 | `2026-09-19-columbus-zone-in-phase-2-public-comment-2026` | Citywide | Zoning / Policy | DO NOT PUBLISH | Substantial duplicate of Aug 23 live article |
-| Sep 20 | `2026-09-20-columbus-mt-vernon-avenue-7m-rebuild-king-lincoln-bronzeville` | Near East Side | Neighborhoods / Infrastructure | A9 fix needed | Needs dated status claim correction; Vercel import/proof status: UNMEASURED |
-| Sep 21 | `2026-09-21-columbus-motherful-co-housing-noe-bixby-far-east-side` | Far East Columbus | Affordable / Co-housing | A9 fix needed | Needs dated-claim fix; Vercel import/proof status: UNMEASURED |
-| Sep 22 | `2026-09-22-dublin-metro-center-mixed-use-rezoning-columbus-ohio` | Dublin | Mixed-use / Zoning | 18/18 PASS | In Vercel queue; one draft confirmed REAL_PHOTO_RESEARCH_REQUIRED (operator-verified 2026-09-23T08:25Z) |
-
-**Unique publishable articles this week (after removing DO NOT PUBLISH items):** 5
-
-### Full backlog as of September 22
-
-Including articles carried forward from the prior week (per Sep 22 brief), 10 articles are committed to the repository for dates Sep 13–22. Their individual Vercel import and proof-queue status is UNMEASURED from this environment. Per operator verification at 2026-09-23T08:25Z, one draft is confirmed blocked `REAL_PHOTO_RESEARCH_REQUIRED`; no pending or stuck proof, correction, or publication jobs were found.
-
-| Priority | Slug | Status |
-|---|---|---|
-| 1 | `2026-09-13-columbus-northland-affordable-senior-housing-green-oaks-2026` | Needs content-gate verification |
-| 2 | `2026-09-14-osu-moves-moritz-college-of-law-downtown-into-huntington-tower` | Content-gate PASS; oldest fresh story (9 days) |
-| 3 | `2026-09-16-columbus-east-side-permanently-affordable-condos-community-land-trust` | Content-gate PASS |
-| 4 | `2026-09-20-columbus-mt-vernon-avenue-7m-rebuild-king-lincoln-bronzeville` | Needs A9 dated-claim fix |
-| 5 | `2026-09-21-columbus-motherful-co-housing-noe-bixby-far-east-side` | Needs A9 dated-claim fix |
-| 6 | `2026-09-15-columbus-downtown-commission-diocese-gay-street-demolition` | STALE ADVANCE — rewrite as result story after Sep 22 hearing |
-| 7 | `2026-09-22-dublin-metro-center-mixed-use-rezoning-columbus-ohio` | 18/18 PASS; in Vercel queue; one draft confirmed REAL_PHOTO_RESEARCH_REQUIRED |
-| 8 | `2026-09-17-italian-village-merus-428-apartments-state-library-site` | Needs substantial rewrite |
-| DO NOT PUBLISH | `2026-09-18-columbus-olde-towne-east-mercy-on-main-affordable-housing` | Duplicate + malformed JSON |
-| DO NOT PUBLISH | `2026-09-19-columbus-zone-in-phase-2-public-comment-2026` | Duplicate of Aug 23 live article |
-
----
-
-## 2. Coverage by area, topic, and asset class
-
-### Neighborhood / area coverage (September 16–22 drafts, excluding DO NOT PUBLISH)
-
-| Neighborhood | Articles this week |
+| Package date / subject | Evidence-based disposition |
 |---|---|
-| Near East Side (King-Lincoln Bronzeville) | 1 |
-| East Side (Broad & Gould) | 1 |
-| Italian Village | 1 |
-| Far East Columbus / Southeast | 1 |
-| Dublin | 1 |
-| Citywide (zoning) | 0 (held — duplicate) |
+| Sep 16 — East Side community-land-trust condos | Committed candidate. Recheck against the September 22 publication before assigning further work; do not assume a new angle. |
+| Sep 17 — Italian Village / former State Library site | Previous report recorded multiple gate failures. Requires reporting and validation; not ready. |
+| Sep 18 — Mercy on Main | Previous report recorded duplicate risk and malformed JSON. Hold pending exact comparison and parsing/validation. |
+| Sep 19 — Zone In Phase 2 | Previous report recorded duplicate risk. Hold unless a material new development is verified. |
+| Sep 20 — Mt. Vernon Avenue | Previous report recorded a dated-status claim failure. Requires correction and current validation. |
+| Sep 21 — Motherful co-housing | Previous report recorded a dated-claim failure. Requires correction and current validation. |
+| Sep 22 — Dublin Metro Center | Operator confirms one imported Dublin draft blocked `REAL_PHOTO_RESEARCH_REQUIRED`. A prior machine pass is not image readiness or publication approval. |
 
-**Running gap list — zero coverage in September 2026 to date:**
-- Short North (highest Columbus search-volume neighborhood; zero stories this month)
-- German Village (metro's highest median sale price ~$737K; zero stories)
-- Franklinton (three simultaneous active West Broad projects; last covered Aug 2026)
-- New Albany / Columbus data center corridor
-- Clintonville
-- Upper Arlington (school bond vote Nov 3 — 6 weeks away)
-- Worthington, Hilliard, Grove City, Gahanna, Polaris/Westerville (outer suburbs: zero)
+The September 13–15 files are older research packages, not an automatic publication backlog. Re-report dates and status, compare with live coverage, and use the current contract before considering any new submission. The Diocese advance must not be republished as a result story without the meeting record.
 
-### Asset class coverage (September 16–22 drafts, excluding DO NOT PUBLISH)
+### Verifiable metadata counts for the five non-excluded candidates
 
-| Asset class | Count | Notes |
-|---|---|---|
-| Affordable housing / Homeownership | 2 | Sep 16 (CLT condos), Sep 21 (co-housing) |
-| Multifamily | 1 | Sep 17 (Italian Village Merus — needs rewrite) |
-| Neighborhoods / Infrastructure | 1 | Sep 20 (Mt. Vernon Ave rebuild) |
-| Mixed-use / Zoning | 1 | Sep 22 (Dublin Metro Center) |
+These counts cover the September 16, 17, 20, 21 and 22 JSON packages only:
 
-**Asset classes with zero September coverage:**
-- Industrial / Data center (largest current capital deployment in Central Ohio — no story)
-- Office market (four consecutive quarters of positive absorption — no market overview)
-- Single-family residential (Columbus REALTORS September data not yet covered)
-- Retail / Commercial (no lifestyle story published in 11+ days)
-- Senior housing (only one story all of August)
-- Build-to-rent
-- Investment sales / Cap rates
+- Columbus Underground appears in **3 of 5 source ledgers**. Every Columbus Underground record in that set is labeled **SECONDARY**; the prior claim of two PRIMARY uses was incorrect.
+- City of Columbus primary records are listed in the September 16 and 20 packages; City of Dublin primary records are listed in the September 22 package. The prior blanket assertion that no government primary records were fetched was unsupported. Actual fetch success and evidentiary support require verification.
+- The exact tag `near-east-side` appears in **1 of 5 tag lists (20%)**, not 3 of 5 (60%). Tag frequency is not a measure of reader demand or publication coverage.
+- Initial-discovery sources and the independence of source origins were not verified in this correction. Reposts and syndicated copies must not be counted as independent reporting.
 
-### Source diversity
+## 2. Coverage corrections and SEO limits
 
-All five unique publishable drafts this week relied on Columbus Underground as a primary or confirming secondary source (2 of 5 as primary). Three relied on it exclusively for the initial discovery. Colliers Columbus weekly, Columbus Business First, ABC6, NBC4, and City of Dublin planning pages each appeared in one draft. No Columbus REALTORS primary data was used this week. No OHFA, Franklin County Auditor, or government planning-record primary was fetched this week.
+Two assignment premises are contradicted by the report's own snapshot source:
 
-**Diversity gap:** Columbus Underground is doing heavy lifting across both discovery and verification. A deliberate effort to source from Columbus Business First (for development/commercial), WOSU (policy/civic), Franklin County data portals (property records), and Colliers/JLL quarterly reports (market data) would strengthen independence.
-
----
-
-## 3. Duplicate and stale-angle tracking
-
-| Held item | Reason | Action |
-|---|---|---|
-| Sep 18 Mercy on Main | Duplicates Aug 2, 2026 live article + malformed JSON | Do not publish |
-| Sep 19 Zone In Phase 2 | Substantial duplicate of Aug 23 live article; same primary sources | Do not publish |
-| Sep 15 Diocese advance | Advance window expired; hearing was Sep 22 | Rewrite as result story (hearing outcome needed) |
-
-**Recurring keyword over-use:** `near-east-side` appears in 3 of 5 unique publishable drafts this week (60%). Combined with the prior week's analysis, it remains the dominant area tag. Franklinton, Short North, and New Albany are all search-rich and underserved.
-
----
-
-## 4. Production pipeline status
-
-### Architecture note
-
-The current handoff is: **cloud routine commits JSON + source-image packages to public GitHub `main`** → **hosted Vercel pipeline handles import (minute 05), image prep (minute 10), and proof delivery (minute 15) hourly**. The routine does not call `publish-article.mjs`, `newsroom-run.mjs`, or database scripts, and `DATABASE_URL` is intentionally not injected into the routine's environment (`routines.md`, synchronized Sep 22, 2026). References to DATABASE_URL absence, Higgsfield calls, BLOB_READ_WRITE_TOKEN, and `articles_live_image_required` constraint failures in Sep 16–22 daily briefs describe prior-architecture sessions that operated before the Sep 22 policy update. They are **not current operational blockers**.
-
-### Operator-verified production state — 2026-09-23T08:25Z (read-only DB)
-
-| Metric | Value |
+| Earlier claim | Snapshot evidence and correction |
 |---|---|
-| Last audited publication | 2026-09-22T15:13:38.784353Z |
-| Draft(s) in Vercel queue — current hold | One draft blocked `REAL_PHOTO_RESEARCH_REQUIRED` |
-| Vercel import last attempt | 2026-09-23T08:05:18.565698Z — status `NO_ARTIFACTS` (expected: no new article JSON committed in that cycle) |
-| Pending/stuck proof jobs | None |
-| Pending/stuck correction jobs | None |
-| Pending/stuck publication jobs | None |
-| Vercel config: import | `true` |
-| Vercel config: paid AI images | `false` |
-| Vercel config: proof workflow | `true` |
+| German Village has zero September coverage | Snapshot contains the September 4 live article **“Columbus German Village Cedar Square Wins Contested 3-2 Vote.”** Remove the zero-coverage claim. |
+| Stone Ridge / South Side 150-unit groundbreaking has not been covered | Snapshot contains the September 6 live article **“South Side Columbus Breaks Ground on 150-Unit Affordable Apartments.”** Compare the project identity and existing reporting before proposing an update. Do not repeat the groundbreaking as an uncovered story. |
 
-### Current editorial hold
+A refreshed, publication-date-based corpus audit is needed before asserting other neighborhood or asset-class gaps. Snapshot article dates are not a substitute for audited publication timestamps.
 
-`REAL_PHOTO_RESEARCH_REQUIRED` is the one confirmed Vercel-queue hold as of the operator read. This means the draft in question has not had a rights-cleared photograph committed with it per `CLOUD_ROUTINE_HANDOFF.md`. The correct resolution is to complete photo research, download the original bytes, verify rights explicitly allow public redistribution, perform a visual review, and commit the image file with the required provenance receipt before the Vercel proof workflow can proceed.
+Remove unsupported neighborhood rankings, median-price superlatives, capital-deployment rankings, absorption trends, “search-rich” labels and claims that no competing outlet has covered an angle. They are **UNMEASURED or UNVERIFIED**, not established SEO opportunities.
 
-### Note on historic `editorial_email_reviews` rows
+## 3. Production and source-access status
 
-The Sep 22 audit session (which operated under the old direct-DB architecture) noted that 104 of 105 live articles lacked an `editorial_email_reviews` row. This does not establish unauthorized publication: the email-review gate was introduced by the Sep 22 owner policy update; articles published before that date predate the gate requirement. This is not a current operational blocker and does not require investigation before resumed publication.
+| Boundary | Verified or explicitly limited status |
+|---|---|
+| Live corpus | Operator reports **105 articles**. |
+| Last publication | **2026-09-22T15:13:38.784353Z**, operator-verified. |
+| Draft image hold | One imported Dublin draft: `REAL_PHOTO_RESEARCH_REQUIRED`. |
+| Cloud importer | Enabled, per operator. |
+| Paid image generation | Off, per operator. |
+| Paid revisions | Off, per operator; do not promise unattended model corrections. |
+| Publication authority | Only verified owner approval of the exact article-image proof; a commit or machine pass is not approval. |
+| Fresh cloud access check | Operator confirms successful **WebFetch** source access in the fresh canary after four routines moved to the secret-free CREN public-research Full-network environment. |
+| Binary photo path | Download/inspection tests remain pending. Successful WebFetch does not prove image acquisition or an end-to-end proof cycle. |
 
----
+The earlier social canary's HTTP 403 observations belong to that run and its former environment. They do not establish that all source access remains blocked after the environment change. Do not describe the new environment as fully healthy until its remaining handoffs are verified.
 
-## 5. Social listener highlights (unverified leads — all require independent source confirmation before assignment)
+The operator's **08:25Z historical check** reported no pending/stuck proof, correction or publication jobs and an **08:05:18.565698Z** import result of `NO_ARTIFACTS`. These are timestamped observations, not a continuously verified queue state. `NO_ARTIFACTS` does not prove that reporting or source research succeeded.
 
-Sources: `briefs/2026-09-20-social-listener.md`, `briefs/2026-09-21-social-listener.md`, `briefs/2026-09-22.md`.
+### Resolving the existing image hold
 
-| Theme | Volume | Frame | Lead quality |
-|---|---|---|---|
-| Diocese 197 E. Gay St. — Downtown Commission vote result (Sep 22) | HIGH | Immediate result story peg | HIGH — hearing confirmed; decision should be on public record now |
-| Columbus rental registry — $15/unit annual fee, litigation threat from Columbus Apartment Association | HIGH | Explainer + accountability | HIGH — Columbus City Council records, NBC4, BREAD statements all indexed |
-| Zone In Phase 2 — 60-day comment closes Oct 24; area-commission-by-commission breakdown | HIGH | Civic explainer (time-sensitive) | MEDIUM — sources confirmed but CREN has duplicate-risk backlog article (hold that; write fresh area-by-area piece) |
-| Franklinton: Peninsula Phase II Giant Eagle grocery anchor + 550/555 W. Broad activity | STEADY | Development / lifestyle | HIGH — 3 sources confirmed (10tv, Columbus Underground ×2) |
-| Stone Ridge at High Street 150-unit affordable groundbreaking (Aug 25; NRP Group) | STEADY | Affordable housing | MEDIUM — 3+ sources confirmed; 28 days old as of Sep 23; still publishable |
-| Columbus data center build-out (New Albany/Licking County) | STEADY | Industrial / land use | HIGH — WOSU, Cologix, ABC6 sources confirmed in prior SEO report |
-| Our City Our Say Issue 8 — Nov 2026 ballot, housing development implications | LOUD | Policy / governance | MEDIUM — housing angle is under-covered; election timing makes it time-sensitive |
-| AI tenant screening / eviction records + $2.8M city eviction aid | LIGHT-STEADY | Consumer / policy | LOW-MEDIUM — verify 90% screening stat from Second Chance Housing / Settl before assigning |
+For a fresh submission, complete rights-cleared photo research, verify that permission allows public redistribution of original bytes, inspect the original and intended 16:9 crop, and supply the exact-byte provenance receipt.
 
----
+For the **already-imported Dublin draft**, do not overwrite the GitHub JSON expecting automatic repair. The current handoff holds changed imported artifacts. Use the supervised draft-image attachment/correction workflow, revalidate the unchanged evidence and new image, and obtain a new proof before any approval.
 
-## 6. Five evidence-led assignments for the week of September 23–29, 2026
+Photo selection is image-desk work, not a separate owner image-review task. Do not bulk relabel or reimport the old packages. Do not copy production secrets into routine environments.
 
-### Assignment 1 — Diocese Gay Street demolition result story
-**Working title:** "Downtown Commission Denies / Approves Diocese Demolition at 197 E. Gay Street"
-**Primary keyword hypothesis:** `diocese columbus gay street demolition` · `downtown commission columbus`
-**Area / Asset class:** Downtown Columbus · Historic preservation
-**Why now:** The Downtown Commission hearing was September 22. The commission's decision is the live story peg. CREN has a stranded advance draft (Sep 15) with sourced background; the result story is a natural next step. Community sentiment indexed in two Columbus Underground opinion pieces is strongly opposed to demolition — the contrast between a nearby 71-unit affordable housing project (Finance Fund) and a same-block demolition for surface parking is the emotional center of the story.
-**Exact sources to check:** Downtown Commission meeting minutes or BZAP records at development.columbus.gov (primary), Columbus Underground original news piece "Church Wants to Tear Down 5-Story Downtown Building" (secondary), Columbus Underground opinion pieces "Goodbye, Gay Street" and "The Catholic Church Can Afford to Fix Their Downtown Building" (context), NBC4 / ABC6 day-of coverage if filed.
-**Evidence threshold:** Commission decision on record at primary source before drafting.
+## 4. Social evidence and research queue
 
----
+The corrected September 23 social brief reports **NO_VERIFIED_LEADS** and **UNMEASURED** volume/sentiment for its historical canary. Earlier HIGH, STEADY, LOUD and similar ratings must not be carried forward. Two opinion columns cannot establish neighborhood-wide sentiment.
 
-### Assignment 2 — Columbus rental registry explainer
-**Working title:** "Columbus's New Rental Registry: What Landlords Owe, What Tenants Gain, and Who Is Fighting It"
-**Primary keyword hypothesis:** `columbus ohio rental registry` · `columbus rental property registration`
-**Area / Asset class:** Columbus metro · Multifamily (landlord / tenant policy)
-**Why now:** Columbus City Council passed the residential rental registry ordinance in April 2026. The Columbus Apartment Association has retained outside counsel and signaled litigation citing state law preemption. No plain-language explainer exists in Columbus local real estate media. The litigation threat is the live hook; the $15/unit registration fee and triennial inspection requirement are the practical content. This is a story that answers a real reader question with broad operator audience reach.
-**Exact sources:** Columbus City Council ordinance text or Columbus City Code (primary), Columbus Apartment Association legal statement (NBC4, secondary), BREAD / tenant-advocacy coalition statements (Columbus Today / Legal Aid, secondary), Columbus Building and Zoning Services implementation timeline (primary if available).
-**Evidence threshold:** Primary ordinance text confirmed at columbus.gov or council records before drafting.
+The following are **unverified research questions**, not approved assignments or measured demand:
 
----
+| Lead | Evidence needed before assignment |
+|---|---|
+| Diocese / Gay Street meeting outcome | Dated official agenda and decision; verify that the meeting occurred and compare with existing CREN coverage. |
+| Rental registry implementation or litigation | Current ordinance, implementation record and attributable legal action/statement. Do not assert fees, deadlines or litigation from snippets alone. |
+| Franklinton development update | Identify each project separately and verify its address, developer, approval status and any tenant commitment. Do not combine different projects as corroborating one development or predict appreciation. |
+| Stone Ridge / South Side housing | A material new development beyond existing September 6 coverage, supported by primary evidence. |
+| New Albany / data-center land use | Current project and parcel records plus a defined local consequence. Do not claim an unoccupied SEO niche, regional rank or land-value effect without evidence. |
 
-### Assignment 3 — Peninsula Phase II: Giant Eagle Anchors Franklinton's Most Ambitious Mixed-Use Yet
-**Working title:** "Giant Eagle Is Coming to Franklinton — Here's What Peninsula Phase II Means for Residents and Investors"
-**Primary keyword hypothesis:** `franklinton columbus apartments` · `peninsula franklinton columbus`
-**Area / Asset class:** Franklinton · Multifamily / Retail / Mixed-use
-**Why now:** Peninsula Phase II (250 apartments + parking + Giant Eagle ground-floor grocery at Broad & Belle) fills a documented food-access gap in a neighborhood historically classified as food insecure. Construction expected 2026, completion 2027–28. Three independent sources confirm (10tv for Giant Eagle anchor; Columbus Underground for 550 W. Broad Grateful Development approval; Columbus Underground for 555 W. Broad / NRI Byers Chevrolet demolition). The story has dual audiences: residents (food access, walkability) and investors (commercial density catalyst, "next Short North" appreciation dynamic). CREN has not covered any Franklinton story since August.
-**Exact sources:** 10tv article on Peninsula Phase II Giant Eagle (https://www.10tv.com/article/news/local/boomtown-ohio/the-peninsula-phase-2-giant-eagle-downtown-columbus/530-c2b7fff7-fdcc-481f-bc24-cb0d8b9319d3, secondary), Columbus Underground articles on 550 and 555 W. Broad (secondary), Franklinton Development Association / city planning documents for Giant Eagle ground-floor retail confirmation (primary if available), Crawford Hoying as developer (secondary confirmation from 10tv).
-**Evidence threshold:** Giant Eagle tenancy confirmed at primary or developer source before claiming it as fact.
+## 5. Next checks
 
----
+1. Complete the fresh canary's binary-image and handoff checks; report source fetch, photo acquisition, GitHub delivery, import, image preparation and proof separately.
+2. Resolve the existing Dublin image hold through the supervised workflow, without treating a changed GitHub package as an automatic update.
+3. Recompute coverage from the current corpus and audited publication dates before issuing gap counts or new assignments.
+4. Revalidate any candidate against current sources, duplicate coverage, prompt/image contracts and the exact proof. Owner approval remains separate from machine validation.
+5. If alerting needs verification, inspect an authorized server-side delivery receipt or conduct an approved test. Credential presence alone does not prove Telegram delivery.
 
-### Assignment 4 — Stone Ridge at High Street: 150-Unit South Side Affordable Housing Groundbreaking
-**Working title:** "NRP Group Breaks Ground on 150-Unit Affordable Complex in South Columbus"
-**Primary keyword hypothesis:** `south columbus affordable housing` · `nrp group columbus ohio`
-**Area / Asset class:** South Columbus (45 W. Barthman Ave.) · Affordable housing / Multifamily
-**Why now:** NRP Group broke ground on August 25 — the story is 28 days old but still publishable; it has not been covered by CREN. Three or more independent sources confirm: NRP Group press release via Yahoo Finance, NBC4 WCMH-TV, Multi-Housing News, Multifamily Biz. Financing: Deutsche Bank (construction + permanent); co-sponsors: City of Columbus and OHFA. 60% AMI, one- through four-bedroom units, completion April 2028. At 4.5 acres and 150 units, it is the largest South Side affordable project reported in CREN's recent research. It also provides a concrete data point for the $500M housing bond's output — connecting to the stranded Sep 16 Broad & Gould CLT condos story.
-**Exact sources:** NRP Group press release via Yahoo Finance (https://sg.finance.yahoo.com/news/nrp-group-breaks-ground-150-154700390.html, primary), NBC4 (https://www.nbc4i.com/news/local-news/columbus/construction-begins-on-150-unit-affordable-housing-development-in-south-columbus/, secondary), Multi-Housing News (secondary).
-**Evidence threshold:** Two independent sources minimum; confirm address, unit count, and AMI cap at primary.
+**Correction record:** Replaced unsupported readiness, source/tag counts, coverage gaps, demand/sentiment ratings and assignment premises. Preserved the distinction between historical access failures and the newly verified WebFetch path. This report neither publishes articles nor certifies that the fresh canary has completed.
 
----
-
-### Assignment 5 — Columbus Data Center Build-Out: What New Albany's Land Rush Means for Central Ohio Real Estate
-**Working title:** "Columbus Is Becoming the Great Lakes' #2 Data Center Hub — What That Means for Central Ohio Land"
-**Primary keyword hypothesis:** `columbus data center new albany ohio` · `new albany ohio real estate`
-**Area / Asset class:** New Albany / Licking County corridor · Industrial / Data center
-**Why now:** This gap was the top-ranked assignment in the September 20 SEO report and remains unfilled. Columbus is tracking to become the #2 Great Lakes data center hub (WOSU, January 2026). Meta Prometheus (New Albany, 1GW), Cologix $1B campus groundbreaking (Columbus Construction Trades), EdgeConneX 524K sq ft conversion, and Vantage OH1 are all active. No Columbus local real estate outlet has connected the data center build-out to land acquisition, industrial zoning pressure, and investor-facing land-value implications in the New Albany International Business Park corridor. This is CREN's clearest unoccupied SEO opportunity in an asset class generating the largest single capital deployment in Central Ohio right now.
-**Exact sources:** WOSU "Columbus will become second-largest data center hub" (January 2026, secondary), Cologix groundbreaking coverage via Columbus Construction Trades (secondary), DataCenter Dynamics Vantage OH1 Columbus coverage (secondary), ABC6 Ohio data center surge reporting (secondary), City of Columbus / Licking County planning records for zoning changes near New Albany International Business Park (primary, needs direct fetch).
-**Evidence threshold:** Two independent named projects with confirmed addresses or parcel records before drafting land-use implications.
-
----
-
-## 7. Production cadence summary
-
-**Last audited publication:** 2026-09-22T15:13:38.784353Z (operator-verified, read-only DB, 2026-09-23T08:25Z).
-
-**Vercel import last ran:** 2026-09-23T08:05:18.565698Z — status `NO_ARTIFACTS` (expected when no new article JSON was committed in that cycle).
-
-**Sep 16–22 live count:** UNMEASURED — no DB or analytics access available to this routine. The Sep 21 snapshot (104 articles, last entry Sep 12) predates the Sep 22 publication and understates the live total.
-
-**Editorial output (Sep 16–22):** 5 unique publishable draft packages committed to `main` (2 held as DO NOT PUBLISH — duplicates). Drafting capacity is producing well-sourced work; photo research remains the gating requirement under current policy before any article can enter the Vercel proof workflow.
-
-**Prior SEO report benchmarks (Sep 20 report) still unresolved:**
-- Short North: still zero coverage
-- German Village: still zero coverage
-- New Albany / data center: still zero coverage
-- Franklinton: still zero coverage
-- Office market overview: still zero coverage
-- Single-family market data piece: still zero coverage
-
-**Owner action items:**
-
-| Priority | Action | Why |
-|---|---|---|
-| P1 | Complete rights-cleared photo research for each backlog article before committing | `REAL_PHOTO_RESEARCH_REQUIRED` is the one confirmed Vercel hold; per `CLOUD_ROUTINE_HANDOFF.md`, a rights-verified source image with provenance receipt must be committed with the package |
-| P2 | Confirm Telegram alerting credentials are configured | `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` raised repeatedly; confirms operational alert channel is working |
-
----
-
-*Report generated by the CRE News weekly SEO routine. Corrected 2026-09-23: production-state and architecture claims updated to reflect operator-verified read-only DB evidence at 2026-09-23T08:25Z and current GitHub→Vercel handoff architecture per `.claude/routines.md` and `frontend/prompts/CLOUD_ROUTINE_HANDOFF.md` (both synchronized 2026-09-22). Old-architecture blocker language (DATABASE_URL, Higgsfield, BLOB_READ_WRITE_TOKEN, articles_live_image_required) removed; zero-publication claim corrected; editorial_email_reviews characterization corrected.*
-*Period: September 16–22, 2026. Generated: September 23, 2026.*
-*Sources: daily newsroom briefs Sep 16–22 (briefs/2026-09-{16–22}.md), social-listener briefs Sep 20–21, prior SEO report (briefs/2026-09-20-seo-report.md), monthly operating review (briefs/2026-09-22-monthly-operating-review.md), public-data snapshot (frontend/content/snapshot/public-data.json), committed article JSON files under frontend/content/articles/, operator-verified production DB read 2026-09-23T08:25Z.*
+**Sources:** committed article packages under `frontend/content/articles/`; `frontend/content/snapshot/public-data.json`; corrected `briefs/2026-09-23-social-listener.md`; `frontend/prompts/CLOUD_ROUTINE_HANDOFF.md`; operator-supplied production and canary observations on September 23, 2026.

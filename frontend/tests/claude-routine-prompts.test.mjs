@@ -31,3 +31,12 @@ test('social listener forbids inferred recency, volume, and sentiment', () => {
   assert.match(prompt, /never infer them from the number or tone of news articles/i);
   assert.match(prompt, /Count authors, not articles or domains/i);
 });
+
+test('weekly report requires recomputed counts and rejects unsupported readiness and demand claims', () => {
+  const prompt = readPrompt('CLAUDE_WEEKLY_SEO.md');
+  assert.match(prompt, /Recompute every coverage\/source count/);
+  assert.match(prompt, /candidate, never "publishable"/);
+  assert.match(prompt, /sentiment `UNMEASURED`/);
+  assert.match(prompt, /latest corrected social report/);
+  assert.match(prompt, /supervised correction path/);
+});

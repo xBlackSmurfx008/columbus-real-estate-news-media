@@ -7,9 +7,9 @@
 
 ## Data provenance
 
-**Live corpus (publication database):** 104 articles, all `status = 'live'`, most recent published date September 12, 2026. Source: `frontend/content/snapshot/public-data.json` refreshed by Session 2 on September 21, and confirmed by direct DB query during the September 22 audit run.
+**Live corpus:** Per `frontend/content/snapshot/public-data.json` refreshed September 21 (the newest committed snapshot available to this routine), 104 articles carried `status = 'live'` at that point. September-to-date live count beyond that snapshot is UNMEASURED from this environment — the routine does not have DB or analytics access and cannot query the live publication total. Operator-verified last audited publication: **2026-09-22T15:13:38.784353Z** (read-only production DB, verified 2026-09-23T08:25Z).
 
-**Committed draft packages:** 10 JSON articles committed to the repository under `frontend/content/articles/` for dates September 13–22 are NOT in the live DB. They are counted below as "staged packages" (committed to GitHub) or "draft in DB" (staged to the Neon DB as `status = 'draft'` with no live DB row until image and approval requirements are met). A committed JSON is not a publication.
+**Committed draft packages:** 10 JSON articles are committed to the repository under `frontend/content/articles/` for dates September 13–22. Current handoff architecture is public GitHub `main` → hosted Vercel import/image/proof pipeline; the cloud routine commits JSON and source-image packages only and does not write to the Neon DB directly. A committed JSON is not a publication; import, image prep, and proof delivery are Vercel's responsibility.
 
 **No Google Trends, Search Console, ranking, traffic, or conversion data is available during this run.** All search-interest characterizations are hypotheses inferred from search result density and source volume, not measured demand.
 
@@ -19,27 +19,27 @@
 
 ### Live publications this week
 
-**Zero articles published.** The most recent live article (per the September 21 snapshot) is dated September 12, 2026. This is day 10+ of zero live output. The production blocker is documented in Section 4 below.
+**Live count for Sep 16–22: UNMEASURED** — no analytics, Search Console, or DB access is available to this routine. Per operator-verified production read at 2026-09-23T08:25Z, the last audited publication timestamp is **2026-09-22T15:13:38.784353Z**. The Sep 21 snapshot (104 articles, most recent Sep 12) reflects the state before that publication and is stale for counting purposes. Total Sep 16–22 live publications cannot be confirmed from committed files alone.
 
 ### Staged packages (committed to GitHub, not live)
 
-All 7 articles drafted September 16–22 are committed to the repository but not live on the site. One (Dublin Metro Center, Sep 22) was additionally staged to the Neon DB as `status = 'draft'` during the third run on September 22, but remains blocked from the approval queue because no hero image has been attached.
+All 7 articles drafted September 16–22 are committed to the repository. Their current Vercel import/proof status is UNMEASURED from this environment except as noted in Section 4. Per operator verification at 2026-09-23T08:25Z, one draft in the Vercel queue is blocked `REAL_PHOTO_RESEARCH_REQUIRED`.
 
 | Date drafted | Slug | Area | Asset class | Content-gate status | Action |
 |---|---|---|---|---|---|
-| Sep 16 | `2026-09-16-columbus-east-side-permanently-affordable-condos-community-land-trust` | East Side | Affordable / Homeownership | PASS | Publish when image pipeline available |
-| Sep 17 | `2026-09-17-italian-village-merus-428-apartments-state-library-site` | Italian Village | Multifamily | MULTIPLE FAILURES | Needs substantial rewrite before publish |
+| Sep 16 | `2026-09-16-columbus-east-side-permanently-affordable-condos-community-land-trust` | East Side | Affordable / Homeownership | PASS | Vercel import/proof status: UNMEASURED |
+| Sep 17 | `2026-09-17-italian-village-merus-428-apartments-state-library-site` | Italian Village | Multifamily | MULTIPLE FAILURES | Needs substantial rewrite; Vercel import/proof status: UNMEASURED |
 | Sep 18 | `2026-09-18-columbus-olde-towne-east-mercy-on-main-affordable-housing` | Near East Side | Affordable | DO NOT PUBLISH | Duplicate of Aug 2 live article; also has malformed JSON |
 | Sep 19 | `2026-09-19-columbus-zone-in-phase-2-public-comment-2026` | Citywide | Zoning / Policy | DO NOT PUBLISH | Substantial duplicate of Aug 23 live article |
-| Sep 20 | `2026-09-20-columbus-mt-vernon-avenue-7m-rebuild-king-lincoln-bronzeville` | Near East Side | Neighborhoods / Infrastructure | A9 fix needed | Needs dated status claim correction before publish |
-| Sep 21 | `2026-09-21-columbus-motherful-co-housing-noe-bixby-far-east-side` | Far East Columbus | Affordable / Co-housing | A9 fix needed | Needs dated-claim fix before publish |
-| Sep 22 | `2026-09-22-dublin-metro-center-mixed-use-rezoning-columbus-ohio` | Dublin | Mixed-use / Zoning | 18/18 PASS (draft in DB) | Staged; blocked only on hero image |
+| Sep 20 | `2026-09-20-columbus-mt-vernon-avenue-7m-rebuild-king-lincoln-bronzeville` | Near East Side | Neighborhoods / Infrastructure | A9 fix needed | Needs dated status claim correction; Vercel import/proof status: UNMEASURED |
+| Sep 21 | `2026-09-21-columbus-motherful-co-housing-noe-bixby-far-east-side` | Far East Columbus | Affordable / Co-housing | A9 fix needed | Needs dated-claim fix; Vercel import/proof status: UNMEASURED |
+| Sep 22 | `2026-09-22-dublin-metro-center-mixed-use-rezoning-columbus-ohio` | Dublin | Mixed-use / Zoning | 18/18 PASS | In Vercel queue; one draft confirmed REAL_PHOTO_RESEARCH_REQUIRED (operator-verified 2026-09-23T08:25Z) |
 
 **Unique publishable articles this week (after removing DO NOT PUBLISH items):** 5
 
 ### Full backlog as of September 22
 
-Including articles stranded from the prior week (per Sep 22 brief), the total committed-but-not-live backlog is 10 articles (Sep 13–22). All are blocked by the image pipeline issue described in Section 4.
+Including articles carried forward from the prior week (per Sep 22 brief), 10 articles are committed to the repository for dates Sep 13–22. Their individual Vercel import and proof-queue status is UNMEASURED from this environment. Per operator verification at 2026-09-23T08:25Z, one draft is confirmed blocked `REAL_PHOTO_RESEARCH_REQUIRED`; no pending or stuck proof, correction, or publication jobs were found.
 
 | Priority | Slug | Status |
 |---|---|---|
@@ -49,7 +49,7 @@ Including articles stranded from the prior week (per Sep 22 brief), the total co
 | 4 | `2026-09-20-columbus-mt-vernon-avenue-7m-rebuild-king-lincoln-bronzeville` | Needs A9 dated-claim fix |
 | 5 | `2026-09-21-columbus-motherful-co-housing-noe-bixby-far-east-side` | Needs A9 dated-claim fix |
 | 6 | `2026-09-15-columbus-downtown-commission-diocese-gay-street-demolition` | STALE ADVANCE — rewrite as result story after Sep 22 hearing |
-| 7 | `2026-09-22-dublin-metro-center-mixed-use-rezoning-columbus-ohio` | 18/18 PASS; staged as DB draft; blocked on image |
+| 7 | `2026-09-22-dublin-metro-center-mixed-use-rezoning-columbus-ohio` | 18/18 PASS; in Vercel queue; one draft confirmed REAL_PHOTO_RESEARCH_REQUIRED |
 | 8 | `2026-09-17-italian-village-merus-428-apartments-state-library-site` | Needs substantial rewrite |
 | DO NOT PUBLISH | `2026-09-18-columbus-olde-towne-east-mercy-on-main-affordable-housing` | Duplicate + malformed JSON |
 | DO NOT PUBLISH | `2026-09-19-columbus-zone-in-phase-2-public-comment-2026` | Duplicate of Aug 23 live article |
@@ -98,7 +98,7 @@ Including articles stranded from the prior week (per Sep 22 brief), the total co
 
 ### Source diversity
 
-All five unique publishable drafts this week relied on Columbus Underground as a primary or confirming secondary source (2 of 5 as primary). Three relied on it exclusively for the initial discovery. Colliers Columbus weekly, Columbus Business First, ABC6, NBC4, and City of Dublin planning pages each appeared in one draft. No Columbus REALTORS primary data was used this week (market-data refresh not possible without DATABASE_URL). No OHFA, Franklin County Auditor, or government planning-record primary was fetched this week.
+All five unique publishable drafts this week relied on Columbus Underground as a primary or confirming secondary source (2 of 5 as primary). Three relied on it exclusively for the initial discovery. Colliers Columbus weekly, Columbus Business First, ABC6, NBC4, and City of Dublin planning pages each appeared in one draft. No Columbus REALTORS primary data was used this week. No OHFA, Franklin County Auditor, or government planning-record primary was fetched this week.
 
 **Diversity gap:** Columbus Underground is doing heavy lifting across both discovery and verification. A deliberate effort to source from Columbus Business First (for development/commercial), WOSU (policy/civic), Franklin County data portals (property records), and Colliers/JLL quarterly reports (market data) would strengthen independence.
 
@@ -116,29 +116,33 @@ All five unique publishable drafts this week relied on Columbus Underground as a
 
 ---
 
-## 4. Unresolved workflow blockers
+## 4. Production pipeline status
 
-### Critical (blocks all publication)
+### Architecture note
 
-| Blocker | Days outstanding | Status as of Sep 22 |
-|---|---|---|
-| Higgsfield image pipeline unreachable from cloud container | Ongoing all of September | UNRESOLVED. Network egress policy blocks all calls to Higgsfield API. No hero image can be generated or verified from the routine's execution environment. |
-| `articles_live_image_required` DB constraint | Ongoing | UNRESOLVED. The `articles` table enforces `CHECK (status <> 'live' OR (image_url IS NOT NULL AND image_url LIKE 'https://%'))`. `publish-article.mjs` inserts the row before attaching an image, so every insert fails the constraint. |
-| No rights-cleared hero photo sourcing path | Ongoing | UNRESOLVED. Merely finding an image on a city or news website is not redistribution permission per CLOUD_ROUTINE_HANDOFF.md. No rights-cleared source image has been identified for any backlog article. |
+The current handoff is: **cloud routine commits JSON + source-image packages to public GitHub `main`** → **hosted Vercel pipeline handles import (minute 05), image prep (minute 10), and proof delivery (minute 15) hourly**. The routine does not call `publish-article.mjs`, `newsroom-run.mjs`, or database scripts, and `DATABASE_URL` is intentionally not injected into the routine's environment (`routines.md`, synchronized Sep 22, 2026). References to DATABASE_URL absence, Higgsfield calls, BLOB_READ_WRITE_TOKEN, and `articles_live_image_required` constraint failures in Sep 16–22 daily briefs describe prior-architecture sessions that operated before the Sep 22 policy update. They are **not current operational blockers**.
 
-### Important (affects monitoring and market data)
+### Operator-verified production state — 2026-09-23T08:25Z (read-only DB)
 
-| Blocker | Status |
+| Metric | Value |
 |---|---|
-| Production site egress blocked (HTTP 403 from cloud container) | UNRESOLVED. Cannot confirm live site health, verify published article pages, or run `verify:site`. Owner action needed: add `columbusrealestatenews.com` to routine's network egress allowlist. |
-| DATABASE_URL intermittent | PARTIALLY RESOLVED. Absent for 23 consecutive AM runs (Sep 1–22). Present in Sep 20 session 2, Sep 22 sessions 2 and 3. Likely still not persistent in the AM routine environment. |
-| BLOB_READ_WRITE_TOKEN absent | UNRESOLVED. Required for Vercel Blob hero upload fallback path. |
-| 104/105 live articles have no `editorial_email_reviews` record | NEWLY IDENTIFIED (Sep 22 audit run). 104 live articles predate or lack the email-review approval record required by the current CLOUD_ROUTINE_HANDOFF.md policy. The Sep 22 audit found only 1 article with a review row. Root cause unknown — may reflect a pre-Sep-21 approval path no longer in use, or it may indicate the publication gate was not enforced historically. Requires owner investigation before additional articles are published. |
-| Telegram alerting not configured | UNRESOLVED since Aug 2026. `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` not set. |
+| Last audited publication | 2026-09-22T15:13:38.784353Z |
+| Draft(s) in Vercel queue — current hold | One draft blocked `REAL_PHOTO_RESEARCH_REQUIRED` |
+| Vercel import last attempt | 2026-09-23T08:05:18.565698Z — status `NO_ARTIFACTS` (expected: no new article JSON committed in that cycle) |
+| Pending/stuck proof jobs | None |
+| Pending/stuck correction jobs | None |
+| Pending/stuck publication jobs | None |
+| Vercel config: import | `true` |
+| Vercel config: paid AI images | `false` |
+| Vercel config: proof workflow | `true` |
 
-### Active DB audit items (from Sep 22 third run)
+### Current editorial hold
 
-- Dublin Metro Center (Sep 22) is now `status = 'draft'` in the Neon DB (id: `2026-09-22-dublin-ohio-moves-to-rezone-its-210-acre-metro-center-as-mixed-use`), inside the run record for `newsroom_runs` id `50e3c127-aa76-4dbd-add0-084dac206ba3`. It cannot advance without a hero image attached via `BLOB_READ_WRITE_TOKEN` or the image pipeline.
+`REAL_PHOTO_RESEARCH_REQUIRED` is the one confirmed Vercel-queue hold as of the operator read. This means the draft in question has not had a rights-cleared photograph committed with it per `CLOUD_ROUTINE_HANDOFF.md`. The correct resolution is to complete photo research, download the original bytes, verify rights explicitly allow public redistribution, perform a visual review, and commit the image file with the required provenance receipt before the Vercel proof workflow can proceed.
+
+### Note on historic `editorial_email_reviews` rows
+
+The Sep 22 audit session (which operated under the old direct-DB architecture) noted that 104 of 105 live articles lacked an `editorial_email_reviews` row. This does not establish unauthorized publication: the email-review gate was introduced by the Sep 22 owner policy update; articles published before that date predate the gate requirement. This is not a current operational blocker and does not require investigation before resumed publication.
 
 ---
 
@@ -213,9 +217,13 @@ Sources: `briefs/2026-09-20-social-listener.md`, `briefs/2026-09-21-social-liste
 
 ## 7. Production cadence summary
 
-**Rolling 10-day live output (Sep 13–22):** Zero articles published. All 10 drafted articles are stranded by the image pipeline and DB constraint described in Section 4.
+**Last audited publication:** 2026-09-22T15:13:38.784353Z (operator-verified, read-only DB, 2026-09-23T08:25Z).
 
-**September-to-date:** 2 live articles published (Sep 11 mass timber, Sep 12 Reserve at Maryland modular). 10 staged packages. The pipeline is producing well-sourced editorial work; the bottleneck is entirely operational.
+**Vercel import last ran:** 2026-09-23T08:05:18.565698Z — status `NO_ARTIFACTS` (expected when no new article JSON was committed in that cycle).
+
+**Sep 16–22 live count:** UNMEASURED — no DB or analytics access available to this routine. The Sep 21 snapshot (104 articles, last entry Sep 12) predates the Sep 22 publication and understates the live total.
+
+**Editorial output (Sep 16–22):** 5 unique publishable draft packages committed to `main` (2 held as DO NOT PUBLISH — duplicates). Drafting capacity is producing well-sourced work; photo research remains the gating requirement under current policy before any article can enter the Vercel proof workflow.
 
 **Prior SEO report benchmarks (Sep 20 report) still unresolved:**
 - Short North: still zero coverage
@@ -225,20 +233,15 @@ Sources: `briefs/2026-09-20-social-listener.md`, `briefs/2026-09-21-social-liste
 - Office market overview: still zero coverage
 - Single-family market data piece: still zero coverage
 
-**Owner action items (carried forward from all prior reports):**
+**Owner action items:**
 
 | Priority | Action | Why |
 |---|---|---|
-| P0 | Identify a rights-cleared hero image source for the backlog and/or confirm a working image pipeline path from the routine's execution environment | No articles can publish without a compliant `https://` image URL; Higgsfield unreachable from cloud container |
-| P0 | Investigate 104/105 live articles with no `editorial_email_reviews` record — determine whether pre-Sep-21 approval used a now-unlogged path, or whether the approval gate was not enforced historically | Required before resuming publication to ensure compliance with current CLOUD_ROUTINE_HANDOFF.md policy |
-| P1 | Confirm DATABASE_URL is set persistently in the AM routine environment (not only in manual re-runs) | Still intermittent; was absent for 23 consecutive AM runs Sep 1–22 |
-| P1 | Add `BLOB_READ_WRITE_TOKEN` to routine environment | Needed for Vercel Blob placeholder hero upload path |
-| P1 | Add `columbusrealestatenews.com` to routine's network egress allowlist | Needed for site health monitoring and article verification |
-| P2 | Configure Telegram alerting (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`) | Raised in every brief since August; still not configured |
-| P2 | Resolve `publish-article.mjs` insert-order issue (row inserts before image_url is set, violating the DB constraint) | Architecture fix needed regardless of other credential issues |
+| P1 | Complete rights-cleared photo research for each backlog article before committing | `REAL_PHOTO_RESEARCH_REQUIRED` is the one confirmed Vercel hold; per `CLOUD_ROUTINE_HANDOFF.md`, a rights-verified source image with provenance receipt must be committed with the package |
+| P2 | Confirm Telegram alerting credentials are configured | `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` raised repeatedly; confirms operational alert channel is working |
 
 ---
 
-*Report generated by the CRE News weekly SEO routine.*
+*Report generated by the CRE News weekly SEO routine. Corrected 2026-09-23: production-state and architecture claims updated to reflect operator-verified read-only DB evidence at 2026-09-23T08:25Z and current GitHub→Vercel handoff architecture per `.claude/routines.md` and `frontend/prompts/CLOUD_ROUTINE_HANDOFF.md` (both synchronized 2026-09-22). Old-architecture blocker language (DATABASE_URL, Higgsfield, BLOB_READ_WRITE_TOKEN, articles_live_image_required) removed; zero-publication claim corrected; editorial_email_reviews characterization corrected.*
 *Period: September 16–22, 2026. Generated: September 23, 2026.*
-*Sources: daily newsroom briefs Sep 16–22 (briefs/2026-09-{16–22}.md), social-listener briefs Sep 20–21, prior SEO report (briefs/2026-09-20-seo-report.md), monthly operating review (briefs/2026-09-22-monthly-operating-review.md), public-data snapshot (frontend/content/snapshot/public-data.json), committed article JSON files under frontend/content/articles/.*
+*Sources: daily newsroom briefs Sep 16–22 (briefs/2026-09-{16–22}.md), social-listener briefs Sep 20–21, prior SEO report (briefs/2026-09-20-seo-report.md), monthly operating review (briefs/2026-09-22-monthly-operating-review.md), public-data snapshot (frontend/content/snapshot/public-data.json), committed article JSON files under frontend/content/articles/, operator-verified production DB read 2026-09-23T08:25Z.*

@@ -8,6 +8,15 @@ Separate live articles, staged packages, held packages, and ideas. A committed d
 Google Trends, Search Console, ranking, traffic, conversion, or audience demand data unless that exact source is
 available during the run; label search suggestions as hypotheses when only public search results are available.
 
+Read `.claude/routines.md`, `frontend/prompts/CLOUD_ROUTINE_HANDOFF.md`, and the newest committed operational
+verification report before interpreting old briefs. Old briefs describe historical failures, not current system state.
+The current writer hands off through GitHub and Vercel; it does not need database credentials or Higgsfield access.
+Paid generation is disabled by owner choice. The article's editorial date is not its publication timestamp: use a
+durable publication receipt to count releases, otherwise mark throughput `UNMEASURED`. Absence of email-review rows
+for legacy articles does not establish unauthorized publication or justify a global publication stop.
+When live APIs or operational records cannot be reached, explicitly mark present health and current counts unknown.
+Never promote an old brief's outage claim into a current finding without fresh evidence.
+
 Report coverage by Columbus area, reader need, topic and asset class; duplicated or stale angles; source diversity;
 publication throughput; unresolved workflow blockers; and five evidence-led assignments for the next week. Incorporate
 recent social-listener themes only as unverified leads. Include the exact source or record behind each recommendation.

@@ -26,8 +26,15 @@ const apply = process.argv.includes('--apply');
 if (apply && arg('confirm') !== `configure-${configuration.name}`) throw new Error('CONFIRMATION_REQUIRED');
 const routineUrl = `https://claude.ai/code/routines/${configuration.id}`;
 function browser(javascript) {
-  const source = `var t=Application(${targets[0]}).windows.byId(${targets[1]}).tabs.byId(${targets[2]}); t.execute({javascript:${JSON.stringify(javascript)}});`;
-  try { return execFileSync('osascript', ['-l', 'JavaScript', '-'], { input: source, encoding: 'utf8', timeout: 15_000,
+  // Native AppleScript preserves numeric Chrome window/tab IDs. JXA can resolve
+  // another Chrome instance when headless test browsers are also running.
+  const quoted = '"' + javascript.replaceAll('\\', '\\\\').replaceAll('"', '\\"') + '"';
+  const source = `tell application "Google Chrome"
+    set targetWindow to window id ${targets[1]}
+    set targetTab to tab id ${targets[2]} of targetWindow
+    return execute targetTab javascript ${quoted}
+  end tell`;
+  try { return execFileSync('osascript', ['-'], { input: source, encoding: 'utf8', timeout: 15_000,
     stdio: ['pipe', 'pipe', 'pipe'] }).trim(); }
   catch { throw new Error('CREN_BROWSER_ACCESS_FAILED_OUTPUT_REDACTED'); }
 }

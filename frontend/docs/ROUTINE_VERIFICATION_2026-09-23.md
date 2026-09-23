@@ -61,3 +61,26 @@ The weekly report received a second evidence correction: removed unsupported rea
 recomputed metadata counts and removed demonstrably false coverage-gap claims. Its prompt now requires an explicit
 final evidence audit; live saved/reloaded instruction hash matches `.claude/routines.md`. Twenty-five focused
 routine/import/source contract tests pass. Syntax and diff checks pass for the attended environment helper.
+
+## Final bounded verification — 09:14 UTC
+
+- Repair PR 27 merged as `a5cb4d2`; corrected SEO report on `main` exactly matches the reviewed local SHA-256
+  `bf2dac48f5848c8ccd3ae5e9107fdefeeeb471649a6e38fef835559146c71913`.
+- Fresh newsroom canary delivered receipt-only PR 28, merged as `08bbf47`. It truthfully returns
+  `NO_QUALIFYING_STORY` / `NEEDS_REPORTING` / `NEEDS_IMAGE`; no article was generated or published. The official
+  schedule ultimately confirmed the September 22 hearing date, but no reachable decision record was found.
+  Its description "second scheduled run" is inaccurate: this was an operator-triggered manual canary.
+- 09:11:34–09:11:48 UTC independent check: apex/www homepages and public APIs returned HTTP 200, both APIs exposed
+  105 articles. The public API may serve a snapshot fallback; this is availability evidence, not database proof.
+- `configure-cloud-handoff.mjs` dry run returned `configurationMatches: true`: production import, cloud image and
+  proof processing enabled; paid corrections/generation and protected outbound/acquisition flags disabled.
+- No runtime application change or deployment was needed for this environment/prompt repair. No credentials were
+  transferred and no article, image, approval, historical hold or unrelated routine was changed.
+
+Remaining limits: publisher-specific access restrictions, the existing Dublin image/content-policy holds, and no
+new qualifying article/photo package in the canary. The second SEO correction is verified on GitHub but its Drive
+mirror is not yet verified; the old Claude session stalled loading during the mirror check. Do not claim the Drive
+copy is synchronized or that this no-story canary exercised proof delivery/approval/publication. The hourly importer
+recognized the earlier quiet receipt at 09:05; consumption of the later PR 28 receipt remains to be checked at its
+next scheduled cycle. GitHub-hosted checks also retain the previously observed account billing/runner limitation;
+the local 25-test pass does not imply remote CI executed.

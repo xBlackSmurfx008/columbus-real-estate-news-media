@@ -2,18 +2,32 @@
   "schema_version": "cren-cloud-run-v1",
   "routine": "cre-news-newsroom",
   "date": "2026-09-23",
-  "completed_at": "2026-09-23T08:57:00Z",
+  "completed_at": "2026-09-23T09:12:00Z",
   "story_result": "NO_QUALIFYING_STORY",
   "article_paths": [],
-  "editorial_note": "No article or image package qualified today. The cloud routine's execution environment blocks all outbound network egress except web-search snippets and the allowlisted GitHub repository. Full-text of primary and independent sources could not be fetched (columbus.gov, columbusunderground.com, nbc4i.com, en.wikipedia.org and every other domain tested returned EGRESS_BLOCKED / CONNECT tunnel 403), so no claim could be verified across independent origins to the cren-article-v1.0.2 contract. No image bytes could be downloaded or visually inspected, so no rights-cleared photograph could be sourced, cropped, hashed, or receipted; a truthful cloud_image_asset receipt is therefore impossible. Per policy this is NEEDS_REPORTING + NEEDS_IMAGE, so all candidate leads were held. This receipt records the editorial outcome only and is not publication authority; no import, image preparation, email delivery, or publication is claimed.",
+  "editorial_note": "Second scheduled run of 2026-09-23. This supersedes the earlier same-day receipt (completed_at 2026-09-23T08:57:00Z), which recorded a total outbound-egress block. Environment state has changed: outbound HTTPS is now SELECTIVELY reachable. columbus.gov (including the primary Downtown Commission schedule PDF) and Wikimedia (commons API + upload.wikimedia.org) responded successfully this run; columbusunderground.com returns 403 (organization egress policy) and nbc4i.com returns 429 (site rate limit). Despite the partial recovery, no article or image package qualifies to the cren-article-v1.0.2 contract. The top time-sensitive lead (Diocese 197 E. Gay St. demolition) has its hearing date CONFIRMED as 2026-09-22 by the primary Downtown Commission 2026 meeting schedule, but the commission's DECISION is not on any reachable public record yet: September minutes are not posted, no independent day-of coverage appears in web-search snippets, and the dominant independent origin (columbusunderground.com) is egress-blocked, so the outcome cannot be verified across independent origins. No current, rights-cleared, story-specific documentary photograph is obtainable for any surveyed lead: Wikimedia Commons holds only historical DPLA archival images of the East Gay Street block (would fail story_match / truthful_caption for a current news photo), and the proposed / new-construction leads have no existing photographable subject. Per the cloud handoff, paid or synthetic image generation is not authorized, so a truthful cloud_image_asset receipt is impossible. Per policy this is NEEDS_REPORTING + NEEDS_IMAGE, so all candidate leads are held. This receipt records the editorial outcome only and is not publication authority; no import, image preparation, email delivery, or publication is claimed, and no git commit is treated as a publication or downstream-import success.",
+  "environment_change_since_prior_run": {
+    "prior_run_completed_at": "2026-09-23T08:57:00Z",
+    "prior_finding": "NETWORK_EGRESS_BLOCKED for all non-search outbound HTTPS (403).",
+    "current_finding": "Outbound HTTPS is selectively reachable. Reachable this run: columbus.gov (WebFetch of https://www.columbus.gov/ and of the Downtown Commission 2026 schedule PDF both succeeded), commons.wikimedia.org API (200 on search), upload.wikimedia.org (Wikimedia-generated responses, not a proxy block). Blocked this run: columbusunderground.com (403, organization egress policy). Rate-limited this run: nbc4i.com (429).",
+    "operational_implication": "The September-long P0 total-egress block is no longer fully accurate: primary city records at columbus.gov and rights-metadata at Wikimedia Commons are now reachable, but the dominant independent discovery/verification source (columbusunderground.com) remains specifically policy-blocked, which is the current binding constraint on cross-origin verification."
+  },
   "blockers": [
-    "NETWORK_EGRESS_BLOCKED: all non-search outbound HTTPS returns 403 from the routine container; no source full-text or image bytes retrievable (P0, ongoing all of September per briefs/2026-09-23-seo-report.md).",
-    "NEEDS_IMAGE: no rights-cleared source image could be downloaded or visually inspected; no compliant image package can accompany any draft.",
-    "NEEDS_REPORTING: claims verifiable only from search-result snippets, which is insufficient for the article-writing evidence contract."
+    "COLUMBUSUNDERGROUND_EGRESS_BLOCKED: columbusunderground.com returns 403 from the routine's egress policy. It is the dominant discovery and verification origin per briefs/2026-09-23-seo-report.md, so its unavailability is the primary constraint on verifying leads across independent origins (P1).",
+    "NEEDS_REPORTING: Diocese 197 E. Gay St. demolition hearing date confirmed 2026-09-22 via primary schedule, but the commission's decision is not yet on the reachable public record (September minutes unposted; no independent day-of coverage in search snippets; key source blocked). No claim about the outcome can be verified across independent origins.",
+    "NEEDS_IMAGE: no current, rights-cleared, story-specific documentary photograph is obtainable for any surveyed lead; only historical archival Commons images exist for the relevant block, and proposed/new-construction leads have no existing photographable subject. Paid/synthetic generation is not authorized by the cloud handoff, so no compliant image package can accompany any draft."
   ],
   "leads_surveyed_not_verified": [
-    "Diocese 197 E. Gay St. Downtown Commission demolition (hearing was Sep 22, 2026) — decision not present in search snippets; primary meeting record at development.columbus.gov unreachable.",
-    "NRP Group Stone Ridge at High Street, 150-unit affordable, 45 W. Barthman Ave. (groundbreaking Aug 25, 2026) — snippet detail available; full-text/independence unverifiable and no image obtainable; also duplicate-risk vs. Sep 6 brief mention.",
-    "Franklinton Peninsula Phase II (Giant Eagle anchor) — not re-searched to full-text; same egress + image blockers apply."
-  ]
+    "Diocese 197 E. Gay St. Downtown Commission demolition-and-surface-parking request: hearing date CONFIRMED 2026-09-22 (Regular Meeting) via the primary Downtown Commission 2026 schedule at columbus.gov; decision/outcome UNVERIFIED (minutes not posted, no reachable independent day-of coverage, columbusunderground.com blocked). Only historical DPLA archival photos of the East Gay Street block are on Wikimedia Commons, unusable as a current documentary photo.",
+    "NRP Group Stone Ridge at High Street, 150-unit affordable, 45 W. Barthman Ave. (groundbreaking 2026-08-25): snippet detail available; full-text independence unverifiable via reachable origins and no rights-cleared photograph of a just-broken-ground site is obtainable; also 28+ days old and duplicate-risk vs. earlier briefs.",
+    "Franklinton Peninsula Phase II (Giant Eagle anchor): proposed/under-construction; no existing photographable subject and no rights-cleared image; primary tenancy confirmation not reachable via allowed origins.",
+    "Columbus residential rental registry explainer: primary ordinance reachable via columbus.gov, but no story-specific rights-cleared documentary photograph exists and the cloud handoff bars synthetic/AI illustration, so the image contract cannot be met.",
+    "New Albany / Licking County data center build-out: reachable primary parcel/zoning records not confirmed this run; no rights-cleared story-specific photograph of the named facilities is obtainable."
+  ],
+  "handoff_status": {
+    "discovery_reporting": "COMPLETED_NO_QUALIFYING_STORY",
+    "github_commit": "receipt-only for 2026-09-23 (supersedes morning receipt)",
+    "website_import": "not applicable — no article artifact committed",
+    "image_proof": "not applicable — no image artifact committed"
+  }
 }

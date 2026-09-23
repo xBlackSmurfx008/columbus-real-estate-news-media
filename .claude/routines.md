@@ -5,16 +5,16 @@ The external Claude cloud routine configuration must be inspected independently;
 Do not assume a local `~/.claude/routines.yaml` exists or is authoritative for production.
 Track each configured job's expected execution and durable run receipt separately from manual canaries.
 
-September22 synchronized cloud routines, independently saved and read back:
+September23 synchronized cloud routines, independently saved, reloaded and read back:
 
 - `cre-news-newsroom` (`trig_01K92dUMrzY5eMRQH7Pa6CUe`), daily06:33EDT, SHA-256
-  `f232a67d5491a14de3aacc00fb01416667126ac060b6dc2332aab3d50bc6743b`.
+  `28a4321e5658a281a170bbe27bc7f914c95bf3c3f3be73de1218c6ef7c23269d`.
 - `cre-news-social-listen` (`trig_012CStw9Z125jkXwk4hTD4KZ`), daily16:43EDT, SHA-256
-  `fb3efde813b2edccd3417d611f2a0ec82afc0a2d01caefd9a96511ca8bd600bd`.
+  `e2ffd6c7687db47b3ece5bfd7aa9acaa9eb710d644a1c4cae4271df5b584c9af`.
 - `cre-news-weekly-seo` (`trig_016rhF74yLz6VhLQLvhJ3p35`), Sunday10:00EDT, SHA-256
-  `b7161fe683b6ceedfc4cb10f1bc8dcf9ef6a34c85599d151e8b2f75093dd506a`.
+  `96c1a107e33e56c8657a7d214d0c6cc0fda858c2e3885155ada02f4eabdf2228`.
 - `cre-news-monthly-review` (`trig_014fQXTnGRGStYeFdeZXSvED`), first day monthly10:00local, SHA-256
-  `7a74edeefb7170b22bbec11bebb9230b568254b365ff08d179f7d01a0b00cf2f`.
+  `44ccfa1463e32a8af72d9279e992cc2f664ad27c477fff89dbe9d73be2baf6f8`.
 
 All four use only the CREN repository plus Google Drive and have push/email completion notifications enabled. The
 newsroom prompt is a canonical body without a legacy prefix and includes the cloud handoff plus current writing policy.

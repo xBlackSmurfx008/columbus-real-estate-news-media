@@ -1,0 +1,19 @@
+{
+  "schema_version": "cren-cloud-run-v1",
+  "routine": "cre-news-newsroom",
+  "date": "2026-09-23",
+  "completed_at": "2026-09-23T08:57:00Z",
+  "story_result": "NO_QUALIFYING_STORY",
+  "article_paths": [],
+  "editorial_note": "No article or image package qualified today. The cloud routine's execution environment blocks all outbound network egress except web-search snippets and the allowlisted GitHub repository. Full-text of primary and independent sources could not be fetched (columbus.gov, columbusunderground.com, nbc4i.com, en.wikipedia.org and every other domain tested returned EGRESS_BLOCKED / CONNECT tunnel 403), so no claim could be verified across independent origins to the cren-article-v1.0.2 contract. No image bytes could be downloaded or visually inspected, so no rights-cleared photograph could be sourced, cropped, hashed, or receipted; a truthful cloud_image_asset receipt is therefore impossible. Per policy this is NEEDS_REPORTING + NEEDS_IMAGE, so all candidate leads were held. This receipt records the editorial outcome only and is not publication authority; no import, image preparation, email delivery, or publication is claimed.",
+  "blockers": [
+    "NETWORK_EGRESS_BLOCKED: all non-search outbound HTTPS returns 403 from the routine container; no source full-text or image bytes retrievable (P0, ongoing all of September per briefs/2026-09-23-seo-report.md).",
+    "NEEDS_IMAGE: no rights-cleared source image could be downloaded or visually inspected; no compliant image package can accompany any draft.",
+    "NEEDS_REPORTING: claims verifiable only from search-result snippets, which is insufficient for the article-writing evidence contract."
+  ],
+  "leads_surveyed_not_verified": [
+    "Diocese 197 E. Gay St. Downtown Commission demolition (hearing was Sep 22, 2026) — decision not present in search snippets; primary meeting record at development.columbus.gov unreachable.",
+    "NRP Group Stone Ridge at High Street, 150-unit affordable, 45 W. Barthman Ave. (groundbreaking Aug 25, 2026) — snippet detail available; full-text/independence unverifiable and no image obtainable; also duplicate-risk vs. Sep 6 brief mention.",
+    "Franklinton Peninsula Phase II (Giant Eagle anchor) — not re-searched to full-text; same egress + image blockers apply."
+  ]
+}

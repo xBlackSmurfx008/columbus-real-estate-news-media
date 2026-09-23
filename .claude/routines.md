@@ -10,9 +10,9 @@ September23 synchronized cloud routines, independently saved, reloaded and read 
 - `cre-news-newsroom` (`trig_01K92dUMrzY5eMRQH7Pa6CUe`), daily06:33EDT, SHA-256
   `28a4321e5658a281a170bbe27bc7f914c95bf3c3f3be73de1218c6ef7c23269d`.
 - `cre-news-social-listen` (`trig_012CStw9Z125jkXwk4hTD4KZ`), daily16:43EDT, SHA-256
-  `e2ffd6c7687db47b3ece5bfd7aa9acaa9eb710d644a1c4cae4271df5b584c9af`.
+  `1ee8490c65c1d8cc22f8f3d37f69d701a3357dfc4026b9dcda3b8e9f1c25ec17`.
 - `cre-news-weekly-seo` (`trig_016rhF74yLz6VhLQLvhJ3p35`), Sunday10:00EDT, SHA-256
-  `96c1a107e33e56c8657a7d214d0c6cc0fda858c2e3885155ada02f4eabdf2228`.
+  `829b6777946e45ae07d2c648eedc9aa86cb6c4983fb131e91bf1408c103871bf`.
 - `cre-news-monthly-review` (`trig_014fQXTnGRGStYeFdeZXSvED`), first day monthly10:00local, SHA-256
   `44ccfa1463e32a8af72d9279e992cc2f664ad27c477fff89dbe9d73be2baf6f8`.
 

@@ -20,6 +20,16 @@ and say so plainly—never infer them from the number or tone of news articles. 
 Keep each suggested question tied to the observed theme; do not imply that separate organizations or legal matters are
 connected without sourced evidence.
 
+## Mandatory evidence gate before saving
+
+If every source is accessible only through search snippets, the report must say `NO_VERIFIED_LEADS` and contain zero
+lead cards, market figures, carried-forward sentiment, or factual story summaries. This is a successful quiet-day
+research outcome, not permission to relax the evidence gate. Record only attempted sources and access limitations.
+For every admitted lead, include the directly opened source URL, exact observed publication timestamp with timezone,
+actual access time, and what was observed on that page. Remove any lead missing one of these fields before saving.
+Do not carry forward unchanged stories or sentiment from earlier briefs. Never infer sentiment from market data.
+Use the actual run time; never label a manually triggered run as scheduled or invent an end time later than now.
+
 Check recent CREN coverage and the latest listener briefs to avoid repeating the same theme without a material change.
 Save exactly one report to `briefs/YYYY-MM-DD-social-listener.md` and the same report to
 `CRE News / briefs / YYYY-MM-DD-social-listener.md` in Drive. Clearly label every item as a lead requiring independent

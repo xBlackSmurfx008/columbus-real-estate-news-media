@@ -21,6 +21,19 @@ Report coverage by Columbus area, reader need, topic and asset class; duplicated
 publication throughput; unresolved workflow blockers; and five evidence-led assignments for the next week. Incorporate
 recent social-listener themes only as unverified leads. Include the exact source or record behind each recommendation.
 
+Final evidence audit before delivery:
+- Recompute every coverage/source count from the inspected files or response. State the denominator, snapshot date,
+  and exact record. Search all live titles/slugs before claiming an area or proposed subject is uncovered.
+- A draft with unresolved gates is a candidate, never "publishable". A source-ledger entry is not proof the source
+  was successfully read. Distinguish source classifications as actually recorded from your verified assessment.
+- Without connected measurement, label search volume, rankings, appreciation, engagement and sentiment `UNMEASURED`.
+  No HIGH/LOUD/trending labels, market superlatives or competitor-content absolutes from snippets or article counts.
+- Read the latest corrected social report; do not resurrect disavowed measurements from older versions.
+- Frame unverified assignment premises as reporting questions, not facts. Each recommendation must include its
+  duplicate check and the new, independently verifiable development needed to justify coverage.
+- Date environment/access observations to the actual run. Distinguish configured alerts from delivery receipts.
+  Changed already-imported files require the supervised correction path, not an assumed automatic re-import.
+
 Save exactly one report to `briefs/YYYY-MM-DD-seo-report.md` and the same report to
 `CRE News / seo-reports / YYYY-MM-DD.md` in Drive. Do not draft or publish articles, modify production data, perform
 outreach, spend money, or change schedules and credentials.

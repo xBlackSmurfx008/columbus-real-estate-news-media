@@ -1,0 +1,50 @@
+{
+  "schema_version": "cren-cloud-run-v1",
+  "routine": "cre-news-newsroom",
+  "date": "2026-09-25",
+  "completed_at": "2026-09-25T10:40:26Z",
+  "story_result": "NO_QUALIFYING_STORY",
+  "article_paths": [],
+  "editorial_note": "Scheduled cloud handoff-only run for 2026-09-25. Result NO_QUALIFYING_STORY. Consistent with recent runs, discovery/verification is not the sole blocker; the binding constraint is the rights-cleared IMAGE contract, and for several current leads independent-origin verification is also weakened by persistent HTTP 403 blocks on the primary local outlets (columbusunderground.com, nbc4i.com, columbusbusinessfirst/bizjournals, dispatch.com, axios.com). This run's material finding: redistributable, documentary photographs DO exist on Wikimedia Commons for EXISTING, well-known Columbus places (North Market has 15 CC/PD images; Scioto Peninsula has multiple CC/PD/NARA images), but NONE of the current-day newsworthy real-estate subjects surveyed today (new construction, proposals, or zoning-code corridors) has a matching rights-cleared documentary photograph. The structural mismatch is between what is newsworthy now (new/proposed/undeveloped subjects) and what is openly photographed under redistributable licenses (existing landmarks). No current-day story cleared BOTH a primary + two independent reachable origins AND the story-matching, publicly-redistributable documentary-image contract, so no draft was produced. Per the cloud handoff, paid/AI image generation and stock placeholders are barred and holding is correct; no false cloud_image_asset receipt was written. This receipt records the editorial outcome only and is not publication authority; no import, image preparation, email delivery, or publication is claimed, and no git commit is treated as publication or downstream-import success.",
+  "egress_status_this_run": {
+    "reachable": [
+      "WebSearch (titles/URLs/snippets)",
+      "commons.wikimedia.org MediaSearch API (WebFetch, 200)",
+      "en.wikipedia.org (WebFetch, 200)",
+      "whatnow.com (WebFetch, 200)",
+      "columbusdistricts.com (WebFetch, 200)",
+      "columbus.gov city-bulletin PDF (WebFetch retrieved 5.1MB binary, but the PDF was not text-extractable in this environment: no pdftotext or python PDF library available, so the primary ordinance text could not be parsed here)"
+    ],
+    "unavailable_http_403_or_blocked": [
+      "columbusunderground.com (403 this run)",
+      "nbc4i.com (403 recorded prior runs; primary carrier for several 2026 leads)",
+      "columbusbusinessfirst / bizjournals (blocked prior runs)",
+      "dispatch.com (blocked prior runs)",
+      "axios.com/local/columbus (blocked prior runs)"
+    ]
+  },
+  "blockers": [
+    "NEEDS_IMAGE (binding): no current, rights-cleared, publicly-redistributable, story-matching documentary photograph is obtainable for any current-day qualifying real-estate subject surveyed this run. Wikimedia Commons holds redistributable documentary photos of existing landmarks (North Market, Scioto Peninsula) but none document the actual subject of a current-day newsworthy story. Paid/AI generation and stock placeholders are barred by the cloud handoff, so no compliant cloud_image_asset can accompany a draft.",
+    "PRIMARY_PDF_UNPARSEABLE: the Columbus City Bulletin #38 (2026-09-19) PDF was fetched (5.1MB) but could not be text-extracted in this environment (no pdftotext / no python PDF library), so the 161-corridor rezoning ordinance text could not be read directly from the primary record this run.",
+    "INDEPENDENT_ORIGIN_LIMIT: columbusunderground.com, nbc4i.com, bizjournals/Columbus Business First, dispatch.com, and axios.com remain 403/blocked, weakening cross-origin verification for several current leads (Merchant Building tower facts, GreenHouse Columbus, Brewery District)."
+  ],
+  "leads_surveyed_not_verified": [
+    "SR-161 / Northland corridor rezoning (Zone In initiative), Columbus City Council: a genuinely current land-use matter appearing in the City Bulletin #38 (2026-09-19) and in Columbus Underground's 'Council to Vote on Zoning Changes for 161 Corridor' (CU 403). HELD: the primary bulletin PDF was not text-extractable here, and — decisively — a zoning-code corridor has no single photographable subject; Wikimedia Commons 'Northland Columbus' returned only unrelated/dated items (Northland High School 1978, Continent, French Quarter mall, a 1989 Morse Rd photo), none a documentary, story-matching, redistributable image of the rezoning subject. NEEDS_IMAGE.",
+    "North Market 'Merchant Building' 32-story tower (North Market Historic District): under construction since 2023, completion targeted Q4 2026. HELD on two grounds: (1) no fresh, dated 2026 milestone (e.g., topping-out) was confirmable from reachable sources this run, and sources conflict materially (Wikipedia: Wood Companies/Schiff Capital, $292M, 174 units, 162+44 hotel/club rooms; wire/search: Rockbridge/Edwards Cos., $430M, 206-room hotel) — unreconciled without a fetched primary record; (2) Wikimedia Commons has NO documentary photo of the actual tower under construction (a 'Merchant Building Columbus' search returned the unrelated Farmers & Merchants Union Bank in Columbus, WISCONSIN), and a photo of the historic North Market hall would not truthfully document the new tower. NEEDS_IMAGE + verification.",
+    "Capitol Square Renaissance ($600M, Edwards Cos., ~10 acres south of E. Broad St.): SHELVED in April 2026 per Edwards Companies; stale, not news now, and primary carrier NBC4 is 403. Not admitted.",
+    "LeVeque Tower apartment-to-condo conversion (50 W. Broad St., Kaufman Development, 69 units): announced April 2025; stale, not a current-week story. (Commons does hold redistributable documentary photos of the LeVeque Tower itself, but there is no current news hook.) Not admitted.",
+    "Landmark on Scioto (Lincoln Avenue Communities, 321 units, up to 60% AMI, 44.5 acres): groundbreaking was April 9, 2026; stale, not news now. Not admitted.",
+    "GreenHouse Columbus / Franklinton (Kaufman Development, ~313 units at 501 W. Broad St., third phase of Gravity): move-ins reportedly began May 2026 and the 2026-09-24 trade write-up (E-A-A) appears to be a belated notice; project-specific facts trace only to Columbus Underground search snippets (CU 403). Not current and not independently verified. Held.",
+    "Worthington 445 E. Dublin-Granville Rd (SR-161) referendum petition (Democracy Before Developers) against the 2026-07-20 rezoning of the former Harding Hospital / I Am Boundless site: reporting was FULLY VERIFIED in the 2026-09-24 run (City of Worthington primary page + WOSU + Yahoo). No material change confirmed inside today's window; still held on NEEDS_IMAGE (Commons has no documentary redistributable photo of the site). Carried as context, not repeated as a new lead."
+  ],
+  "idea_queues_consulted": [
+    "briefs/2026-09-24-social-listener.md (newest social listener within prior 48h): 1 verified lead (GreenHouse Columbus/Franklinton) plus search-snippet-only items (Grateful Development/East Franklinton, Brewery District). Treated as an untrusted idea queue; independently re-checked. GreenHouse held (not current; CU-only specifics).",
+    "briefs/2026-09-23-seo-report.md (newest SEO report within prior 14 days): research questions (Diocese/Gay Street outcome, rental registry, Franklinton, Stone Ridge/South Side, New Albany data centers) requiring primary verification and a compliant image. Treated as an untrusted idea queue; none cleared the current-day + primary + independent-origin + documentary-image bar this run."
+  ],
+  "handoff_status": {
+    "discovery_reporting": "COMPLETED_survey; NO_QUALIFYING_STORY (no current-day lead cleared both verification and the documentary-image contract)",
+    "github_commit": "receipt + brief for 2026-09-25 committed to the routine branch and handed to main via PR/merge per the delivery sequence",
+    "website_import": "not applicable — no article artifact committed",
+    "image_proof": "not applicable — no image artifact committed (NEEDS_IMAGE)"
+  }
+}

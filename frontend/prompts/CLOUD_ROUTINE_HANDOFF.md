@@ -1,4 +1,4 @@
-# CREN cloud handoff — owner policy September 22, 2026
+# CREN cloud handoff — owner policy September 22, 2026 (amended September 26, 2026: CREN data card image fallback)
 
 This replaces prior database staging, direct publication, extra admin approval and fixed-length instructions.
 Research in the existing Claude cloud routine. Vercel imports JSON from the public GitHub repository; the cloud
@@ -41,9 +41,26 @@ only the configured owner's verified email approval may release the unchanged ar
   `frontend/content/articles/YYYY-MM-DD-descriptive-slug.json`.
 - Set image_url to null. Never set approval fields, publication status, scores, image_sha256, or pretend an import ran.
 - Preserve truthful article date and fact_checked_at; do not simply relabel or republish an old backlog story.
-- Finish photo research BEFORE committing the candidate. Prefer an actual, relevant rights-cleared photograph.
-  Merely finding a photograph on a city/developer/news website is not permission. Do not purchase licenses.
-- For a usable source image, download its original bytes, inspect the full image and intended16:9crop yourself,
+- Finish image work BEFORE committing the candidate. A missing photograph is never, by itself, a reason to hold a
+  verified story: use the image ladder below. Prefer stories whose facts are readable in full from primary sources
+  this environment can fetch (city, county, state and agency records) over stories known only from blocked outlets.
+- Image ladder: (1) an actual, relevant rights-cleared photograph; otherwise (2) a CREN data card. Merely finding a
+  photograph on a city/developer/news website is not permission. Do not purchase licenses.
+- CREN data card (`image_provenance.type: "CREN_GRAPHIC"`): from `frontend/`, write a card spec outside the repo and run
+  `node scripts/render-cren-graphic.mjs --spec /tmp/card.json --out content/images/YYYY-MM-DD-descriptive-slug.png`.
+  The spec holds `kicker`, `headline`, one to three `facts` (`value`, `label`), `location` and `source`. Every card
+  fact must be a verified fact stated in the article body and mapped in the claim ledger; never round, project or
+  invent a number for the card. `source` names the primary record. Commit the PNG unmodified and copy the printed
+  `git_blob_sha` and `source_sha256` into `cloud_image_asset`. Record the primary record as the SELECTED
+  `source_review` entry and as `image_provenance.source`; set `license: "CREN original work"`,
+  `permission_evidence: "Created by CREN from public records with render-cren-graphic.mjs; no third-party imagery."`,
+  `credit: "CREN graphic"`, a caption beginning `CREN graphic.` that names the data source, a real `location_note`,
+  and a `date_note` giving the creation date and the date of the status evidence. `image_alt` begins
+  `CREN data card` and summarizes the card. Open the rendered PNG and read every word before attesting the visual
+  review: for a card, `natural_appearance` means faithful to the disclosed data-card medium, `story_match` means every
+  card fact matches the article, and `mobile_crop` means the text stays legible at phone width. The same ladder
+  applies to lifestyle and event stories.
+- For a usable source photograph, download its original bytes, inspect the full image and intended16:9crop yourself,
   (centered16:9crop, including mobile display) and commit those unmodified original bytes under `frontend/content/images/YYYY-MM-DD-descriptive-slug.jpg`
   (also .jpeg/.png/.webp). Maximum25MiB. Do not commit secrets or unrelated files.
 - This repository is public: the license/permission must explicitly allow public redistribution of the original file,
@@ -74,11 +91,13 @@ only the configured owner's verified email approval may release the unchanged ar
 
 Only attest checks actually performed on the exact image. A script, hash or image filename is not visual review.
 Do not use an official rendering as a photograph; caption it accurately. No separate owner image-review request.
-If the original/crop is unsuitable, rights are unclear, or actual visual inspection is unavailable, hold the story
-and document the missing evidence in the brief; never fill a false receipt just to pass the pipeline.
+If a photograph's original/crop is unsuitable or its rights are unclear, skip it and use the CREN data card. Hold the
+story only when the card cannot be rendered or actually inspected, and document why in the brief; never fill a false
+receipt just to pass the pipeline.
 
-No paid image generation or paid email revisions are authorized by this routine. If there is no usable source asset,
-record NEEDS_IMAGE in the brief and stop; do not synthesize an image through another provider or insert a stock placeholder.
+No paid image generation or paid email revisions are authorized by this routine. The data card is rendered locally and
+is not AI generation. Record NEEDS_IMAGE only when the renderer fails; do not synthesize an image through another
+provider or insert a stock placeholder.
 Vercel imports at minute05, prepares images at minute10 and sends proofs at minute15 hourly, subject to its gates.
 Only the configured owner's verified email approval can publish the unchanged article-image package.
 Report separately: discovery/reporting completed, GitHub commit saved, website import pending/verified, proof pending.

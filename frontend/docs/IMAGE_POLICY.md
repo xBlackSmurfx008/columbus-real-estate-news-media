@@ -6,8 +6,12 @@ a separate image review or approval. Send one article proof; the owner's email a
 
 1. Use a relevant photograph of the actual site/event when its identity, context and reuse permission are verified.
 2. Keep an official rendering or data graphic when it best explains the story; label it accurately.
-3. If no suitable authorized photo is available, use a natural photographic-style generic AI illustration with explicit
-   disclosure. It is never visual evidence of the named property, residents, ceremony or finished project.
+3. If no suitable authorized photo is available, the cloud routine uses a CREN data card (`CREN_GRAPHIC`) rendered
+   offline by `scripts/render-cren-graphic.mjs` from verified facts in the article. It is CREN's own work, so it needs
+   no third-party license, and it re-seeds its layout tiles until it clears the near-duplicate check against committed
+   images. Field rules are in `prompts/CLOUD_ROUTINE_HANDOFF.md`. A card never depicts or implies a photo of the site.
+4. Outside the cloud routine, a natural photographic-style generic AI illustration with explicit disclosure remains a
+   supervised fallback. It is never visual evidence of the named property, residents, ceremony or finished project.
 
 ## Source choice record
 

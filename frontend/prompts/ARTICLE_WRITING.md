@@ -125,7 +125,8 @@ Never fabricate a search, permission, source, photographer credit, capture date,
 Prefer a relevant rights-cleared `LICENSED_PHOTO` (including CREN-owned photography). Record source URL, license or
 written permission, permission evidence, credit, location/date notes, reviewer and verification time. Use the original
 file without AI reconstruction. Official renderings remain labeled renderings, never completed-project photographs.
-If no suitable authorized photo is available, justify the fallback and use a natural photographic-style generic
+In the cloud routine, the fallback is the CREN data card defined in the cloud handoff, never AI generation.
+Elsewhere, if no suitable authorized photo is available, justify the fallback and use a natural photographic-style generic
 `AI_GENERATED` illustration: ordinary daylight, believable materials, neutral colors and public eye-level perspective.
 Do not invent the actual property, event, final design, signage or people. Do not request painted/cut-paper art or CGI.
 The exact fallback caption is: "AI-generated illustration; not a photograph of the actual property or event."

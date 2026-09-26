@@ -44,8 +44,17 @@ only the configured owner's verified email approval may release the unchanged ar
 - Finish image work BEFORE committing the candidate. A missing photograph is never, by itself, a reason to hold a
   verified story: use the image ladder below. Prefer stories whose facts are readable in full from primary sources
   this environment can fetch (city, county, state and agency records) over stories known only from blocked outlets.
-- Image ladder: (1) an actual, relevant rights-cleared photograph; otherwise (2) a CREN data card. Merely finding a
-  photograph on a city/developer/news website is not permission. Do not purchase licenses.
+- Image ladder (full rules in `frontend/docs/IMAGE_POLICY.md`): (1) an actual, relevant rights-cleared photograph,
+  including CREN-owned photos in the Google Drive folder "CREN Photo Library / inbox" (`frontend/docs/PHOTO_INTAKE.md`);
+  otherwise (2) a CREN chart or map built from public data with `scripts/render-cren-chart.mjs`
+  (`image_brief.image_role: "DATA"`) when the data answers the story's question, such as a map of the actual site;
+  otherwise (3) an honest context photo of the same street or district whose caption states what it shows and the year
+  taken (`image_role: "CONTEXT"`), when the story is about the place's look; otherwise (4) a CREN data card. Merely
+  finding a photograph on a city/developer/news website is not permission. Do not purchase licenses.
+- If no breaking story clears verification by the end of discovery, produce the recurring data format that is due per
+  `frontend/docs/RECURRING_DATA_FORMATS.md` instead of returning NO_QUALIFYING_STORY. It must still pass every gate.
+- In every brief, add a "Photo requests" list: addresses of verified leads that would benefit from a CREN photo run,
+  time sensitive sites (approved demolitions) first. The owner shoots them; you never contact anyone.
 - CREN data card (`image_provenance.type: "CREN_GRAPHIC"`): from `frontend/`, write a card spec outside the repo and run
   `node scripts/render-cren-graphic.mjs --spec /tmp/card.json --out content/images/YYYY-MM-DD-descriptive-slug.png`.
   The spec holds `kicker`, `headline`, one to three `facts` (`value`, `label`), `location` and `source`. Every card

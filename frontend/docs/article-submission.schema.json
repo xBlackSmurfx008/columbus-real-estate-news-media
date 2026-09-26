@@ -121,6 +121,10 @@
         "source_asset_considered": { "const": true },
         "source_asset_note": { "type": "string" },
         "image_policy_version": { "const": "cren-image-v2-real-photo-first" },
+        "image_role": {
+          "enum": ["SUBJECT", "CONTEXT", "DATA"],
+          "description": "SUBJECT shows the story site itself; CONTEXT is an honest, dated photo of the surrounding area; DATA is a chart or map built from public data."
+        },
         "source_review": {
           "type": "array", "minItems": 1, "maxItems": 10,
           "items": {

@@ -42,6 +42,17 @@ export function planEditorialImage(article) {
     || (article.image_caption != null && article.image_caption !== provenance.caption)) return hold('SOURCE_CAPTION_MISMATCH');
   if (provenance.type === 'OFFICIAL_RENDERING' && !/rendering/i.test(provenance.caption)) return hold('RENDERING_DISCLOSURE_REQUIRED');
   if (provenance.type === 'LICENSED_PHOTO' && /AI-generated|\brendering\b/i.test(provenance.caption)) return hold('PHOTO_PROVENANCE_CONFLICT');
+  // Owner amendment, September 26, 2026: CREN data graphics and honest context photos may lead a story.
+  if (provenance.type === 'CREN_GRAPHIC' && !(/\bCREN\b/.test(provenance.caption) && /\b(data|source)\b/i.test(provenance.caption))) {
+    return hold('GRAPHIC_DATA_SOURCE_CAPTION_REQUIRED');
+  }
+  if (brief.image_role != null && !['SUBJECT', 'CONTEXT', 'DATA'].includes(brief.image_role)) return hold('IMAGE_ROLE_INVALID');
+  if (brief.image_role === 'DATA' && !['CREN_GRAPHIC', 'PUBLIC_RECORD_GRAPHIC'].includes(provenance.type)) return hold('DATA_ROLE_REQUIRES_GRAPHIC');
+  if (brief.image_role === 'CONTEXT') {
+    if (provenance.type !== 'LICENSED_PHOTO') return hold('CONTEXT_ROLE_REQUIRES_PHOTO');
+    // The caption must say when the photo was taken so it never passes as the story site today.
+    if (!/\b(18|19|20)\d{2}\b/.test(provenance.caption)) return hold('CONTEXT_CAPTION_YEAR_REQUIRED');
+  }
   return { mode: 'SOURCE_ASSET', reason: 'Use the verified source file; never synthesize a replacement.' };
 }
 

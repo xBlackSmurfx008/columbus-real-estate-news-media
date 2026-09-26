@@ -177,3 +177,31 @@ test('visual review cannot bypass missing source rights or AI disclosure', () =>
   assert.throws(() => validateImageAttachmentReview(generated, articleId, sourceSha256), /AI_DISCLOSURE_REQUIRED/);
   assert.equal(validateImageAttachmentReview(aiFallback(), articleId, sourceSha256).mode, 'AI_FALLBACK');
 });
+
+test('CREN data graphics may lead a story when the caption names CREN and the data source', () => {
+  const graphic = sourcedPhoto();
+  graphic.image_brief.image_role = 'DATA';
+  graphic.image_provenance.type = 'CREN_GRAPHIC';
+  graphic.image_provenance.credit = 'CREN graphic';
+  graphic.image_caption = graphic.image_provenance.caption = 'CREN graphic. Data: City of Columbus building permits, pulled Sept. 26, 2026.';
+  assert.equal(planEditorialImage(graphic).mode, 'SOURCE_ASSET');
+  graphic.image_caption = graphic.image_provenance.caption = 'CREN graphic of permits.';
+  assertHold(graphic, 'GRAPHIC_DATA_SOURCE_CAPTION_REQUIRED');
+  const photoAsData = sourcedPhoto(); photoAsData.image_brief.image_role = 'DATA';
+  assertHold(photoAsData, 'DATA_ROLE_REQUIRES_GRAPHIC');
+});
+
+test('context photos must be licensed photographs whose caption states the year taken', () => {
+  const context = sourcedPhoto();
+  context.image_brief.image_role = 'CONTEXT';
+  context.image_caption = context.image_provenance.caption = 'S. Front St. in the Brewery District, 2014. Photo: Example Photographer.';
+  assert.equal(planEditorialImage(context).mode, 'SOURCE_ASSET');
+  context.image_caption = context.image_provenance.caption = 'S. Front St. in the Brewery District. Photo: Example Photographer.';
+  assertHold(context, 'CONTEXT_CAPTION_YEAR_REQUIRED');
+  const renderingContext = sourcedPhoto(); renderingContext.image_brief.image_role = 'CONTEXT';
+  renderingContext.image_provenance.type = 'OFFICIAL_RENDERING';
+  renderingContext.image_caption = renderingContext.image_provenance.caption = 'Official rendering, 2026. Credit: Example Photographer.';
+  assertHold(renderingContext, 'CONTEXT_ROLE_REQUIRES_PHOTO');
+  const unknownRole = sourcedPhoto(); unknownRole.image_brief.image_role = 'MOOD';
+  assertHold(unknownRole, 'IMAGE_ROLE_INVALID');
+});

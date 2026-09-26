@@ -1,17 +1,79 @@
 # CREN image policy: real photos first
 
-Version `cren-image-v2-real-photo-first`, approved September 22, 2026. Article prompt v1.0.2.
+Version `cren-image-v2-real-photo-first`, approved September 22, 2026, amended September 26, 2026. Article prompt v1.0.2.
+The version string is unchanged so drafts already in the pipeline stay valid; the amendments only widen what qualifies.
 Owner clarification: image selection and visual checks are delegated to the image desk. Do not ask the owner for
 a separate image review or approval. Send one article proof; the owner's email approval publishes that exact package.
 
 1. Use a relevant photograph of the actual site/event when its identity, context and reuse permission are verified.
-2. Keep an official rendering or data graphic when it best explains the story; label it accurately.
-3. If no suitable authorized photo is available, the cloud routine uses a CREN data card (`CREN_GRAPHIC`) rendered
-   offline by `scripts/render-cren-graphic.mjs` from verified facts in the article. It is CREN's own work, so it needs
-   no third-party license, and it re-seeds its layout tiles until it clears the near-duplicate check against committed
+   CREN-owned photos from the weekly photo run and reader photos with written permission count (`docs/PHOTO_INTAKE.md`).
+2. Otherwise use a CREN chart or map built from public or openly licensed data (`scripts/render-cren-chart.mjs`,
+   amendment A below) when the data answers the story's question, for example a map of the actual site.
+3. Otherwise use an honest context photo of the same street or district, captioned with what it shows and the year
+   taken (amendment D below), when the story is about the place's look or character.
+4. Otherwise the cloud routine uses a CREN data card (`CREN_GRAPHIC`) rendered offline by
+   `scripts/render-cren-graphic.mjs` from verified facts in the article. It is CREN's own work, so it needs no
+   third-party license, and it re-seeds its layout tiles until it clears the near-duplicate check against committed
    images. Field rules are in `prompts/CLOUD_ROUTINE_HANDOFF.md`. A card never depicts or implies a photo of the site.
-4. Outside the cloud routine, a natural photographic-style generic AI illustration with explicit disclosure remains a
+5. Keep an official rendering only when it best explains the story and its redistribution rights are clear; label it.
+6. Outside the cloud routine, a natural photographic-style generic AI illustration with explicit disclosure remains a
    supervised fallback. It is never visual evidence of the named property, residents, ceremony or finished project.
+
+## Amendment, September 26, 2026 (owner approved)
+
+The owner approved four changes to clear the structural image hold recorded in the September 24 to 26 briefs: stories
+that are newsworthy now (proposals, demolitions, zoning) rarely have a redistributable photo of the actual site.
+
+### A. Charts and maps are a valid hero
+
+A `CREN_GRAPHIC` built by CREN from public records or openly licensed data belongs to CREN and clears the image contract.
+Set `image_brief.image_role: "DATA"`.
+
+- Allowed inputs: government open data and public records (City of Columbus, Franklin County Auditor and GIS, Columbus
+  Building and Zoning Services, MORPC, Census/ACS, HUD, FRED), and OpenStreetMap geometry with the attribution
+  "© OpenStreetMap contributors (ODbL)" printed on the image. Record the dataset license in `license`.
+- Not allowed: screenshots of Google Maps, Apple Maps, Zillow, Redfin, CoStar, LoopNet, MLS pages or any other
+  proprietary map or chart; tracing a developer's site plan; paid data CREN has not licensed for redistribution.
+- Render from `frontend/` with `node scripts/render-cren-chart.mjs --spec /tmp/chart.json --out content/images/DATE-slug.png`
+  (run `npm ci` first so `sharp` is present). It produces a 1600x900 PNG in CREN colors with every label inside the
+  mobile crop, refuses a spec whose `source_line` does not start with "Data:", prints the `cloud_image_asset` hashes,
+  and re-seeds its header and footer bands until it clears the same near-duplicate guard as the data card.
+- `image_provenance`: `type: "CREN_GRAPHIC"`, `source` = the dataset page (also the SELECTED `source_review` url),
+  `license` = the data license or "public record", `permission_evidence` = "Original CREN graphic built from <dataset>;
+  no third party image content", `credit` = "CREN graphic", `location_note` and `date_note` = the geography and the
+  date the data was pulled. Caption pattern: "CREN graphic. Data: <agency or dataset>, pulled <date>." The validator
+  holds any CREN_GRAPHIC (chart, map or data card) whose caption lacks "CREN" or lacks "data"/"source".
+- Every number and point on the graphic must trace to the fetched dataset, exactly like body copy. A map marks a verified
+  address or parcel only; never draw a proposed building footprint unless it comes from a public record.
+- Visual review for graphics: `natural_appearance` means clean and faithful to the disclosed medium, `story_match` means
+  the data answers the story's question, `truthful_caption` means the caption names the source and pull date.
+
+### B. CREN takes its own photos
+
+A weekly photo run (about 30 minutes, one phone) of sites in the news builds a CREN-owned library. Reader-submitted photos
+with written permission also qualify. Intake, rights wording and file handling are in `docs/PHOTO_INTAKE.md`. Owned and
+reader photos use `type: "LICENSED_PHOTO"`, `image_role: "SUBJECT"` when they show the story site.
+
+### C. Recurring data formats
+
+The routine always has a publishable option on a slow news day. The formats and their primary sources are in
+`docs/RECURRING_DATA_FORMATS.md`; each ships with a CREN_GRAPHIC hero, so none depends on finding a photo.
+
+### D. Honest context photos
+
+A rights-cleared photo of the surrounding area may lead a story about a site that has no usable photo. Set
+`image_role: "CONTEXT"` and keep `type: "LICENSED_PHOTO"`.
+
+- The caption states what the photo actually shows, where, and the year taken, for example: "S. Front St. in the Brewery
+  District, 2014. Photo: Davis.4497, CC BY SA 3.0." The validator holds a context caption without a year.
+- The caption and alt text must not say or imply the photo shows the story's building, lot or project. If the subject
+  building is visible, say so only when verified; otherwise say "nearby" or name the street.
+- The photo must be of the same street, block or named district as the story. A photo of a different neighborhood, or a
+  generic skyline for a site specific story, fails `story_match`.
+- Wikimedia Commons CC BY and CC BY SA files qualify when the credit and license name are in the caption. Record the
+  Commons file page as `source`. Unknown capture dates are stated as such and cannot be used as context photos.
+- Prefer A (a map of the actual site) over D when both are possible; a context photo is the better choice when the story
+  is about a place's look or character.
 
 ## Source choice record
 

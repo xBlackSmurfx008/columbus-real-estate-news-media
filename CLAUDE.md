@@ -20,10 +20,10 @@ Those current policies replace all earlier direct-database, direct-publication, 
 At 06:33 America/New_York, the `cre-news-newsroom` Claude routine:
 
 1. Reviews recent CREN coverage and searches current Columbus-area primary and reputable local sources.
-2. Selects at most one strong real-estate story and one strong lifestyle story. It publishes nothing and may produce no draft when evidence or imagery is insufficient.
+2. Selects at most one strong real-estate story and one strong lifestyle story. It publishes nothing and may produce no draft when evidence is insufficient; a missing photograph alone is not a reason to hold (see step 5).
 3. Verifies claims across independent origins and creates an original local contribution. Syndicated copies count as one source.
 4. Produces only current `cren-article-v1.0.2` JSON packages that pass the article-writing contract.
-5. Researches a story-specific, documentary-style, rights-cleared photograph. The exact source bytes, redistribution rights, hashes, provenance, caption, and honest visual-review receipt must accompany the draft package. No paid generation, glossy AI art, placeholders, fake signage, or invented property specificity.
+5. Researches a story-specific, documentary-style, rights-cleared photograph. When none is cleared, it renders a CREN data card from the article's verified facts with `frontend/scripts/render-cren-graphic.mjs` (`CREN_GRAPHIC`; rules in `frontend/prompts/CLOUD_ROUTINE_HANDOFF.md`). The exact source bytes, redistribution rights, hashes, provenance, caption, and honest visual-review receipt must accompany the draft package. No paid generation, glossy AI art, placeholders, fake signage, or invented property specificity.
 6. Commits the JSON and approved source-image package to the public repository's existing main branch. It never includes secrets or claims that website import, email delivery, or publication occurred merely because GitHub accepted a commit.
 7. Records sources, held items, and handoff state in the daily brief.
 

@@ -1,0 +1,14 @@
+{
+  "schema": "cren-directive-event-v1",
+  "item": "deploy-conversion-layer",
+  "at": "2026-09-05",
+  "actor": "cmo-rebuild",
+  "type": "open",
+  "kind": "engineering",
+  "status": "proposed",
+  "priority": 1,
+  "title": "Deploy the conversion layer to production and prove it with telemetry",
+  "why": "Backfilled. First issued in directives/2026-09-05-cmo.md and re-issued in 16 daily directives through 2026-09-26 on the hypothesis that production ran a build older than main.",
+  "definition_of_done": "Production serves the contextual article CTA and the four funnel-page disclosures.",
+  "verify": "Public fetch of a live article shows data-cta-funnel and each funnel page shows its commercial disclosure."
+}

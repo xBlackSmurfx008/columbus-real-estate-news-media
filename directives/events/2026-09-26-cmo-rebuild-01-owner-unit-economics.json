@@ -1,0 +1,14 @@
+{
+  "schema": "cren-directive-event-v1",
+  "item": "owner-unit-economics",
+  "at": "2026-09-26",
+  "actor": "cmo-rebuild",
+  "type": "open",
+  "kind": "owner",
+  "status": "asked",
+  "priority": 2,
+  "title": "Give the routine the numbers that value a lead",
+  "question": "Reply with rough figures: average gross profit on a closed for-sale-by-owner acquisition and the qualified-lead-to-deal close rate; the same two for investor-property deals; and whether a renter lead is worth money to you (do you own or manage rentals?).",
+  "cost_of_delay": "Without these, every funnel ranking is a guess (cren-revenue unit economics items 1-3 and 5).",
+  "default_if_unanswered": "Park it: the routine treats renter leads as audience-building, ranks funnels only by your stated revenue order, and stops asking for 8 weeks."
+}

@@ -1,0 +1,15 @@
+{
+  "schema": "cren-directive-event-v1",
+  "item": "owner-answer-lead-24",
+  "at": "2026-09-14",
+  "actor": "cmo-rebuild",
+  "type": "open",
+  "kind": "owner",
+  "status": "asked",
+  "priority": 1,
+  "title": "Answer the property's only real lead",
+  "question": "Send the reply already drafted in your Gmail (2026-09-14) to lead #24, the 2026-09-05 renter inquiry, then set lead #24 to contacted in /admin/leads. Done?",
+  "cost_of_delay": "This is the only real lead the site has produced, and the trust cost of silence grows every day.",
+  "default_if_unanswered": "None. A person is waiting, so this stays first until you answer it or explicitly close it.",
+  "note": "First raised in directives/2026-09-06-cmo.md; reduced to an owner-only action in directives/2026-09-14-progress.md."
+}

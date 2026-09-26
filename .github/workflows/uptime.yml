@@ -15,6 +15,8 @@ concurrency:
 
 jobs:
   check:
+    # DATABASE_URL and the Telegram secrets live in the `reporting` environment, restricted to main.
+    environment: reporting
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

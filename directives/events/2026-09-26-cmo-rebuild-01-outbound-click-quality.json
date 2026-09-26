@@ -1,0 +1,14 @@
+{
+  "schema": "cren-directive-event-v1",
+  "item": "outbound-click-quality",
+  "at": "2026-09-26",
+  "actor": "cmo-rebuild",
+  "type": "open",
+  "kind": "engineering",
+  "status": "proposed",
+  "priority": 2,
+  "title": "Separate human outbound clicks from automated ones",
+  "why": "The 2026-09-26 KPI run shows 32 outbound clicks from 32 distinct visitors, all from /housing-search, while that page drew at most 2 pageviews (it is absent from a top-10 list whose last entry has 2). /go logs server-side without JavaScript and filters bots by user agent only (lib/affiliate-clicks.ts). The routine has been reading this as growing demand.",
+  "definition_of_done": "Each outbound click records whether the same visitor has a page view in the prior 30 minutes, and kpi-report prints clicks with and without a matching page view.",
+  "verify": "kpi-report prints an outbound line split into clicks with and without a prior page view."
+}

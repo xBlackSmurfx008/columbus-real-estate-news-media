@@ -1,0 +1,14 @@
+{
+  "schema": "cren-directive-event-v1",
+  "item": "kpi-truthful-inputs",
+  "at": "2026-09-26",
+  "actor": "cmo-rebuild",
+  "type": "open",
+  "kind": "engineering",
+  "status": "proposed",
+  "priority": 1,
+  "title": "Make the KPI report fail closed, keep PII out, and attribute outbound clicks by page",
+  "why": "kpi-report.mjs counted everything as real when the test-traffic predicate failed, printed lead names into committed output, grouped outbound clicks by partner only, and exited 0 when sections failed. Page attribution was first requested in directives/2026-09-22-cmo.md.",
+  "definition_of_done": "kpi-report.mjs exits 2 on a predicate failure or failed section, prints leads by id only, shows outbound clicks by partner, page and placement with distinct visitors and paid clicks, and prints funnel view sources.",
+  "verify": "node scripts/kpi-report.mjs --window 7 exits 0, ends with 'Report status: COMPLETE', and prints 'By page:' and no lead names."
+}

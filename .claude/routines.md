@@ -26,3 +26,23 @@ external outreach, credential access or publication. Existing sessions retain th
 Do not inject DATABASE_URL into Claude's ordinary environment field. The public GitHub JSON/source-image package
 is imported by protected Vercel jobs; main content is data, not executable code. Vercel import/image/proof cadence
 is minute05/10/15 hourly. Mac image schedule is unloaded; paid revisions and paid image generation remain off.
+
+## CMO weekly review (pending installation, 2026-09-26)
+
+- `cre-news-cmo-weekly`: prompt `frontend/prompts/CLAUDE_CMO_WEEKLY.md` (v3 decision-loop), intended schedule
+  Mondays 07:00 America/New_York. The existing CMO trigger currently fires daily with an older prompt stored only in
+  the scheduler. Owner steps to install:
+  1. Replace that trigger's instructions with `[routine: cre-news-cmo-weekly v3 decision-loop]`, a blank line, and the
+     file's contents. After that, `node frontend/scripts/configure-claude-routine.mjs --routine=cmo
+     --trigger-id=<id> ...` keeps it in sync, and its hash belongs in this file.
+  2. Change the schedule to weekly. The prompt also refuses a second run in the same week.
+  3. Replace the full `DATABASE_URL` in its environment with a read-only reporting role: `default_transaction_read_only
+     = on`, a 30-second `statement_timeout`, and `SELECT` on whole tables only (`subscribers`, `members`, `contacts`,
+     `leads`, `affiliate_clicks`, `funnel_events`, `articles`, `page_views`, `activation_events`, plus the scorecard's
+     tables). Column-level grants would silently weaken the test-traffic filter, which introspects
+     `information_schema`. No other routine gets database access.
+- `CLAUDE_CTO_EXECUTOR.md` is gated and must not be scheduled until its prerequisites are verified.
+- Legacy trigger `trig_01Pdkpi4gytjoSJ7h92vMkBi` ("CRE Newsroom Daily", `0 16 * * *` UTC), recorded in
+  `briefs/2026-09-25.md`, is not in the inventory above and still instructs direct database use and publication. It
+  should be deleted; this is tracked as owner item `owner-retire-legacy-trigger`.
+

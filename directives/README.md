@@ -29,11 +29,12 @@ A card is `done` only when its pull request has merged **and** an independent
 verifier has checked every Definition-of-done item. A pull request is not
 completion, and neither is a ticked box.
 
-Owner policy (live instruction, 2026-08-17): directives are built without
-waiting for approval. Agents therefore open pull requests for ready cards right
-away, but those pull requests are proposals: nothing reaches `main` without the
-owner's merge, except docs-only cards marked `merge_policy: auto_after_green`.
-Ticking "Changes requested" below pauses every card of that directive.
+Owner policy (live instructions, 2026-08-17 and 2026-09-26): directives never
+wait for owner approval, and the owner gets updates, not approval requests.
+Agents open pull requests for ready cards right away. Code still needs a human
+merge before it reaches `main`, except docs-only cards marked
+`merge_policy: auto_after_green`. To stop a directive, tick "Pause" in its
+Owner override section; the dispatcher then skips every card of that directive.
 
 File format: `YYYY-MM-DD-cmo.md`
 
@@ -58,7 +59,9 @@ File format: `YYYY-MM-DD-cmo.md`
 ## Owner decisions
 (only when an owner card has been open 14+ days: what, and what waiting costs)
 
-## Owner approval
-- [ ] Approved
-- [ ] Changes requested: <notes>
+## Owner override (optional; no approval needed)
+- [ ] Pause this directive: <notes>
 ```
+
+Directives written before 2026-09-26 carry an "Owner approval" section instead;
+for those, a ticked "Changes requested" box means the same as "Pause".

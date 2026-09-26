@@ -97,11 +97,13 @@ claiming delivery.
 ## 8. Owner email (draft only)
 
 Gmail draft to the owner address given in this routine's configuration,
-subject `CREN CMO Weekly — <date>`: the KPI snapshot, one paragraph
-interpreting the week, the directives issued, the owner queue from the board
-as a checklist, and this closing line: "Please approve the directives or
-request changes in the directive file." Do not claim delivery unless step 7
-succeeded.
+subject `CREN CMO Weekly — <date>`. This is an update, not an approval
+request; the owner does not approve directives. Include: the KPI snapshot, one
+paragraph interpreting the week, what the agents finished since last week
+(from the board and progress receipts), the directives issued, and the owner
+queue from the board as a short checklist of things only the owner can do.
+Close with: "No reply needed. To stop a directive, tick Pause in its file."
+Do not claim delivery unless step 7 succeeded.
 
 ## 9. CRM action items (best effort)
 

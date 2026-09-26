@@ -16,10 +16,15 @@ const compareDir = arg('compare-dir') ?? dirname(outPath);
 const compareHashes = [];
 if (existsSync(compareDir)) {
   for (const name of readdirSync(compareDir).filter(file => /\.(png|jpe?g|webp)$/i.test(file))) {
-    compareHashes.push(await perceptualHash(readFileSync(join(compareDir, name))));
+    // A skipped file would silently weaken the duplicate check, so an unreadable one stops the run.
+    try { compareHashes.push(await perceptualHash(readFileSync(join(compareDir, name)))); }
+    catch (error) { throw new Error(`CARD_COMPARE_IMAGE_INVALID: ${name}: ${error.message}`); }
   }
 }
-const card = await renderCard(JSON.parse(readFileSync(specPath, 'utf8')), { compareHashes });
+let spec;
+try { spec = JSON.parse(readFileSync(specPath, 'utf8')); }
+catch (error) { throw new Error(`CARD_SPEC_PARSE_ERROR: ${error.message}`); }
+const card = await renderCard(spec, { compareHashes });
 writeFileSync(outPath, card.bytes);
 console.log(JSON.stringify({
   path: outPath, bytes: card.bytes.length, git_blob_sha: card.gitBlobSha, source_sha256: card.sourceSha256,

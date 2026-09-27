@@ -1,0 +1,212 @@
+{
+  "prompt_version": "cren-article-v1.0.2",
+  "title": "Columbus Issued 17 Demolition Permits in August 2026",
+  "category": "Development",
+  "author": "CRE News Staff",
+  "date": "2026-09-27",
+  "excerpt": "Columbus issued 17 demolition permits in August 2026, up from 11 in July, with the South Side seeing the most activity and no historic-district buildings on the list.",
+  "answer_summary": "Columbus issued 17 demolition permits in August 2026, up from 11 in July and 10 a year earlier, according to city building records. None of the 13 sites sat inside a designated historic district, and South Side ZIP 43207 accounted for the largest share.",
+  "primary_keyword": "demolition permits",
+  "meta_description": "Columbus issued 17 demolition permits in August 2026, up from 11 in July. CREN charts the monthly trend, maps the busiest ZIP codes, and checks each site.",
+  "fact_checked_at": "2026-09-27T10:53:53Z",
+  "canonical_event_key": "columbus-demolition-permits-2026-08",
+  "area_slug": null,
+  "topic_slug": "development",
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "development",
+    "demolition",
+    "south-side-columbus"
+  ],
+  "read_time": "4 min",
+  "featured": false,
+  "image_url": null,
+  "location": {
+    "name": "Columbus, Ohio",
+    "state": "OH"
+  },
+  "body": "Columbus issued 17 demolition permits in August 2026, up from 11 in July and 10 a year earlier, according to city building records. None of the 13 sites sat inside a designated historic district, and South Side ZIP 43207 accounted for the largest share.\n\n## How the count was built\n\nA demolition permit is the city permission an owner needs before a building can legally be torn down, and each record lists the site address, the applicant's declared teardown cost, and the date the permit was issued. CREN counted every August record in the city's public [Building Permits dataset](https://opendata.columbus.gov/datasets/columbus::building-permits) whose permit type ended in the word Demolition. The dataset is released into the public domain under a Creative Commons Zero waiver, and CREN pulled it on September 27, 2026.\n\n## A rebound after a slow summer\n\nThe August total was up from 11 in July and 7 in June, the quietest month of the year. It ranked second among the eight months of 2026 measured so far, behind January and May, which each recorded 18. A year earlier, in August 2025, the city issued 10 such permits. Because one redevelopment can carry a separate permit for each building on a site, these counts track permits, not projects.\n\n## Where the teardowns clustered\n\nThe 17 permits covered 13 distinct addresses. Six of those addresses sat in ZIP 43207, the South Side, which together carried 10 of the month's permits. The busiest single site was 2260 Lockbourne Rd, a South Side commercial property that drew five separate teardown permits worth a combined declared value of $80,000. The rest were scattered through the Hilltop, Clintonville, the University District, the Near East Side, and the Far East Side.\n\n## Teardown estimates, not property values\n\nThe declared value on a demolition permit is the applicant's estimate of the cost to raze a structure, not the sale price or the county's assessed value. Across all of August's records, those estimates added up to $360,000. The single largest, $60,000, covered the month's only multifamily teardown, at 1921-1931 Bairsford Dr on the Far East Side. The biggest commercial estimate away from the Lockbourne site was $42,000, at 3635 W Dublin-Granville Rd on the city's northwest edge.\n\n## No historic-district buildings on the list\n\nCREN checked all 13 addresses against the city's [Historic Districts](https://hub.arcgis.com/datasets/4fae82408663403499c387346437c56b_18) map, which covers 18 protected areas including German Village, Victorian Village, and the Brewery District. None of August's sites fell inside any of them, so the month brought no permitted teardowns of buildings shielded by the city's architectural review. That is worth tracking, because a demolition inside a historic district needs a separate commission review that routine teardowns elsewhere do not.\n\n## What the permits do not settle\n\nA permit records permission to demolish, not the day a crew arrives, so some buildings on the August list may still be standing. The city refreshes the dataset daily, and late entries can lift a month's total after the fact. CREN will rerun the count when September closes, and will watch whether the cleared Lockbourne Rd site files for new construction.",
+  "source_ledger": [
+    {
+      "id": "S1",
+      "type": "PRIMARY",
+      "url": "https://opendata.columbus.gov/datasets/columbus::building-permits",
+      "publisher": "City of Columbus",
+      "title": "Building Permits (Open Data)",
+      "published_at": "2026-09-27",
+      "fetched_at": "2026-09-27T10:53:53Z",
+      "http_status": 200,
+      "fetch_note": "Queried the ArcGIS feature service behind this CC0 dataset on September 27, 2026 for demolition permits by month (GENERAL_TYPE ending in 'Demolition') and pulled every August 2026 record with address, declared value, ZIP and issue date. Monthly 2026 counts: Jan 18, Feb 3, Mar 12, Apr 10, May 18, Jun 7, Jul 11, Aug 17; Aug 2025 was 10."
+    },
+    {
+      "id": "S2",
+      "type": "PRIMARY",
+      "url": "https://hub.arcgis.com/datasets/4fae82408663403499c387346437c56b_18",
+      "publisher": "City of Columbus",
+      "title": "Historic Districts (Open Data)",
+      "published_at": "2026-09-27",
+      "fetched_at": "2026-09-27T10:53:53Z",
+      "http_status": 200,
+      "fetch_note": "Downloaded the CC0 Historic Districts polygons (18 districts) on September 27, 2026 and ran a point-in-polygon test for each of the 13 August demolition sites; none fell inside a district."
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "C1",
+      "claim": "Columbus issued 17 demolition permits in August 2026, up from 11 in July and 10 a year earlier, according to city building records.",
+      "source_ids": ["S1"],
+      "kind": "COMPARISON"
+    },
+    {
+      "id": "C2",
+      "claim": "None of the 13 sites sat inside a designated historic district, and South Side ZIP 43207 accounted for the largest share.",
+      "source_ids": ["S1", "S2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C3",
+      "claim": "The dataset is released into the public domain under a Creative Commons Zero waiver, and CREN pulled it on September 27, 2026.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C4",
+      "claim": "The August total was up from 11 in July and 7 in June, the quietest month of the year.",
+      "source_ids": ["S1"],
+      "kind": "COMPARISON"
+    },
+    {
+      "id": "C5",
+      "claim": "It ranked second among the eight months of 2026 measured so far, behind January and May, which each recorded 18.",
+      "source_ids": ["S1"],
+      "kind": "COMPARISON"
+    },
+    {
+      "id": "C6",
+      "claim": "A year earlier, in August 2025, the city issued 10 such permits.",
+      "source_ids": ["S1"],
+      "kind": "COMPARISON"
+    },
+    {
+      "id": "C7",
+      "claim": "The 17 permits covered 13 distinct addresses.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C8",
+      "claim": "Six of those addresses sat in ZIP 43207, the South Side, which together carried 10 of the month's permits.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C9",
+      "claim": "The busiest single site was 2260 Lockbourne Rd, a South Side commercial property that drew five separate teardown permits worth a combined declared value of $80,000.",
+      "source_ids": ["S1"],
+      "kind": "CALCULATION",
+      "calculation": "Five commercial demolition permits at 2260 Lockbourne Rd, declared values $20,000 + $10,000 + $20,000 + $10,000 + $20,000 = $80,000."
+    },
+    {
+      "id": "C10",
+      "claim": "Across all of August's records, those estimates added up to $360,000.",
+      "source_ids": ["S1"],
+      "kind": "CALCULATION",
+      "calculation": "Sum of declared values across all 17 August 2026 demolition permits = $360,000."
+    },
+    {
+      "id": "C11",
+      "claim": "The single largest, $60,000, covered the month's only multifamily teardown, at 1921-1931 Bairsford Dr on the Far East Side.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C12",
+      "claim": "The biggest commercial estimate away from the Lockbourne site was $42,000, at 3635 W Dublin-Granville Rd on the city's northwest edge.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C13",
+      "claim": "CREN checked all 13 addresses against the city's [Historic Districts](https://hub.arcgis.com/datasets/4fae82408663403499c387346437c56b_18) map, which covers 18 protected areas including German Village, Victorian Village, and the Brewery District.",
+      "source_ids": ["S1", "S2"],
+      "kind": "FACT"
+    }
+  ],
+  "entity_ledger": [
+    {
+      "name": "City of Columbus",
+      "source_ids": ["S1"]
+    },
+    {
+      "name": "City of Columbus Building Permits dataset",
+      "source_ids": ["S1"]
+    },
+    {
+      "name": "German Village",
+      "source_ids": ["S2"]
+    },
+    {
+      "name": "Victorian Village",
+      "source_ids": ["S2"]
+    },
+    {
+      "name": "Brewery District",
+      "source_ids": ["S2"]
+    }
+  ],
+  "image_brief": {
+    "primary_request": "A CREN chart of Columbus demolition-permit activity that needs no photograph, built from public city data.",
+    "editorial_idea": "Show the monthly rhythm of Columbus demolition permitting and where August's teardowns clustered, using the city's open permit data rather than a site photo.",
+    "story_anchors": [
+      "17 demolition permits issued citywide in August 2026",
+      "South Side ZIP 43207 carried the largest share of the month's permits",
+      "No August teardown fell inside a designated historic district"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "This is a citywide data story covering 13 scattered addresses with no single subject, so no rights-cleared documentary photograph could honestly stand for the whole month; a CREN chart built from the public permit dataset is the accurate hero.",
+    "image_policy_version": "cren-image-v2-real-photo-first",
+    "image_role": "DATA",
+    "source_review": [
+      {
+        "url": "https://opendata.columbus.gov/datasets/columbus::building-permits",
+        "outcome": "SELECTED",
+        "note": "City of Columbus Building Permits open dataset (CC0). Every bar on the chart is a monthly count pulled from this dataset; it is the chart's sole data source."
+      },
+      {
+        "url": "https://www.columbus.gov/",
+        "outcome": "UNSUITABLE",
+        "note": "Considered leading with a documentary site photograph, but August's permits span 13 scattered addresses with no single subject, so any one-site photo would misrepresent a citywide count; none was selected."
+      }
+    ],
+    "avoid": "Do not imply the chart is a photograph of any property; do not map or name a site the permit record does not list; do not treat a permit as proof a building is already gone."
+  },
+  "image_alt": "CREN bar chart of Columbus demolition permits issued by month from January to August 2026, with August at 17, the year's second-highest total.",
+  "image_provenance": {
+    "type": "CREN_GRAPHIC",
+    "caption": "CREN graphic. Data: City of Columbus Building Permits (CC0), pulled September 27, 2026.",
+    "source": "https://opendata.columbus.gov/datasets/columbus::building-permits",
+    "license": "CC0 1.0 (public domain)",
+    "permission_evidence": "Original CREN chart built from the City of Columbus Building Permits open dataset; no third-party image content.",
+    "credit": "CREN graphic",
+    "location_note": "Columbus, Ohio (citywide; August demolition sites span ZIP codes 43201 to 43235).",
+    "date_note": "Chart created September 27, 2026; the data covers demolition permits issued January to August 2026, pulled September 27, 2026.",
+    "verified_by": "CREN cloud image desk",
+    "verified_at": "2026-09-27T10:53:53Z"
+  },
+  "cloud_image_asset": {
+    "path": "frontend/content/images/2026-09-27-columbus-demolition-permits-august-2026.png",
+    "git_blob_sha": "3505900332fde96f11bdd28ccd9d4566552e4c37",
+    "source_sha256": "61d4df57d0248429ba2581ccc7509b6811e1c85a26f35ffba41a1506a154ace7",
+    "visual_review": {
+      "reviewed_by": "CREN cloud image desk",
+      "reviewed_at": "2026-09-27T10:53:53Z",
+      "natural_appearance": true,
+      "geometry_and_shadows": true,
+      "no_synthetic_artifacts": true,
+      "story_match": true,
+      "truthful_caption": true,
+      "mobile_crop": true
+    }
+  }
+}

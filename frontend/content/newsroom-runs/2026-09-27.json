@@ -1,0 +1,67 @@
+{
+  "schema_version": "cren-cloud-run-v1",
+  "routine": "cre-news-newsroom",
+  "date": "2026-09-27",
+  "completed_at": "2026-09-27T10:56:06Z",
+  "story_result": "ARTIFACTS_COMMITTED",
+  "article_paths": [
+    "frontend/content/articles/2026-09-27-columbus-demolition-permits-august-2026.json"
+  ],
+  "editorial_note": "Scheduled cloud handoff-only run for 2026-09-27 (Sunday). Result ARTIFACTS_COMMITTED. This run breaks the September 23-26 NO_QUALIFYING_STORY drought by applying the September 26 image-policy amendment (docs/IMAGE_POLICY.md section A and C; prompts/CLOUD_ROUTINE_HANDOFF.md) that lets a CREN chart built from public data lead a story so a slow-news day never depends on finding a photograph. No qualifying breaking real-estate story cleared full primary + two-independent-origin verification AND currency by the end of discovery (the two directly-fetched Hoodline leads carried only a single origin, and the strongest prior lead, the WWCD/Brewery District demolition, was corrected in the 2026-09-26 social listener to be a September 2025 story), so the recurring data format that is due was produced instead. Today is a Sunday; the monthly Demolition Watch format (docs/RECURRING_DATA_FORMATS.md, format 3, scheduled the first Tuesday) had its September slot (Sept 1) pass unproduced and is therefore overdue, so it was the format due. The article covers August 2026 (the last complete month) demolition permits, is built entirely from two City of Columbus CC0 open datasets fetched this run, needs no photograph, and passed the editorial gate 18/18 with image plan SOURCE_ASSET. This receipt records the editorial outcome only; it is never publication authority. No import, image preparation, email delivery, or publication is claimed, and no git commit is treated as publication or downstream-import success.",
+  "artifacts": {
+    "article": "frontend/content/articles/2026-09-27-columbus-demolition-permits-august-2026.json",
+    "image": "frontend/content/images/2026-09-27-columbus-demolition-permits-august-2026.png",
+    "image_type": "CREN_GRAPHIC (bar chart; image_role DATA)",
+    "brief": "briefs/2026-09-27.md"
+  },
+  "verification": {
+    "editorial_gate": "PASS 18/18 (scripts/editorial-quality-lib.mjs)",
+    "schema_check": "PASS (docs/article-submission.schema.json required fields, patterns, enums)",
+    "image_plan": "SOURCE_ASSET (scripts/editorial-image-policy.mjs planEditorialImage)",
+    "image_hashes_verified": "git hash-object and sha256sum recomputed from the committed PNG match cloud_image_asset",
+    "recurring_format": "Demolition Watch (docs/RECURRING_DATA_FORMATS.md format 3), August 2026, CREN chart hero"
+  },
+  "data_pulls_this_run": {
+    "columbus_building_permits_cc0": {
+      "service": "https://services1.arcgis.com/9yy6msODkIBzkUXU/arcgis/rest/services/Building_Permits/FeatureServer/0",
+      "dataset_page": "https://opendata.columbus.gov/datasets/columbus::building-permits",
+      "license": "CC0 1.0",
+      "results": "Aug 2026 demolition permits: 17 total (9 one-to-three-family, 7 commercial, 1 multifamily), 13 distinct addresses, declared value sum $360,000. Monthly 2026: Jan 18, Feb 3, Mar 12, Apr 10, May 18, Jun 7, Jul 11, Aug 17. Jul 2026 = 11; Aug 2025 = 10. ZIP 43207 (South Side): 6 sites / 10 permits."
+    },
+    "columbus_historic_districts_cc0": {
+      "dataset_page": "https://hub.arcgis.com/datasets/4fae82408663403499c387346437c56b_18",
+      "license": "CC0 1.0",
+      "results": "18 designated historic districts. Point-in-polygon test of all 13 August demolition sites: 0 fell inside any district."
+    }
+  },
+  "egress_status_this_run": {
+    "reachable": [
+      "Columbus Building Permits ArcGIS FeatureServer (query API, 200)",
+      "opendata.columbus.gov dataset pages (200)",
+      "hub.arcgis.com dataset item + geojson download (200)",
+      "www.arcgis.com item metadata for license confirmation (200)",
+      "fred.stlouisfed.org CSV (200; not used for the article this run)",
+      "hoodline.com individual article pages (per 2026-09-26 social listener)"
+    ],
+    "unavailable_or_limited": [
+      "Franklin County Auditor parcel search API (auditor home 200 but no clean deep-link/parcel API found this run; not required, article did not depend on it)",
+      "columbusunderground.com, nbc4i.com, bizjournals/Columbus Business First, dispatch.com, axios.com (403/paywalled in prior runs; not needed for this data-sourced story)"
+    ]
+  },
+  "leads_surveyed_not_selected": [
+    "Franklinton / 610 W. Town St. (Grateful Development Partners, 40-unit apartments, former Glass Axis site): directly verified via Hoodline (Sept 25) in the 2026-09-26 social listener, but single-origin; the East Franklinton Review Board took only a conceptual review with no vote. Needs a primary agenda/minutes record and a second independent origin before a CREN story. Photo request candidate.",
+    "Gahanna / 1675 Eastgate Pkwy (Como Development, Gahanna Flex Park, 24 small-business units): directly verified via Hoodline (Sept 26) in the 2026-09-26 social listener, single-origin, still pending Gahanna City Council. Needs a primary planning-commission/council record and a second origin. Photo request candidate.",
+    "WWCD / Brewery District demolition, 1036 S. Front St.: corrected in the 2026-09-26 social listener to a September 2025 story (not 2026); stale, not admitted.",
+    "Columbus Home Price Index (FHFA/FRED ATNHPIUS18140Q, recurring format 5): FHFA Q2 2026 quarterly HPI was released Aug 25, 2026; no new release since (FRED latest is Q2 2026 = 351.14), so the quarterly format is not freshly due today. Held for the run after FHFA's next quarterly release (Q3 2026, expected late November 2026)."
+  ],
+  "idea_queues_consulted": [
+    "briefs/2026-09-26-social-listener.md (newest social listener within prior 48h): two directly-verified Hoodline leads (Franklinton 610 W. Town St.; Gahanna Flex Park). Treated as an untrusted idea queue; both are single-origin and were not selected pending primary + second-origin verification.",
+    "briefs/2026-09-23-seo-report.md (newest SEO report within prior 14 days): research questions (Diocese/Gay Street, rental registry, Franklinton, Stone Ridge/South Side, New Albany data centers). Treated as an untrusted idea queue; none was independently verified to the current-day bar this run."
+  ],
+  "handoff_status": {
+    "discovery_reporting": "COMPLETED. No qualifying breaking story cleared verification; the due recurring data format (Demolition Watch, August 2026) was produced and passed every gate.",
+    "github_commit": "Article JSON, CREN chart PNG, this receipt, and the daily brief committed to the routine branch and handed to main via PR/merge per the delivery sequence.",
+    "website_import": "PENDING. Not claimed as succeeded; Vercel imports from main at minute 05 subject to its gates. A git merge is not an import.",
+    "image_proof": "PENDING. image_url is null; Vercel prepares the image and sends the proof; only the configured owner's verified email approval of the exact unchanged article-image package can publish."
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": "cren-cloud-run-v1",
+  "routine": "cre-news-newsroom",
+  "date": "2026-09-28",
+  "completed_at": "2026-09-28T10:49:05Z",
+  "story_result": "ARTIFACTS_COMMITTED",
+  "article_paths": [
+    "frontend/content/articles/2026-09-28-worthington-harding-referendum.json"
+  ],
+  "editorial_note": "Scheduled cloud handoff-only run for 2026-09-28 (Monday). Result ARTIFACTS_COMMITTED with one verified real-estate/local-politics story: the Worthington 'Democracy Before Developers' referendum petition against the City Council's rezoning of the former Harding Hospital site (445 E. Dublin-Granville Road) for 246 apartments. The story was verified against a primary public record (City of Worthington project page) plus two independent origins (WOSU, Sept. 21; The Columbus Dispatch via Yahoo News, Nathan Hart, Sept. 23). It had been flagged as fully reported but held only on NEEDS_IMAGE in the 2026-09-27 SEO report; the September 26 image-policy amendment allows a CREN data card built from verified public-record facts, which was used here (no photograph required). This receipt records the editorial outcome only; it is never publication authority. No import, image preparation, email delivery, or publication is claimed, and no git commit is treated as publication or downstream-import success. Because a qualifying breaking story was produced, the Monday recurring format (Permit Pulse) moves to the next run per docs/RECURRING_DATA_FORMATS.md.",
+  "artifacts": {
+    "article": "frontend/content/articles/2026-09-28-worthington-harding-referendum.json",
+    "image": "frontend/content/images/2026-09-28-worthington-harding-referendum.png",
+    "image_type": "CREN_GRAPHIC (data card; image_role DATA)",
+    "brief": "Run state recorded in this receipt; no separate brief file committed to keep the main PR within the handoff's receipt+article+image scope."
+  },
+  "verification": {
+    "editorial_gate": "PASS 18/18 (scripts/editorial-quality-lib.mjs evaluateArticle)",
+    "schema_check": "PASS (docs/article-submission.schema.json required fields, patterns, enums, length bounds)",
+    "image_plan": "SOURCE_ASSET (scripts/editorial-image-policy.mjs planEditorialImage)",
+    "image_hashes_verified": "git hash-object and sha256sum recomputed from the committed PNG match cloud_image_asset (git_blob_sha 8a9c803193a2ca7d9b73b093c1ccc58144918cb0; source_sha256 6a3cca68d269ee67de6e670180cb412c6ac67f43e18e464ca2cbc1d9b2f6795e)",
+    "visual_review": "Image opened and inspected in-session before attesting: 1600x900 data card, all values within box bounds, legible, truthful data caption, no synthetic artifacts, mobile-safe centered crop.",
+    "unit_count_reconciled": "Earlier briefs listed '248 apartments'; the City of Worthington record shows 246 apartments (148 one-bedroom, 74 two-bedroom, 24 three-bedroom) plus 2 single-family homes (248 total residential units). The article uses 246 apartments to match the primary record."
+  },
+  "story_facts_verified": {
+    "site": "445 E. Dublin-Granville Road, Worthington; ~20.4 acres; former Harding Hospital; landowner I Am Boundless.",
+    "rezoning": "S-1 to Planned Unit Development; City Council approved July 20, 2026; Municipal Planning Commission recommended 4-1 on June 25, 2026 (primary: City of Worthington).",
+    "project": "246 apartments + 2 single-family homes; ~$52.45M investment; 74 of 246 apartments (30%) at 80% AMI for 10 years; requested 10-year, 75% property-tax abatement estimated at ~$743,000/year (primary: City of Worthington).",
+    "referendum": "Democracy Before Developers submitted 3,976 signatures; required threshold 3,017 (35% of last gubernatorial turnout) per the Columbus Dispatch; Franklin County Board of Elections validation expected mid-October 2026 (WOSU); measure would appear on a 2027 ballot if certified (WOSU, Dispatch).",
+    "original_contributions": "Reproducible calculations: signature cushion (3,976 - 3,017 = 959, ~32% above minimum); validity stress test (3,976 x 0.85 = ~3,380 > 3,017); abatement term total (~$743,000 x 10 = ~$7.4M). Synthesis of primary project record with the referendum timeline."
+  },
+  "leads_surveyed_not_selected": [
+    "McCoy Park NWSL training facility rezoning (Z26-022, 600 Stimmel Rd): Columbus City Council final vote was expected at the September 28, 2026 regular meeting. As of this morning's run the vote had not occurred and no post-vote reporting existed; an outcome story cannot be written before the vote. Held for a future run once the Council minutes / vote count are available. This is the most consequential pending civic-space decision and should be the lead when the outcome is verifiable.",
+    "One Twenty Vine, 120 Vine St., Arena District (242-unit, 7-story): verified Sept 24-25 via Columbus Navigator and Colliers Weekly Review; Downtown Commission approval Sept 22. Held previously on NEEDS_IMAGE; now unblockable via a CREN data card in a future run. Not selected today to keep to one story.",
+    "Diocese / 197 E. Gay St. Downtown Commission outcome: the Sept 22 vote outcome remains unconfirmed; primary September Downtown Commission minutes were not posted at columbus.gov as of the 2026-09-27 SEO report. Needs the primary meeting record.",
+    "Franklinton 610 W. Town St. (Grateful Development Partners) and Gahanna Flex Park (Como Development): both single-origin (Hoodline) and pending primary board/council records; not cleared to the two-independent-origin bar.",
+    "Bethel Road Asian dining corridor (Enchantea reopening): single-origin lifestyle lead (Hoodline) from the 2026-09-27 social listener; not independently verified; no qualifying lifestyle story produced.",
+    "Permit Pulse (weekly recurring format, due Monday): data pull succeeded (ArcGIS Building Permits CC0 reachable), but a qualifying breaking story was produced, so the format moves to the next run per docs/RECURRING_DATA_FORMATS.md."
+  ],
+  "idea_queues_consulted": [
+    "briefs/2026-09-27-social-listener.md (newest social listener within prior 48h): Bethel Road/Enchantea single-origin lifestyle lead and McCoy Park NWSL forward-looking context. Treated as an untrusted idea queue; McCoy Park vote had not occurred; Bethel Road not independently verified.",
+    "briefs/2026-09-27-seo-report.md (newest SEO report within prior 14 days): five evidence-led assignments. Assignment 1 (Worthington referendum) was independently re-verified this run against the City of Worthington primary record, WOSU, and the Columbus Dispatch, and selected."
+  ],
+  "egress_status_this_run": {
+    "reachable": [
+      "Columbus Building Permits ArcGIS FeatureServer (query API, 200; Permit Pulse data confirmed available)",
+      "worthington.org project page (200)",
+      "wosu.org article (200)",
+      "yahoo.com (Columbus Dispatch aggregation, 200)"
+    ],
+    "unavailable_or_limited": [
+      "vote.franklincountyohio.gov Notice-of-Election PDF (fetched but binary/scanned; not text-extractable in this environment, so the 3,017 threshold is cited to the Columbus Dispatch's reporting of the board requirement, not the board's own notice)",
+      "itpr.org (fetched, but the site is 'Independence Township Parks & Recreation', an aggregator with no credible newsroom; dropped, not used as an independent origin)",
+      "columbusunderground.com, nbc4i.com, bizjournals/Columbus Business First, dispatch.com, 10tv.com (403/paywalled in prior runs; not required for this story)"
+    ]
+  },
+  "handoff_status": {
+    "discovery_reporting": "COMPLETED. One qualifying breaking story (Worthington referendum) cleared full primary + two-independent-origin verification and the image bar via a CREN data card.",
+    "github_commit": "Article JSON, CREN data-card PNG, and this receipt committed to the routine branch and handed to main via PR/merge per the delivery sequence.",
+    "website_import": "PENDING. Not claimed as succeeded; Vercel imports from main at minute 05 subject to its gates. A git merge is not an import.",
+    "image_proof": "PENDING. image_url is null; Vercel prepares the image and sends the proof; only the configured owner's verified email approval of the exact unchanged article-image package can publish."
+  }
+}

@@ -1,0 +1,227 @@
+{
+  "prompt_version": "cren-article-v1.0.2",
+  "title": "Worthington Referendum Petition Targets Harding Hospital Rezoning",
+  "category": "Local Politics",
+  "author": "CRE News Staff",
+  "date": "2026-09-28",
+  "excerpt": "A residents' group turned in 3,976 signatures to put Worthington's rezoning of the former Harding Hospital site, cleared for 246 apartments, before voters.",
+  "answer_summary": "A Worthington residents' group has submitted 3,976 petition signatures to force a public vote on the City Council's July rezoning of the former Harding Hospital site for 246 apartments, and the Franklin County Board of Elections is expected to decide by mid-October whether the referendum reaches the ballot.",
+  "primary_keyword": "Worthington referendum",
+  "meta_description": "Worthington residents submitted 3,976 signatures seeking a public vote on the City Council's rezoning of the former Harding Hospital site for 246 apartments.",
+  "fact_checked_at": "2026-09-28T10:47:00Z",
+  "canonical_event_key": "worthington-harding-hospital-referendum-2026",
+  "area_slug": "worthington",
+  "topic_slug": "local-politics",
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "local-politics",
+    "worthington",
+    "affordable-housing",
+    "rezoning"
+  ],
+  "read_time": "5 min",
+  "featured": false,
+  "image_url": null,
+  "location": {
+    "name": "Worthington, Ohio",
+    "state": "OH"
+  },
+  "body": "A Worthington residents' group has submitted 3,976 petition signatures to force a public vote on the City Council's July rezoning of the former Harding Hospital site for 246 apartments, and the Franklin County Board of Elections is expected to decide by mid-October whether the referendum reaches the ballot.\n\n## The site and the rezoning\n\nThe dispute centers on about 20.4 acres at 445 E. Dublin-Granville Road, a property tied to the former Harding Hospital and now owned by the disability nonprofit I Am Boundless. On July 20, 2026, the [Worthington City Council approved rezoning](https://www.worthington.org/802/Boundless-Harding-Hospital-Site) the land from its S-1 designation to a Planned Unit Development, the classification that allows the denser residential plan. The city's Municipal Planning Commission had recommended the change on June 25, 2026, by a 4-1 vote.\n\n## The petition and the threshold\n\nThe group behind the effort, Democracy Before Developers, gathered names through the summer and turned in 3,976 signatures, [according to the Columbus Dispatch](https://www.yahoo.com/news/us/articles/worthington-citizen-group-submits-3-090909858.html). Under Ohio law, a valid referendum petition needs signatures equal to 35 percent of the votes cast in the city's last election for governor, a threshold the Dispatch reported as 3,017 for Worthington. That leaves the group about 959 signatures, or roughly 32 percent, above the minimum before any signature is reviewed. Even at the low end of the 85-to-90 percent validity rate the group's coordinator estimated, about 3,380 names would survive, still above the bar.\n\n## What the city approved\n\nThe approved plan calls for 246 apartments and two single-family homes, an investment the city puts at about $52.45 million. The apartments break down as 148 one-bedroom, 74 two-bedroom and 24 three-bedroom units. The developer, Elford, has committed 74 of the 246 apartments, about 30 percent, to households earning up to 80 percent of the area median income for 10 years, tied to a requested 10-year, 75 percent property-tax abatement the city estimates at roughly $743,000 a year. Over its full term, that abatement would forgo about $7.4 million in property taxes.\n\n## Why residents are objecting\n\nOpponents have argued the project is too dense for the surrounding neighborhood, the objection WOSU described as driving the effort to block the high-density complex. The City Council's July rezoning and the city's workforce-housing terms are the documented case on the other side. CREN did not obtain direct comment from Elford or the city for this report, and this account rests on the city's public project record and the cited reporting.\n\n## What is settled and what is not\n\nSeveral parts of the story remain open. The Franklin County Board of Elections, not the city, decides whether the signatures are valid, and [WOSU reported](https://www.wosu.org/politics-government/2026-09-21/worthington-group-submits-nearly-4-000-signatures-in-effort-to-block-high-density-apartment-complex) that a ruling is expected in mid-October 2026. The 3,017-signature figure traces to the Dispatch's account of the board's requirement; CREN could not independently read the board's own notice, which was posted only as a scanned document. Reporting indicates the measure would appear on a 2027 ballot if it is certified, though the exact date depends on that certification. A separate Final Plan approval is still required before construction can begin, regardless of the referendum.\n\n## What to watch next\n\nThe next verifiable checkpoint is the elections board's validation decision, expected in mid-October 2026, which will determine whether the rezoning goes before voters or takes effect as approved. CREN will update this report when the board certifies or rejects the petition.",
+  "source_ledger": [
+    {
+      "id": "S1",
+      "type": "PRIMARY",
+      "url": "https://www.worthington.org/802/Boundless-Harding-Hospital-Site",
+      "publisher": "City of Worthington",
+      "title": "Boundless / Harding Hospital Site",
+      "published_at": null,
+      "fetched_at": "2026-09-28T10:30:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "S2",
+      "type": "SECONDARY",
+      "url": "https://www.wosu.org/politics-government/2026-09-21/worthington-group-submits-nearly-4-000-signatures-in-effort-to-block-high-density-apartment-complex",
+      "publisher": "WOSU Public Media",
+      "title": "Worthington group submits nearly 4,000 signatures in effort to block high-density apartment complex",
+      "published_at": "2026-09-21",
+      "fetched_at": "2026-09-28T10:31:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "S4",
+      "type": "SECONDARY",
+      "url": "https://www.yahoo.com/news/us/articles/worthington-citizen-group-submits-3-090909858.html",
+      "publisher": "The Columbus Dispatch (via Yahoo News)",
+      "title": "Worthington citizen group submits 3,976 signatures to get zoning change on ballot",
+      "published_at": "2026-09-23",
+      "fetched_at": "2026-09-28T10:33:00Z",
+      "http_status": 200
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "C1",
+      "claim": "A Worthington residents' group has submitted 3,976 petition signatures to force a public vote on the City Council's July rezoning of the former Harding Hospital site for 246 apartments, and the Franklin County Board of Elections is expected to decide by mid-October whether the referendum reaches the ballot.",
+      "source_ids": ["S1", "S2", "S4"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C2",
+      "claim": "The dispute centers on about 20.4 acres at 445 E. Dublin-Granville Road, a property tied to the former Harding Hospital and now owned by the disability nonprofit I Am Boundless.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C3",
+      "claim": "On July 20, 2026, the [Worthington City Council approved rezoning](https://www.worthington.org/802/Boundless-Harding-Hospital-Site) the land from its S-1 designation to a Planned Unit Development, the classification that allows the denser residential plan.",
+      "source_ids": ["S1"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C4",
+      "claim": "The city's Municipal Planning Commission had recommended the change on June 25, 2026, by a 4-1 vote.",
+      "source_ids": ["S1"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C5",
+      "claim": "The group behind the effort, Democracy Before Developers, gathered names through the summer and turned in 3,976 signatures, [according to the Columbus Dispatch](https://www.yahoo.com/news/us/articles/worthington-citizen-group-submits-3-090909858.html).",
+      "source_ids": ["S4"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C6",
+      "claim": "Under Ohio law, a valid referendum petition needs signatures equal to 35 percent of the votes cast in the city's last election for governor, a threshold the Dispatch reported as 3,017 for Worthington.",
+      "source_ids": ["S4"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C7",
+      "claim": "That leaves the group about 959 signatures, or roughly 32 percent, above the minimum before any signature is reviewed.",
+      "source_ids": ["S4"],
+      "kind": "CALCULATION",
+      "calculation": "3,976 submitted minus 3,017 required = 959; 959 / 3,017 = 0.318, or about 32 percent above the minimum."
+    },
+    {
+      "id": "C8",
+      "claim": "Even at the low end of the 85-to-90 percent validity rate the group's coordinator estimated, about 3,380 names would survive, still above the bar.",
+      "source_ids": ["S4"],
+      "kind": "CALCULATION",
+      "calculation": "3,976 submitted x 0.85 = 3,379.6, rounded to about 3,380, which exceeds the 3,017 threshold."
+    },
+    {
+      "id": "C9",
+      "claim": "The approved plan calls for 246 apartments and two single-family homes, an investment the city puts at about $52.45 million.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C10",
+      "claim": "The apartments break down as 148 one-bedroom, 74 two-bedroom and 24 three-bedroom units.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C11",
+      "claim": "The developer, Elford, has committed 74 of the 246 apartments, about 30 percent, to households earning up to 80 percent of the area median income for 10 years, tied to a requested 10-year, 75 percent property-tax abatement the city estimates at roughly $743,000 a year.",
+      "source_ids": ["S1"],
+      "kind": "CALCULATION",
+      "calculation": "74 of 246 apartments = 30.1 percent, rounded to about 30 percent; abatement value per the city record is roughly $743,000 per year over the 10-year, 75 percent term."
+    },
+    {
+      "id": "C12",
+      "claim": "Over its full term, that abatement would forgo about $7.4 million in property taxes.",
+      "source_ids": ["S1"],
+      "kind": "CALCULATION",
+      "calculation": "$743,000 per year x 10 years = $7,430,000, rounded to about $7.4 million."
+    },
+    {
+      "id": "C13",
+      "claim": "The Franklin County Board of Elections, not the city, decides whether the signatures are valid, and [WOSU reported](https://www.wosu.org/politics-government/2026-09-21/worthington-group-submits-nearly-4-000-signatures-in-effort-to-block-high-density-apartment-complex) that a ruling is expected in mid-October 2026.",
+      "source_ids": ["S2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C14",
+      "claim": "The 3,017-signature figure traces to the Dispatch's account of the board's requirement; CREN could not independently read the board's own notice, which was posted only as a scanned document.",
+      "source_ids": ["S4"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C15",
+      "claim": "Reporting indicates the measure would appear on a 2027 ballot if it is certified, though the exact date depends on that certification.",
+      "source_ids": ["S2", "S4"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C16",
+      "claim": "The next verifiable checkpoint is the elections board's validation decision, expected in mid-October 2026, which will determine whether the rezoning goes before voters or takes effect as approved.",
+      "source_ids": ["S2"],
+      "kind": "STATUS"
+    }
+  ],
+  "entity_ledger": [
+    { "name": "Democracy Before Developers", "source_ids": ["S2", "S4"] },
+    { "name": "I Am Boundless", "source_ids": ["S1", "S4"] },
+    { "name": "Elford", "source_ids": ["S1", "S2"] },
+    { "name": "Worthington City Council", "source_ids": ["S1"] },
+    { "name": "Municipal Planning Commission", "source_ids": ["S1"] },
+    { "name": "Franklin County Board of Elections", "source_ids": ["S2", "S4"] }
+  ],
+  "image_brief": {
+    "primary_request": "A CREN data card summarizing the approved Harding Hospital site plan at the center of the Worthington referendum, built from the city's public project record.",
+    "editorial_idea": "Because the site is a vacant former hospital property and only copyrighted developer renderings circulate, present the verified public-record facts of the approved plan as an honest data card rather than a photo the record cannot support.",
+    "story_anchors": [
+      "3,976 signatures submitted to force a public vote on the rezoning",
+      "246 apartments approved on the former Harding Hospital site",
+      "Franklin County Board of Elections validation expected in mid-October 2026"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "A rights-cleared documentary photograph of the vacant former Harding Hospital site is not obtainable in this environment, and only copyrighted developer renderings circulate in news coverage; paid or AI generation is barred, so a CREN data card built from the City of Worthington's public project record is the accurate hero.",
+    "image_policy_version": "cren-image-v2-real-photo-first",
+    "image_role": "DATA",
+    "source_review": [
+      {
+        "url": "https://www.worthington.org/802/Boundless-Harding-Hospital-Site",
+        "outcome": "SELECTED",
+        "note": "City of Worthington public project record for the Harding Hospital site; the data card's figures (246 apartments, $52.45 million, 74 affordable units at 80 percent AMI) are drawn from this page."
+      },
+      {
+        "url": "https://www.wosu.org/politics-government/2026-09-21/worthington-group-submits-nearly-4-000-signatures-in-effort-to-block-high-density-apartment-complex",
+        "outcome": "RIGHTS_UNCLEAR",
+        "note": "WOSU's coverage carries developer site imagery, but such renderings are copyrighted and their display in news coverage is not redistribution permission for this public repository, so no photo was used."
+      }
+    ],
+    "avoid": "Do not present the card as a photograph of the site; do not show a developer rendering as a built project; do not imply the referendum has already qualified for the ballot."
+  },
+  "image_alt": "CREN data card: Worthington's approved Harding Hospital plan, with 246 apartments, $52.45 million investment, and 74 units at 80 percent of area median income.",
+  "image_provenance": {
+    "type": "CREN_GRAPHIC",
+    "caption": "CREN graphic. Data: City of Worthington public records, pulled Sept. 28, 2026.",
+    "source": "https://www.worthington.org/802/Boundless-Harding-Hospital-Site",
+    "license": "Public record (City of Worthington)",
+    "permission_evidence": "Original CREN data card built from the City of Worthington's public project record for the Harding Hospital site; no third-party image content.",
+    "credit": "CREN graphic",
+    "location_note": "Worthington, Ohio (445 E. Dublin-Granville Road).",
+    "date_note": "Data card created September 28, 2026 from the City of Worthington project record; figures reflect the plan as approved July 20, 2026.",
+    "verified_by": "CREN cloud image desk",
+    "verified_at": "2026-09-28T10:47:00Z"
+  },
+  "cloud_image_asset": {
+    "path": "frontend/content/images/2026-09-28-worthington-harding-referendum.png",
+    "git_blob_sha": "8a9c803193a2ca7d9b73b093c1ccc58144918cb0",
+    "source_sha256": "6a3cca68d269ee67de6e670180cb412c6ac67f43e18e464ca2cbc1d9b2f6795e",
+    "visual_review": {
+      "reviewed_by": "CREN cloud image desk",
+      "reviewed_at": "2026-09-28T10:47:00Z",
+      "natural_appearance": true,
+      "geometry_and_shadows": true,
+      "no_synthetic_artifacts": true,
+      "story_match": true,
+      "truthful_caption": true,
+      "mobile_crop": true
+    }
+  }
+}

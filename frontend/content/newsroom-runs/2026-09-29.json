@@ -1,0 +1,64 @@
+{
+  "schema_version": "cren-cloud-run-v1",
+  "routine": "cre-news-newsroom",
+  "date": "2026-09-29",
+  "completed_at": "2026-09-29T14:05:00Z",
+  "story_result": "ARTIFACTS_COMMITTED",
+  "article_paths": [
+    "frontend/content/articles/2026-09-29-columbus-permit-pulse.json"
+  ],
+  "editorial_note": "Scheduled cloud handoff-only run for 2026-09-29 (Tuesday). No breaking real-estate or lifestyle story cleared the full verification-and-image bar, so the recurring Permit Pulse format that was carried over from Monday's breaking-story run was produced instead, per docs/RECURRING_DATA_FORMATS.md. Result ARTIFACTS_COMMITTED with one data-format article: 'Columbus Permitted 188 New Housing Units in a Lopsided Week,' built entirely from the City of Columbus Building Permits open dataset (CC0 1.0). This receipt records the editorial outcome only; it is never publication authority. No import, image preparation, email delivery, or publication is claimed, and no git commit is treated as publication or downstream-import success.",
+  "artifacts": {
+    "article": "frontend/content/articles/2026-09-29-columbus-permit-pulse.json",
+    "image": "frontend/content/images/2026-09-29-columbus-permit-pulse.png",
+    "image_type": "CREN_GRAPHIC (bar chart; image_role DATA)",
+    "brief": "Run state recorded in this receipt; no separate brief file committed to keep the main PR within the handoff's receipt+article+image scope."
+  },
+  "verification": {
+    "editorial_gate": "PASS 18/18 (scripts/editorial-quality-lib.mjs evaluateArticle)",
+    "schema_check": "PASS (docs/article-submission.schema.json required fields, enums, patterns, and item constraints; verified via scripts/cloud-draft-import.mjs prepareCloudDraft, which returned SOURCE_ASSET and gate 18/18)",
+    "import_dry_run": "PASS (scripts/cloud-draft-import.mjs prepareCloudDraft ran clean against the committed package with a simulated source binding; not an actual Vercel import)",
+    "image_plan": "SOURCE_ASSET (scripts/editorial-image-policy.mjs planEditorialImage)",
+    "image_hashes_verified": "git hash-object and sha256sum recomputed from the committed PNG match cloud_image_asset (git_blob_sha 1ecc80cfa1098a83537ce74502f6d11d32e28461; source_sha256 24bb6c4422807cd6b055514000d344f1e90de20a676a2d19daf97be7a5046b4c)",
+    "visual_review": "Chart PNG opened and inspected in-session before attesting: 1600x900 bar chart, nine weekly bars with values 392, 90, 13, 230, 26, 8, 12, 21 and the highlighted 188, all labels within the mobile-safe center band, legible, truthful data caption, no synthetic artifacts.",
+    "near_duplicate_guard": "render-cren-chart.mjs cleared the near-duplicate check on attempt 1 (min hamming distance 21 vs 2 existing images)."
+  },
+  "story_facts_verified": {
+    "source": "City of Columbus Building Permits open dataset (CC0 1.0), Open Data hub item f7a785b863454d96a0fe3f5aa5368e7d, pulled 2026-09-29 via the ArcGIS feature service.",
+    "weekly_new_residential_units": "Week-start (residential units = 1-3 family + multifamily): Jul 27 392, Aug 3 90, Aug 10 13, Aug 17 230, Aug 24 26, Aug 31 8, Sep 7 12, Sep 14 21, Sep 21 188 (latest complete week, issued 2026-09-21 to 2026-09-27).",
+    "latest_week_breakdown": "168 of 188 units are nine multifamily new-structure permits at Presley Hope Place, ZIP 43081 (three at 24 units, six at 16 units = 168); the other 20 units are 1-3 family/duplex permits spread across ZIPs 43085 (6), 43205 (3), 43206 (3), 43211 (2), 43119 (2), 43110 (2), 43228 (1), 43123 (1).",
+    "year_over_year": "Same week 2025 (2025-09-22 to 2025-09-28): 99 residential units (13 one-to-three-family, 86 multifamily). 188 vs 99 = +89, about +90 percent.",
+    "year_to_date_through_sep_28": "3,968 multifamily units, 663 one-to-three-family units, 512 commercial units (new-structure permits).",
+    "original_contributions": "Week-over-week and year-over-year comparison; ZIP-level geographic breakdown; reproducible isolation of the single Presley Hope Place cluster (168 of 188 units) that drives the week's total."
+  },
+  "leads_surveyed_not_selected": [
+    "BJ's Wholesale Club, 1209-1213 Stringtown Road, Grove City (2026-09-28 social-listener lead): a 104,470-sq-ft membership warehouse and 18-pump gas station seeking planned-unit commercial rezoning across Grove City and Jackson Township. Verification failed the two-independent-origin bar: Hoodline (Sep 28, author Amber Reed) explicitly cites NBC4 WCMH-TV as its source and the Yahoo copy is the same NBC4 story, so the Grove City proposal traces to a single origin (NBC4, 403-blocked from direct fetch). The Grove City primary record could not be reached (CivicClerk portal grovecityoh.portal.civicclerk.com is client-rendered; grovecityohio.gov pages did not surface the item). Held pending a primary planning/council record plus a genuinely independent second origin.",
+    "McCoy Park NWSL training-facility rezoning (Z26-022, 600 Stimmel Rd): Columbus City Council's final vote was expected at the Sep 28 regular meeting. No post-vote reporting or primary record (minutes, vote count, ordinance text) was verifiable this run; an outcome story cannot be written before the result is confirmable. Remains the most consequential pending civic-space decision; should be the lead once the Council record or independent post-vote reporting appears.",
+    "One Twenty Vine (120 Vine St., Arena District, 242-unit, 7-story), Diocese/197 E. Gay St. Downtown Commission outcome, Franklinton 610 W. Town St. (Grateful Development Partners), Gahanna Flex Park (Como Development): all carried forward from the 2026-09-27 SEO report; each still needs a posted primary board/council record and/or a second independent origin, and none showed a verifiable material change this run.",
+    "Lifestyle: no lifestyle lead was independently verified to the two-origin bar this run.",
+    "Permit Pulse was carried over from Monday's (2026-09-28) run, which produced a breaking story (Worthington referendum); with no qualifying breaking story today it was produced this run per docs/RECURRING_DATA_FORMATS.md."
+  ],
+  "idea_queues_consulted": [
+    "briefs/2026-09-28-social-listener.md (newest social listener within prior 48h): one verified lead (BJ's Wholesale Club, Grove City) plus McCoy Park forward-looking context. Treated as an untrusted idea queue; BJ's failed independent re-verification (single origin, no reachable primary record) and McCoy Park's vote outcome was not confirmable.",
+    "briefs/2026-09-27-seo-report.md (newest SEO report within prior 14 days): five evidence-led assignments. Assignment 1 (Worthington referendum) was already published 2026-09-28; the remaining assignments still lack a posted primary record or independent second origin and were not cleared this run."
+  ],
+  "egress_status_this_run": {
+    "reachable": [
+      "Columbus Building Permits ArcGIS FeatureServer (services1.arcgis.com query API, 200; all Permit Pulse figures pulled here)",
+      "opendata.columbus.gov Building Permits dataset landing page (200; client-rendered)",
+      "hoodline.com individual article page (200; BJ's Grove City story, which self-cites NBC4)"
+    ],
+    "unavailable_or_limited": [
+      "nbc4i.com (403; the originating origin for the BJ's Grove City story)",
+      "grovecityoh.portal.civicclerk.com (client-rendered; Grove City primary agenda/application not machine-readable this run)",
+      "columbusunderground.com, bizjournals/Columbus Business First, 10tv.com (403/paywalled in prior runs)",
+      "No verifiable Columbus City Council record or post-vote reporting for the Sep 28 McCoy Park rezoning vote was available this run"
+    ]
+  },
+  "handoff_status": {
+    "discovery_reporting": "COMPLETED. No breaking story cleared the full primary + two-independent-origin + image bar; the due recurring Permit Pulse data format was produced from the CC0 Building Permits dataset.",
+    "github_commit": "Article JSON, CREN bar-chart PNG, and this receipt committed to the routine branch and handed to main via PR/merge per the delivery sequence.",
+    "website_import": "PENDING. Not claimed as succeeded; Vercel imports from main at minute 05 subject to its gates. A git merge is not an import.",
+    "image_proof": "PENDING. image_url is null; Vercel prepares the image and sends the proof; only the configured owner's verified email approval of the exact unchanged article-image package can publish."
+  }
+}

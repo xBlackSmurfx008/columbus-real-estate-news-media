@@ -1,0 +1,187 @@
+{
+  "prompt_version": "cren-article-v1.0.2",
+  "title": "Columbus Permitted 188 New Housing Units in a Lopsided Week",
+  "category": "Development",
+  "author": "CRE News Staff",
+  "date": "2026-09-29",
+  "excerpt": "Columbus building permits added 188 new housing units in the week of September 21, but 168 of them came from a single northeast-side apartment cluster.",
+  "answer_summary": "Columbus permitted 188 new housing units in the week of September 21, up from 21 the week before and 99 a year earlier, according to city building records. Nearly all of the increase came from a single multifamily development in one northeast-side ZIP code.",
+  "primary_keyword": "columbus building permits",
+  "meta_description": "Columbus permitted 188 new housing units in the week of September 21, 2026, up from 21 a week earlier, but 168 came from one northeast-side apartment cluster.",
+  "fact_checked_at": "2026-09-29T13:45:00Z",
+  "canonical_event_key": "columbus-new-housing-permits-2026-week39",
+  "area_slug": null,
+  "topic_slug": "development",
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "development",
+    "building-permits",
+    "housing"
+  ],
+  "read_time": "4 min",
+  "featured": false,
+  "image_url": null,
+  "location": {
+    "name": "Columbus, Ohio",
+    "state": "OH"
+  },
+  "body": "Columbus permitted 188 new housing units in the week of September 21, up from 21 the week before and 99 a year earlier, according to city building records. Nearly all of the increase came from a single multifamily development in one northeast-side ZIP code.\n\n## How the count works\n\nA building permit for a new structure is the city's sign-off before construction can start, and each residential record lists the site address, the number of dwelling units, the applicant's declared construction cost, and the date the permit was issued. CREN counted every new-structure residential permit in the city's public [Building Permits dataset](https://opendata.columbus.gov/datasets/columbus::building-permits) by querying the [ArcGIS feature service](https://services1.arcgis.com/9yy6msODkIBzkUXU/arcgis/rest/services/Building_Permits/FeatureServer/0) behind it, a public-domain feed released under a Creative Commons Zero waiver, and pulled the figures on September 29, 2026.\n\n## A one-project spike\n\nThe 188 units were the most Columbus permitted in any single week since mid-August, but the jump is misleading on its own. Of the 188 units, 168 came from nine multifamily permits issued for a single cluster of buildings at Presley Hope Place, in ZIP 43081 on the far northeast side. Without that one development, the week produced just 20 units, roughly in line with the eight-to-26-unit range of the four weeks before it.\n\n## Where the rest of the week's homes are\n\nThe remaining 20 units were spread across the city in ones and twos. ZIP 43085, on the Worthington and north Columbus line, led that group with six units, followed by three each in the Near East Side's 43205 and the South Side's 43206. The rest were single-family and duplex permits in five other ZIP codes, reaching from Linden in the north to the western and southern edges of the city.\n\n## What one week can and cannot show\n\nMeasured against the same week a year ago, when the city permitted 99 new units, the latest week is up by 89, or about 90 percent. But multifamily permitting is lumpy, and a single complex can swing a week's total by hundreds of units, so week-to-week moves say more about when large projects clear review than about any lasting trend.\n\nThrough September 28, Columbus had permitted 3,968 multifamily units, 663 one-to-three-family units, and 512 units in new commercial structures for the year. A permit is also not a finished home, and because one project can carry a separate structural permit for each building, permit counts run ahead of both project counts and the number of finished homes. The city updates the feed daily, and late entries can lift a past week's total after the fact.\n\n## What to watch next\n\nCREN will refresh this count next week and watch whether the multifamily pace holds or the Presley Hope Place cluster in ZIP 43081 stands out as a one-week outlier.",
+  "source_ledger": [
+    {
+      "id": "S1",
+      "type": "PRIMARY",
+      "url": "https://services1.arcgis.com/9yy6msODkIBzkUXU/arcgis/rest/services/Building_Permits/FeatureServer/0",
+      "publisher": "City of Columbus",
+      "title": "Building Permits feature service (ArcGIS REST)",
+      "published_at": "2026-09-29",
+      "fetched_at": "2026-09-29T13:20:00Z",
+      "http_status": 200,
+      "fetch_note": "Queried this CC0 ArcGIS feature service on September 29, 2026 for new-structure residential permits (GENERAL_TYPE ending in 'New Structure') by week, ZIP and unit count. Weekly residential units (one-to-three-family plus multifamily): week of Jul 27 392, Aug 3 90, Aug 10 13, Aug 17 230, Aug 24 26, Aug 31 8, Sep 7 12, Sep 14 21, Sep 21 188. Same week 2025 (Sep 22 to 28): 99 units (13 one-to-three-family, 86 multifamily). Week of Sep 21 by ZIP: 43081 168, 43085 6, 43205 3, 43206 3, 43211 2, 43119 2, 43110 2, 43228 1, 43123 1. The 168 units in 43081 are nine multifamily permits at Presley Hope Place addresses (three at 24 units, six at 16 units). Year-to-date through Sep 28: 3,968 multifamily units, 663 one-to-three-family units, 512 commercial units."
+    },
+    {
+      "id": "S2",
+      "type": "PRIMARY",
+      "url": "https://opendata.columbus.gov/datasets/columbus::building-permits",
+      "publisher": "City of Columbus",
+      "title": "Building Permits (Open Data)",
+      "published_at": "2026-09-29",
+      "fetched_at": "2026-09-29T13:22:00Z",
+      "http_status": 200,
+      "fetch_note": "The Open Data hub landing page for the same Building Permits dataset (hub item f7a785b863454d96a0fe3f5aa5368e7d), released under a Creative Commons Zero 1.0 public-domain waiver. Page returned HTTP 200; it renders its detail through client-side scripting, so the machine-readable figures were pulled from the feature service in S1. Listed here as the human-readable source record for the same CC0 data."
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "C1",
+      "claim": "Columbus permitted 188 new housing units in the week of September 21, up from 21 the week before and 99 a year earlier, according to city building records.",
+      "source_ids": ["S1", "S2"],
+      "kind": "COMPARISON"
+    },
+    {
+      "id": "C2",
+      "claim": "CREN counted every new-structure residential permit in the city's public [Building Permits dataset](https://opendata.columbus.gov/datasets/columbus::building-permits) by querying the [ArcGIS feature service](https://services1.arcgis.com/9yy6msODkIBzkUXU/arcgis/rest/services/Building_Permits/FeatureServer/0) behind it, a public-domain feed released under a Creative Commons Zero waiver, and pulled the figures on September 29, 2026.",
+      "source_ids": ["S1", "S2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C3",
+      "claim": "The 188 units were the most Columbus permitted in any single week since mid-August, but the jump is misleading on its own.",
+      "source_ids": ["S1"],
+      "kind": "COMPARISON"
+    },
+    {
+      "id": "C4",
+      "claim": "Of the 188 units, 168 came from nine multifamily permits issued for a single cluster of buildings at Presley Hope Place, in ZIP 43081 on the far northeast side.",
+      "source_ids": ["S1"],
+      "kind": "CALCULATION",
+      "calculation": "The 168 units in ZIP 43081 are nine multifamily new-structure permits at Presley Hope Place addresses: three permits at 24 units each (72) plus six permits at 16 units each (96) = 168, which is about 89 percent of the week's 188 units."
+    },
+    {
+      "id": "C5",
+      "claim": "Without that one development, the week produced just 20 units, roughly in line with the eight-to-26-unit range of the four weeks before it.",
+      "source_ids": ["S1"],
+      "kind": "CALCULATION",
+      "calculation": "188 total units minus the 168 at Presley Hope Place = 20 units. The four prior weeks were Aug 24 (26), Aug 31 (8), Sep 7 (12) and Sep 14 (21), a range of 8 to 26 units."
+    },
+    {
+      "id": "C6",
+      "claim": "The remaining 20 units were spread across the city in ones and twos.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C7",
+      "claim": "ZIP 43085, on the Worthington and north Columbus line, led that group with six units, followed by three each in the Near East Side's 43205 and the South Side's 43206.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C8",
+      "claim": "Measured against the same week a year ago, when the city permitted 99 new units, the latest week is up by 89, or about 90 percent.",
+      "source_ids": ["S1"],
+      "kind": "CALCULATION",
+      "calculation": "Same week in 2025 (Sep 22 to 28) had 99 new residential units (13 one-to-three-family plus 86 multifamily). 188 minus 99 = 89; 89 / 99 = 0.899, or about 90 percent."
+    },
+    {
+      "id": "C9",
+      "claim": "Through September 28, Columbus had permitted 3,968 multifamily units, 663 one-to-three-family units, and 512 units in new commercial structures for the year.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C10",
+      "claim": "CREN will refresh this count next week and watch whether the multifamily pace holds or the Presley Hope Place cluster in ZIP 43081 stands out as a one-week outlier.",
+      "source_ids": ["S1"],
+      "kind": "STATUS"
+    }
+  ],
+  "entity_ledger": [
+    {
+      "name": "City of Columbus",
+      "source_ids": ["S1", "S2"]
+    },
+    {
+      "name": "City of Columbus Building Permits dataset",
+      "source_ids": ["S1", "S2"]
+    },
+    {
+      "name": "Presley Hope Place",
+      "source_ids": ["S1"]
+    }
+  ],
+  "image_brief": {
+    "primary_request": "A CREN bar chart of new residential units Columbus permitted by week, built from public city permit data and needing no photograph.",
+    "editorial_idea": "Show the week-to-week rhythm of Columbus new-housing permitting so readers can see that the latest week's total is driven by one large multifamily project rather than a broad surge, using the city's open permit data instead of a site photo.",
+    "story_anchors": [
+      "188 new residential units permitted in the week of September 21",
+      "168 of those units came from a single cluster at Presley Hope Place in ZIP 43081",
+      "Only 20 units were spread across the rest of the city"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "This is a citywide weekly-count story spanning nine ZIP codes with no single subject, so no rights-cleared documentary photograph could honestly stand for the week; a CREN bar chart built from the public permit dataset is the accurate hero.",
+    "image_policy_version": "cren-image-v2-real-photo-first",
+    "image_role": "DATA",
+    "source_review": [
+      {
+        "url": "https://services1.arcgis.com/9yy6msODkIBzkUXU/arcgis/rest/services/Building_Permits/FeatureServer/0",
+        "outcome": "SELECTED",
+        "note": "City of Columbus Building Permits feature service (CC0). Every bar on the chart is a weekly residential-unit sum pulled from this service; it is the chart's sole data source."
+      },
+      {
+        "url": "https://opendata.columbus.gov/datasets/columbus::building-permits",
+        "outcome": "UNSUITABLE",
+        "note": "Considered leading with a documentary photograph of the busiest site, but the week's units span nine ZIP codes and the single-cluster nature is the story, so any one-site photo would misrepresent a citywide count; none was used."
+      }
+    ],
+    "avoid": "Do not imply the chart is a photograph of any property; do not name or map a site the permit record does not list; do not treat a permit as proof a building is finished or occupied."
+  },
+  "image_alt": "CREN bar chart of new housing units Columbus permitted by week, late July to late September 2026, with the September 21 week highlighted at 188.",
+  "image_provenance": {
+    "type": "CREN_GRAPHIC",
+    "caption": "CREN graphic. Data: City of Columbus Building Permits (CC0), pulled September 29, 2026.",
+    "source": "https://services1.arcgis.com/9yy6msODkIBzkUXU/arcgis/rest/services/Building_Permits/FeatureServer/0",
+    "license": "CC0 1.0 (public domain)",
+    "permission_evidence": "Original CREN chart built from the City of Columbus Building Permits open dataset (CC0 1.0); no third-party image content.",
+    "credit": "CREN graphic",
+    "location_note": "Columbus, Ohio (citywide; the charted weeks cover new-structure residential permits across the city).",
+    "date_note": "Chart created September 29, 2026; the bars cover the weeks of July 27 to September 21, 2026, pulled September 29, 2026.",
+    "verified_by": "CREN cloud image desk",
+    "verified_at": "2026-09-29T13:45:00Z"
+  },
+  "cloud_image_asset": {
+    "path": "frontend/content/images/2026-09-29-columbus-permit-pulse.png",
+    "git_blob_sha": "1ecc80cfa1098a83537ce74502f6d11d32e28461",
+    "source_sha256": "24bb6c4422807cd6b055514000d344f1e90de20a676a2d19daf97be7a5046b4c",
+    "visual_review": {
+      "reviewed_by": "CREN cloud image desk",
+      "reviewed_at": "2026-09-29T13:45:00Z",
+      "natural_appearance": true,
+      "geometry_and_shadows": true,
+      "no_synthetic_artifacts": true,
+      "story_match": true,
+      "truthful_caption": true,
+      "mobile_crop": true
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "schema_version": "cren-cloud-run-v1",
+  "routine": "cre-news-newsroom",
+  "date": "2026-09-30",
+  "completed_at": "2026-09-30T10:55:00Z",
+  "story_result": "ARTIFACTS_COMMITTED",
+  "article_paths": [
+    "frontend/content/articles/2026-09-30-columbus-third-quarter-housing-permits.json"
+  ],
+  "editorial_note": "Scheduled cloud handoff-only run for 2026-09-30 (Wednesday). No breaking real-estate or lifestyle story cleared the full primary + two-independent-origin + currency + image bar by the end of discovery, so a verified data-analysis article built entirely from the City of Columbus Building Permits open dataset (CC0 1.0) was produced instead. The article, 'Columbus Permitted Fewer New Homes in the Third Quarter of 2026,' closes the third quarter (which ends today) with a citywide new-housing-permit review: 1,599 new residential units in Q3, down about 11 percent from Q3 2025 and below Q2 2026, front-loaded in July and concentrated in four ZIP codes. It is distinct from the 2026-09-29 weekly Permit Pulse (single-week view) and the 2026-09-27 monthly Demolition Watch. This receipt records the editorial outcome only; it is never publication authority. No import, image preparation, email delivery, or publication is claimed, and no git commit is treated as publication or downstream-import success.",
+  "artifacts": {
+    "article": "frontend/content/articles/2026-09-30-columbus-third-quarter-housing-permits.json",
+    "image": "frontend/content/images/2026-09-30-columbus-third-quarter-housing-permits.png",
+    "image_type": "CREN_GRAPHIC (bar chart; image_role DATA)",
+    "brief": "Run state recorded in this receipt; no separate brief file committed to keep the main PR within the handoff's receipt+article+image scope."
+  },
+  "verification": {
+    "editorial_gate": "PASS 18/18 (scripts/editorial-quality-lib.mjs evaluateArticle)",
+    "schema_and_import_dry_run": "PASS (scripts/cloud-draft-import.mjs prepareCloudDraft ran clean against the committed package with a simulated source binding; returned imageMode SOURCE_ASSET and gate 18/18; not an actual Vercel import)",
+    "image_plan": "SOURCE_ASSET (scripts/editorial-image-policy.mjs planEditorialImage)",
+    "image_hashes_verified": "git hash-object and sha256sum recomputed from the committed PNG match cloud_image_asset (git_blob_sha 818b3c5b55207fb913be48b3edefdfa3f5246604; source_sha256 01ddad2103253bf543f97b4f63a1a4de6795f4d467089b971b2ba6e4d52f596e)",
+    "visual_review": "Chart PNG opened and inspected in-session before attesting: 1600x900 bar chart, nine monthly bars (Jan 274, Feb 47, Mar 674, Apr 1,425, May 369, Jun 243, Jul 1,011 highlighted, Aug 362, Sep 226), all labels within the mobile-safe center band, legible, truthful data caption, no synthetic artifacts.",
+    "near_duplicate_guard": "render-cren-chart.mjs cleared the near-duplicate check on attempt 1 (min hamming distance 32 vs 3 existing images)."
+  },
+  "story_facts_verified": {
+    "source": "City of Columbus Building Permits open dataset (CC0 1.0), Open Data hub item f7a785b863454d96a0fe3f5aa5368e7d, pulled 2026-09-30 via the ArcGIS feature service; residential = GENERAL_TYPE 'Multi Family - New Structure' plus '1,2,3 Family - New Structure'.",
+    "quarterly_new_residential_units": "Q1 2026 995 (857 MF / 138 one-to-three-family), Q2 2026 2,037 (1,750 / 287), Q3 2026 1,599 (1,361 MF across 99 permits / 238 across 230 permits). Q3 2025 1,799 (1,564 MF / 235).",
+    "year_over_year": "Q3 2026 1,599 vs Q3 2025 1,799 = -200, about -11 percent.",
+    "nine_month_pace": "Jan-Sep 2026 residential units 4,631 (995+2,037+1,599) vs Jan-Sep 2025 7,033 (2,081+3,153+1,799).",
+    "monthly_2026_residential_units": "Jan 274, Feb 47, Mar 674, Apr 1,425, May 369, Jun 243, Jul 1,011, Aug 362, Sep 226. July = 1,011 / 1,599 = about 63 percent of Q3.",
+    "q3_top_zips": "43219 387, 43207 374, 43212 263, 43081 252 (sum 1,276 = about 80 percent of 1,599); 22 distinct ZIP codes total.",
+    "largest_q3_projects": "Single 263-unit multifamily permit at 1515 Gerrard Ave (43212, issued 2026-07-23); cluster of 24-unit permits on Sovereign Crest Dr / Prestige Pointe Ave / Regency Grove Ln / Brighton Reserve Way (43219, 2026-07-28); South Side clusters on W Castle Rd, Stone Case Rd, Feather Edge Ln (43207); Brady Alexander Ct and Presley Hope Pl (43081).",
+    "cross_check": "Quarterly type sums reconcile to the 2026-09-29 Permit Pulse year-to-date figures: MF 857+1,750+1,361 = 3,968; one-to-three-family 138+287+238 = 663; commercial 4+482+26 = 512.",
+    "original_contributions": "Quarter-over-quarter and year-over-year comparison; nine-month pace comparison; intra-quarter monthly breakdown isolating July's front-loading; ZIP-level geographic concentration and identification of the specific large multifamily filings driving each top ZIP.",
+    "limitations_stated": "Permits are not completed homes; one project can carry a separate structural permit per building; declared values are often blank and are not sale prices; the feed updates daily and late entries can lift September and the Q3 total after the pull."
+  },
+  "leads_surveyed_not_selected": [
+    "McCoy Park NWSL training-facility rezoning (Z26-022 / ordinance 2452-2026, 600 Stimmel Rd): the Sept 28 Council zoning meeting was confirmed (Legistar agenda ID 1445174; item 2452-2026), but no post-vote primary record (minutes, vote count) or independent post-vote news report was verifiable this run. The columbus.gov meeting page shows only the announcement, and reachable coverage (matternews) is an April 20 advance piece. Cannot write the outcome before it is confirmable. Remains the most consequential pending decision; should lead once the Council record or independent post-vote reporting appears.",
+    "HUD FY2027 Fair Market Rents ('What Rent Costs Here', recurring format 6): FY2027 FMRs are published (Federal Register 2026-09-01, effective Oct 1, 2026), but huduser.gov is behind an AWS WAF challenge (x-amzn-waf-action: challenge; HTTP 202, empty body) and the Federal Register document redirected to an access-request page, so the exact Columbus, OH FMR values could not be verified from a primary source this run. Per policy, numbers were not estimated; held for a run where the HUD data or an authoritative primary rendering is reachable.",
+    "Columbus Home Price Index (FHFA/FRED ATNHPIUS18140Q, recurring format 5): latest FRED value remains Q2 2026 (351.14); Q3 2026 not yet released (expected late November 2026). Not freshly due.",
+    "Columbus August 2026 market data (Momentum Acquisitions / Redfin, 2026-09-28 social-listener Lead 1): single press-release origin from a private company; Redfin underlying not independently verified; fails the two-independent-origin bar.",
+    "BJ's Wholesale Club Grove City, One Twenty Vine (120 Vine St.), Diocese/197 E. Gay St., Franklinton 610 W. Town St., Gahanna Flex Park: all carried forward from prior social-listener briefs and the 2026-09-27 SEO report; each still needs a posted primary board/council record and/or a genuinely independent second origin, and none showed a verifiable material change this run.",
+    "Lifestyle: no lifestyle lead was independently verified to the two-origin bar this run.",
+    "Zoning Watch (recurring format 4): the Council Zoning Variances CC0 service is reachable, but its records carry no address field and its LAST_EDIT_DATE is a GIS-edit date, not the Council action date (e.g., CV26-037 shows a Sept 21 edit but Legistar records a Aug 27 passage), so a clean, accurate monthly variance map would require heavy per-item Legistar reconciliation and was not produced this run to avoid date-attribution errors."
+  ],
+  "idea_queues_consulted": [
+    "briefs/2026-09-29-social-listener.md (newest social listener within prior 48h): two verified leads (Columbus August 2026 market data; City Council Issues 8 and 9). Treated as an untrusted idea queue; the market-data lead is single-origin (press release) and the ballot-measures lead is governance, not a current real-estate transaction/decision. Neither cleared independent re-verification to a real-estate news story this run.",
+    "briefs/2026-09-27-seo-report.md (newest SEO report within prior 14 days): five evidence-led assignments. Assignment 1 (Worthington referendum) was already published 2026-09-28; the remaining assignments still lack a posted primary record or independent second origin and were not cleared this run."
+  ],
+  "egress_status_this_run": {
+    "reachable": [
+      "Columbus Building Permits ArcGIS FeatureServer (services1.arcgis.com query API, 200; all article figures pulled here)",
+      "Council Zoning Variances map service (maps2.columbus.gov, 200; surveyed, not used)",
+      "columbus.legistar.com Calendar and LegislationDetail pages (200; used to confirm the Sept 28 meeting item and to test variance date attribution)",
+      "columbus.gov Council Zoning Meeting page (200; announcement only, no results posted)"
+    ],
+    "unavailable_or_limited": [
+      "huduser.gov (AWS WAF challenge; HTTP 202 empty body) and unblock.federalregister.gov (access-request redirect) — blocked verification of FY2027 HUD Fair Market Rents",
+      "No verifiable Columbus City Council record or post-vote reporting for the Sept 28 McCoy Park rezoning vote was available this run",
+      "columbusunderground.com, nbc4i.com, bizjournals/Columbus Business First, 10tv.com, dispatch.com (403/paywalled in prior runs)"
+    ]
+  },
+  "handoff_status": {
+    "discovery_reporting": "COMPLETED. No breaking story cleared the full primary + two-independent-origin + currency + image bar; a verified Q3 new-housing-permit data analysis was produced from the CC0 Building Permits dataset and passed every gate.",
+    "github_commit": "Article JSON, CREN bar-chart PNG, and this receipt committed to the routine branch and handed to main via PR/merge per the delivery sequence.",
+    "website_import": "PENDING. Not claimed as succeeded; Vercel imports from main at minute 05 subject to its gates. A git merge is not an import.",
+    "image_proof": "PENDING. image_url is null; Vercel prepares the image and sends the proof; only the configured owner's verified email approval of the exact unchanged article-image package can publish."
+  }
+}

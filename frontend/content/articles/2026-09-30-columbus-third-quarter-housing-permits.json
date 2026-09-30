@@ -1,0 +1,184 @@
+{
+  "prompt_version": "cren-article-v1.0.2",
+  "title": "Columbus Permitted Fewer New Homes in the Third Quarter of 2026",
+  "category": "Development",
+  "author": "CRE News Staff",
+  "date": "2026-09-30",
+  "excerpt": "Columbus housing permits added 1,599 new residential units in the third quarter of 2026, down from 1,799 a year earlier, with July carrying most of the total.",
+  "answer_summary": "Columbus housing permits added 1,599 new residential units from July through September, down from 1,799 in the same three months of 2025 and below the 2,037 units permitted in the second quarter, according to city building records. Most of the quarter's units came from a handful of large apartment projects permitted in July.",
+  "primary_keyword": "columbus housing permits",
+  "meta_description": "Columbus permitted 1,599 new housing units in the third quarter of 2026, down about 11 percent from a year earlier, with most of the units permitted in July.",
+  "fact_checked_at": "2026-09-30T10:45:00Z",
+  "canonical_event_key": "columbus-new-housing-permits-2026-q3",
+  "area_slug": null,
+  "topic_slug": "development",
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "development",
+    "building-permits",
+    "housing"
+  ],
+  "read_time": "4 min",
+  "featured": false,
+  "image_url": null,
+  "location": {
+    "name": "Columbus, Ohio",
+    "state": "OH"
+  },
+  "body": "Columbus housing permits added 1,599 new residential units from July through September, down from 1,799 in the same three months of 2025 and below the 2,037 units permitted in the second quarter, according to city building records. Most of the quarter's units came from a handful of large apartment projects permitted in July.\n\n## How the count works\n\nA building permit for a new structure is the city's sign-off before construction can begin, and each residential record lists the site address, the number of dwelling units, and the date the permit was issued. CREN counted every new-structure residential permit in the city's public [Building Permits dataset](https://opendata.columbus.gov/datasets/columbus::building-permits) by querying the [ArcGIS feature service](https://services1.arcgis.com/9yy6msODkIBzkUXU/arcgis/rest/services/Building_Permits/FeatureServer/0) behind it, a public-domain feed released under a Creative Commons Zero waiver, and pulled the third-quarter figures on the morning of September 30, 2026.\n\n## A quarter that trailed last year\n\nThe 1,599 units Columbus permitted in the third quarter were about 11 percent fewer than the 1,799 units permitted in the same quarter of 2025. They also fell short of the 2,037 units permitted in the second quarter of 2026, though they ran ahead of the 995 units permitted in the first quarter.\n\nAcross the first nine months of 2026, Columbus has permitted 4,631 new residential units, well below the 7,033 units it had permitted through the same point in 2025.\n\n## Front-loaded in July\n\nThe quarter's total leaned heavily on its first month. Columbus permitted 1,011 residential units in July, then 362 in August and 226 in September, with the July figure alone making up about 63 percent of the quarter.\n\nMultifamily buildings drove the swing. Of the quarter's 1,599 units, 1,361 came in 99 multifamily new-structure permits and 238 in 230 one-to-three-family permits, so a small number of large filings can move the total far more than the steady trickle of houses and duplexes.\n\n## Where the new homes clustered\n\nFour ZIP codes accounted for about 80 percent of the quarter's new residential units. The 43219 ZIP on the northeast side led with 387 units, followed by the South Side's 43207 with 374, the near-northwest 43212 with 263, and 43081 near Westerville with 252, and the rest were spread across 18 other ZIP codes.\n\nA few developments account for those clusters. A single multifamily permit for 263 units at 1515 Gerrard Ave drove the 43212 total in July, a group of 24-unit apartment permits along Sovereign Crest Drive and nearby streets made up most of 43219, and separate multifamily groupings on the South Side and near Presley Hope Place filled out 43207 and 43081.\n\n## What the permit count leaves out\n\nA permit is not a finished home, and because one project can carry a separate structural permit for each building, permit counts run ahead of both the number of projects and the number of finished homes. Declared construction values in the feed are often left blank and are not sale prices, so CREN did not rank projects by cost. The city updates the feed daily, and late entries can lift the September and third-quarter totals after this count was taken.\n\n## What to watch next\n\nCREN will refresh the count at the close of the fourth quarter and watch whether multifamily filings return to the faster pace seen earlier this year or the recent slower months carry into the winter.",
+  "source_ledger": [
+    {
+      "id": "S1",
+      "type": "PRIMARY",
+      "url": "https://services1.arcgis.com/9yy6msODkIBzkUXU/arcgis/rest/services/Building_Permits/FeatureServer/0",
+      "publisher": "City of Columbus",
+      "title": "Building Permits feature service (ArcGIS REST)",
+      "published_at": "2026-09-30",
+      "fetched_at": "2026-09-30T10:20:00Z",
+      "http_status": 200,
+      "fetch_note": "Queried this CC0 ArcGIS feature service on September 30, 2026 for new-structure residential permits (GENERAL_TYPE 'Multi Family - New Structure' and '1,2,3 Family - New Structure') by quarter, month, ZIP and unit count. Quarterly residential units (multifamily plus one-to-three-family): Q1 2026 995 (857 MF / 138 one-to-three-family), Q2 2026 2,037 (1,750 / 287), Q3 2026 1,599 (1,361 MF across 99 permits / 238 across 230 permits). Q3 2025 1,799 (1,564 MF / 235). Nine months 2026 through Sept 30: 4,631 residential units; nine months 2025: 7,033. Monthly 2026 residential units: Jan 274, Feb 47, Mar 674, Apr 1,425, May 369, Jun 243, Jul 1,011, Aug 362, Sep 226. Q3 2026 residential units by ZIP: 43219 387, 43207 374, 43212 263, 43081 252, then 18 more ZIPs (22 total). Largest Q3 multifamily permits: a single 263-unit permit at 1515 Gerrard Ave (43212, issued 2026-07-23); a cluster of 24-unit permits along Sovereign Crest Dr, Prestige Pointe Ave, Regency Grove Ln and Brighton Reserve Way (43219, 2026-07-28); South Side clusters on W Castle Rd, Stone Case Rd and Feather Edge Ln (43207); and Brady Alexander Ct and Presley Hope Pl (43081). Q3 2026 commercial new-structure permits: 33."
+    },
+    {
+      "id": "S2",
+      "type": "PRIMARY",
+      "url": "https://opendata.columbus.gov/datasets/columbus::building-permits",
+      "publisher": "City of Columbus",
+      "title": "Building Permits (Open Data)",
+      "published_at": "2026-09-30",
+      "fetched_at": "2026-09-30T10:22:00Z",
+      "http_status": 200,
+      "fetch_note": "The Open Data hub landing page for the same Building Permits dataset (hub item f7a785b863454d96a0fe3f5aa5368e7d), released under a Creative Commons Zero 1.0 public-domain waiver. Page returned HTTP 200; it renders its detail through client-side scripting, so the machine-readable figures were pulled from the feature service in S1. Listed here as the human-readable source record for the same CC0 data."
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "C1",
+      "claim": "Columbus housing permits added 1,599 new residential units from July through September, down from 1,799 in the same three months of 2025 and below the 2,037 units permitted in the second quarter, according to city building records.",
+      "source_ids": ["S1", "S2"],
+      "kind": "COMPARISON"
+    },
+    {
+      "id": "C2",
+      "claim": "CREN counted every new-structure residential permit in the city's public [Building Permits dataset](https://opendata.columbus.gov/datasets/columbus::building-permits) by querying the [ArcGIS feature service](https://services1.arcgis.com/9yy6msODkIBzkUXU/arcgis/rest/services/Building_Permits/FeatureServer/0) behind it, a public-domain feed released under a Creative Commons Zero waiver, and pulled the third-quarter figures on the morning of September 30, 2026.",
+      "source_ids": ["S1", "S2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C3",
+      "claim": "The 1,599 units Columbus permitted in the third quarter were about 11 percent fewer than the 1,799 units permitted in the same quarter of 2025.",
+      "source_ids": ["S1"],
+      "kind": "CALCULATION",
+      "calculation": "Q3 2026 residential units (multifamily plus one-to-three-family) = 1,599; Q3 2025 = 1,799. 1,799 minus 1,599 = 200; 200 / 1,799 = 0.111, or about 11 percent fewer."
+    },
+    {
+      "id": "C4",
+      "claim": "They also fell short of the 2,037 units permitted in the second quarter of 2026, though they ran ahead of the 995 units permitted in the first quarter.",
+      "source_ids": ["S1"],
+      "kind": "COMPARISON"
+    },
+    {
+      "id": "C5",
+      "claim": "Across the first nine months of 2026, Columbus has permitted 4,631 new residential units, well below the 7,033 units it had permitted through the same point in 2025.",
+      "source_ids": ["S1"],
+      "kind": "CALCULATION",
+      "calculation": "2026 quarterly residential units: Q1 995 + Q2 2,037 + Q3 1,599 = 4,631. 2025: Q1 2,081 + Q2 3,153 + Q3 1,799 = 7,033."
+    },
+    {
+      "id": "C6",
+      "claim": "Columbus permitted 1,011 residential units in July, then 362 in August and 226 in September, with the July figure alone making up about 63 percent of the quarter.",
+      "source_ids": ["S1"],
+      "kind": "CALCULATION",
+      "calculation": "Monthly Q3 2026 residential units: July 1,011, August 362, September 226; 1,011 + 362 + 226 = 1,599. 1,011 / 1,599 = 0.632, or about 63 percent."
+    },
+    {
+      "id": "C7",
+      "claim": "Of the quarter's 1,599 units, 1,361 came in 99 multifamily new-structure permits and 238 in 230 one-to-three-family permits, so a small number of large filings can move the total far more than the steady trickle of houses and duplexes.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C8",
+      "claim": "Four ZIP codes accounted for about 80 percent of the quarter's new residential units.",
+      "source_ids": ["S1"],
+      "kind": "CALCULATION",
+      "calculation": "Top four ZIP codes by Q3 2026 residential units: 43219 387 + 43207 374 + 43212 263 + 43081 252 = 1,276. 1,276 / 1,599 = 0.798, or about 80 percent."
+    },
+    {
+      "id": "C9",
+      "claim": "The 43219 ZIP on the northeast side led with 387 units, followed by the South Side's 43207 with 374, the near-northwest 43212 with 263, and 43081 near Westerville with 252, and the rest were spread across 18 other ZIP codes.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C10",
+      "claim": "A single multifamily permit for 263 units at 1515 Gerrard Ave drove the 43212 total in July, a group of 24-unit apartment permits along Sovereign Crest Drive and nearby streets made up most of 43219, and separate multifamily groupings on the South Side and near Presley Hope Place filled out 43207 and 43081.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    }
+  ],
+  "entity_ledger": [
+    {
+      "name": "City of Columbus",
+      "source_ids": ["S1", "S2"]
+    },
+    {
+      "name": "City of Columbus Building Permits dataset",
+      "source_ids": ["S1", "S2"]
+    }
+  ],
+  "image_brief": {
+    "primary_request": "A CREN bar chart of new residential units Columbus permitted by month in 2026, built from public city permit data and needing no photograph.",
+    "editorial_idea": "Show how uneven Columbus new-housing permitting is month to month so readers can see that the third quarter's total leaned on a single strong July, using the city's open permit data rather than a site photo of any one project.",
+    "story_anchors": [
+      "1,599 new residential units permitted in the third quarter of 2026, down from 1,799 a year earlier",
+      "July alone carried 1,011 units, about 63 percent of the quarter",
+      "Four ZIP codes accounted for about 80 percent of the quarter's units"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "This is a citywide quarterly-count story spanning 22 ZIP codes with no single subject, so no rights-cleared documentary photograph could honestly stand for the quarter; a CREN bar chart built from the public permit dataset is the accurate hero.",
+    "image_policy_version": "cren-image-v2-real-photo-first",
+    "image_role": "DATA",
+    "source_review": [
+      {
+        "url": "https://services1.arcgis.com/9yy6msODkIBzkUXU/arcgis/rest/services/Building_Permits/FeatureServer/0",
+        "outcome": "SELECTED",
+        "note": "City of Columbus Building Permits feature service (CC0). Every bar on the chart is a monthly residential-unit sum for 2026 pulled from this service; it is the chart's sole data source."
+      },
+      {
+        "url": "https://opendata.columbus.gov/datasets/columbus::building-permits",
+        "outcome": "UNSUITABLE",
+        "note": "Considered leading with a documentary photograph of the quarter's largest project, but the units span 22 ZIP codes and no single site represents a citywide quarterly count, so any one-site photo would misrepresent the story; none was used."
+      }
+    ],
+    "avoid": "Do not imply the chart is a photograph of any property; do not name or map a site the permit record does not list; do not treat a permit as proof a building is finished or occupied."
+  },
+  "image_alt": "CREN bar chart of new housing units Columbus permitted by month from January to September 2026, with the July bar highlighted at 1,011 units.",
+  "image_provenance": {
+    "type": "CREN_GRAPHIC",
+    "caption": "CREN graphic. Data: City of Columbus Building Permits (CC0), pulled September 30, 2026.",
+    "source": "https://services1.arcgis.com/9yy6msODkIBzkUXU/arcgis/rest/services/Building_Permits/FeatureServer/0",
+    "license": "CC0 1.0 (public domain)",
+    "permission_evidence": "Original CREN chart built from the City of Columbus Building Permits open dataset (CC0 1.0); no third-party image content.",
+    "credit": "CREN graphic",
+    "location_note": "Columbus, Ohio (citywide; the charted months cover new-structure residential permits across the city).",
+    "date_note": "Chart created September 30, 2026; the bars cover the months of January to September 2026, pulled September 30, 2026.",
+    "verified_by": "CREN cloud image desk",
+    "verified_at": "2026-09-30T10:45:00Z"
+  },
+  "cloud_image_asset": {
+    "path": "frontend/content/images/2026-09-30-columbus-third-quarter-housing-permits.png",
+    "git_blob_sha": "818b3c5b55207fb913be48b3edefdfa3f5246604",
+    "source_sha256": "01ddad2103253bf543f97b4f63a1a4de6795f4d467089b971b2ba6e4d52f596e",
+    "visual_review": {
+      "reviewed_by": "CREN cloud image desk",
+      "reviewed_at": "2026-09-30T10:45:00Z",
+      "natural_appearance": true,
+      "geometry_and_shadows": true,
+      "no_synthetic_artifacts": true,
+      "story_match": true,
+      "truthful_caption": true,
+      "mobile_crop": true
+    }
+  }
+}

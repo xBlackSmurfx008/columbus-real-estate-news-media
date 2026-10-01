@@ -73,9 +73,13 @@ export async function affiliatePerformance(sql, { windowDays = 30 } = {}) {
     return { available: false, reason: "affiliate_clicks table not found" };
   }
 
+  const distinctVisitorsExpr = has(columns, "visitor_hash")
+    ? "COUNT(DISTINCT visitor_hash)::int"
+    : "NULL::int";
   const [totals] = await sql.query(
     `SELECT COUNT(*)::int AS clicks,
-            ${affiliateCountExpr(columns)} AS affiliate_clicks
+            ${affiliateCountExpr(columns)} AS affiliate_clicks,
+            ${distinctVisitorsExpr} AS distinct_visitors
        FROM affiliate_clicks
       WHERE ${realWhere}
         AND created_at >= NOW() - ($1 || ' days')::interval`,
@@ -105,6 +109,8 @@ export async function affiliatePerformance(sql, { windowDays = 30 } = {}) {
     totals: {
       clicks: Number(totals.clicks),
       affiliateClicks: Number(totals.affiliate_clicks),
+      // null when visitor_hash is not migrated: unknown, not zero.
+      distinctVisitors: totals.distinct_visitors === null ? null : Number(totals.distinct_visitors),
       allTimeClicks: Number(allTime.clicks),
       excludedTestClicks: Number(excluded.n),
     },

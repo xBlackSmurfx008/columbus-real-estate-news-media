@@ -1,0 +1,9 @@
+{
+  "schema": "cren-directive-event-v1",
+  "item": "kpi-truthful-inputs",
+  "at": "2026-09-26",
+  "actor": "cmo-rebuild",
+  "type": "update",
+  "status": "in_build",
+  "note": "Built on branch claude/gracious-carson-ilbz9x together with the CMO routine rebuild. First run showed 32 outbound clicks from 32 distinct visitors, all on /housing-search, a page with at most 2 pageviews in the same window."
+}

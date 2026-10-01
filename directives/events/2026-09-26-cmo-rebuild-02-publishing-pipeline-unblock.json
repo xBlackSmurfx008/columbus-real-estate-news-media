@@ -1,0 +1,9 @@
+{
+  "schema": "cren-directive-event-v1",
+  "item": "publishing-pipeline-unblock",
+  "at": "2026-09-26",
+  "actor": "cmo-rebuild",
+  "type": "update",
+  "status": "dropped",
+  "note": "Reassigned, not abandoned. Newsroom tooling (image research, PDF extraction, source access) belongs to the newsroom routine and its owner, not the CMO. The one owner decision inside it is tracked as owner-photo-supply."
+}

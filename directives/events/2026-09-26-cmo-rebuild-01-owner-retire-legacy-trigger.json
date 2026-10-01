@@ -1,0 +1,15 @@
+{
+  "schema": "cren-directive-event-v1",
+  "item": "owner-retire-legacy-trigger",
+  "at": "2026-09-26",
+  "actor": "cmo-rebuild",
+  "type": "open",
+  "kind": "owner",
+  "status": "queued",
+  "priority": 4,
+  "title": "Retire the legacy CRE Newsroom Daily trigger",
+  "question": "Delete or rewrite scheduled trigger trig_01Pdkpi4gytjoSJ7h92vMkBi, whose stored prompt still instructs direct database use and direct publication, which CLAUDE.md forbids: done?",
+  "cost_of_delay": "A run that follows that stored prompt literally would cross the production safety boundary.",
+  "default_if_unanswered": "None. This is a safety item; it stays queued until closed.",
+  "note": "Found in briefs/2026-09-25.md (addendum). The trigger is absent from .claude/routines.md."
+}

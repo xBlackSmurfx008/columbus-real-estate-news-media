@@ -13,6 +13,7 @@ export type AffiliatePerformance =
       totals: {
         clicks: number;
         affiliateClicks: number;
+        distinctVisitors: number | null;
         allTimeClicks: number;
         excludedTestClicks: number;
       };

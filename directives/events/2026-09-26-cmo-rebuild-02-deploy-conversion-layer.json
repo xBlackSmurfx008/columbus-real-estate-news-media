@@ -1,0 +1,12 @@
+{
+  "schema": "cren-directive-event-v1",
+  "item": "deploy-conversion-layer",
+  "at": "2026-09-26",
+  "actor": "cmo-rebuild",
+  "type": "update",
+  "status": "dropped",
+  "note": "Premise disproved. A public fetch on 2026-09-26 found the contextual CTA (data-cta-funnel) on a live article, the seller funnel disclosure live, and the old Stay Informed block gone. Zero funnel views mean no traffic reaches the funnels, not a missing deploy.",
+  "evidence": {
+    "url": "https://columbusrealestatenews.com/sell/your-home"
+  }
+}

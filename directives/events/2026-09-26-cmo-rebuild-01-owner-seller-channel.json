@@ -1,0 +1,14 @@
+{
+  "schema": "cren-directive-event-v1",
+  "item": "owner-seller-channel",
+  "at": "2026-09-26",
+  "actor": "cmo-rebuild",
+  "type": "open",
+  "kind": "owner",
+  "status": "asked",
+  "priority": 3,
+  "title": "Decide whether to reach sellers directly, not only through search",
+  "question": "Authorize one non-search seller channel (for example, contacting for-sale-by-owner listings or absentee-owner records) run under the investor entity, never the newsroom, with a monthly budget and CAN-SPAM/TCPA compliance: yes with a budget, or no?",
+  "cost_of_delay": "At roughly 300 pageviews a month, search alone yields about one seller lead every two years (estimate from assumed click and submit rates, not measured). Each week without a direct channel is a week with no seller pipeline.",
+  "default_if_unanswered": "No: the routine stays search-only and stops proposing outbound channels."
+}

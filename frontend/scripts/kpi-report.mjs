@@ -3,8 +3,13 @@
 //
 // Prints markdown: totals + deltas for the window, the four revenue funnels
 // end-to-end, referrer-host mix, a daily pageview trend, leads by
-// persona/status, affiliate clicks, and newest leads (emails masked — this
-// output gets committed to the repo, keep PII out).
+// persona/status, outbound partner clicks, and newest leads (by id only — this
+// output gets committed to a public repo, so no names or emails).
+//
+// FAIL-CLOSED RULE: if the test-traffic predicate cannot be resolved the script
+// exits 2 before printing a number, and if any later section fails it ends with
+// `Report status: INCOMPLETE` and exits 2. A routine must never read a partial
+// report as a complete one.
 //
 // TRUTH RULE (owner plan 2026-09-04, P0 item 2): every audience, lead, and
 // funnel number below is filtered through the SHARED test-traffic predicate in
@@ -25,6 +30,7 @@ import { neon } from "@neondatabase/serverless";
 import { sendTelegramAlert } from "./telegram-alert.mjs";
 import { resolveTestTrafficPredicates } from "./test-traffic-lib.mjs";
 import { FUNNELS, FUNNEL_STAGES, QUALIFIED_STATUSES } from "./funnel-lib.mjs";
+import { affiliatePerformance } from "./affiliate-report-lib.mjs";
 
 const args = process.argv.slice(2);
 const wIdx = args.indexOf("--window");
@@ -38,10 +44,14 @@ if (!databaseUrl) {
 }
 const sql = neon(databaseUrl);
 
-function maskEmail(email) {
-  const [user, domain] = String(email).split("@");
-  return `${user.slice(0, 2)}***@${domain ?? "?"}`;
+// Paths, referrer hosts and search terms are written by outsiders. Strip
+// control and markdown/HTML characters so they cannot restructure a committed
+// report or smuggle instructions into it.
+function safeLabel(value) {
+  return String(value ?? "").replace(/[\u0000-\u001f\u007f`|<>\[\]]/g, "").slice(0, 100) || "(empty)";
 }
+
+const incompleteSections = [];
 
 function pct(numerator, denominator) {
   if (!denominator) return "n/a";
@@ -66,13 +76,15 @@ const predicates = {};
 for (const table of ["subscribers", "members", "contacts", "leads", "affiliate_clicks", "funnel_events"]) {
   try {
     predicates[table] = await resolveTestTrafficPredicates(sql, table);
-  } catch {
-    predicates[table] = null;
+  } catch (error) {
+    // Falling back to "count everything" would report test traffic as audience.
+    console.error(`Report status: FAILED — test-traffic predicate for ${table} could not be resolved (${error instanceof Error ? error.message : "unknown error"}).`);
+    process.exit(2);
   }
 }
 
-const real = (table) => predicates[table]?.realWhere ?? "true";
-const synthetic = (table) => predicates[table]?.testWhere ?? "false";
+const real = (table) => predicates[table].realWhere;
+const synthetic = (table) => predicates[table].testWhere;
 
 async function counts(table) {
   const where = real(table);
@@ -111,13 +123,7 @@ const leadsByPersona = await sql.query(
    GROUP BY persona, status ORDER BY persona, status`,
 );
 
-const clicks = await sql.query(
-  `SELECT partner_slug, COUNT(*)::int AS n FROM affiliate_clicks
-    WHERE ${real("affiliate_clicks")}
-      AND created_at >= NOW() - ($1 || ' days')::interval
-    GROUP BY partner_slug ORDER BY n DESC`,
-  [windowDays],
-);
+const outbound = await affiliatePerformance(sql, { windowDays });
 
 const articles = await sql`
   SELECT COUNT(*)::int AS n FROM articles
@@ -125,7 +131,7 @@ const articles = await sql`
 `;
 
 const newestLeads = await sql.query(
-  `SELECT persona, name, email, area, status, created_at FROM leads
+  `SELECT id, persona, area, status, created_at FROM leads
     WHERE created_at >= NOW() - ($1 || ' days')::interval AND ${real("leads")}
     ORDER BY created_at DESC LIMIT 15`,
   [windowDays],
@@ -196,6 +202,9 @@ try {
       GROUP BY persona`,
     [windowDays, QUALIFIED_STATUSES],
   );
+  const [instrumentation] = await sql.query(
+    `SELECT COUNT(*)::int AS n, MAX(created_at) AS newest FROM funnel_events WHERE ${real("funnel_events")}`,
+  );
   const leadsByFunnelPersona = Object.fromEntries(leadRows.map((r) => [r.persona, r]));
 
   funnelReport = FUNNELS.map((funnel) => {
@@ -247,6 +256,16 @@ try {
       `View→submission ${pct(totals.submissions, totals.views)}; start→submission ${pct(totals.submissions, totals.starts)}; value ${money(totals.valueCents)}.`,
   );
 
+  // Views are max(funnel_view events, page_views on the funnel path). Print both
+  // sources and the newest event so "no traffic" and "tracking broken" differ.
+  const eventViews = stageRows.filter((r) => r.stage === "funnel_view").reduce((sum, r) => sum + r.n, 0);
+  const pathViews = Object.values(viewsByPath).reduce((sum, n) => sum + n, 0);
+  console.log(
+    `\nView sources: ${eventViews} funnel_view event(s), ${pathViews} page view(s) on funnel paths. ` +
+      `funnel_events all time: ${instrumentation.n} real row(s), newest ` +
+      `${instrumentation.newest ? new Date(instrumentation.newest).toISOString().slice(0, 10) : "never"}.`,
+  );
+
   // Attribution: what sends people into a funnel.
   const attribution = await sql.query(
     `SELECT COALESCE(NULLIF(article_slug, ''), '(no article)') AS article,
@@ -265,12 +284,13 @@ try {
   if (attribution.length > 0) {
     console.log(`\nFunnel entry attribution (article / placement / campaign / area):\n`);
     for (const row of attribution) {
-      console.log(`- ${row.article} · ${row.placement} · ${row.campaign} · ${row.area}: ${row.n}`);
+      console.log(`- ${safeLabel(row.article)} · ${safeLabel(row.placement)} · ${safeLabel(row.campaign)} · ${safeLabel(row.area)}: ${row.n}`);
     }
   } else {
     console.log(`\nNo funnel CTA clicks or submissions attributed in window.`);
   }
 } catch {
+  incompleteSections.push("funnels");
   console.log(`Funnel telemetry unavailable or not migrated. Run scripts/migrate-funnel-events.mjs.`);
 }
 
@@ -281,17 +301,29 @@ if (leadsByPersona.length > 0) {
   console.log(`\nNo leads yet.`);
 }
 
-if (clicks.length > 0) {
-  console.log(`\n### Affiliate clicks in window\n`);
-  for (const c of clicks) console.log(`- ${c.partner_slug}: ${c.n}`);
+console.log(`\n### Outbound partner clicks (last ${windowDays} day(s))\n`);
+if (!outbound.available) {
+  incompleteSections.push("outbound");
+  console.log(`Outbound click data unavailable: ${safeLabel(outbound.reason)}.`);
 } else {
-  console.log(`\nNo affiliate clicks in window.`);
+  const { totals } = outbound;
+  const visitors = totals.distinctVisitors === null ? "not tracked" : totals.distinctVisitors;
+  console.log(`- Real outbound clicks: ${totals.clicks} (distinct visitors: ${visitors})`);
+  console.log(`- Through a paying affiliate link: ${totals.affiliateClicks}`);
+  if (totals.clicks > 0 && totals.affiliateClicks === 0) {
+    console.log(`- None of these clicks earn money: no affiliate program is active. Do not report them as revenue.`);
+  }
+  for (const [rows, label] of [[outbound.byPartner, "partner"], [outbound.byPage, "page"], [outbound.byPlacement, "placement"]]) {
+    if (rows.length === 0) continue;
+    console.log(`\nBy ${label}:\n`);
+    for (const row of rows.slice(0, 10)) console.log(`- ${safeLabel(row.key)}: ${row.clicks}`);
+  }
 }
 
 if (newestLeads.length > 0) {
-  console.log(`\n### Newest leads (emails masked)\n`);
+  console.log(`\n### Newest leads (by id; no names or emails)\n`);
   for (const l of newestLeads) {
-    console.log(`- [${new Date(l.created_at).toISOString().slice(0, 10)}] ${l.persona} — ${l.name} (${maskEmail(l.email)})${l.area ? ", " + l.area : ""} — ${l.status}`);
+    console.log(`- [${new Date(l.created_at).toISOString().slice(0, 10)}] lead #${l.id} — ${l.persona}${l.area ? ", " + safeLabel(l.area) : ""} — ${l.status}`);
   }
 }
 
@@ -330,13 +362,13 @@ try {
   console.log(`- Unique visitors (daily-rotating hash): ${totals.visitors}`);
   if (topPaths.length > 0) {
     console.log(`\nTop pages:\n`);
-    for (const p of topPaths) console.log(`- ${p.path}: ${p.n}`);
+    for (const p of topPaths) console.log(`- ${safeLabel(p.path)}: ${p.n}`);
   }
 
   console.log(`\nReferrer mix (which channel actually sends readers):\n`);
   if (referrers.length > 0) {
     for (const r of referrers) {
-      console.log(`- ${r.host}: ${r.views} views / ${r.visitors} visitors (${pct(r.views, totals.views)})`);
+      console.log(`- ${safeLabel(r.host)}: ${r.views} views / ${r.visitors} visitors (${pct(r.views, totals.views)})`);
     }
   } else {
     console.log(`- No pageviews in window.`);
@@ -353,6 +385,7 @@ try {
     console.log(`- No pageviews in window.`);
   }
 } catch {
+  incompleteSections.push("traffic");
   console.log(`\n### Traffic\n`);
   console.log(`Traffic table unavailable or not migrated. Run scripts/migrate-page-views.mjs.`);
 }
@@ -461,23 +494,24 @@ try {
 
   if (formSources.length > 0) {
     console.log(`\nForm submissions by source:\n`);
-    for (const source of formSources) console.log(`- ${source.label}: ${source.n}`);
+    for (const source of formSources) console.log(`- ${safeLabel(source.label)}: ${source.n}`);
   }
   if (formPersonas.length > 0) {
     console.log(`\nForm submissions by persona:\n`);
-    for (const persona of formPersonas) console.log(`- ${persona.label}: ${persona.n}`);
+    for (const persona of formPersonas) console.log(`- ${safeLabel(persona.label)}: ${persona.n}`);
   }
   if (zeroSearches.length > 0) {
     console.log(`\nZero-result search terms:\n`);
-    for (const search of zeroSearches) console.log(`- ${search.label}: ${search.n}`);
+    for (const search of zeroSearches) console.log(`- ${safeLabel(search.label)}: ${search.n}`);
   }
   if (areaHubs.length > 0) {
     console.log(`\nArea hub performance:\n`);
     for (const hub of areaHubs) {
-      console.log(`- ${hub.area_slug}: ${hub.views} views / ${hub.visitors} visitors / ${hub.follows} follows / ${hub.preferences} preferences (${pct(hub.follows, hub.views)} follow rate)`);
+      console.log(`- ${safeLabel(hub.area_slug)}: ${hub.views} views / ${hub.visitors} visitors / ${hub.follows} follows / ${hub.preferences} preferences (${pct(hub.follows, hub.views)} follow rate)`);
     }
   }
 } catch {
+  incompleteSections.push("activation");
   console.log(`\n### Activation analytics\n`);
   console.log(`Activation analytics unavailable or not migrated. Run scripts/migrate-activation-events.mjs and scripts/migrate-page-views.mjs.`);
 }
@@ -501,4 +535,11 @@ if (toTelegram) {
   ].filter(Boolean).join("\n");
   const result = await sendTelegramAlert({ status: "COMPLETED", summary });
   console.log(result.ok ? `\nTelegram: delivered.` : `\nTelegram: NOT delivered (${result.error}).`);
+}
+
+if (incompleteSections.length > 0) {
+  console.log(`\nReport status: INCOMPLETE — failed section(s): ${incompleteSections.join(", ")}. Do not treat missing sections as zero.`);
+  process.exitCode = 2;
+} else {
+  console.log(`\nReport status: COMPLETE`);
 }

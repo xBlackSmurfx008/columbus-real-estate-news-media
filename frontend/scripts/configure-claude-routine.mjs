@@ -19,9 +19,13 @@ const configurations = {
     file: '../prompts/CLAUDE_WEEKLY_SEO.md', version: 'v2 live-corpus' },
   monthly: { id: 'trig_014fQXTnGRGStYeFdeZXSvED', name: 'cre-news-monthly-review',
     file: '../prompts/CLAUDE_MONTHLY_REVIEW.md', version: 'v1 planning-only' },
+  // The CMO trigger id is not recorded in the repository yet; pass it explicitly.
+  cmo: { id: arg('trigger-id'), name: 'cre-news-cmo-weekly',
+    file: '../prompts/CLAUDE_CMO_WEEKLY.md', version: 'v3 decision-loop' },
 };
 const configuration = configurations[routineKey];
 if (!configuration) throw new Error('KNOWN_ROUTINE_REQUIRED');
+if (!/^trig_[A-Za-z0-9]+$/.test(configuration.id ?? '')) throw new Error('TRIGGER_ID_REQUIRED');
 const apply = process.argv.includes('--apply');
 if (apply && arg('confirm') !== `configure-${configuration.name}`) throw new Error('CONFIRMATION_REQUIRED');
 const routineUrl = `https://claude.ai/code/routines/${configuration.id}`;

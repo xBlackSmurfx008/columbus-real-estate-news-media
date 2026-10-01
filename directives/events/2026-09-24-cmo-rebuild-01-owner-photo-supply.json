@@ -1,0 +1,15 @@
+{
+  "schema": "cren-directive-event-v1",
+  "item": "owner-photo-supply",
+  "at": "2026-09-24",
+  "actor": "cmo-rebuild",
+  "type": "open",
+  "kind": "owner",
+  "status": "queued",
+  "priority": 5,
+  "title": "Decide whether CREN will supply its own documentary photos",
+  "question": "Will you take or commission documentary photos for held stories, starting with the WWCD building at 1036 S. Front St. before it is demolished: yes or no?",
+  "cost_of_delay": "Three verified stories are held only for images (newsroom briefs 2026-09-24 to 2026-09-26); the WWCD photo window closes at demolition.",
+  "default_if_unanswered": "No: the newsroom keeps holding image-blocked stories under current policy.",
+  "note": "First raised in directives/2026-09-24-cmo.md. Queued behind the three-item owner cap."
+}

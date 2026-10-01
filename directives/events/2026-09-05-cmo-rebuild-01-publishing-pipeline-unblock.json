@@ -1,0 +1,14 @@
+{
+  "schema": "cren-directive-event-v1",
+  "item": "publishing-pipeline-unblock",
+  "at": "2026-09-05",
+  "actor": "cmo-rebuild",
+  "type": "open",
+  "kind": "engineering",
+  "status": "proposed",
+  "priority": 2,
+  "title": "Unblock the newsroom publishing pipeline",
+  "why": "Backfilled. Issued in varying forms (publish-capable routine, image constraint, image supply, PDF tooling, 403 blocks) in directives/2026-09-05-cmo.md through 2026-09-26-cmo.md.",
+  "definition_of_done": "The newsroom can take a verified story with a compliant image to proof.",
+  "verify": "A newsroom brief records a draft package reaching proof."
+}

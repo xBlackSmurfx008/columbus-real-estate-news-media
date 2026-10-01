@@ -1,0 +1,229 @@
+{
+  "prompt_version": "cren-article-v1.0.2",
+  "title": "One Twenty Vine: 242 Apartments Approved for Arena District Lot",
+  "category": "Development",
+  "author": "CRE News Staff",
+  "date": "2026-10-01",
+  "excerpt": "Nationwide Realty Investors won Columbus Downtown Commission approval for One Twenty Vine, a 242-unit apartment plan on an Arena District lot at 154 Vine Street.",
+  "answer_summary": "Nationwide Realty Investors won Columbus Downtown Commission approval on September 22, 2026 for One Twenty Vine, a two-building, 242-unit apartment project on an Arena District parking lot at 154 Vine Street. The design clears review, but the project still needs building permits, and no construction date has been set.",
+  "primary_keyword": "one twenty vine",
+  "meta_description": "The Columbus Downtown Commission approved One Twenty Vine, Nationwide Realty Investors' 242-unit, two-building apartment plan for an Arena District parking lot.",
+  "fact_checked_at": "2026-10-01T10:45:00Z",
+  "canonical_event_key": "one-twenty-vine-arena-district-242-apartments",
+  "area_slug": null,
+  "topic_slug": "development",
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "development",
+    "arena-district",
+    "apartments",
+    "nationwide-realty-investors"
+  ],
+  "read_time": "4 min",
+  "featured": false,
+  "image_url": null,
+  "location": {
+    "name": "Columbus, Ohio",
+    "state": "OH"
+  },
+  "body": "Nationwide Realty Investors won Columbus Downtown Commission approval on September 22, 2026 for One Twenty Vine, a two-building, 242-unit apartment project on an Arena District parking lot at 154 Vine Street. The design clears review, but the project still needs building permits, and no construction date has been set.\n\n## How the Arena District lot would be built\n\nThe Columbus Downtown Commission, the city board that signs off on the design of downtown buildings, approved the project's design at its September 22, 2026 meeting, as reported by the [Columbus Navigator](https://www.columbusnavigator.com/one-twenty-vine-arena-district-apartments/) and [NBC4](https://www.yahoo.com/news/articles/arena-district-parking-lot-slated-123000614.html). Wood framing over a concrete podium is a common way to add height at lower cost than all-concrete construction, and the enclosed ground-floor parking keeps cars off the street wall.\n\nPlans call for two seven-story buildings, each with five floors of wood framing over a two-story podium, rising to a parapet of just over 83 feet. The 242 apartments would sit above a ground floor holding a leasing office, a fitness center, a resident lounge, and 56 enclosed parking spaces, with 10 bicycle spaces and no retail. A third-floor skywalk would connect the buildings to the neighboring Kilbourne Garage, and a shared interior courtyard would add a pool deck and outdoor gathering space.\n\n## A surface parking lot slated for housing\n\nThe buildings would replace a gravel parking lot on the block bounded by Vine, Spruce, Armstrong, and Kilbourne streets, where nine parcels and portions of the surrounding right-of-way would be combined and the site readdressed from 154 Vine Street to 120 Vine Street. The site is a paid surface lot today, one of the gravel blocks that still interrupt the Arena District's street grid near Nationwide Arena.\n\nA CREN check of the city's public building-permit records on October 1, 2026 found no new-structure permit on file for 154 or 120 Vine Street, matching a project that has cleared design review but not yet reached the construction stage.\n\n## Nationwide's second building on Vine Street\n\nThe same partnership built Two Twenty Vine, a 124-unit apartment building immediately west at 220 Vine Street, whose new-structure permit the city issued on December 5, 2023. The new project would roughly double that unit count on the adjacent block, extending Nationwide Realty Investors' build-out of the Vine Street corridor beside Nationwide Arena.\n\nNationwide Realty Investors is the development arm of Nationwide Insurance and has led the Arena District's build-out from rail yards and parking lots into offices, apartments, and entertainment.\n\n## What the records confirm and what they leave open\n\nCREN matched the unit count and approval date against two independent news accounts and verified the site's permit status and the neighboring building's 2023 permit directly in the City of Columbus [building-permit dataset](https://opendata.columbus.gov/datasets/columbus::building-permits), a public-domain feed released under a Creative Commons Zero waiver. The Downtown Commission's own minutes for the September 22, 2026 meeting had not been posted to the city's website as of this report, so the vote is sourced to those news accounts rather than a city document.\n\nNo construction timeline, apartment rents, or affordability set-aside has been announced, and the courtyard and amenity details come from the applicant's submitted plans as described in that coverage.\n\n## What to watch next\n\nThe next verifiable step is a building-permit application for 120 Vine Street, which would signal a construction start and appear in the same public dataset CREN checked for this report. Until then, the plan is a design on paper, cleared for how it looks but not yet permitted to be built.",
+  "source_ledger": [
+    {
+      "id": "S1",
+      "type": "PRIMARY",
+      "url": "https://services1.arcgis.com/9yy6msODkIBzkUXU/arcgis/rest/services/Building_Permits/FeatureServer/0",
+      "publisher": "City of Columbus",
+      "title": "Building Permits feature service (ArcGIS REST)",
+      "published_at": "2026-10-01",
+      "fetched_at": "2026-10-01T10:30:00Z",
+      "http_status": 200,
+      "fetch_note": "Queried this CC0 ArcGIS feature service on October 1, 2026. A search for SITE_ADDRESS beginning '154 VINE' or '120 VINE' returned only a 2014 electrical permit at 154 Vine St and a 2021 commercial MEP permit at 120 Vine St, and no 'New Structure' permit for either address, consistent with a project that has cleared design review but not filed for construction. A query for new-structure permits on Vine Street in ZIP 43215 returned '220 VINE ST | Multi Family - New Structure | issued 2023-12-05 | 124 units', confirming Two Twenty Vine's unit count and permit date."
+    },
+    {
+      "id": "S2",
+      "type": "PRIMARY",
+      "url": "https://opendata.columbus.gov/datasets/columbus::building-permits",
+      "publisher": "City of Columbus",
+      "title": "Building Permits (Open Data)",
+      "published_at": "2026-10-01",
+      "fetched_at": "2026-10-01T10:44:00Z",
+      "http_status": 200,
+      "fetch_note": "Human-readable Open Data hub landing page for the same Building Permits dataset (hub item f7a785b863454d96a0fe3f5aa5368e7d), released under a Creative Commons Zero 1.0 public-domain waiver. The page returned HTTP 200 and renders its detail through client-side scripting, so the machine-readable records were pulled from the feature service in S1; this is the reader-facing link to the same CC0 data."
+    },
+    {
+      "id": "S3",
+      "type": "SECONDARY",
+      "url": "https://www.columbusnavigator.com/one-twenty-vine-arena-district-apartments/",
+      "publisher": "Columbus Navigator",
+      "title": "242-Unit Apartment Building Proposed For Arena District Parking Lot",
+      "published_at": "2026-09-24",
+      "fetched_at": "2026-10-01T10:15:00Z",
+      "http_status": 200,
+      "fetch_note": "Full article fetched October 1, 2026 (byline James Arney, published September 24, 2026). Confirms 242 units; future address 120 Vine St (from 154 Vine St); block bounded by Vine, Spruce, Armstrong and Kilbourne; nine parcels plus right-of-way combined; seven stories as a two-story base with five stories above; parapet just over 83 feet; residential only, no retail; first-floor leasing office, fitness center, resident lounge and 56 enclosed parking spaces; third-floor skywalk to the Kilbourne Garage; interior courtyard with a pool; owner HP Land Development LTD (a Hamilton Parker affiliate) with Nationwide Realty Investors as development partner; architect The Columbus Architectural Studio; Downtown Commission approval Tuesday, September 22, 2026; building permits the next requirement; no construction timeline announced; Two Twenty Vine (124 apartments) built immediately west by the same partnership."
+    },
+    {
+      "id": "S4",
+      "type": "SECONDARY",
+      "url": "https://www.yahoo.com/news/articles/arena-district-parking-lot-slated-123000614.html",
+      "publisher": "NBC4 / WCMH (via Yahoo News)",
+      "title": "Arena District parking lot slated for 242 apartments",
+      "published_at": "2026-09-28",
+      "fetched_at": "2026-10-01T10:25:00Z",
+      "http_status": 200,
+      "fetch_note": "Full NBC4/WCMH article fetched October 1, 2026 via its Yahoo News syndication (byline Thomas Cobb, WCMH Columbus, published September 28, 2026). An independent newsroom from S3; corroborates 242 apartments across two seven-story buildings (five wood floors over a two-story podium) at 154 Vine St (to be 120 Vine St); nine parcels plus right-of-way; 56 enclosed first-floor parking spaces and 10 bicycle spaces; third-floor skywalk to the Kilbourne Garage; shared courtyard with a pool deck; Downtown Commission approval September 22, 2026; design review approved but construction permits still required; no construction timeline; Two Twenty Vine, a 124-unit building immediately west. Original publisher nbc4i.com returned HTTP 403 to direct fetch; the Yahoo syndication is the same origin, not an independent one."
+    },
+    {
+      "id": "S5",
+      "type": "PRIMARY",
+      "url": "https://nominatim.openstreetmap.org/search?q=154+Vine+Street%2C+Columbus%2C+Ohio&format=json",
+      "publisher": "OpenStreetMap",
+      "title": "OpenStreetMap Nominatim geocoding, 154 Vine Street, Columbus, Ohio",
+      "published_at": "2026-10-01",
+      "fetched_at": "2026-10-01T10:35:00Z",
+      "http_status": 200,
+      "fetch_note": "Geocoded October 1, 2026 for the CREN locator map. 154 Vine Street returned 39.9714988, -83.0080316 (Arena District, 43215); 220 Vine Street (Two Twenty Vine) returned 39.9719370, -83.0084582, immediately west; Nationwide Arena returned 39.9691873, -83.0060800. OpenStreetMap data is licensed ODbL (© OpenStreetMap contributors), attributed on the rendered map."
+    },
+    {
+      "id": "S6",
+      "type": "PRIMARY",
+      "url": "https://www.columbus.gov/Business-Development/Building-Zoning-Services/Boards-and-Commissions/Historic-Preservation-Development-Review-Boards-Commissions/Downtown-Commission",
+      "publisher": "City of Columbus",
+      "title": "Downtown Commission (Building and Zoning Services)",
+      "published_at": "2026-10-01",
+      "fetched_at": "2026-10-01T10:05:00Z",
+      "http_status": 200,
+      "fetch_note": "Fetched October 1, 2026. The commission's meeting-materials table lists agendas and minutes only through December 16, 2025 with active links; no agenda or minutes document was posted for the September 22, 2026 meeting as of this fetch, so the vote itself could not be confirmed from a primary city document this run."
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "C1",
+      "claim": "Nationwide Realty Investors won Columbus Downtown Commission approval on September 22, 2026 for One Twenty Vine, a two-building, 242-unit apartment project on an Arena District parking lot at 154 Vine Street.",
+      "source_ids": ["S3", "S4"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C2",
+      "claim": "The Columbus Downtown Commission, the city board that signs off on the design of downtown buildings, approved the project's design at its September 22, 2026 meeting, as reported by the [Columbus Navigator](https://www.columbusnavigator.com/one-twenty-vine-arena-district-apartments/) and [NBC4](https://www.yahoo.com/news/articles/arena-district-parking-lot-slated-123000614.html).",
+      "source_ids": ["S3", "S4"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C3",
+      "claim": "Plans call for two seven-story buildings, each with five floors of wood framing over a two-story podium, rising to a parapet of just over 83 feet.",
+      "source_ids": ["S3", "S4"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C4",
+      "claim": "The 242 apartments would sit above a ground floor holding a leasing office, a fitness center, a resident lounge, and 56 enclosed parking spaces, with 10 bicycle spaces and no retail.",
+      "source_ids": ["S3", "S4"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C5",
+      "claim": "The buildings would replace a gravel parking lot on the block bounded by Vine, Spruce, Armstrong, and Kilbourne streets, where nine parcels and portions of the surrounding right-of-way would be combined and the site readdressed from 154 Vine Street to 120 Vine Street.",
+      "source_ids": ["S3", "S4"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C6",
+      "claim": "A CREN check of the city's public building-permit records on October 1, 2026 found no new-structure permit on file for 154 or 120 Vine Street, matching a project that has cleared design review but not yet reached the construction stage.",
+      "source_ids": ["S1", "S2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C7",
+      "claim": "The same partnership built Two Twenty Vine, a 124-unit apartment building immediately west at 220 Vine Street, whose new-structure permit the city issued on December 5, 2023.",
+      "source_ids": ["S1", "S3", "S4"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C8",
+      "claim": "CREN matched the unit count and approval date against two independent news accounts and verified the site's permit status and the neighboring building's 2023 permit directly in the City of Columbus [building-permit dataset](https://opendata.columbus.gov/datasets/columbus::building-permits), a public-domain feed released under a Creative Commons Zero waiver.",
+      "source_ids": ["S1", "S2", "S3", "S4"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C9",
+      "claim": "The Downtown Commission's own minutes for the September 22, 2026 meeting had not been posted to the city's website as of this report, so the vote is sourced to those news accounts rather than a city document.",
+      "source_ids": ["S6"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C10",
+      "claim": "The next verifiable step is a building-permit application for 120 Vine Street, which would signal a construction start and appear in the same public dataset CREN checked for this report.",
+      "source_ids": ["S1", "S3", "S4"],
+      "kind": "FACT"
+    }
+  ],
+  "entity_ledger": [
+    {
+      "name": "Nationwide Realty Investors",
+      "source_ids": ["S3", "S4"]
+    },
+    {
+      "name": "Columbus Downtown Commission",
+      "source_ids": ["S3", "S4", "S6"]
+    },
+    {
+      "name": "City of Columbus",
+      "source_ids": ["S1", "S2"]
+    }
+  ],
+  "image_brief": {
+    "primary_request": "A CREN locator map showing where the proposed One Twenty Vine apartments would rise in the Arena District, built from OpenStreetMap geometry so it needs no photograph of the gravel lot.",
+    "editorial_idea": "Place the proposed 242-unit project in its Arena District context, on a surface lot just east of the developer's existing Two Twenty Vine and a few blocks from Nationwide Arena, so readers see the block-by-block infill pattern without a copyrighted rendering or an unavailable site photo.",
+    "story_anchors": [
+      "242-unit, two-building apartment project proposed at 120 Vine Street",
+      "immediately east of Nationwide Realty Investors' existing Two Twenty Vine",
+      "an Arena District surface parking lot, blocks from Nationwide Arena"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "The site is a gravel surface parking lot with no rights-cleared documentary photograph available, and only the architect's copyrighted renderings exist, so CREN used a locator map built from OpenStreetMap geometry (image ladder step 2) rather than a photo or a rendering. Coordinates for the site, Two Twenty Vine, and Nationwide Arena were geocoded from OpenStreetMap on October 1, 2026, and the building-permit status was pulled from the City of Columbus open dataset.",
+    "image_policy_version": "cren-image-v2-real-photo-first",
+    "image_role": "DATA",
+    "source_review": [
+      {
+        "url": "https://www.openstreetmap.org/#map=17/39.9715/-83.0080",
+        "outcome": "SELECTED",
+        "note": "OpenStreetMap geometry for the Arena District. The three map points (120/154 Vine Street, Two Twenty Vine at 220 Vine Street, and Nationwide Arena) were geocoded here on October 1, 2026 and plotted; ODbL requires the attribution printed on the image, which it carries."
+      },
+      {
+        "url": "https://www.columbusnavigator.com/one-twenty-vine-arena-district-apartments/",
+        "outcome": "UNSUITABLE",
+        "note": "The only project imagery in the news coverage is the architect's copyrighted design rendering; public display is not redistribution permission, and an official rendering may not be passed off as a site photograph, so it was not used."
+      }
+    ],
+    "avoid": "Do not present the map as a photograph or rendering of the building; do not draw a building footprint or any structure the public record does not establish; do not imply construction has started."
+  },
+  "image_alt": "CREN locator map of the Arena District showing the proposed 120 Vine Street apartment site in red, with Two Twenty Vine and Nationwide Arena nearby.",
+  "image_provenance": {
+    "type": "CREN_GRAPHIC",
+    "caption": "CREN graphic. Data: OpenStreetMap (© OpenStreetMap contributors, ODbL), geocoded October 1, 2026; building-permit status from City of Columbus Building Permits (CC0).",
+    "source": "https://www.openstreetmap.org/#map=17/39.9715/-83.0080",
+    "license": "OpenStreetMap data © OpenStreetMap contributors, ODbL; building-permit data CC0 1.0 (public domain)",
+    "permission_evidence": "Original CREN map built from OpenStreetMap geometry (ODbL, attributed on the image) and the City of Columbus Building Permits open dataset (CC0 1.0); no third-party image content.",
+    "credit": "CREN graphic",
+    "location_note": "Arena District, Columbus, Ohio; the red marker is 120 Vine Street (also addressed 154 Vine Street), with Two Twenty Vine and Nationwide Arena shown for context.",
+    "date_note": "Map created October 1, 2026; coordinates geocoded October 1, 2026; the Downtown Commission design approval it illustrates is dated September 22, 2026.",
+    "verified_by": "CREN cloud image desk",
+    "verified_at": "2026-10-01T10:45:00Z"
+  },
+  "cloud_image_asset": {
+    "path": "frontend/content/images/2026-10-01-one-twenty-vine-arena-district-apartments.png",
+    "git_blob_sha": "be5e554a8f493df3af8a0f1e39843bd8ceac295e",
+    "source_sha256": "2e4bb8b0a1379f4c7bba59a8780f303b03ee69ac633ff376964818eeca403f9f",
+    "visual_review": {
+      "reviewed_by": "CREN cloud image desk",
+      "reviewed_at": "2026-10-01T10:45:00Z",
+      "natural_appearance": true,
+      "geometry_and_shadows": true,
+      "no_synthetic_artifacts": true,
+      "story_match": true,
+      "truthful_caption": true,
+      "mobile_crop": true
+    }
+  }
+}

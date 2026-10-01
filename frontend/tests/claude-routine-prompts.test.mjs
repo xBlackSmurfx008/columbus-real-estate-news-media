@@ -10,6 +10,8 @@ test('every cloud routine has a verified branch-to-main delivery contract', () =
     'CLAUDE_SOCIAL_LISTENER.md',
     'CLAUDE_WEEKLY_SEO.md',
     'CLAUDE_MONTHLY_REVIEW.md',
+    'CLAUDE_CMO_WEEKLY.md',
+    'CLAUDE_TASK_DISPATCHER.md',
   ];
 
   for (const name of prompts) {

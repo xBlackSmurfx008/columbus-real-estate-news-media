@@ -49,4 +49,11 @@ Every published fact must trace to a fetched source. Dates, addresses, project s
 
 Claude produces the public handoff package. Vercel owns import, image preparation, proof delivery, correction intake, approval authentication, publication, and production health. Telegram is for operational alerts. GitHub Actions are an additional monitor only after an actual scheduled runner execution is observed.
 
+## Directive execution
+
+The CMO weekly routine writes directives and breaks them into task cards in `directives/tasks/`. The task dispatcher
+routine (`frontend/prompts/CLAUDE_TASK_DISPATCHER.md`) spawns `cren-engineer` and `cren-docs` agents
+(`.claude/agents/`) for ready cards and has `cren-verifier` check merged work. A card is done only after independent
+verification. Owner-only steps are owner cards, never agent work. Board: `npm run tasks:board` from `frontend/`.
+
 Market-data refreshes, CRM work, outreach, billing, credential changes, and production configuration are separate workflows. The newsroom routine must not perform them or broaden its authority.

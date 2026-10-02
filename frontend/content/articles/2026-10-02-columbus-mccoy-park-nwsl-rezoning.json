@@ -1,0 +1,292 @@
+{
+  "prompt_version": "cren-article-v1.0.2",
+  "title": "Columbus Finalizes McCoy Park Rezoning for NWSL Training Site",
+  "category": "Development",
+  "author": "CRE News Staff",
+  "date": "2026-10-02",
+  "excerpt": "Columbus City Council has finalized the rezoning of 21.3 acres on the southwest side, including part of McCoy Park, for a private NWSL training facility.",
+  "answer_summary": "Columbus has finalized the rezoning of 21.3 acres on the city's southwest side, including part of city-owned McCoy Park, to allow a private National Women's Soccer League training facility. City Council's zoning committee approved the change on September 14, 2026, and no construction permit had been filed as of October 2.",
+  "primary_keyword": "mccoy park rezoning",
+  "meta_description": "Columbus finalized the McCoy Park rezoning on Sept. 14, 2026, clearing 21.3 acres on the southwest side for a private NWSL training facility; no permit is filed.",
+  "fact_checked_at": "2026-10-02T10:52:00Z",
+  "canonical_event_key": "mccoy-park-nwsl-training-facility-rezoning-z26-022",
+  "area_slug": null,
+  "topic_slug": "development",
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "development",
+    "mccoy-park",
+    "nwsl",
+    "rezoning",
+    "southwest-columbus"
+  ],
+  "read_time": "4 min",
+  "featured": false,
+  "image_url": null,
+  "location": {
+    "name": "Columbus, Ohio",
+    "state": "OH"
+  },
+  "body": "Columbus has finalized the rezoning of 21.3 acres on the city's southwest side, including part of city-owned McCoy Park, to allow a private National Women's Soccer League training facility. City Council's zoning committee approved the change on September 14, 2026, and no construction permit had been filed as of October 2.\n\n## What the rezoning allows\n\nOrdinance 2452-2026, carrying rezoning case Z26-022, changes 21.3 acres at 600 Stimmel Road from a mix of residential, rural, and commercial districts to a Commercial Planned Development district, according to the [Columbus City Council record](https://columbus.legistar.com/LegislationDetail.aspx?ID=138384&GUID=C04C4E09-97A0-4106-B1D8-447ED783A22E). The city's own development staff report describes the proposed use as a private athletic training facility for the National Women's Soccer League, and lists the City of Columbus as the property owner and Phil Dangerfield, represented by attorney David Hodge, as the applicant.\n\nThe 21.3-acre site is made up of four parcels: one holding the public McCoy Park, two that are undeveloped, and one that was previously a manufactured-home park.\n\n## How it cleared city hall\n\nThe Columbus Development Commission, which reviews zoning cases before they reach the council, recommended conditional approval at an August 13, 2026 hearing, pending a traffic access study. The council introduced the ordinance on August 28, 2026, and its zoning committee approved it on September 14, 2026, waiving the measure's second reading.\n\nThe council president and mayor signed the ordinance and the city clerk attested it by September 16, 2026, making the rezoning final, though the online legislative record does not publish an individual roll-call tally.\n\n## What the facility would include\n\nIndependent coverage by [WOSU](https://www.wosu.org/politics-government/2026-06-09/southwest-area-commission-to-consider-nwsl-facility-plans-at-mccoy-park) and [NBC4](https://www.yahoo.com/news/us/articles/southwest-area-commission-vote-rezoning-202820777.html) described a roughly $50 million project backed by the Haslam Sports Group, with five soccer fields and a two-story, 45,000-square-foot training building. The same reporting put $25 million from the city alongside $25 million from Franklin County, plus commitments of $12 million for food-insecurity and early-childhood programs and $3 million toward new southwest-side parks.\n\nThose accounts, published in April and June 2026, described a site of nearly 30 acres and a groundbreaking targeted for later in 2026, figures that are broader than, and predate, the 21.3-acre rezoning the council has now completed.\n\n## The park at the center of the debate\n\nThe McCoy Park parcel is designated for 'park and open space' in the city's 2009 Southwest Area Plan, a guide the private athletic use departs from, the staff report notes. On September 16, 2026, the council also authorized moving $941,941.53 to modify a Kimley-Horn contract for a 'Gender Road Park and McCoy Park Improvements Project,' according to a separate [council ordinance](https://columbus.legistar.com/LegislationDetail.aspx?ID=138130&GUID=4FD58D47-9329-4242-83C8-BE0B3E43BA84).\n\nEarlier reporting said the city shelved an adaptive-park design after neighborhood opposition and pledged a working group and a replacement park on the southwest side.\n\n## What the records leave open\n\nA CREN search of the City of Columbus [building-permit dataset](https://opendata.columbus.gov/datasets/columbus::building-permits) on October 2, 2026 found no construction permit on file for the Stimmel Road site, consistent with a project that has cleared zoning but not yet filed to build. The council record marks the ordinance passed but lists no individual vote count, and the facility's field layout, building size, and acreage figures come from news coverage rather than the rezoning text itself.\n\n## What to watch next\n\nThe McCoy Park rezoning is now law, but the next verifiable step is a building-permit application for the Stimmel Road site, which would signal a construction start and appear in the same public dataset CREN checked. A separate replacement-park plan and the facility's groundbreaking remain the public milestones that would move the project from a zoning decision on paper to construction.",
+  "source_ledger": [
+    {
+      "id": "S1",
+      "type": "PRIMARY",
+      "url": "https://columbus.legistar.com/LegislationDetail.aspx?ID=138384&GUID=C04C4E09-97A0-4106-B1D8-447ED783A22E",
+      "publisher": "Columbus City Council",
+      "title": "Ordinance 2452-2026 (Rezoning Z26-022, 600 Stimmel Rd.)",
+      "published_at": "2026-09-16",
+      "fetched_at": "2026-10-02T10:20:00Z",
+      "http_status": 200,
+      "fetch_note": "Legislative record for ordinance 2452-2026 / rezoning case Z26-022. The machine-readable action history was pulled from the Columbus Legistar web API (webapi.legistar.com/v1/columbus/matters/138384 and its /histories and /events/6206) on October 2, 2026, which returned HTTP 200: status 'Passed'; zoning committee action 'Approved' with the second reading waived at the September 14, 2026 Zoning Committee meeting (Event 6206, 6:30 PM, City Council Chambers Rm 231); signed by the council president September 14, by the mayor September 15, and attested by the city clerk September 16, 2026. No individual roll-call tally is published. This reader-facing LegislationDetail page is the human-readable link to the same record."
+    },
+    {
+      "id": "S2",
+      "type": "PRIMARY",
+      "url": "https://legistar3.granicus.com/Columbus/attachments/a00899be-3b1b-4110-b72a-d26230ec1b79.pdf",
+      "publisher": "City of Columbus, Development Commission",
+      "title": "Staff report, Z26-022 (ORD#2452-2026 attachments)",
+      "published_at": "2026-08-13",
+      "fetched_at": "2026-10-02T10:35:00Z",
+      "http_status": 200,
+      "fetch_note": "Official Development Commission staff report attached to ordinance 2452-2026, fetched October 2, 2026. States: location 600 STIMMEL RD. (43223), 21.3 acres, 310 feet east of Harmon Avenue (parcels 010-095231, 010-095234, 010-095233, 425-295576); request CPD, Commercial Planned Development District (H-110); proposed use 'Private athletic training facility'; background describes redevelopment 'as an athletic training facility for the National Women's Soccer League (NWSL)'; property owner City of Columbus; applicant Phil Dangerfield c/o David Hodge, Atty.; four parcels, one R-3 developed with the public park (McCoy Park), two undeveloped (R, Rural and C-1, Commercial), one C-4 previously a manufactured-home park; McCoy Park parcel within the Southwest Area Plan (2009) recommending 'Park and Open Space'; Southwest Area Commission recommendation for approval; City Departments' recommendation Conditional Approval pending a traffic access study."
+    },
+    {
+      "id": "S3",
+      "type": "PRIMARY",
+      "url": "https://columbus.legistar.com/LegislationDetail.aspx?ID=138130&GUID=4FD58D47-9329-4242-83C8-BE0B3E43BA84",
+      "publisher": "Columbus City Council",
+      "title": "Ordinance 2204-2026 (Gender Road Park and McCoy Park Improvements Project)",
+      "published_at": "2026-09-16",
+      "fetched_at": "2026-10-02T10:40:00Z",
+      "http_status": 200,
+      "fetch_note": "Legislative record for ordinance 2204-2026, pulled from the Columbus Legistar web API (matter 138130) on October 2, 2026 (HTTP 200): status 'Passed', passed September 16, 2026. Authorizes the Director of Recreation and Parks to modify an existing contract with Kimley-Horn and Associates, Inc. for the 'Gender Road Park and McCoy Park Improvements Project', and the transfer, appropriation, and expenditure of $941,941.53 from the Recreation and Parks Voted Bond Fund, with an emergency clause."
+    },
+    {
+      "id": "S4",
+      "type": "PRIMARY",
+      "url": "https://opendata.columbus.gov/datasets/columbus::building-permits",
+      "publisher": "City of Columbus",
+      "title": "Building Permits (Open Data)",
+      "published_at": "2026-10-02",
+      "fetched_at": "2026-10-02T10:10:00Z",
+      "http_status": 200,
+      "fetch_note": "City of Columbus Building Permits open dataset (hub item f7a785b863454d96a0fe3f5aa5368e7d), released under a Creative Commons Zero 1.0 public-domain waiver. The machine-readable records were queried from the dataset's ArcGIS feature service (services1.arcgis.com/9yy6msODkIBzkUXU/arcgis/rest/services/Building_Permits/FeatureServer/0) on October 2, 2026; a search for SITE_ADDRESS containing 'STIMMEL' returned zero permit records, confirming no construction permit is on file for the site. This is the reader-facing link to the same CC0 data."
+    },
+    {
+      "id": "S5",
+      "type": "PRIMARY",
+      "url": "https://nominatim.openstreetmap.org/search?q=600+Stimmel+Road%2C+Columbus%2C+Ohio&format=json",
+      "publisher": "OpenStreetMap",
+      "title": "OpenStreetMap Nominatim geocoding, 600 Stimmel Road, Columbus, Ohio",
+      "published_at": "2026-10-02",
+      "fetched_at": "2026-10-02T10:45:00Z",
+      "http_status": 200,
+      "fetch_note": "Geocoded October 2, 2026 for the CREN locator map. 600 Stimmel Road returned 39.9353870, -83.0123746 (Southwest Columbus, Franklin Township), and McCoy Park returned 39.9368152, -83.0123329 at effectively the same location; Downtown Columbus returned 39.9602848, -83.0024576 for context. OpenStreetMap data is licensed ODbL (© OpenStreetMap contributors), attributed on the rendered map."
+    },
+    {
+      "id": "S6",
+      "type": "SECONDARY",
+      "url": "https://www.wosu.org/politics-government/2026-06-09/southwest-area-commission-to-consider-nwsl-facility-plans-at-mccoy-park",
+      "publisher": "WOSU",
+      "title": "Southwest Area Commission delays vote on NWSL facility plans at McCoy Park",
+      "published_at": "2026-06-09",
+      "fetched_at": "2026-10-02T10:25:00Z",
+      "http_status": 200,
+      "fetch_note": "Fetched October 2, 2026 (published June 9, 2026). Ties McCoy Park to a Haslam Sports Group NWSL training facility; describes nearly 30 acres south of Greenlawn Avenue and east of Harmon Avenue; five soccer fields (three for community use, two full plus one partial for team practice); a two-story, 45,000-square-foot training building with locker rooms and a cafeteria and heated grass fields; $50 million from Columbus and Franklin County; $12 million from the ownership group for food insecurity and early childhood education; $3 million for new southwest-side parks; the Southwest Area Commission tabled its advisory vote; groundbreaking then scheduled for October with a 2028 season target."
+    },
+    {
+      "id": "S7",
+      "type": "SECONDARY",
+      "url": "https://www.yahoo.com/news/us/articles/southwest-area-commission-vote-rezoning-202820777.html",
+      "publisher": "NBC4 / WCMH (via Yahoo News)",
+      "title": "Southwest Area Commission to vote on rezoning of McCoy Park",
+      "published_at": "2026-06-09",
+      "fetched_at": "2026-10-02T10:28:00Z",
+      "http_status": 200,
+      "fetch_note": "NBC4/WCMH report fetched October 2, 2026 via its Yahoo News syndication (published June 9, 2026); an independent newsroom from S6. Ties the McCoy Park rezoning to a Haslam Sports Group NWSL training facility with fields for the professional team and a youth team, about 200 parking spaces, and a training building; names a target of final city council approval in September 2026, construction beginning in fall 2026, and a 2028 inaugural season."
+    },
+    {
+      "id": "S8",
+      "type": "SECONDARY",
+      "url": "https://abc6onyourside.com/news/local/five-fields-big-lot-first-look-at-new-nwsl-national-womens-soccer-league-facility-after-adaptive-park-plan-benched-mccoy-park-southside-neighbors-columbus",
+      "publisher": "ABC6 (WSYX)",
+      "title": "City gives first look at NWSL training facility after adaptive park plan benched",
+      "published_at": "2026-04-24",
+      "fetched_at": "2026-10-02T10:30:00Z",
+      "http_status": 200,
+      "fetch_note": "Fetched October 2, 2026 (published April 24, 2026). Reports five fields and a large parking lot along Harmon Avenue for the Haslam Sports Group facility; $50 million total ($25 million city plus $25 million county); a $12 million private donation and a $3 million contribution toward an adaptive-park alternative; the original adaptive-park plan 'benched' after community backlash, with city commitments to a neighbor working group and a replacement park location submitted to council."
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "C1",
+      "claim": "Columbus has finalized the rezoning of 21.3 acres on the city's southwest side, including part of city-owned McCoy Park, to allow a private National Women's Soccer League training facility.",
+      "source_ids": ["S1", "S2"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C2",
+      "claim": "City Council's zoning committee approved the change on September 14, 2026, and no construction permit had been filed as of October 2.",
+      "source_ids": ["S1", "S4"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C3",
+      "claim": "Ordinance 2452-2026, carrying rezoning case Z26-022, changes 21.3 acres at 600 Stimmel Road from a mix of residential, rural, and commercial districts to a Commercial Planned Development district, according to the [Columbus City Council record](https://columbus.legistar.com/LegislationDetail.aspx?ID=138384&GUID=C04C4E09-97A0-4106-B1D8-447ED783A22E).",
+      "source_ids": ["S1", "S2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C4",
+      "claim": "The city's own development staff report describes the proposed use as a private athletic training facility for the National Women's Soccer League, and lists the City of Columbus as the property owner and Phil Dangerfield, represented by attorney David Hodge, as the applicant.",
+      "source_ids": ["S2"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C5",
+      "claim": "The 21.3-acre site is made up of four parcels: one holding the public McCoy Park, two that are undeveloped, and one that was previously a manufactured-home park.",
+      "source_ids": ["S2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C6",
+      "claim": "The Columbus Development Commission, which reviews zoning cases before they reach the council, recommended conditional approval at an August 13, 2026 hearing, pending a traffic access study.",
+      "source_ids": ["S2"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C7",
+      "claim": "The council introduced the ordinance on August 28, 2026, and its zoning committee approved it on September 14, 2026, waiving the measure's second reading.",
+      "source_ids": ["S1"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C8",
+      "claim": "The council president and mayor signed the ordinance and the city clerk attested it by September 16, 2026, making the rezoning final, though the online legislative record does not publish an individual roll-call tally.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C9",
+      "claim": "Independent coverage by [WOSU](https://www.wosu.org/politics-government/2026-06-09/southwest-area-commission-to-consider-nwsl-facility-plans-at-mccoy-park) and [NBC4](https://www.yahoo.com/news/us/articles/southwest-area-commission-vote-rezoning-202820777.html) described a roughly $50 million project backed by the Haslam Sports Group, with five soccer fields and a two-story, 45,000-square-foot training building.",
+      "source_ids": ["S6", "S7"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C10",
+      "claim": "The same reporting put $25 million from the city alongside $25 million from Franklin County, plus commitments of $12 million for food-insecurity and early-childhood programs and $3 million toward new southwest-side parks.",
+      "source_ids": ["S6", "S8"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C11",
+      "claim": "Those accounts, published in April and June 2026, described a site of nearly 30 acres and a groundbreaking targeted for later in 2026, figures that are broader than, and predate, the 21.3-acre rezoning the council has now completed.",
+      "source_ids": ["S6", "S7", "S8"],
+      "kind": "COMPARISON"
+    },
+    {
+      "id": "C12",
+      "claim": "The McCoy Park parcel is designated for 'park and open space' in the city's 2009 Southwest Area Plan, a guide the private athletic use departs from, the staff report notes.",
+      "source_ids": ["S2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C13",
+      "claim": "On September 16, 2026, the council also authorized moving $941,941.53 to modify a Kimley-Horn contract for a 'Gender Road Park and McCoy Park Improvements Project,' according to a separate [council ordinance](https://columbus.legistar.com/LegislationDetail.aspx?ID=138130&GUID=4FD58D47-9329-4242-83C8-BE0B3E43BA84).",
+      "source_ids": ["S3"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C14",
+      "claim": "Earlier reporting said the city shelved an adaptive-park design after neighborhood opposition and pledged a working group and a replacement park on the southwest side.",
+      "source_ids": ["S8"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C15",
+      "claim": "A CREN search of the City of Columbus [building-permit dataset](https://opendata.columbus.gov/datasets/columbus::building-permits) on October 2, 2026 found no construction permit on file for the Stimmel Road site, consistent with a project that has cleared zoning but not yet filed to build.",
+      "source_ids": ["S4"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C16",
+      "claim": "The council record marks the ordinance passed but lists no individual vote count, and the facility's field layout, building size, and acreage figures come from news coverage rather than the rezoning text itself.",
+      "source_ids": ["S1", "S6"],
+      "kind": "FACT"
+    }
+  ],
+  "entity_ledger": [
+    {
+      "name": "Columbus City Council",
+      "source_ids": ["S1", "S3"]
+    },
+    {
+      "name": "Columbus Development Commission",
+      "source_ids": ["S2"]
+    },
+    {
+      "name": "Haslam Sports Group",
+      "source_ids": ["S6", "S7", "S8"]
+    },
+    {
+      "name": "City of Columbus",
+      "source_ids": ["S2", "S4"]
+    }
+  ],
+  "image_brief": {
+    "primary_request": "A CREN locator map showing where the rezoned NWSL training site sits on the southwest side of Columbus, built from OpenStreetMap geometry so it needs no photograph of the site.",
+    "editorial_idea": "Place the 600 Stimmel Road / McCoy Park site in its citywide context, southwest of downtown Columbus, so readers see where the rezoned parcels are without a copyrighted project rendering or an unavailable site photo.",
+    "story_anchors": [
+      "21.3-acre rezoned site at 600 Stimmel Road, including part of McCoy Park",
+      "southwest Columbus, away from downtown",
+      "a private NWSL training facility approved on city-owned parkland"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "No rights-cleared documentary photograph of the site or event was available, and the only project imagery in the news coverage is copyrighted design renderings, which public display does not license for redistribution and which may not be passed off as a photograph. CREN therefore used a locator map built from OpenStreetMap geometry (image ladder step 2). Coordinates for the site, McCoy Park, and downtown Columbus were geocoded from OpenStreetMap on October 2, 2026, and the building-permit status was pulled from the City of Columbus open dataset.",
+    "image_policy_version": "cren-image-v2-real-photo-first",
+    "image_role": "DATA",
+    "source_review": [
+      {
+        "url": "https://www.openstreetmap.org/#map=14/39.9354/-83.0124",
+        "outcome": "SELECTED",
+        "note": "OpenStreetMap geometry for southwest Columbus. The site (600 Stimmel Road / McCoy Park) and Downtown Columbus were geocoded here on October 2, 2026 and plotted; ODbL requires the attribution printed on the image, which it carries."
+      },
+      {
+        "url": "https://www.wosu.org/politics-government/2026-06-09/southwest-area-commission-to-consider-nwsl-facility-plans-at-mccoy-park",
+        "outcome": "RIGHTS_UNCLEAR",
+        "note": "The only project imagery accompanying the NWSL facility coverage is the applicant's and city's design renderings, which carry no public redistribution permission and are not photographs of a built facility, so none was used."
+      }
+    ],
+    "avoid": "Do not present the map as a photograph or rendering of any building; do not draw a building footprint, soccer fields, or any structure the public record does not establish; do not imply construction has started."
+  },
+  "image_alt": "CREN locator map of southwest Columbus marking the rezoned 600 Stimmel Road and McCoy Park site in red, with downtown Columbus shown for context.",
+  "image_provenance": {
+    "type": "CREN_GRAPHIC",
+    "caption": "CREN graphic. Data: OpenStreetMap (© OpenStreetMap contributors, ODbL), geocoded October 2, 2026; rezoning case Z26-022 from the City of Columbus.",
+    "source": "https://www.openstreetmap.org/#map=14/39.9354/-83.0124",
+    "license": "OpenStreetMap data © OpenStreetMap contributors, ODbL; Columbus zoning and permit data CC0 1.0 (public domain)",
+    "permission_evidence": "Original CREN map built from OpenStreetMap geometry (ODbL, attributed on the image) and City of Columbus open data (CC0 1.0); no third-party image content is reused.",
+    "credit": "CREN graphic",
+    "location_note": "Southwest Columbus, Ohio; the red marker is the rezoned 600 Stimmel Road site, which includes the public McCoy Park, with downtown Columbus shown for orientation.",
+    "date_note": "Map created October 2, 2026; coordinates geocoded October 2, 2026; the rezoning it illustrates was approved September 14, 2026 and attested September 16, 2026.",
+    "verified_by": "CREN cloud image desk",
+    "verified_at": "2026-10-02T10:50:00Z"
+  },
+  "cloud_image_asset": {
+    "path": "frontend/content/images/2026-10-02-columbus-mccoy-park-nwsl-rezoning.png",
+    "git_blob_sha": "2c6ab4b682e28a2e5e04969e4d5d9d0bd6d00705",
+    "source_sha256": "a3cc37bd97b6cdd29d480e4da92aa7b0d9cf588c0841f61ed892ecd239655681",
+    "visual_review": {
+      "reviewed_by": "CREN cloud image desk",
+      "reviewed_at": "2026-10-02T10:50:00Z",
+      "natural_appearance": true,
+      "geometry_and_shadows": true,
+      "no_synthetic_artifacts": true,
+      "story_match": true,
+      "truthful_caption": true,
+      "mobile_crop": true
+    }
+  }
+}

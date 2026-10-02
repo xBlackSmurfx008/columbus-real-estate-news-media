@@ -19,13 +19,13 @@ Those current policies replace all earlier direct-database, direct-publication, 
 
 At 06:33 America/New_York, the `cre-news-newsroom` Claude routine:
 
-1. Reviews recent CREN coverage and searches current Columbus-area primary and reputable local sources.
+1. Runs the same-day guard (`frontend/scripts/newsroom-run-guard.mjs`) so a repeated firing fills only an open story slot, checks due items on the pending-decisions watchlist (`briefs/watchlist.json`), reviews recent CREN coverage (`frontend/scripts/recent-articles.mjs`, credential-less), and searches current Columbus-area primary and reputable local sources (lifestyle origins in `frontend/docs/LIFESTYLE_SOURCES.md`).
 2. Selects at most one strong real-estate story and one strong lifestyle story. It publishes nothing and may produce no draft when evidence is insufficient; a missing photograph alone is not a reason to hold (see step 5).
 3. Verifies claims across independent origins and creates an original local contribution. Syndicated copies count as one source.
 4. Produces only current `cren-article-v1.0.2` JSON packages that pass the article-writing contract.
 5. Researches a story-specific, documentary-style, rights-cleared photograph, including CREN-owned photos (`frontend/docs/PHOTO_INTAKE.md`). When none is cleared, it uses, in order, a CREN chart or map from public data (`frontend/scripts/render-cren-chart.mjs`), an honest dated context photo of the same street or district, or a CREN data card from the article's verified facts (`frontend/scripts/render-cren-graphic.mjs`); rules in `frontend/docs/IMAGE_POLICY.md` and `frontend/prompts/CLOUD_ROUTINE_HANDOFF.md`. On days with no qualifying breaking story it produces the recurring data format that is due (`frontend/docs/RECURRING_DATA_FORMATS.md`). The exact source bytes, redistribution rights, hashes, provenance, caption, and honest visual-review receipt must accompany the draft package. No paid generation, glossy AI art, placeholders, fake signage, or invented property specificity.
 6. Commits the JSON and approved source-image package to the public repository's existing main branch. It never includes secrets or claims that website import, email delivery, or publication occurred merely because GitHub accepted a commit.
-7. Records sources, held items, and handoff state in the daily brief.
+7. Records sources, held items, and handoff state in the daily brief; updates the watchlist; appends photo requests to `briefs/photo-requests.json` (the owner alone marks a site `SHOT`).
 
 ## Hosted handoff and approval
 

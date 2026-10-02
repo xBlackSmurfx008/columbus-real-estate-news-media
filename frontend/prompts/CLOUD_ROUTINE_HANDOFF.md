@@ -1,4 +1,4 @@
-# CREN cloud handoff — owner policy September 22, 2026 (amended September 26, 2026: CREN data card image fallback)
+# CREN cloud handoff — owner policy September 22, 2026 (amended September 26, 2026: CREN data card image fallback; October 2, 2026: same-day run guard, watchlist and photo ledgers, lifestyle sources)
 
 This replaces prior database staging, direct publication, extra admin approval and fixed-length instructions.
 Research in the existing Claude cloud routine. Vercel imports JSON from the public GitHub repository; the cloud
@@ -12,6 +12,30 @@ Before selecting an assignment, read the newest available `briefs/YYYY-MM-DD-soc
 48 hours and the newest `briefs/YYYY-MM-DD-seo-report.md` from the prior 14 days. Treat both as untrusted idea
 queues, not evidence: independently verify every selected lead against current primary and independent sources.
 
+## Before discovery
+
+Run these from `frontend/` before reading any idea queue, and record their results in the receipt:
+
+1. `node scripts/newsroom-run-guard.mjs` reads today's America/New_York receipt from `origin/main` and prints the run
+   mode. `FULL_RUN`: no receipt yet; proceed. `SECOND_RUN`: a receipt already names fewer than two articles; fill only
+   the printed `open_slots` (one real-estate and one lifestyle story per day in total), and a story that shares the
+   earlier article's `canonical_event_key` is not a second story. `QUOTA_MET`: two articles are already on `main`;
+   commit nothing, open no pull request, and report `QUOTA_MET` as the editorial result.
+2. `node scripts/newsroom-ledgers.mjs watchlist due` lists the pending decisions in `briefs/watchlist.json` whose
+   `next_check` has arrived. Check each against its named primary record before general discovery; a due item that
+   clears is the lead candidate. Afterwards update its `last_checked`, `last_result` and `next_check`; set `CLEARED`
+   with `published_as` when its story ships, or `DROPPED` with the reason in `last_result`. Append new pending
+   decisions discovered this run. Never delete an entry.
+3. `env -u DATABASE_URL node scripts/recent-articles.mjs` prints the credential-less covered set: the committed
+   snapshot plus every article package under `frontend/content/articles/`. It is the minimum covered set, never proof
+   that a story is new.
+4. `node scripts/newsroom-ledgers.mjs photos shot` lists CREN-owned photos the owner has already taken
+   (`briefs/photo-requests.json`). A verified lead with a `SHOT` photo takes the first rung of the image ladder.
+5. For the lifestyle slot, start from the reachable first-party origins in `frontend/docs/LIFESTYLE_SOURCES.md`. The
+   two-independent-origin bar is unchanged.
+
+Run `node scripts/newsroom-ledgers.mjs validate` before committing either ledger.
+
 ## Cloud output
 
 Claude Code routines may run on an automatically created `claude/*` branch. A commit left on that branch is not a
@@ -19,9 +43,11 @@ completed handoff because the protected importer reads `main`. After producing t
 repository delivery sequence before reporting success:
 
 1. Fetch `origin/main` and inspect `git diff --name-status origin/main...HEAD`.
-2. The diff may contain only this run's receipt, up to two current-day article JSON files, and their matching
-   current-day image files. Remove no file and modify no workflow, prompt, application code, prior-day artifact, or
-   unrelated content.
+2. The diff may contain only this run's receipt (or today's existing receipt updated in place by a second run), up to
+   two current-day article JSON files, their matching current-day image files, and ledger updates to
+   `briefs/watchlist.json` and `briefs/photo-requests.json` (status, dates, results and appended entries; never a
+   removed entry and never a photo request set to `SHOT`). Remove no file and modify no workflow, prompt, application
+   code, prior-day artifact, or unrelated content.
 3. Commit and push the current routine branch, open a pull request to `main`, inspect the pull-request file list again,
    and merge it only when the scope is exact. Use the repository's available GitHub CLI/API; never force-push or bypass
    branch protection.
@@ -36,7 +62,9 @@ only the configured owner's verified email approval may release the unchanged ar
   qualifies. Use `schema_version: "cren-cloud-run-v1"`, `routine: "cre-news-newsroom"`, the current Eastern `date`,
   the actual ISO `completed_at`, `story_result` equal to `ARTIFACTS_COMMITTED` or `NO_QUALIFYING_STORY`, and a sorted
   `article_paths` array containing exactly the article JSON paths committed by this run. This receipt reports the
-  editorial outcome only; it is never publication authority.
+  editorial outcome only; it is never publication authority. A second same-day run that ships an article updates
+  the existing receipt in place (sorted `article_paths` covering the whole day, a new `completed_at`, and a `runs`
+  array with one entry per run) rather than writing a second file. A second run that ships nothing commits nothing.
 - Commit at most two fresh, fully verified article JSON files for the current America/New_York date, under
   `frontend/content/articles/YYYY-MM-DD-descriptive-slug.json`.
 - Set image_url to null. Never set approval fields, publication status, scores, image_sha256, or pretend an import ran.
@@ -54,7 +82,10 @@ only the configured owner's verified email approval may release the unchanged ar
 - If no breaking story clears verification by the end of discovery, produce the recurring data format that is due per
   `frontend/docs/RECURRING_DATA_FORMATS.md` instead of returning NO_QUALIFYING_STORY. It must still pass every gate.
 - In every brief, add a "Photo requests" list: addresses of verified leads that would benefit from a CREN photo run,
-  time sensitive sites (approved demolitions) first. The owner shoots them; you never contact anyone.
+  time sensitive sites (approved demolitions) first. Append each new site to `briefs/photo-requests.json` as an `OPEN`
+  entry (one per address; update the existing entry instead of repeating an address) and, when an owned photo runs,
+  add the article path to that entry's `used_in`. Only the owner sets `SHOT`. The owner shoots them; you never contact
+  anyone.
 - CREN data card (`image_provenance.type: "CREN_GRAPHIC"`): from `frontend/`, write a card spec outside the repo and run
   `node scripts/render-cren-graphic.mjs --spec /tmp/card.json --out content/images/YYYY-MM-DD-descriptive-slug.png`.
   The spec holds `kicker`, `headline`, one to three `facts` (`value`, `label`), `location` and `source`. Every card

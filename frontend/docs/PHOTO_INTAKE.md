@@ -8,8 +8,9 @@ photo of the actual place.
 
 **When:** once a week, daylight, ideally Saturday or Sunday morning when streets are quiet.
 
-**What to shoot:** the "Photo requests" list in the newest newsroom brief (`briefs/YYYY-MM-DD.md`), plus anything on the
-standing list below. Time sensitive sites (approved demolitions) go first.
+**What to shoot:** the `OPEN` entries in `briefs/photo-requests.json`, time sensitive sites (approved demolitions)
+first. `cd frontend && node scripts/newsroom-ledgers.mjs photos open` prints them in that order. The newest newsroom
+receipt's "Photo requests" list names the same sites.
 
 **How to shoot each site (5 frames, about 3 minutes):**
 
@@ -29,16 +30,19 @@ standing list below. Time sensitive sites (approved demolitions) go first.
 - Phone location tagging may stay on; the GPS in the file shows the photo was taken at the site. Do not take library
   photos at home with location on.
 
-**Standing list (current as of September 26, 2026):**
+**The standing list** moved to `briefs/photo-requests.json` on October 2, 2026 (the September 26 list of 1036 S. Front
+St., 120 Vine St., the SR 161 / Northland corridor and 40 W. Long St. is seeded there). The routine appends new sites
+as `OPEN` entries; the owner does not need to track them. After a photo run, mark each site you shot:
 
-| Priority | Site | Why | Frames needed |
-|---|---|---|---|
-| 1, time sensitive | Former WWCD building, 1036 S. Front St., Brewery District | HRC approved demolition for a 106 unit Arcadia Development building; the building will be gone soon | All 5 |
-| 2 | One Twenty Vine site, 120 Vine St., Arena District | Downtown Commission approved COA2600944 on September 22, 2026; currently a gravel lot | 1, 2, 4, 5 |
-| 3 | SR 161 / Northland corridor, Morse Rd. and Cleveland Ave. area | Zone In corridor rezoning in front of City Council | 1 and 4 at two intersections |
-| 4 | Former Downtown YMCA, 40 W. Long St. | Lofts at 40 Long conversion under construction; progress photos build a timeline | 1 and 2, repeat monthly |
+```json
+"status": "SHOT",
+"shot_on": "2026-10-04",
+"library_ref": "2026-10-04 run notes.txt; 2026-10-04 1036 S Front St 1-5.jpg"
+```
 
-The newsroom routine adds new sites to "Photo requests" in each daily brief; the owner does not need to track them.
+Only the owner sets `SHOT`. The routine reads `SHOT` entries to lead with an owned photo wherever one exists, records
+the article path in `used_in` when a photo runs, and never deletes an entry. `cd frontend && node
+scripts/newsroom-ledgers.mjs photos validate` checks the file after editing.
 
 ## 2. Getting photos to the newsroom
 
@@ -73,7 +77,8 @@ redistribution, not only for display on the site. CC BY 4.0 does that while keep
    - `credit`: "Stephen Adams / CREN"
    - `location_note`: the address and which way the camera faces; `date_note`: the date taken from the run notes or EXIF
    - Caption pattern: "The former WWCD building at 1036 S. Front St., Sept. 27, 2026. Photo: Stephen Adams / CREN."
-4. Moves nothing and deletes nothing in Drive; it lists used files in the brief under "Photo library used".
+4. Moves nothing and deletes nothing in Drive; it lists used files in the brief under "Photo library used" and adds the
+   article path to the matching `briefs/photo-requests.json` entry's `used_in`.
 
 ## 4. Reader-submitted photos
 

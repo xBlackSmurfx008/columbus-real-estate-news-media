@@ -14,6 +14,10 @@
 // filter. It no longer has one. A painful true number is the deliverable.
 //
 // Usage: DATABASE_URL=... node scripts/kpi-report.mjs [--window 7] [--telegram]
+// KPI_DATABASE_URL, when set, takes precedence over DATABASE_URL so the weekly
+// reporting routine can run on a read-only, reporting-scoped credential instead
+// of the owner credential (CMO directive 2026-10-01, P1). This script only
+// reads; a read-only role is all it needs.
 // --telegram additionally posts the headline numbers to the owner's Telegram
 // (no-ops with a warning when TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID are unset).
 // Funnel + activation metrics require:
@@ -31,9 +35,9 @@ const wIdx = args.indexOf("--window");
 const windowDays = wIdx >= 0 ? Number(args[wIdx + 1]) || 7 : 7;
 const toTelegram = args.includes("--telegram");
 
-const databaseUrl = process.env.DATABASE_URL;
+const databaseUrl = process.env.KPI_DATABASE_URL || process.env.DATABASE_URL;
 if (!databaseUrl) {
-  console.error("DATABASE_URL environment variable is not set");
+  console.error("Neither KPI_DATABASE_URL nor DATABASE_URL is set");
   process.exit(1);
 }
 const sql = neon(databaseUrl);
@@ -284,6 +288,33 @@ if (leadsByPersona.length > 0) {
 if (clicks.length > 0) {
   console.log(`\n### Affiliate clicks in window\n`);
   for (const c of clicks) console.log(`- ${c.partner_slug}: ${c.n}`);
+
+  // Page attribution (CMO directive 2026-10-01, P2): the one steady revenue
+  // signal must be traceable to the pages that produce it. `path` is written
+  // by /go/[slug] from its `from` parameter; older rows without it fall back
+  // to the referrer path so history still attributes, and anything else is
+  // reported honestly as unknown rather than guessed.
+  try {
+    const clicksByPage = await sql.query(
+      `SELECT COALESCE(
+                NULLIF(path, ''),
+                NULLIF(regexp_replace(referrer, '^https?://[^/]+', ''), ''),
+                '(unknown page)'
+              ) AS page,
+              COUNT(*)::int AS n
+         FROM affiliate_clicks
+        WHERE ${real("affiliate_clicks")}
+          AND created_at >= NOW() - ($1 || ' days')::interval
+        GROUP BY page ORDER BY n DESC LIMIT 15`,
+      [windowDays],
+    );
+    if (clicksByPage.length > 0) {
+      console.log(`\nAffiliate clicks by page:\n`);
+      for (const row of clicksByPage) console.log(`- ${row.page}: ${row.n}`);
+    }
+  } catch {
+    console.log(`\nAffiliate page attribution unavailable. Run scripts/migrate-affiliate-tracking.mjs.`);
+  }
 } else {
   console.log(`\nNo affiliate clicks in window.`);
 }

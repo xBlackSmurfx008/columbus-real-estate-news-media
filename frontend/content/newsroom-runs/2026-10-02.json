@@ -1,0 +1,91 @@
+{
+  "schema_version": "cren-cloud-run-v1",
+  "routine": "cre-news-newsroom",
+  "date": "2026-10-02",
+  "completed_at": "2026-10-02T10:56:00Z",
+  "story_result": "ARTIFACTS_COMMITTED",
+  "article_paths": [
+    "frontend/content/articles/2026-10-02-columbus-mccoy-park-nwsl-rezoning.json"
+  ],
+  "editorial_note": "Scheduled cloud handoff-only run for 2026-10-02 (Friday). One real-estate/land-use story cleared the full primary-record + two-independent-origin + currency + image bar: Columbus has finalized the rezoning (Z26-022 / ordinance 2452-2026) of 21.3 acres at 600 Stimmel Road, including part of the city-owned McCoy Park, for a private NWSL training facility. The Columbus Legistar primary record shows the city council zoning committee approved the ordinance on September 14, 2026 (not the September 28 date the social-listener briefs had carried forward as a pending vote), and it was signed and attested by September 16, 2026. The decisive, previously-unreported-in-accessible-press status (final and enacted), the companion park-funding ordinance (2204-2026, $941,941.53 for McCoy Park improvements), and a direct permit-dataset check (no construction permit filed) make this a current public-record update rather than a rehash of the spring deal coverage. No lifestyle story cleared the two-origin bar this run, so only one article was produced. The recurring Friday slot has no due format; the October 'What Rent Costs Here' (HUD FY2027 Fair Market Rents) format could not be produced because HUD's huduser.gov returned a 202 bot-challenge to every data-file and API request this run, and the recurring-format rule forbids estimating numbers, so it is held (see held_items). This receipt records the editorial outcome only; it is never publication authority. No import, image preparation, email delivery, or publication is claimed, and no git commit is treated as publication or downstream-import success.",
+  "artifacts": {
+    "article": "frontend/content/articles/2026-10-02-columbus-mccoy-park-nwsl-rezoning.json",
+    "image": "frontend/content/images/2026-10-02-columbus-mccoy-park-nwsl-rezoning.png",
+    "image_type": "CREN_GRAPHIC (locator map; image_role DATA)",
+    "brief": "Run state, sources, held items, and photo requests are recorded in this receipt; no separate brief file committed, to keep the PR within the handoff's receipt+article+image scope."
+  },
+  "verification": {
+    "editorial_gate": "PASS 18/18 (scripts/editorial-quality-lib.mjs evaluateArticle).",
+    "schema_and_import_dry_run": "PASS. scripts/cloud-draft-import.mjs prepareCloudDraft ran clean against the committed package with a simulated source binding; returned imageMode SOURCE_ASSET and gate 18/18. Not an actual Vercel import.",
+    "image_plan": "SOURCE_ASSET (scripts/editorial-image-policy.mjs planEditorialImage).",
+    "image_hashes_verified": "git hash-object and sha256sum recomputed from the committed PNG match cloud_image_asset (git_blob_sha 2c6ab4b682e28a2e5e04969e4d5d9d0bd6d00705; source_sha256 a3cc37bd97b6cdd29d480e4da92aa7b0d9cf588c0841f61ed892ecd239655681).",
+    "visual_review": "Locator-map PNG (1600x900) opened and inspected in-session before attesting: a cream data panel with a red primary marker labeled '600 Stimmel Rd.' at lower center and a green context marker labeled 'Downtown Columbus' at upper right, a north arrow, the title 'Where the NWSL training site sits', the subtitle naming 600 Stimmel Road / McCoy Park, the printed OpenStreetMap ODbL attribution, a 'Data:' source line, and the CREN mark. Labels legible and within the mobile-safe center band; no synthetic artifacts; no building footprint, fields, or structure drawn; faithful to the disclosed map medium.",
+    "near_duplicate_guard": "render-cren-chart.mjs cleared the near-duplicate check on attempt 1 (min hamming distance 23 vs 5 existing images; threshold 18)."
+  },
+  "story_facts_verified": {
+    "project": "Private National Women's Soccer League (NWSL) training facility proposed on 21.3 acres at 600 Stimmel Road, southwest Columbus, including part of the city-owned McCoy Park.",
+    "rezoning": "Ordinance 2452-2026 / Rezoning case Z26-022: 600 Stimmel Rd. (43223), 21.3 acres, 310 feet east of Harmon Avenue (parcels 010-095231, 010-095234, 010-095233, 425-295576), from R-3/R/C-1/C-4 to CPD, Commercial Planned Development District (H-110). Proposed use: 'Private athletic training facility' described in the staff report as 'an athletic training facility for the National Women's Soccer League (NWSL).' Property owner: City of Columbus. Applicant: Phil Dangerfield c/o David Hodge, Atty.",
+    "legislative_timeline": "Development Commission staff report dated August 13, 2026 with City Departments' recommendation of Conditional Approval pending a traffic access study; Southwest Area Commission recommendation for approval; ordinance introduced to council August 28, 2026; council Zoning Committee 'Approved' with the second reading waived at the September 14, 2026 Zoning Committee meeting (Legistar Event 6206, 6:30 PM, City Council Chambers Rm 231); signed by the council president September 14, by the mayor September 15, and attested by the city clerk September 16, 2026. Status 'Passed.' No individual roll-call tally is published in the Legistar record (motion by Rob Dorans, seconded by Nancy Day-Achauer, per the event item, but no vote count).",
+    "companion_park_funding": "Ordinance 2204-2026 (Neighborhoods, Recreation & Parks Committee), passed September 16, 2026: authorizes modifying a Kimley-Horn and Associates contract for the 'Gender Road Park and McCoy Park Improvements Project' and the transfer/appropriation/expenditure of $941,941.53 from the Recreation and Parks Voted Bond Fund, with an emergency clause.",
+    "permit_check": "City of Columbus Building Permits ArcGIS feature service (CC0), pulled 2026-10-02: a query for SITE_ADDRESS containing 'STIMMEL' returned zero permit records, consistent with a project that has cleared zoning but not filed for construction.",
+    "facility_specs_from_coverage": "Independent coverage (WOSU June 9, 2026; NBC4/WCMH via Yahoo June 9, 2026; ABC6/WSYX April 24, 2026) describes a roughly $50 million Haslam Sports Group project: five soccer fields (three community, two full plus one partial for team practice), a two-story 45,000-square-foot training building with locker rooms and a cafeteria, heated grass fields, and about 200 parking spaces; $25M city + $25M county, $12M ownership contribution for food insecurity/early childhood, $3M toward new southwest-side parks; the original adaptive-park plan 'benched' after community opposition with a working group and replacement park pledged; groundbreaking targeted for later in 2026 and a 2028 inaugural season. These specs are attributed to the coverage, which predates and is broader (nearly 30 acres) than the 21.3-acre rezoning footprint.",
+    "geography": "600 Stimmel Rd geocoded 39.9353870,-83.0123746; McCoy Park 39.9368152,-83.0123329 (same location); Downtown Columbus 39.9602848,-83.0024576 (OpenStreetMap/Nominatim, ODbL, 2026-10-02).",
+    "original_contributions": "Direct primary-record check of the Columbus Legistar legislative history (establishing that the rezoning is already final and enacted, correcting the pending-vote framing carried in prior briefs), the companion park-funding ordinance and its dollar figure, a building-permit dataset check showing no construction filing, a reconciliation of the 21.3-acre rezoning footprint against the ~30-acre figure in news coverage, and a CREN locator map.",
+    "limitations_stated": "No individual roll-call vote tally is published; the facility's field count, building size, and acreage come from news coverage (April-June 2026) rather than the rezoning text; the ~30-acre figure in coverage is broader than the 21.3-acre rezoning footprint; the staff report's traffic access study condition and the separate replacement-park plan remain open."
+  },
+  "sources": {
+    "primary_records": [
+      "Columbus Legistar ordinance 2452-2026 / Z26-022 -- reader page https://columbus.legistar.com/LegislationDetail.aspx?ID=138384&GUID=C04C4E09-97A0-4106-B1D8-447ED783A22E and web API webapi.legistar.com/v1/columbus/matters/138384 (+ /histories, /events/6206) -- fetched 2026-10-02, HTTP 200 (status, actions, dates).",
+      "Columbus Development Commission staff report for Z26-022 (ORD#2452-2026 attachment), https://legistar3.granicus.com/Columbus/attachments/a00899be-3b1b-4110-b72a-d26230ec1b79.pdf -- fetched 2026-10-02, HTTP 200 (use, parcels, ownership, applicant, plan designations).",
+      "Columbus Legistar ordinance 2204-2026, https://columbus.legistar.com/LegislationDetail.aspx?ID=138130&GUID=4FD58D47-9329-4242-83C8-BE0B3E43BA84 (webapi matter 138130) -- fetched 2026-10-02, HTTP 200 (McCoy Park improvements funding $941,941.53).",
+      "City of Columbus Building Permits -- ArcGIS feature service (CC0), services1.arcgis.com/9yy6msODkIBzkUXU/.../Building_Permits/FeatureServer/0, and the Open Data hub page https://opendata.columbus.gov/datasets/columbus::building-permits -- fetched 2026-10-02, HTTP 200 (no Stimmel permit on file).",
+      "OpenStreetMap Nominatim geocoding (ODbL), https://nominatim.openstreetmap.org -- fetched 2026-10-02, HTTP 200 (map coordinates)."
+    ],
+    "independent_news_origins": [
+      "WOSU (wosu.org), 'Southwest Area Commission delays vote on NWSL facility plans at McCoy Park', published 2026-06-09 -- fetched 2026-10-02, HTTP 200.",
+      "NBC4 / WCMH via Yahoo News (yahoo.com), 'Southwest Area Commission to vote on rezoning of McCoy Park', published 2026-06-09 -- fetched 2026-10-02, HTTP 200. Independent newsroom from WOSU.",
+      "ABC6 / WSYX (abc6onyourside.com), 'City gives first look at NWSL training facility after adaptive park plan benched', published 2026-04-24 -- fetched 2026-10-02, HTTP 200."
+    ]
+  },
+  "idea_queues_consulted": [
+    "briefs/2026-10-01-social-listener.md (newest social listener within prior 48h): NO_VERIFIED_LEADS; carried the McCoy Park NWSL rezoning as forward-looking intelligence with an UNCONFIRMED 'September 28 vote'. Treated as an untrusted idea queue and independently verified against the Columbus Legistar primary record, which shows the rezoning actually passed September 14, 2026 and is enacted -- correcting the pending-vote framing. The brief's other near-horizon items (Ohio Stater closure; Zone In Phase 2 webinar) did not reach the bar this run.",
+    "briefs/2026-09-27-seo-report.md (newest SEO report within prior 14 days): its open assignments (Diocese/197 E. Gay St., Franklinton 610 W. Town St., Gahanna Flex Park) still lack a posted primary board/council record or a second independent origin and were not cleared this run."
+  ],
+  "leads_surveyed_not_selected": [
+    "HUD FY2027 Fair Market Rents ('What Rent Costs Here' recurring format, due in October after HUD posts): HUD published FY2027 FMRs in the Federal Register (Sept. 2, 2026, effective Oct. 1, 2026), but huduser.gov returned HTTP 202 (bot challenge) to every FMR data-file and API request this run, and the HUD API also requires a token (HTTP 401). The recurring-format rule forbids estimating numbers, so the format is held until the primary HUD data is reachable (see held_items).",
+    "McCoy Park replacement/adaptive park plan: the separate replacement-park plan promised to neighbors has no posted primary council record of a final location this run; the $941,941.53 Kimley-Horn improvements contract (ord 2204-2026) is reported in this article but the replacement-park siting remains a forward item.",
+    "Zoning items finalized Oct. 2 on the Sept. 28 agenda (5300 Avery Rd. rezoning amendment 2828-2025; variances 2581-2026 and 2588-2026): minor, single-record items without a verifiable second independent origin; not selected.",
+    "Diocese/197 E. Gay St., Franklinton 610 W. Town St., Gahanna Flex Park: carried from the 09-27 SEO report; each still needs a posted primary board/council record and/or a genuinely independent second origin; no verifiable material change this run.",
+    "Lifestyle: no lifestyle lead was independently verified to the two-origin bar this run."
+  ],
+  "held_items": [
+    "NEEDS_DATA: 'What Rent Costs Here' (HUD FY2027 Fair Market Rents for the Columbus, OH HUD Metro FMR Area). FY2027 FMRs are published and effective Oct. 1, 2026, but huduser.gov returns HTTP 202 to data-file downloads and HTTP 401 (token required) to the FMR API through the cloud egress this run, so the primary per-area values could not be pulled. Held rather than estimated. Re-attempt when huduser.gov data files (fmr2027 / fmr2026 Excel) or the FMR API are reachable, or when an operator-supplied HUD data file is available."
+  ],
+  "photo_requests": [
+    "600 Stimmel Road / McCoy Park, southwest Columbus -- a documentary photo of the existing public park and the undeveloped parcels before any groundbreaking would let a future update lead with a real site photo instead of a locator map. Time-sensitive before construction begins.",
+    "197 E. Gay Street, Downtown -- the former Gay-Broad Connector building subject to a demolition request (carried from the 09-27 SEO report); before any approved demolition.",
+    "610 W. Town Street, Franklinton -- the 1928 brick facade proposed for retention at the former Glass Axis site; time-sensitive before construction begins."
+  ],
+  "egress_status_this_run": {
+    "reachable": [
+      "Columbus Legistar web API webapi.legistar.com (HTTP 200; all council legislative facts pulled here)",
+      "columbus.legistar.com LegislationDetail reader pages (HTTP 200)",
+      "legistar3.granicus.com ordinance attachment PDF (HTTP 200; staff report)",
+      "Columbus Building Permits ArcGIS FeatureServer (services1.arcgis.com, HTTP 200)",
+      "opendata.columbus.gov Building Permits dataset page (HTTP 200)",
+      "nominatim.openstreetmap.org geocoding (HTTP 200)",
+      "wosu.org, yahoo.com (NBC4/WCMH syndication), abc6onyourside.com (HTTP 200)"
+    ],
+    "unavailable_or_limited": [
+      "huduser.gov (HTTP 202 bot challenge on all FMR data files; FMR API HTTP 401 token-required) -- blocked the 'What Rent Costs Here' recurring format this run",
+      "10tv.com, nbc4i.com direct, columbusunderground.com, bizjournals.com/columbus (HTTP 403, consistent with prior runs; NBC4 reached via Yahoo syndication)"
+    ]
+  },
+  "handoff_status": {
+    "discovery_reporting": "COMPLETED. One land-use story (McCoy Park NWSL rezoning, now final) cleared the full primary-record + two-independent-origin + currency + image bar and passed every gate 18/18.",
+    "github_commit": "Article JSON, CREN locator-map PNG, and this receipt committed to the routine branch and handed to main via PR/merge per the delivery sequence.",
+    "website_import": "PENDING. Not claimed as succeeded; Vercel imports from main at minute 05 subject to its gates. A git merge is not an import.",
+    "image_proof": "PENDING. image_url is null; Vercel prepares the image and sends the proof; only the configured owner's verified email approval of the exact unchanged article-image package can publish.",
+    "image_hold": "NONE for the published story. The locator map cleared the image contract (SOURCE_ASSET). Separate NEEDS_DATA hold on the HUD FMR recurring format (see held_items), unrelated to this article's image."
+  }
+}

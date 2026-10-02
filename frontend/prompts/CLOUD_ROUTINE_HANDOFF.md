@@ -44,6 +44,8 @@ only the configured owner's verified email approval may release the unchanged ar
 - Finish image work BEFORE committing the candidate. A missing photograph is never, by itself, a reason to hold a
   verified story: use the image ladder below. Prefer stories whose facts are readable in full from primary sources
   this environment can fetch (city, county, state and agency records) over stories known only from blocked outlets.
+  Government PDFs are readable with `pdftotext`, and Columbus Legistar has a no-auth JSON API; proven commands and the
+  current disposition of the blocked outlets are in `frontend/docs/RESEARCH_TOOLING.md`.
 - Image ladder (full rules in `frontend/docs/IMAGE_POLICY.md`): (1) an actual, relevant rights-cleared photograph,
   including CREN-owned photos in the Google Drive folder "CREN Photo Library / inbox" (`frontend/docs/PHOTO_INTAKE.md`);
   otherwise (2) a CREN chart or map built from public data with `scripts/render-cren-chart.mjs`

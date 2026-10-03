@@ -1,0 +1,81 @@
+{
+  "schema_version": "cren-cloud-run-v1",
+  "routine": "cre-news-newsroom",
+  "date": "2026-10-03",
+  "completed_at": "2026-10-03T10:47:00Z",
+  "story_result": "ARTIFACTS_COMMITTED",
+  "article_paths": [
+    "frontend/content/articles/2026-10-03-columbus-home-price-index-q2-2026.json"
+  ],
+  "editorial_note": "Scheduled cloud handoff-only run for 2026-10-03 (Saturday). No breaking real-estate or lifestyle story cleared the full primary-record + two-independent-origin + currency bar from sources reachable this run, so per the recurring-data-format rule the routine produced the due, un-run data format instead of returning NO_QUALIFYING_STORY: a Columbus Home Price Index read from the FHFA All-Transactions House Price Index (the recurring 'Columbus Home Price Index' format in docs/RECURRING_DATA_FORMATS.md). CREN has not previously published this format, and the FHFA series is reachable and public-domain, unlike HUD's FMR data, which remains blocked (see held_items). The article reports that the Columbus metro index rose about 3.3% over the year to 2026 Q2 (the latest available quarter, released Aug. 25, 2026), slightly ahead of the 3.0% national gain and down from about 4.4% a year earlier, with a CREN line-chart hero built from the public series. This receipt records the editorial outcome only; it is never publication authority. No import, image preparation, email delivery, or publication is claimed, and no git commit is treated as publication or downstream-import success.",
+  "artifacts": {
+    "article": "frontend/content/articles/2026-10-03-columbus-home-price-index-q2-2026.json",
+    "image": "frontend/content/images/2026-10-03-columbus-home-price-index-q2-2026.png",
+    "image_type": "CREN_GRAPHIC (line chart; image_role DATA)",
+    "brief": "Run state, sources, held items, and photo requests are recorded in this receipt; no separate brief file is committed, to keep the PR within the handoff's receipt+article+image scope."
+  },
+  "verification": {
+    "editorial_gate": "PASS 18/18 (scripts/editorial-quality-lib.mjs evaluateArticle).",
+    "schema_and_import_dry_run": "PASS. scripts/cloud-draft-import.mjs prepareCloudDraft ran clean against the committed package with a simulated source binding; returned imageMode SOURCE_ASSET, topic-slug/byline/date/freshness checks all accepted. Not an actual Vercel import.",
+    "image_plan": "SOURCE_ASSET (scripts/editorial-image-policy.mjs planEditorialImage).",
+    "image_hashes_verified": "git hash-object and sha256sum recomputed from the committed PNG match cloud_image_asset (git_blob_sha 6ded4a887b307f771bfbaf87ea898d83684c5fee; source_sha256 183c4c73fd3055cab8dbfd0cf02e66c936119590734114d00bc09d59c2ee5143).",
+    "visual_review": "Line-chart PNG (1600x900) opened and inspected in-session before attesting: a cream panel titled 'Columbus home values by the federal index' with the subtitle naming the FHFA All-Transactions index, the Columbus metro, 2024 Q3 to 2026 Q2 and the 1995 Q1 = 100 base; a green line rising gently across eight quarterly points with the final 2026 Q2 point marked red and labeled 351.14; all eight quarter labels and the y-axis (0 to 500) legible and inside the mobile-safe center band; a 'Data:' source line naming FHFA via FRED series ATNHPIUS18140Q and the Oct. 3, 2026 pull date; the CREN mark. Faithful to the disclosed chart medium; no synthetic artifacts; no implied photograph.",
+    "near_duplicate_guard": "render-cren-chart.mjs cleared the near-duplicate check on attempt 1 (min hamming distance 27 vs 6 existing images; threshold 18)."
+  },
+  "story_facts_verified": {
+    "measure": "FHFA House Price Index, All-Transactions version: a repeat-sales index (same homes over time) that adds refinance appraisals to purchase transactions. Not a median sale price; not seasonally adjusted; lags roughly one quarter.",
+    "columbus_series": "ATNHPIUS18140Q (Columbus, OH MSA), units 'Index 1995:Q1=100, NSA'. Quarterly values pulled Oct. 3, 2026: 2024 Q1 312.60, Q2 325.41, Q3 327.08, Q4 330.36; 2025 Q1 334.14, Q2 339.78, Q3 341.06, Q4 342.87; 2026 Q1 346.10, Q2 351.14. Latest observation 2026 Q2, updated Aug. 25, 2026; next scheduled FRED update Oct. 27, 2026.",
+    "national_series": "USSTHPI (United States), units 'Index 1980:Q1=100, NSA'. Values: 2025 Q2 698.69, Q3 703.04, Q4 707.22; 2026 Q1 712.20, Q2 719.87. Different base period from the Columbus series, so only rates of change are comparable.",
+    "calculations": "Columbus YoY 2025 Q2 to 2026 Q2: (351.14-339.78)/339.78 = 3.34%, ~3.3%. Columbus QoQ 2026 Q1 to Q2: (351.14-346.10)/346.10 = 1.46%, ~1.5%. National YoY: (719.87-698.69)/698.69 = 3.03%, ~3.0%. Prior-year Columbus YoY (2024 Q2 to 2025 Q2): (339.78-325.41)/325.41 = 4.42%, ~4.4% (the baseline showing appreciation has cooled).",
+    "release_schedule": "FHFA's House Price Index page lists the next quarterly release as Nov. 24, 2026, covering 2026 Q3 (July-September). That is the article's next verifiable checkpoint.",
+    "original_contributions": "Reproducible QoQ and YoY calculations from the raw series; a historical baseline comparison (this year's 3.3% vs last year's 4.4% pace); a Columbus-vs-national comparison; and a CREN line chart built from the public series.",
+    "limitations_stated": "Index is not a median sale price and not the cost of a typical home today; NSA and lagged; Columbus and national series use different base periods (levels not directly comparable, only rates of change); and both series come from the same agency, so they are one measure of prices rather than two independent gauges."
+  },
+  "sources": {
+    "primary_records": [
+      "FHFA All-Transactions House Price Index for Columbus, OH (MSA), FRED series ATNHPIUS18140Q, https://fred.stlouisfed.org/series/ATNHPIUS18140Q and CSV https://fred.stlouisfed.org/graph/fredgraph.csv?id=ATNHPIUS18140Q -- fetched 2026-10-03, HTTP 200 (public domain; quarterly index values, base period, update dates).",
+      "FHFA All-Transactions House Price Index for the United States, FRED series USSTHPI, https://fred.stlouisfed.org/series/USSTHPI and CSV https://fred.stlouisfed.org/graph/fredgraph.csv?id=USSTHPI -- fetched 2026-10-03, HTTP 200 (public domain; national comparison).",
+      "U.S. Federal Housing Finance Agency, House Price Index page, https://www.fhfa.gov/data/hpi -- fetched 2026-10-03, HTTP 200 (index methodology: all-transactions adds refinance appraisals; next quarterly release Nov. 24, 2026 for 2026 Q3)."
+    ],
+    "independent_news_origins": [
+      "N/A for a federal-data format: the two independent origins used are the FHFA index series (data) and FHFA's own methodology/release page (interpretation). The receipt discloses that both ultimately originate from FHFA, and the article states this limitation explicitly."
+    ]
+  },
+  "idea_queues_consulted": [
+    "briefs/2026-10-02-social-listener.md (newest social listener within prior 48h): 1 VERIFIED LEAD -- Worthington referendum pro-development counter-voices (WOSU, Oct. 1, 2026), with a Franklin County Board of Elections signature-validation decision expected mid-October. Treated as an untrusted idea queue and independently assessed: the only in-window source is a single WOSU article (columbusunderground.com remains HTTP 403), so the new angle fails the two-independent-origin floor, and the decisive BOE milestone has not yet occurred (it is Oct. 3). CREN already published the referendum on Sept. 28, and nothing materially new is independently corroborated, so an update was held per the writing policy's dedupe rule. The brief's other items (McCoy Park -- already published Oct. 2; Ohio Stater closure; Zone In Phase 2 webinar) did not reach the bar this run.",
+    "briefs/2026-10-01-social-listener.md (second newest within prior 48h): NO_VERIFIED_LEADS; carried forward items only. No new lead cleared.",
+    "briefs/2026-09-27-seo-report.md (newest SEO report within prior 14 days): its open assignments (Diocese/197 E. Gay St., Franklinton 610 W. Town St., Gahanna Flex Park) still lack a posted primary board/council record or a second independent origin and were not cleared this run."
+  ],
+  "leads_surveyed_not_selected": [
+    "Worthington Harding Hospital rezoning referendum (pro-development counter-voices, WOSU Oct. 1, 2026): single in-window origin; columbusunderground.com HTTP 403; the Franklin County Board of Elections validation decision ('mid-October') has not yet occurred. Fails the two-origin floor and has no new decisive primary record this run; CREN already published the referendum Sept. 28. Held per the dedupe rule; re-check when the BOE certifies or rejects the petition.",
+    "Ohio Stater (2060 N. High St.) closure and RPM Living redevelopment proposal: carried near-horizon item; no accessible in-window primary record or two independent origins this run (Columbus Underground 403). Not selected.",
+    "NRP Group 'Stone Ridge at High Street' (150-unit affordable) and other items surfaced only via web-search snippets from blocked outlets: no reachable primary record or confirmed in-window publication date; not admitted.",
+    "HUD FY2027 Fair Market Rents ('What Rent Costs Here' recurring format): held again this run -- huduser.gov returns HTTP 202 (bot challenge) to data files and HTTP 401 (token required) to the FMR API through the cloud egress, so the primary per-area values could not be pulled and the recurring-format rule forbids estimating numbers (see held_items).",
+    "Lifestyle: no lifestyle lead was independently verified to the two-origin bar this run."
+  ],
+  "held_items": [
+    "NEEDS_DATA: 'What Rent Costs Here' (HUD FY2027 Fair Market Rents for the Columbus, OH HUD Metro FMR Area). FY2027 FMRs are effective Oct. 1, 2026, but huduser.gov returns HTTP 202 to data-file downloads (portal page and FY2027 Excel) and HTTP 401 (token required) to the FMR API through the cloud egress this run, so the primary per-area values could not be pulled. Held rather than estimated, consistent with the 2026-10-02 run. Re-attempt when huduser.gov data files or the FMR API are reachable, or when an operator-supplied HUD data file is available.",
+    "WATCH: Worthington referendum -- Franklin County Board of Elections signature-validation decision expected mid-October 2026. A certify/reject decision would be a decisive primary record worth a verified update; pair it with a genuinely independent second origin before publishing."
+  ],
+  "photo_requests": [
+    "No new time-sensitive demolition or site photo is needed for this federal-data story (metro-wide statistical read, charted hero).",
+    "Carried from prior runs (owner shoots; routine never contacts anyone): 600 Stimmel Road / McCoy Park, southwest Columbus, before any NWSL-facility groundbreaking; 197 E. Gay Street, Downtown, before any approved demolition; 610 W. Town Street, Franklinton (1928 brick facade), before construction begins."
+  ],
+  "egress_status_this_run": {
+    "reachable": [
+      "fred.stlouisfed.org series pages and fredgraph CSV (HTTP 200; all index values pulled here)",
+      "www.fhfa.gov/data/hpi (HTTP 200; methodology and next release date)"
+    ],
+    "unavailable_or_limited": [
+      "huduser.gov (HTTP 202 bot challenge on FMR portal page and FY2027 Excel; FMR API HTTP 401 token-required) -- blocked the 'What Rent Costs Here' recurring format again this run",
+      "columbusunderground.com, nbc4i.com, 10tv.com, bizjournals.com/columbus, axios.com/local/columbus, multihousingnews.com (HTTP 403, consistent with prior runs) -- limited corroboration of the Worthington and Ohio Stater leads to a single accessible origin each"
+    ]
+  },
+  "handoff_status": {
+    "discovery_reporting": "COMPLETED. No breaking story cleared the bar from reachable sources, so the due recurring data format (Columbus Home Price Index, FHFA) was produced and passed every gate 18/18 with an import dry-run clean.",
+    "github_commit": "Article JSON, CREN line-chart PNG, and this receipt committed to the routine branch and handed to main via PR/merge per the delivery sequence.",
+    "website_import": "PENDING. Not claimed as succeeded; Vercel imports from main at minute 05 subject to its gates. A git merge is not an import.",
+    "image_proof": "PENDING. image_url is null; Vercel prepares the image and sends the proof; only the configured owner's verified email approval of the exact unchanged article-image package can publish.",
+    "image_hold": "NONE for this story (the line chart cleared the image contract, SOURCE_ASSET). Separate NEEDS_DATA hold on the HUD FMR recurring format (see held_items), unrelated to this article's image."
+  }
+}

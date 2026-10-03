@@ -1,0 +1,202 @@
+{
+  "prompt_version": "cren-article-v1.0.2",
+  "title": "Columbus Home Values Rose 3.3% Over the Year to Mid-2026, Says FHFA",
+  "category": "Market Trends",
+  "author": "CRE News Staff",
+  "date": "2026-10-03",
+  "excerpt": "Federal data shows Columbus-area home values up about 3.3% over the year to the second quarter of 2026, a touch faster than the 3.0% national gain and cooler than a year earlier.",
+  "answer_summary": "Columbus-area home values rose 3.3 percent over the year ending in the second quarter of 2026, according to the federal government's all-transactions house price index, slightly faster than the 3.0 percent national gain. The index has climbed every quarter for more than two years.",
+  "primary_keyword": "columbus home values",
+  "meta_description": "Columbus-area home values rose about 3.3% in the year to Q2 2026, says the FHFA all-transactions house price index, just ahead of the 3.0% U.S. gain but cooling.",
+  "fact_checked_at": "2026-10-03T10:45:00Z",
+  "canonical_event_key": "columbus-fhfa-home-price-index-2026-q2",
+  "area_slug": null,
+  "topic_slug": "market-trends",
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "market-trends",
+    "home-prices",
+    "fhfa"
+  ],
+  "read_time": "4 min",
+  "featured": false,
+  "image_url": null,
+  "location": {
+    "name": "Columbus, Ohio",
+    "state": "OH"
+  },
+  "body": "Columbus-area home values rose 3.3 percent over the year ending in the second quarter of 2026, according to the federal government's all-transactions house price index, slightly faster than the 3.0 percent national gain. The index has climbed every quarter for more than two years.\n\n## What the index measures\n\nThe number comes from the Federal Housing Finance Agency's House Price Index, a repeat-sales measure that tracks the changing value of the same homes over time rather than the mix of houses that happen to sell in a given quarter. The all-transactions version the agency describes on its [House Price Index page](https://www.fhfa.gov/data/hpi) adds appraisals from refinances to actual home sales, so it covers more properties than a purchase-only gauge. CREN pulled the Columbus metro and national series from the [Federal Reserve's FRED database](https://fred.stlouisfed.org/series/ATNHPIUS18140Q) on October 3, 2026, where both are posted as public-domain federal data.\n\n## Columbus edged past the national pace\n\nThe Columbus metro index reached 351.14 in the second quarter of 2026, up from 346.10 in the first quarter, a gain of about 1.5 percent in three months. Measured against the second quarter of 2025, when the index stood at 339.78, Columbus home values rose about 3.3 percent over the year. The [national all-transactions index](https://fred.stlouisfed.org/series/USSTHPI) rose about 3.0 percent over the same year, from 698.69 to 719.87, so Columbus appreciation ran a little ahead of the country's.\n\n## Appreciation has cooled from a year ago\n\nThe yearly pace of appreciation has slowed. In the second quarter of 2025, the same Columbus index was about 4.4 percent above its level a year earlier, compared with the 3.3 percent annual gain recorded this quarter. The index has still risen in every quarter CREN examined, from 327.08 in the third quarter of 2024 to 351.14 in the second quarter of 2026, though the increments have been small and steady rather than the sharper jumps of earlier years.\n\n## What the number cannot tell you\n\nThe index is not a median sale price, and it should not be read as the cost of a typical Columbus house today. It measures repeat transactions and refinance appraisals, it is not adjusted for seasonal swings, and it lags, so the second-quarter reading covers April through June and was published on August 25, 2026. The Columbus and national figures also sit on different base periods, 1995 for the metro series and 1980 for the national one, so the raw index levels cannot be compared directly, only their rates of change. Because both series come from the same agency, they are one measure of prices rather than two independent ones.\n\n## When the next reading lands\n\nThe FHFA updates the House Price Index every quarter. Its next release is scheduled for November 24, 2026 and will add third-quarter figures covering July through September, the first reading to show how Columbus values moved in the second half of the year. CREN will update this measure when that data posts.",
+  "source_ledger": [
+    {
+      "id": "S1",
+      "type": "PRIMARY",
+      "url": "https://fred.stlouisfed.org/series/ATNHPIUS18140Q",
+      "publisher": "Federal Reserve Bank of St. Louis (FRED)",
+      "title": "All-Transactions House Price Index for Columbus, OH (MSA), ATNHPIUS18140Q",
+      "published_at": "2026-08-25",
+      "fetched_at": "2026-10-03T10:30:00Z",
+      "http_status": 200,
+      "fetch_note": "FHFA All-Transactions House Price Index for the Columbus, OH metro, distributed by FRED (public domain), units 'Index 1995:Q1=100, Not Seasonally Adjusted', pulled October 3, 2026. Quarterly values: 2024 Q1 312.60, 2024 Q2 325.41, 2024 Q3 327.08, 2024 Q4 330.36, 2025 Q1 334.14, 2025 Q2 339.78, 2025 Q3 341.06, 2025 Q4 342.87, 2026 Q1 346.10, 2026 Q2 351.14. Most recent observation 2026 Q2 (updated August 25, 2026); next scheduled release October 27, 2026."
+    },
+    {
+      "id": "S2",
+      "type": "PRIMARY",
+      "url": "https://fred.stlouisfed.org/series/USSTHPI",
+      "publisher": "Federal Reserve Bank of St. Louis (FRED)",
+      "title": "All-Transactions House Price Index for the United States (USSTHPI)",
+      "published_at": "2026-08-25",
+      "fetched_at": "2026-10-03T10:31:00Z",
+      "http_status": 200,
+      "fetch_note": "FHFA All-Transactions House Price Index for the United States, distributed by FRED (public domain), units 'Index 1980:Q1=100, Not Seasonally Adjusted', pulled October 3, 2026. Quarterly values: 2025 Q2 698.69, 2025 Q3 703.04, 2025 Q4 707.22, 2026 Q1 712.20, 2026 Q2 719.87. Different base period than the Columbus series, so only rates of change are comparable."
+    },
+    {
+      "id": "S3",
+      "type": "PRIMARY",
+      "url": "https://www.fhfa.gov/data/hpi",
+      "publisher": "U.S. Federal Housing Finance Agency",
+      "title": "House Price Index",
+      "published_at": null,
+      "fetched_at": "2026-10-03T10:33:00Z",
+      "http_status": 200,
+      "fetch_note": "FHFA's House Price Index landing page, fetched October 3, 2026. States that the all-transactions index builds on the purchase-only index by adding appraisal data from refinances obtained from the Enterprises, and lists the next quarterly release as November 24, 2026 covering 2026 Q3."
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "C1",
+      "claim": "Columbus-area home values rose 3.3 percent over the year ending in the second quarter of 2026, according to the federal government's all-transactions house price index, slightly faster than the 3.0 percent national gain.",
+      "source_ids": ["S1", "S2", "S3"],
+      "kind": "COMPARISON",
+      "calculation": "Columbus (S1): 2026 Q2 351.14 vs 2025 Q2 339.78 = +11.36, 11.36 / 339.78 = 0.0334, about 3.3 percent. National (S2): 2026 Q2 719.87 vs 2025 Q2 698.69 = +21.18, 21.18 / 698.69 = 0.0303, about 3.0 percent."
+    },
+    {
+      "id": "C2",
+      "claim": "The index has climbed every quarter for more than two years.",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C3",
+      "claim": "CREN pulled the Columbus metro and national series from the [Federal Reserve's FRED database](https://fred.stlouisfed.org/series/ATNHPIUS18140Q) on October 3, 2026, where both are posted as public-domain federal data.",
+      "source_ids": ["S1", "S2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C4",
+      "claim": "The Columbus metro index reached 351.14 in the second quarter of 2026, up from 346.10 in the first quarter, a gain of about 1.5 percent in three months.",
+      "source_ids": ["S1"],
+      "kind": "CALCULATION",
+      "calculation": "351.14 - 346.10 = 5.04; 5.04 / 346.10 = 0.0146, about 1.5 percent over the quarter."
+    },
+    {
+      "id": "C5",
+      "claim": "Measured against the second quarter of 2025, when the index stood at 339.78, Columbus home values rose about 3.3 percent over the year.",
+      "source_ids": ["S1"],
+      "kind": "CALCULATION",
+      "calculation": "351.14 - 339.78 = 11.36; 11.36 / 339.78 = 0.0334, about 3.3 percent year over year."
+    },
+    {
+      "id": "C6",
+      "claim": "The [national all-transactions index](https://fred.stlouisfed.org/series/USSTHPI) rose about 3.0 percent over the same year, from 698.69 to 719.87, so Columbus appreciation ran a little ahead of the country's.",
+      "source_ids": ["S2"],
+      "kind": "CALCULATION",
+      "calculation": "719.87 - 698.69 = 21.18; 21.18 / 698.69 = 0.0303, about 3.0 percent year over year; Columbus 3.3 percent is higher."
+    },
+    {
+      "id": "C7",
+      "claim": "In the second quarter of 2025, the same Columbus index was about 4.4 percent above its level a year earlier, compared with the 3.3 percent annual gain recorded this quarter.",
+      "source_ids": ["S1"],
+      "kind": "CALCULATION",
+      "calculation": "2025 Q2 339.78 vs 2024 Q2 325.41 = +14.37; 14.37 / 325.41 = 0.0442, about 4.4 percent; the latest year-over-year gain is about 3.3 percent."
+    },
+    {
+      "id": "C8",
+      "claim": "The index has still risen in every quarter CREN examined, from 327.08 in the third quarter of 2024 to 351.14 in the second quarter of 2026, though the increments have been small and steady rather than the sharper jumps of earlier years.",
+      "source_ids": ["S1"],
+      "kind": "COMPARISON"
+    },
+    {
+      "id": "C9",
+      "claim": "It measures repeat transactions and refinance appraisals, it is not adjusted for seasonal swings, and it lags, so the second-quarter reading covers April through June and was published on August 25, 2026.",
+      "source_ids": ["S1", "S3"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C10",
+      "claim": "The Columbus and national figures also sit on different base periods, 1995 for the metro series and 1980 for the national one, so the raw index levels cannot be compared directly, only their rates of change.",
+      "source_ids": ["S1", "S2"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C11",
+      "claim": "Its next release is scheduled for November 24, 2026 and will add third-quarter figures covering July through September, the first reading to show how Columbus values moved in the second half of the year.",
+      "source_ids": ["S3"],
+      "kind": "STATUS"
+    }
+  ],
+  "entity_ledger": [
+    {
+      "name": "Federal Housing Finance Agency",
+      "source_ids": ["S1", "S2", "S3"]
+    },
+    {
+      "name": "Federal Reserve Bank of St. Louis",
+      "source_ids": ["S1", "S2"]
+    }
+  ],
+  "image_brief": {
+    "primary_request": "A CREN line chart of the FHFA all-transactions house price index for the Columbus metro over the most recent quarters, built from public federal data and needing no photograph.",
+    "editorial_idea": "Show the steady, shallow upward path of the federal home-price measure for Columbus so readers can see that values are still rising but more slowly than a year ago, using the public index series rather than a site photo for a metro-wide number.",
+    "story_anchors": [
+      "Columbus index at 351.14 in the second quarter of 2026",
+      "About 3.3 percent year-over-year, just ahead of the 3.0 percent national pace",
+      "Appreciation cooled from about 4.4 percent a year earlier"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "This is a metro-wide statistical story with no single building or event to photograph, so no rights-cleared documentary photo could honestly represent it; a CREN line chart built from the public FHFA index series is the accurate hero.",
+    "image_policy_version": "cren-image-v2-real-photo-first",
+    "image_role": "DATA",
+    "source_review": [
+      {
+        "url": "https://fred.stlouisfed.org/series/ATNHPIUS18140Q",
+        "outcome": "SELECTED",
+        "note": "FHFA All-Transactions House Price Index for Columbus via FRED (public domain). Every point on the chart is a quarterly index value pulled from this series; it is the chart's sole data source."
+      },
+      {
+        "url": "https://www.fhfa.gov/data/hpi",
+        "outcome": "UNSUITABLE",
+        "note": "Considered the FHFA HPI page's own charts, but they are agency graphics covering the nation and states, not a Columbus-specific, redistributable hero; CREN built its own chart from the underlying series instead."
+      }
+    ],
+    "avoid": "Do not present the chart as a photograph; do not imply the index is a median sale price; do not chart the raw national index level against the metro level, since they use different base periods."
+  },
+  "image_alt": "CREN line chart of the FHFA all-transactions house price index for metro Columbus, rising from about 327 in late 2024 to 351.14 in the second quarter of 2026.",
+  "image_provenance": {
+    "type": "CREN_GRAPHIC",
+    "caption": "CREN graphic. Data: FHFA House Price Index via FRED (series ATNHPIUS18140Q), pulled Oct. 3, 2026.",
+    "source": "https://fred.stlouisfed.org/series/ATNHPIUS18140Q",
+    "license": "Public domain (U.S. federal data; FHFA House Price Index distributed by FRED)",
+    "permission_evidence": "Original CREN chart built from the FHFA House Price Index series distributed by FRED (public-domain federal data); no third-party image content.",
+    "credit": "CREN graphic",
+    "location_note": "Columbus, OH metropolitan statistical area.",
+    "date_note": "Chart created October 3, 2026; the line covers 2024 Q3 through 2026 Q2 (latest available), data pulled October 3, 2026.",
+    "verified_by": "CREN cloud image desk",
+    "verified_at": "2026-10-03T10:45:00Z"
+  },
+  "cloud_image_asset": {
+    "path": "frontend/content/images/2026-10-03-columbus-home-price-index-q2-2026.png",
+    "git_blob_sha": "6ded4a887b307f771bfbaf87ea898d83684c5fee",
+    "source_sha256": "183c4c73fd3055cab8dbfd0cf02e66c936119590734114d00bc09d59c2ee5143",
+    "visual_review": {
+      "reviewed_by": "CREN cloud image desk",
+      "reviewed_at": "2026-10-03T10:45:00Z",
+      "natural_appearance": true,
+      "geometry_and_shadows": true,
+      "no_synthetic_artifacts": true,
+      "story_match": true,
+      "truthful_caption": true,
+      "mobile_crop": true
+    }
+  }
+}

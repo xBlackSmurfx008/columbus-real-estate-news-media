@@ -1,0 +1,91 @@
+{
+  "schema_version": "cren-cloud-run-v1",
+  "routine": "cre-news-newsroom",
+  "date": "2026-10-04",
+  "completed_at": "2026-10-04T10:55:00Z",
+  "story_result": "ARTIFACTS_COMMITTED",
+  "article_paths": [
+    "frontend/content/articles/2026-10-04-downtown-columbus-high-street-demolition-appeal.json"
+  ],
+  "editorial_note": "Scheduled cloud handoff-only run for 2026-10-04 (Sunday). One real-estate/land-use story cleared the full primary-record + two-independent-origin + currency + image bar: a developer's appeal of the Downtown Commission's denial of a downtown demolition reaches Columbus City Council's Zoning Committee for oral arguments on Monday, October 5, 2026. Owner Town High Plaza, LLC (tied to Cleveland-based Harsax Management) was denied a certificate of appropriateness to demolish three vacant, fire-damaged buildings at 171-191 South High Street (case COA2600161) after a 3-3 Downtown Commission vote on March 24, 2026; it appealed April 2, 2026 and the matter is now set for a Council hearing. The story is anchored on primary records pulled this run -- the Columbus Legistar matter AA0001-2026 and the appeal's joint Stipulation of Facts, City appellee brief, and appellant reply brief -- and corroborated by two independent news origins (Hoodline, ABC6/FOX28). No lifestyle story cleared the two-origin bar this run, so only one article was produced. No recurring data format is due on a Sunday (the Home Price Index ran 2026-10-03), and the one October format, 'What Rent Costs Here' (HUD FY2027 Fair Market Rents), remains held because huduser.gov still returns HTTP 202 to data files and HTTP 401 to the FMR API through the cloud egress (see held_items). This receipt records the editorial outcome only; it is never publication authority. No import, image preparation, email delivery, or publication is claimed, and no git commit is treated as publication or downstream-import success.",
+  "artifacts": {
+    "article": "frontend/content/articles/2026-10-04-downtown-columbus-high-street-demolition-appeal.json",
+    "image": "frontend/content/images/2026-10-04-downtown-columbus-high-street-demolition-appeal.png",
+    "image_type": "CREN_GRAPHIC (locator map; image_role DATA)",
+    "brief": "Run state, sources, held items, and photo requests are recorded in this receipt; no separate brief file is committed, to keep the PR within the handoff's receipt+article+image scope."
+  },
+  "verification": {
+    "editorial_gate": "PASS 18/18 (frontend/scripts/editorial-quality-lib.mjs evaluateArticle).",
+    "schema_and_import_dry_run": "PASS. scripts/cloud-draft-import.mjs prepareCloudDraft ran clean against the committed package with a simulated source binding (date 2026-10-04): returned imageMode SOURCE_ASSET and gate 18/18; topic-slug ('development'), byline ('CRE News Staff'), article-date, and 48-hour freshness checks all accepted. Not an actual Vercel import.",
+    "image_plan": "SOURCE_ASSET (frontend/scripts/editorial-image-policy.mjs planEditorialImage; CREN_GRAPHIC, image_role DATA).",
+    "image_hashes_verified": "git hash-object and sha256sum recomputed from the committed PNG match cloud_image_asset (git_blob_sha 7730a7ae89fb34d0c9de38b6625856ca5d698fe0; source_sha256 30a0ca881fbb61204a02caad3f22e64e2ed82f7bca2c3375a01c3b1481013743; 72,490 bytes).",
+    "visual_review": "Locator-map PNG (1600x900) opened and inspected in-session before attesting: a cream data panel with a red primary marker labeled '171-191 S. High St.' and a green context marker labeled 'Columbus Commons' to its east, a north arrow, the title 'Where the contested demolition block sits', a subtitle naming 171-191 South High Street and Columbus Commons, the printed OpenStreetMap ODbL attribution, a 'Data:' source line, and the CREN mark clear of the source text. Labels legible and within the mobile-safe center band; no synthetic artifacts; no building footprints or structures drawn; faithful to the disclosed map medium.",
+    "near_duplicate_guard": "render-cren-chart.mjs cleared the near-duplicate check on attempt 1 (min hamming distance 18 vs 7 existing images; threshold 18)."
+  },
+  "story_facts_verified": {
+    "property": "171-177 and 185-191 South High Street, Columbus (also 200 South Wall Street), Franklin County Auditor parcel 010-008456-00. Three vacant, fire-damaged brick storefronts in the Downtown District, across High Street from Columbus Commons and next to the former Ohio National Bank building (167 S. High St., parcel 010-037820-00), which the owner has separately renovated.",
+    "owner": "Town High Plaza, LLC, which took title February 13, 2023 (Limited Warranty Deed, Instrument No. 202302210016351). Independent coverage (Hoodline, ABC6/FOX28) describes the owner as an LLC affiliated with Cleveland-based Harsax Management.",
+    "commission_decision": "Downtown Commission case COA2600161. The owner applied February 25, 2026 and, rather than a replacement building, offered a plan to maintain the cleared lot as a seeded lawn. At the March 24, 2026 meeting the commission voted 3-3; under its rules the tie is deemed a denial. The three negative votes cited the absence of a proposed replacement structure or use (Joint Stipulation of Facts, para. 12-15).",
+    "code_basis": "Columbus City Code 3359.23 bars a downtown demolition permit without a certificate of appropriateness, which may issue only if (1) a replacement use is approved, or (2) if no replacement is proposed, a maintenance plan is approved. The property is not on the Columbus Register of Historic Properties, so the Historic Resources Commission has no role (Stipulation para. 10-11).",
+    "enforcement_history": "May 14, 2019 Unsafe Building Order UNSF1900122 (fire damage); 2022 code-enforcement suit (Franklin County Municipal Court 2022EVH060251), voluntarily dismissed December 29, 2022 to facilitate a sale to a buyer committed to demolition; April 10, 2023 reissued Unsafe Building Orders; August 29, 2025 code-enforcement suit (2025EVH060528) in which the City itself seeks receivership and demolition (Stipulation para. 3-9).",
+    "appeal_status": "Administrative Appeal AA0001-2026 of COA2600161, filed April 2, 2026 under CCC 3359.05(E). Columbus Legistar shows MatterStatusName 'Second Reading', MatterBodyName 'Zoning Committee', MatterIntroDate 2026-10-02, MatterAgendaDate 2026-10-05; public notice PN0377-2026 sets oral arguments for Monday, October 5, 2026 at 6:30 p.m. No Council action/vote has occurred yet (histories empty as of this run).",
+    "positions": "Appellant argues CCC 3359.23(2) allows a certificate with a maintenance plan and no replacement, and that the Commission nullified that option by requiring a building (appellant reply brief). The City, as appellee, argues the application proposed only a vacant lot with a grass lawn and that the Downtown Design Guidelines adopted in Ordinance 1532-2013 counsel against vacant lots and non-accessory parking, and asks Council to affirm (City appellee brief). Columbus Landmarks placed the block on its 2023 Most Endangered list and urged reuse (Hoodline).",
+    "original_contributions": "Direct reading of the Legistar appeal record and the appeal's joint Stipulation of Facts and both parties' briefs (pulled and text-extracted this run); a timeline reconciling the Commission's stipulated March 24, 2026 meeting date and 3-3 vote against press framing of an 'April' denial; the identification of the parallel 2025 City receivership suit seeking the same demolition the Commission blocked; and a CREN locator map of the block.",
+    "limitations_stated": "Council has not ruled; the article reports a scheduled hearing, not an outcome, and makes no prediction. The owner-Harsax affiliation is reported by news outlets, not the stipulated record (which names Town High Plaza, LLC). The parallel receivership suit remains pending. Exact building square footage (~38,300 sq ft) comes from news coverage, not the stipulation, and is not asserted as a verified figure in the article."
+  },
+  "sources": {
+    "primary_records": [
+      "Columbus Legistar, Administrative Appeal AA0001-2026 (COA2600161), reader page https://columbus.legistar.com/LegislationDetail.aspx?ID=138758&GUID=51321DD5-75CA-4C54-B047-3712407B92F2 and web API webapi.legistar.com/v1/columbus/matters/138758 -- fetched 2026-10-04, HTTP 200 (status, body, intro/agenda dates, appellant counsel).",
+      "Joint Stipulation of Facts, Town High Plaza LLC v. City of Columbus, https://legistar3.granicus.com/Columbus/attachments/0ecab867-9355-4080-a9e2-b28a1604ecfb.pdf -- fetched 2026-10-04, HTTP 200 (property, ownership, enforcement history, COA application, 3-3 vote, appeal date).",
+      "Brief of Appellee City of Columbus, https://legistar3.granicus.com/Columbus/attachments/c7c0457f-2971-4f78-9917-213829738063.pdf -- fetched 2026-10-04, HTTP 200 (city position; vacant-lot objection; Ordinance 1532-2013 design guidelines).",
+      "Appellant Town High reply brief, https://legistar3.granicus.com/Columbus/attachments/1d7afb54-3dff-4798-9134-aefbe89def8c.pdf -- fetched 2026-10-04, HTTP 200 (appellant CCC 3359.23(2) argument; adjacent Ohio National Bank building renovation).",
+      "Columbus City Council public notice PN0377-2026 (Legistar matter) -- the Zoning Committee oral-argument hearing on COA2600161 set for Monday, October 5, 2026 at 6:30 p.m. -- fetched 2026-10-04 via webapi.legistar.com, HTTP 200."
+    ],
+    "independent_news_origins": [
+      "Hoodline (hoodline.com), 'Century-Old High Street Storefronts Face Wrecking Ball As Lazarus Block Drama Heats Up', published 2026-03-19 -- fetched 2026-10-04, HTTP 200.",
+      "ABC6/FOX28 (myfox28columbus.com), 'Downtown Commission denies demolition of dilapidated buildings', published 2026-04-02 -- fetched 2026-10-04, HTTP 200. Independent newsroom from Hoodline."
+    ]
+  },
+  "idea_queues_consulted": [
+    "briefs/2026-10-03-social-listener.md (newest social listener within prior 48h): 1 VERIFIED LEAD -- Bayer $2.2B pharmaceutical campus in New Albany (Oct. 2, 2026). Treated as an untrusted idea queue and independently assessed: the City of New Albany announcement and news origins are reachable, but the announcement records no rezoning, land-use approval, or housing provision, and the brief itself flags that no source addresses housing demand. A CREN real-estate angle would require a prohibited demand-effect inference with a generic local consequence, so it was held per the writing policy rather than forced. Its carried-forward items (Worthington referendum BOE decision -- still pending, mid-October; Ohio Stater closure; Zone In Phase 2) did not reach the bar this run.",
+    "briefs/2026-10-02-social-listener.md (second newest within prior 48h): Worthington referendum counter-voices -- single in-window origin; the Board of Elections certification had not occurred. No new decisive record this run.",
+    "briefs/2026-09-27-seo-report.md (newest SEO report within prior 14 days): its open assignments (Diocese/197 E. Gay St., Franklinton 610 W. Town St., Gahanna Flex Park) still lack a posted primary board/council record or a second independent origin and were not cleared this run. The 197 E. Gay St. Downtown Commission item is distinct from the 171-191 S. High St. appeal reported today."
+  ],
+  "leads_surveyed_not_selected": [
+    "Bayer $2.2 billion New Albany pharmaceutical campus (Oct. 2, 2026): strong economic-development news with reachable primary (City of New Albany) and multiple origins, but no rezoning/land-use record or housing provision; a CREN housing angle would be speculative and generic. Held, not forced into the real-estate lane.",
+    "Maronda Homes ~1,000-unit Brice Road proposal and the WestBend mixed-use project: surfaced via web search; Brice Road figures trace to an aggregator without a confirmed current primary record, and WestBend is a 2023-2025 project (463-unit first phase already underway), not current. Not selected.",
+    "Worthington Harding rezoning referendum: the Franklin County Board of Elections signature-validation decision ('mid-October') has not occurred; single accessible origin. Held; re-check on the BOE decision (watch item).",
+    "HUD FY2027 Fair Market Rents ('What Rent Costs Here' recurring format): held again -- huduser.gov returns HTTP 202 to data files and HTTP 401 to the FMR API through the cloud egress this run; the recurring-format rule forbids estimating numbers (see held_items).",
+    "Lifestyle: no lifestyle lead was independently verified to the two-origin bar this run."
+  ],
+  "held_items": [
+    "NEEDS_DATA: 'What Rent Costs Here' (HUD FY2027 Fair Market Rents for the Columbus, OH HUD Metro FMR Area). FY2027 FMRs are effective Oct. 1, 2026, but huduser.gov returns HTTP 202 to data-file downloads (FY27 Excel) and HTTP 401 (token required) to the FMR API through the cloud egress this run, so the primary per-area values could not be pulled. Held rather than estimated, consistent with the 2026-10-02 and 2026-10-03 runs. Re-attempt when huduser.gov data files or the FMR API are reachable, or when an operator-supplied HUD data file is available.",
+    "WATCH: Worthington referendum -- Franklin County Board of Elections signature-validation decision expected mid-October 2026; a certify/reject decision would be a decisive primary record worth a verified update, paired with a genuinely independent second origin.",
+    "WATCH: Town High Plaza / 171-191 S. High St. appeal (COA2600161) -- the Zoning Committee oral arguments are October 5, 2026; a committee recommendation and full Council vote, and any movement in the parallel 2025 receivership suit (2025EVH060528), would each be a decisive follow-up record."
+  ],
+  "photo_requests": [
+    "171-191 South High Street, Downtown -- a documentary photo of the three vacant storefronts and the adjacent former Ohio National Bank building, before any demolition, would let a future update lead with a real site photo instead of a locator map. Time-sensitive while the buildings still stand (owner shoots; the routine never contacts anyone).",
+    "Carried from prior runs: 600 Stimmel Road / McCoy Park, southwest Columbus, before any NWSL-facility groundbreaking; 197 E. Gay Street, Downtown, before any approved demolition; 610 W. Town Street, Franklinton (1928 brick facade), before construction begins."
+  ],
+  "egress_status_this_run": {
+    "reachable": [
+      "columbus.legistar.com LegislationDetail reader pages and webapi.legistar.com matters API (HTTP 200; appeal record and public notice)",
+      "legistar3.granicus.com appeal attachment PDFs (HTTP 200; stipulation and briefs, text-extracted with pdftotext)",
+      "hoodline.com, myfox28columbus.com (HTTP 200; independent news origins)",
+      "newalbanyohio.org (HTTP 200; Bayer announcement, surveyed not selected)",
+      "nominatim.openstreetmap.org geocoding (HTTP 200; map coordinates)",
+      "fred.stlouisfed.org (HTTP 200; checked, Home Price Index already produced 2026-10-03)"
+    ],
+    "unavailable_or_limited": [
+      "huduser.gov (HTTP 202 bot challenge on FY2027 FMR data files; FMR API HTTP 401 token-required) -- blocked the 'What Rent Costs Here' recurring format again this run",
+      "columbusunderground.com, nbc4i.com, 10tv.com, bizjournals.com/columbus, axios.com/local/columbus (HTTP 403, consistent with prior runs) -- NBC4 and Columbus Underground coverage of the demolition appeal could not be fetched directly; corroboration drawn from Hoodline and ABC6/FOX28 instead"
+    ]
+  },
+  "handoff_status": {
+    "discovery_reporting": "COMPLETED. One land-use story (the 171-191 S. High St. demolition appeal reaching City Council) cleared the full primary-record + two-independent-origin + currency + image bar and passed every gate 18/18 with an import dry-run clean.",
+    "github_commit": "Article JSON, CREN locator-map PNG, and this receipt committed to the routine branch and handed to main via PR/merge per the delivery sequence.",
+    "website_import": "PENDING. Not claimed as succeeded; Vercel imports from main at minute 05 subject to its gates. A git merge is not an import.",
+    "image_proof": "PENDING. image_url is null; Vercel prepares the image and sends the proof; only the configured owner's verified email approval of the exact unchanged article-image package can publish.",
+    "image_hold": "NONE for this story (the locator map cleared the image contract, SOURCE_ASSET). Separate NEEDS_DATA hold on the HUD FMR recurring format (see held_items), unrelated to this article's image."
+  }
+}

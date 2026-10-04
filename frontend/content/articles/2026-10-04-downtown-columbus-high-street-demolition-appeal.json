@@ -1,0 +1,313 @@
+{
+  "prompt_version": "cren-article-v1.0.2",
+  "title": "Downtown Columbus Demolition Appeal Reaches City Council",
+  "category": "Development",
+  "author": "CRE News Staff",
+  "date": "2026-10-04",
+  "excerpt": "Town High Plaza wants to raze three fire-damaged storefronts at 171-191 South High Street. The Downtown Commission said no, and City Council hears the appeal Monday.",
+  "answer_summary": "Columbus City Council hears oral arguments Monday on a developer's appeal of the Downtown Commission's refusal to let it demolish three vacant, fire-damaged buildings at 171 to 191 South High Street downtown, a case that tests whether the city can require a replacement plan before a teardown.",
+  "primary_keyword": "downtown Columbus demolition",
+  "meta_description": "A developer's appeal of a denied downtown Columbus demolition reaches City Council Monday, testing whether the city can require a replacement before a teardown.",
+  "fact_checked_at": "2026-10-04T10:55:00Z",
+  "canonical_event_key": "downtown-high-street-demolition-appeal-coa2600161",
+  "area_slug": null,
+  "topic_slug": "development",
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "development",
+    "downtown-columbus",
+    "demolition",
+    "downtown-commission"
+  ],
+  "read_time": "4 min",
+  "featured": false,
+  "image_url": null,
+  "location": {
+    "name": "Columbus, Ohio",
+    "state": "OH"
+  },
+  "body": "Columbus City Council hears oral arguments Monday on a developer's appeal of the Downtown Commission's refusal to let it demolish three vacant, fire-damaged buildings at 171 to 191 South High Street downtown, a case that tests whether the city can require a replacement plan before a teardown.\n\n## The block and who owns it\nThe century-old brick storefronts sit across High Street from Columbus Commons and next to the former Ohio National Bank building at 167 South High Street. Their owner, Town High Plaza, LLC, is tied to Cleveland-based Harsax Management, which Hoodline [reported](https://hoodline.com/2026/03/century-old-high-street-storefronts-face-wrecking-ball-as-lazarus-block-drama-heats-up/) bought the block in 2023 and shelved an earlier plan for a 15-story tower as construction costs and interest rates rose. Town High Plaza has renovated the adjoining bank building, which it describes in the appeal as the future grand lobby of whatever is eventually built on the site.\n\n## Why the Downtown Commission said no\nCity code bars any downtown teardown without a certificate of appropriateness from the Downtown Commission, which cannot sign off unless an owner first gets a replacement use cleared or, lacking that, wins approval of a plan to maintain the empty lot. Town High Plaza applied on February 25, 2026 and offered to keep the cleared lot as a seeded lawn rather than build a replacement. At the commission's March 24, 2026 meeting the vote split 3 to 3, a tie that counts as a denial, with the three members against citing the lack of a replacement structure or use. Local news [covered the denial](https://myfox28columbus.com/news/local/downtown-columbus-commission-denies-demolition-ohio-dilapidated-buildings-commons-national-bank-building-south-high-street) at the time.\n\n## A long code-enforcement backstory\nThe block has drawn city enforcement for years, a history both sides lay out in a joint [stipulation of facts](https://legistar3.granicus.com/Columbus/attachments/0ecab867-9355-4080-a9e2-b28a1604ecfb.pdf). A May 2019 unsafe-building order cited fire-damaged framing and structural damage at 185 to 191 South High Street. The city sued over code violations in 2022, then dropped that case after the prior owner agreed to sell to a buyer committed to demolition. In August 2025 the city filed a fresh code-enforcement suit seeking to place the property in receivership and tear the buildings down as a remedy. The property is not on the Columbus Register of Historic Properties, so the Historic Resources Commission has no role.\n\n## The question before council\nThe appeal turns on one reading of the code. Town High Plaza argues the ordinance plainly allows a certificate when an owner offers a maintenance plan and proposes no replacement, and that the commission erased that path by insisting on a building. The city, defending the commission as appellee, counters in [its brief](https://legistar3.granicus.com/Columbus/attachments/c7c0457f-2971-4f78-9917-213829738063.pdf) that the application offered no replacement structure, only a vacant lot with a grass lawn, and that the downtown design guidelines council adopted in 2013 advise against vacant lots and non-accessory parking. Columbus Landmarks had earlier put the storefronts on its 2023 most-endangered list and urged reuse over demolition.\n\n## What to watch\nOral arguments are set for 6:30 p.m. on Monday, October 5, 2026 before the council's Zoning Committee, per the [council record](https://columbus.legistar.com/LegislationDetail.aspx?ID=138758&GUID=51321DD5-75CA-4C54-B047-3712407B92F2). Council can affirm the commission, reverse it and grant the certificate, or return the matter for more work; a committee recommendation and a full council vote would follow. The separate 2025 receivership suit, in which the city itself seeks to demolish the buildings, remains pending in Franklin County Municipal Court and could produce the very outcome the commission blocked.",
+  "source_ledger": [
+    {
+      "id": "S1",
+      "type": "PRIMARY",
+      "url": "https://columbus.legistar.com/LegislationDetail.aspx?ID=138758&GUID=51321DD5-75CA-4C54-B047-3712407B92F2",
+      "publisher": "Columbus City Council",
+      "title": "Administrative Appeal AA0001-2026 (COA2600161, Downtown Commission)",
+      "published_at": "2026-10-02",
+      "fetched_at": "2026-10-04T10:20:00Z",
+      "http_status": 200,
+      "fetch_note": "Columbus Legistar legislative record for the administrative appeal AA0001-2026 of Downtown Commission case COA2600161. The machine-readable matter record was pulled from the Legistar web API (webapi.legistar.com/v1/columbus/matters/138758) on October 4, 2026, HTTP 200: MatterStatusName 'Second Reading', MatterBodyName 'Zoning Committee', MatterIntroDate 2026-10-02, MatterAgendaDate 2026-10-05; appellant counsel Kevin Dunn, Plank Law Firm. Public notice PN0377-2026 sets the oral-argument hearing for Monday, October 5, 2026 at 6:30 p.m. This reader-facing LegislationDetail page is the human-readable link to the same record."
+    },
+    {
+      "id": "S2",
+      "type": "PRIMARY",
+      "url": "https://legistar3.granicus.com/Columbus/attachments/0ecab867-9355-4080-a9e2-b28a1604ecfb.pdf",
+      "publisher": "Columbus City Council (Zoning Committee record)",
+      "title": "Joint Stipulation of Facts, Town High Plaza LLC v. City of Columbus (COA2600161)",
+      "published_at": "2026-09-11",
+      "fetched_at": "2026-10-04T10:30:00Z",
+      "http_status": 200,
+      "fetch_note": "Jointly agreed Stipulation of Facts filed in the appeal, signed by counsel for Town High Plaza LLC (Kevin Dunn, Plank Law) and the City of Columbus (Joshua Cartee, City Attorney's office). Establishes: property at 171-177 and 185-191 South High Street (parcel 010-008456-00); owner Town High Plaza LLC since Feb. 13, 2023; May 14, 2019 Unsafe Building Order citing fire damage; 2022 and 2025 code-enforcement suits (the 2025 case seeks receivership and demolition); COA application filed Feb. 25, 2026; a maintenance/seeded-lawn plan presented March 24, 2026; a 3-3 Downtown Commission vote deemed a denial for lack of a replacement use; appeal to City Council filed April 2, 2026. PDF downloaded and text-extracted this run."
+    },
+    {
+      "id": "S3",
+      "type": "PRIMARY",
+      "url": "https://legistar3.granicus.com/Columbus/attachments/c7c0457f-2971-4f78-9917-213829738063.pdf",
+      "publisher": "City of Columbus, Department of Law",
+      "title": "Brief of Appellee City of Columbus (Downtown Commission appeal COA2600161)",
+      "published_at": "2026-09-11",
+      "fetched_at": "2026-10-04T10:31:00Z",
+      "http_status": 200,
+      "fetch_note": "City of Columbus appellee brief urging City Council to affirm the Downtown Commission. States the application proposed no replacement structure, only a vacant lot with a grass/seeded lawn, and cites the Downtown Design Guidelines adopted by City Council in Ordinance 1532-2013, which counsel against vacant lots and non-accessory parking. PDF downloaded and text-extracted this run."
+    },
+    {
+      "id": "S4",
+      "type": "PRIMARY",
+      "url": "https://legistar3.granicus.com/Columbus/attachments/1d7afb54-3dff-4798-9134-aefbe89def8c.pdf",
+      "publisher": "Town High Plaza LLC (Plank Law Firm)",
+      "title": "Appellant Town High reply brief (Downtown Commission appeal COA2600161)",
+      "published_at": "2026-09-21",
+      "fetched_at": "2026-10-04T10:32:00Z",
+      "http_status": 200,
+      "fetch_note": "Appellant's reply brief arguing that Columbus City Code 3359.23 expressly allows a certificate of appropriateness where an owner offers a plan to maintain the site and proposes no replacement structure, and that the Downtown Commission nullified that statutory option by requiring a replacement building. PDF downloaded and text-extracted this run."
+    },
+    {
+      "id": "S5",
+      "type": "SECONDARY",
+      "url": "https://hoodline.com/2026/03/century-old-high-street-storefronts-face-wrecking-ball-as-lazarus-block-drama-heats-up/",
+      "publisher": "Hoodline",
+      "title": "Century-Old High Street Storefronts Face Wrecking Ball As Lazarus Block Drama Heats Up",
+      "published_at": "2026-03-19",
+      "fetched_at": "2026-10-04T10:05:00Z",
+      "http_status": 200,
+      "fetch_note": "Independent news coverage: century-old brick storefronts at 171-191 S. High St. and 200 S. Wall St. (~38,300 sq ft), adjacent Ohio National Bank building at 167 S. High to remain; developer an LLC affiliated with Cleveland-based Harsax Management, which bought the block in 2023, listed it for sale in fall 2025, and shelved a prior 15-story tower plan over costs and interest rates; Columbus Landmarks placed the block on its 2023 Most Endangered list and urged reuse. Fetched this run, HTTP 200."
+    },
+    {
+      "id": "S6",
+      "type": "SECONDARY",
+      "url": "https://myfox28columbus.com/news/local/downtown-columbus-commission-denies-demolition-ohio-dilapidated-buildings-commons-national-bank-building-south-high-street",
+      "publisher": "ABC6/FOX28 (WSYX/WTTE)",
+      "title": "Downtown Commission denies demolition of dilapidated buildings",
+      "published_at": "2026-04-02",
+      "fetched_at": "2026-10-04T10:06:00Z",
+      "http_status": 200,
+      "fetch_note": "Independent newsroom coverage of the Downtown Commission's denial of the South High Street demolition, noting the buildings sit next to the long-vacant Ohio National Bank building and across from Columbus Commons and that the owner sought temporary green space while reviving a larger project. Fetched this run, HTTP 200."
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "C1",
+      "claim": "171 to 191 South High Street",
+      "source_ids": [
+        "S1",
+        "S2"
+      ],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C2",
+      "claim": "the former Ohio National Bank building at 167 South High Street",
+      "source_ids": [
+        "S2",
+        "S5"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C3",
+      "claim": "bought the block in 2023 and shelved an earlier plan for a 15-story tower",
+      "source_ids": [
+        "S5"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C4",
+      "claim": "applied on February 25, 2026 and offered to keep the cleared lot as a seeded lawn",
+      "source_ids": [
+        "S2"
+      ],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C5",
+      "claim": "the vote split 3 to 3, a tie that counts as a denial",
+      "source_ids": [
+        "S2",
+        "S3"
+      ],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C6",
+      "claim": "A May 2019 unsafe-building order cited fire-damaged framing and structural damage at 185 to 191 South High Street",
+      "source_ids": [
+        "S2"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C7",
+      "claim": "The city sued over code violations in 2022",
+      "source_ids": [
+        "S2"
+      ],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C8",
+      "claim": "In August 2025 the city filed a fresh code-enforcement suit seeking to place the property in receivership",
+      "source_ids": [
+        "S2"
+      ],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C9",
+      "claim": "put the storefronts on its 2023 most-endangered list",
+      "source_ids": [
+        "S5"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C10",
+      "claim": "Oral arguments are set for 6:30 p.m. on Monday, October 5, 2026 before the council's Zoning Committee",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C11",
+      "claim": "The separate 2025 receivership suit, in which the city itself seeks to demolish the buildings, remains pending in Franklin County Municipal Court",
+      "source_ids": [
+        "S2",
+        "S4"
+      ],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C12",
+      "claim": "Town High Plaza argues the ordinance plainly allows a certificate when an owner offers a maintenance plan and proposes no replacement",
+      "source_ids": [
+        "S4"
+      ],
+      "kind": "ATTRIBUTED"
+    },
+    {
+      "id": "C13",
+      "claim": "the application offered no replacement structure, only a vacant lot with a grass lawn",
+      "source_ids": [
+        "S3"
+      ],
+      "kind": "ATTRIBUTED"
+    },
+    {
+      "id": "C14",
+      "claim": "The property is not on the Columbus Register of Historic Properties",
+      "source_ids": [
+        "S2"
+      ],
+      "kind": "FACT"
+    }
+  ],
+  "entity_ledger": [
+    {
+      "name": "Town High Plaza, LLC",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S4"
+      ]
+    },
+    {
+      "name": "Downtown Commission (City of Columbus)",
+      "source_ids": [
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "name": "City of Columbus",
+      "source_ids": [
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "name": "Harsax Management",
+      "source_ids": [
+        "S5"
+      ]
+    },
+    {
+      "name": "Columbus City Council",
+      "source_ids": [
+        "S1"
+      ]
+    },
+    {
+      "name": "Columbus Landmarks",
+      "source_ids": [
+        "S5"
+      ]
+    }
+  ],
+  "image_brief": {
+    "primary_request": "A CREN locator map showing the contested demolition block at 171-191 South High Street in downtown Columbus, across High Street from Columbus Commons, built from OpenStreetMap geometry so it needs no photograph of the buildings.",
+    "editorial_idea": "Place the three storefronts proposed for demolition in their downtown context, next to Columbus Commons, so readers see exactly which block the City Council appeal is about without a copyrighted photo or rendering.",
+    "story_anchors": [
+      "three vacant, fire-damaged buildings at 171-191 South High Street",
+      "across High Street from Columbus Commons, next to the former Ohio National Bank building",
+      "a City Council appeal of the Downtown Commission's demolition denial"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "No rights-cleared documentary photograph of the specific buildings was available for public redistribution, and the only images in the news coverage are outlet photographs that public display does not license for reuse. CREN therefore used a locator map built from OpenStreetMap geometry (image ladder step 2). The site and Columbus Commons were geocoded from OpenStreetMap on October 4, 2026.",
+    "image_policy_version": "cren-image-v2-real-photo-first",
+    "image_role": "DATA",
+    "source_review": [
+      {
+        "url": "https://www.openstreetmap.org/#map=16/39.9585/-83.0002",
+        "outcome": "SELECTED",
+        "note": "OpenStreetMap geometry for the 100 block of South High Street, downtown Columbus. 171-191 S. High St. (39.9585, -83.0002) and Columbus Commons (39.9587, -82.9986) were geocoded via OpenStreetMap Nominatim on October 4, 2026 and plotted; ODbL requires the attribution printed on the image, which it carries."
+      },
+      {
+        "url": "https://hoodline.com/2026/03/century-old-high-street-storefronts-face-wrecking-ball-as-lazarus-block-drama-heats-up/",
+        "outcome": "RIGHTS_UNCLEAR",
+        "note": "The news coverage of the block carries outlet photographs of the storefronts; public display on a news site does not grant redistribution rights for this public repository, so none was used."
+      }
+    ],
+    "avoid": "Do not present the map as a photograph of the buildings; do not draw building footprints or imply a design; do not suggest demolition has occurred."
+  },
+  "image_alt": "CREN locator map of 171-191 South High Street in downtown Columbus, across from Columbus Commons and next to the former Ohio National Bank building.",
+  "image_provenance": {
+    "type": "CREN_GRAPHIC",
+    "caption": "CREN graphic. Data: OpenStreetMap (c) OpenStreetMap contributors, ODbL, geocoded October 4, 2026; Downtown Commission appeal COA2600161 from the City of Columbus.",
+    "source": "https://www.openstreetmap.org/#map=16/39.9585/-83.0002",
+    "license": "OpenStreetMap data (c) OpenStreetMap contributors, ODbL",
+    "permission_evidence": "Original CREN map built from OpenStreetMap geometry (ODbL, attributed on the image); no third-party image content is reused.",
+    "credit": "CREN graphic",
+    "location_note": "Downtown Columbus, Ohio; the red marker is 171-191 South High Street and the green marker is Columbus Commons, across High Street to the east.",
+    "date_note": "Map created October 4, 2026; coordinates geocoded October 4, 2026; it illustrates an appeal whose oral arguments are set for October 5, 2026.",
+    "verified_by": "CREN cloud image desk",
+    "verified_at": "2026-10-04T10:50:00Z"
+  },
+  "cloud_image_asset": {
+    "path": "frontend/content/images/2026-10-04-downtown-columbus-high-street-demolition-appeal.png",
+    "git_blob_sha": "7730a7ae89fb34d0c9de38b6625856ca5d698fe0",
+    "source_sha256": "30a0ca881fbb61204a02caad3f22e64e2ed82f7bca2c3375a01c3b1481013743",
+    "visual_review": {
+      "reviewed_by": "CREN cloud image desk",
+      "reviewed_at": "2026-10-04T10:50:00Z",
+      "natural_appearance": true,
+      "geometry_and_shadows": true,
+      "no_synthetic_artifacts": true,
+      "story_match": true,
+      "truthful_caption": true,
+      "mobile_crop": true
+    }
+  }
+}

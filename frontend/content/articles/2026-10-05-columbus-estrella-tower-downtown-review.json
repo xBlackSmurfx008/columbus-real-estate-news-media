@@ -1,0 +1,241 @@
+{
+  "prompt_version": "cren-article-v1.0.2",
+  "title": "Estrella Tower Grows to 25 Stories Ahead of Columbus Review",
+  "category": "Development",
+  "author": "CRE News Staff",
+  "date": "2026-10-05",
+  "excerpt": "A downtown Columbus tower keeps getting taller: the 25-story Estrella returns to the city's Downtown Commission on October 27, up from what Ohio backed in 2025.",
+  "answer_summary": "A 25-story mixed-use tower called the Estrella returns to the Columbus Downtown Commission on October 27 for a conceptual review, the tallest version yet of a 175 to 199 East Rich Street project that won a $4.5 million state tax credit in 2025 as a shorter building.",
+  "primary_keyword": "Estrella tower",
+  "meta_description": "The 25-story Estrella tower returns to the Columbus Downtown Commission on October 27 for conceptual review, up from the 24-story design Ohio backed in 2025.",
+  "fact_checked_at": "2026-10-05T10:45:00Z",
+  "canonical_event_key": "estrella-tower-downtown-commission-conceptual-review-2026-10-27",
+  "area_slug": "downtown",
+  "topic_slug": "development",
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "development",
+    "downtown",
+    "the-estrella",
+    "downtown-commission"
+  ],
+  "read_time": "4 min",
+  "featured": false,
+  "image_url": null,
+  "location": {
+    "name": "Columbus, Ohio",
+    "state": "OH"
+  },
+  "body": "A 25-story mixed-use tower called the Estrella returns to the Columbus Downtown Commission on October 27 for a conceptual review, the tallest version yet of a 175 to 199 East Rich Street project that won a $4.5 million state tax credit in 2025 as a shorter building.\n\n## A design that keeps getting taller\nThe Estrella has grown with almost every look the city has given it. Hoodline [reported](https://hoodline.com/2026/10/estrella-tower-grows-to-25-stories-as-downtown-columbus-board-takes-another-look/) that Bluestone Brothers first pitched the tower in 2023 at 19 stories, and that the Downtown Commission last reviewed it at 24 stories. The certificate of appropriateness application that architect Berardi and Partners filed on September 30 now describes a 25-story building with 296 apartments. That sign-off is the design decision the commission must issue before a downtown project can seek demolition or building permits.\n\n## What the state already backed\nThe project's core was set when Ohio put money behind it. On January 27, 2025, Governor Mike DeWine and the Ohio Department of Development [announced](https://content.govdelivery.com/attachments/OHIOGOVERNOR/2025/01/24/file_attachments/3142703/2025%200127%20TMUD%20Award%20Descriptions.pdf) a $4.5 million Transformational Mixed-Use Development tax credit for the Estrella. Local television also [covered](https://myfox28columbus.com/news/building-ohios-future-intel-beyond/state-announces-millions-in-tax-credits-for-development-projects-estrella-galaxy-at-polaris-capitol-square-renaissance) the award when the state named it. The state's award record described it then as a 24-story, 503,103-square-foot tower with a total development cost of $122.6 million. That summary said the tower would bring a fresh-food grocery store to what the state calls a food desert, and it projected roughly 1,239 construction jobs and 808 permanent jobs on the site.\n\n## A grocery and a Fourth Street address\nThe Estrella would sit on East Rich Street just east of Columbus Commons, in the corridor the state ties to the revitalization of the Fourth Street district. A full-service grocery downtown has been a persistent gap, and the plans set aside nearly 30,000 square feet of ground-floor commercial space, with a fresh-food market as the anchor. A new resident base in a single tower is the kind of demand such a store needs, though the grocery operator has not been named in the public record.\n\n## What a conceptual review decides\nThe October 27 hearing is a conceptual review, not a vote. The commission will weigh the building's massing, materials and how it meets the sidewalk, and its guidance shapes a project before any permit application is submitted. The city's [meeting calendar](https://www.columbus.gov/Business-Development/Building-Zoning-Services/Boards-and-Commissions/Historic-Preservation-Development-Review-Boards-Commissions/Downtown-Commission) lists the Downtown Commission for October 27 and set a September 30 deadline for applications on that agenda.\n\n## What to watch\nSome caution is warranted on the newest figures. The 25-story, 296-unit count comes from the filed application as Hoodline reported it, while Bluestone Brothers' own [project page](https://bluestonebrothers.com/theestrella) still shows the earlier 24-story, 290-unit design. The tax credit is also earned against the project's taxes over time, not paid up front, and the state can pull an award if a development stalls. The next real test is the October 27 conceptual review itself, where the commission's response will shape whether the taller version moves ahead.",
+  "source_ledger": [
+    {
+      "id": "S1",
+      "type": "PRIMARY",
+      "url": "https://content.govdelivery.com/attachments/OHIOGOVERNOR/2025/01/24/file_attachments/3142703/2025%200127%20TMUD%20Award%20Descriptions.pdf",
+      "publisher": "Ohio Department of Development (Office of Governor Mike DeWine)",
+      "title": "2025 TMUD Award Descriptions (Transformational Mixed-Use Development Program)",
+      "published_at": "2025-01-27",
+      "fetched_at": "2026-10-05T10:20:00Z",
+      "http_status": 200,
+      "fetch_note": "Official Ohio Department of Development award-descriptions document, released with Governor DeWine's January 27, 2025 announcement of $2 billion in TMUD-supported investment. Downloaded and text-extracted with pdftotext this run (266,857 bytes). The Estrella (Franklin County) entry: Total Development Cost $122,605,000; Total Tax Credit $4,500,000; 175-199 Rich St., a 24-story, 503,103-square-foot mixed-use tower with a fresh-food grocery store in a food desert; approximately 1,239 construction jobs and 808 permanent jobs."
+    },
+    {
+      "id": "S2",
+      "type": "PRIMARY",
+      "url": "https://www.columbus.gov/Business-Development/Building-Zoning-Services/Boards-and-Commissions/Historic-Preservation-Development-Review-Boards-Commissions/Downtown-Commission",
+      "publisher": "City of Columbus, Building and Zoning Services",
+      "title": "Downtown Commission (meeting schedule and application deadlines)",
+      "published_at": null,
+      "fetched_at": "2026-10-05T10:25:00Z",
+      "http_status": 200,
+      "fetch_note": "City of Columbus Downtown Commission page confirming the October 27, 2026 meeting (8:30 a.m.) and the September 30, 2026 application deadline for that agenda, and that applications are filed through the city's Citizens Access Portal. Fetched this run, HTTP 200. The page did not list individual agenda items for the upcoming meeting at fetch time."
+    },
+    {
+      "id": "S3",
+      "type": "SECONDARY",
+      "url": "https://hoodline.com/2026/10/estrella-tower-grows-to-25-stories-as-downtown-columbus-board-takes-another-look/",
+      "publisher": "Hoodline",
+      "title": "Estrella Tower Grows to 25 Stories as Downtown Columbus Board Takes Another Look",
+      "published_at": "2026-10-02",
+      "fetched_at": "2026-10-05T10:05:00Z",
+      "http_status": 200,
+      "fetch_note": "Independent news coverage of the current filing: developer Bluestone Brothers, architect Berardi+Partners, Certificate of Appropriateness COA2601058 filed September 30, 2026, a 25-story tower with 296 apartments, roughly 30,000 square feet of ground-floor commercial space for a fresh-food grocery, 327 parking spaces, $122.6 million investment, and an October 27, 2026 Downtown Commission conceptual review; prior heights of 19 stories (2023) and 24 stories. Fetched this run, HTTP 200."
+    },
+    {
+      "id": "S4",
+      "type": "SECONDARY",
+      "url": "https://myfox28columbus.com/news/building-ohios-future-intel-beyond/state-announces-millions-in-tax-credits-for-development-projects-estrella-galaxy-at-polaris-capitol-square-renaissance",
+      "publisher": "ABC6/FOX28 (WSYX/WTTE)",
+      "title": "State announces millions in tax credits for development projects",
+      "published_at": "2025-01-28",
+      "fetched_at": "2026-10-05T10:10:00Z",
+      "http_status": 200,
+      "fetch_note": "Independent newsroom coverage of the January 2025 Ohio TMUD awards, describing the Estrella as a 24-story, 503,103-square-foot mixed-use tower on Rich Street near Columbus Commons with a $4,500,000 tax credit and a $122,605,000 total development cost, awarded by the Ohio Tax Credit Authority. A second independent origin from Hoodline. Fetched this run, HTTP 200."
+    },
+    {
+      "id": "S5",
+      "type": "PRIMARY",
+      "url": "https://bluestonebrothers.com/theestrella",
+      "publisher": "Bluestone Brothers Development",
+      "title": "The Estrella (developer project page)",
+      "published_at": null,
+      "fetched_at": "2026-10-05T10:15:00Z",
+      "http_status": 200,
+      "fetch_note": "Developer's own first-party project page for The Estrella, labeled Conceptual Design. As fetched this run it still describes the earlier design: a 24-floor building with 290 apartments, about 18,000 square feet of first-floor commercial space, and a 327-space parking garage. Used to show that the developer's public page lags the 25-story/296-unit figure in the September 30 filing."
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "C1",
+      "claim": "the Estrella returns to the Columbus Downtown Commission on October 27 for a conceptual review",
+      "source_ids": ["S2", "S3"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C2",
+      "claim": "first pitched the tower in 2023 at 19 stories, and that the Downtown Commission last reviewed it at 24 stories",
+      "source_ids": ["S3"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C3",
+      "claim": "filed on September 30 now describes a 25-story building with 296 apartments",
+      "source_ids": ["S3"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C4",
+      "claim": "a $4.5 million Transformational Mixed-Use Development tax credit for the Estrella",
+      "source_ids": ["S1", "S4"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C5",
+      "claim": "a 24-story, 503,103-square-foot tower with a total development cost of $122.6 million",
+      "source_ids": ["S1", "S4"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C6",
+      "claim": "roughly 1,239 construction jobs and 808 permanent jobs on the site",
+      "source_ids": ["S1"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C7",
+      "claim": "nearly 30,000 square feet of ground-floor commercial space",
+      "source_ids": ["S3"],
+      "kind": "FACT"
+    },
+    {
+      "id": "C8",
+      "claim": "The October 27 hearing is a conceptual review, not a vote",
+      "source_ids": ["S2", "S3"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C9",
+      "claim": "lists the Downtown Commission for October 27 and set a September 30 deadline",
+      "source_ids": ["S2"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C10",
+      "claim": "still shows the earlier 24-story, 290-unit design",
+      "source_ids": ["S5"],
+      "kind": "STATUS"
+    },
+    {
+      "id": "C11",
+      "claim": "the October 27 conceptual review itself",
+      "source_ids": ["S2"],
+      "kind": "STATUS"
+    }
+  ],
+  "entity_ledger": [
+    {
+      "name": "The Estrella",
+      "source_ids": ["S1", "S3", "S5"]
+    },
+    {
+      "name": "Bluestone Brothers",
+      "source_ids": ["S3", "S5"]
+    },
+    {
+      "name": "Berardi and Partners",
+      "source_ids": ["S3"]
+    },
+    {
+      "name": "Columbus Downtown Commission",
+      "source_ids": ["S2", "S3"]
+    },
+    {
+      "name": "Ohio Department of Development",
+      "source_ids": ["S1"]
+    },
+    {
+      "name": "Governor Mike DeWine",
+      "source_ids": ["S1"]
+    }
+  ],
+  "image_brief": {
+    "primary_request": "A CREN bar chart of the Estrella tower's proposed height at three points in time, built from the Ohio TMUD award record and the September 2026 Downtown Commission filing, so the story needs no copyrighted rendering of the building.",
+    "editorial_idea": "Show the single most newsworthy fact plainly: the tower has been redrawn taller again, from 19 stories in 2023 to a state-backed 24 stories and now a filed 25 stories, without using a developer rendering CREN cannot redistribute.",
+    "story_anchors": [
+      "a 25-story Estrella tower returning to the Downtown Commission on October 27",
+      "175 to 199 East Rich Street, downtown Columbus",
+      "a $4.5 million state tax credit awarded to a 24-story design in 2025"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "No rights-cleared documentary photograph exists for a building that has not been constructed, and the only visuals available are developer renderings and news-outlet images that public display does not license for redistribution in this public repository. CREN therefore built an original data chart (image ladder: CREN data graphic) from the Ohio Department of Development TMUD award record and the September 30, 2026 Downtown Commission filing as reported.",
+    "image_policy_version": "cren-image-v2-real-photo-first",
+    "image_role": "DATA",
+    "source_review": [
+      {
+        "url": "https://content.govdelivery.com/attachments/OHIOGOVERNOR/2025/01/24/file_attachments/3142703/2025%200127%20TMUD%20Award%20Descriptions.pdf",
+        "outcome": "SELECTED",
+        "note": "Ohio Department of Development TMUD award-descriptions record, the primary source for the Estrella's 24-story baseline, $4.5 million credit and $122.6 million cost. Downloaded and text-extracted October 5, 2026 and used to build the CREN height chart."
+      },
+      {
+        "url": "https://hoodline.com/2026/10/estrella-tower-grows-to-25-stories-as-downtown-columbus-board-takes-another-look/",
+        "outcome": "RIGHTS_UNCLEAR",
+        "note": "News coverage of the filing may carry developer renderings; public display on a news site does not grant redistribution rights for this public repository, so no third-party image was used. The 25-story September 2026 data point is drawn from this reporting."
+      },
+      {
+        "url": "https://bluestonebrothers.com/theestrella",
+        "outcome": "UNSUITABLE",
+        "note": "The developer's marketing renderings of The Estrella are not rights-cleared for public redistribution and still depict the earlier 24-story design; not used."
+      }
+    ],
+    "avoid": "Do not present the chart as a photograph or rendering of the building; do not imply the 25-story version is approved or under construction; do not treat the tax credit as cash paid up front."
+  },
+  "image_alt": "CREN bar chart showing the Estrella tower's proposed height rising from 19 stories in 2023 to 24 stories in 2025 and 25 stories in a September 2026 filing.",
+  "image_provenance": {
+    "type": "CREN_GRAPHIC",
+    "caption": "CREN chart. Data: Ohio Department of Development TMUD award record (Jan. 27, 2025) and the Columbus Downtown Commission filing (Sept. 30, 2026).",
+    "source": "https://content.govdelivery.com/attachments/OHIOGOVERNOR/2025/01/24/file_attachments/3142703/2025%200127%20TMUD%20Award%20Descriptions.pdf",
+    "license": "Ohio Department of Development public record and City of Columbus public record; original CREN chart.",
+    "permission_evidence": "Original CREN chart built from public Ohio Department of Development and City of Columbus records; no third-party image content is reused.",
+    "credit": "CREN chart",
+    "location_note": "175-199 East Rich Street, downtown Columbus, Ohio.",
+    "date_note": "Chart created October 5, 2026 from a January 27, 2025 state award record and a September 30, 2026 city filing; it illustrates a conceptual review set for October 27, 2026.",
+    "verified_by": "CREN cloud image desk",
+    "verified_at": "2026-10-05T10:45:00Z"
+  },
+  "cloud_image_asset": {
+    "path": "frontend/content/images/2026-10-05-columbus-estrella-tower-downtown-review.png",
+    "git_blob_sha": "3fc83b7f68a8d485dc4d4525542e7854a0c14c0f",
+    "source_sha256": "11c7693c7d4012af9c29529d5766ee36c917ecfcab0c8c12bd5fd42b70ac55d1",
+    "visual_review": {
+      "reviewed_by": "CREN cloud image desk",
+      "reviewed_at": "2026-10-05T10:45:00Z",
+      "natural_appearance": true,
+      "geometry_and_shadows": true,
+      "no_synthetic_artifacts": true,
+      "story_match": true,
+      "truthful_caption": true,
+      "mobile_crop": true
+    }
+  }
+}

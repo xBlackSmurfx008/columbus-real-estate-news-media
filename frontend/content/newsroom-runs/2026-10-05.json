@@ -1,0 +1,90 @@
+{
+  "schema_version": "cren-cloud-run-v1",
+  "routine": "cre-news-newsroom",
+  "date": "2026-10-05",
+  "completed_at": "2026-10-05T10:55:00Z",
+  "story_result": "ARTIFACTS_COMMITTED",
+  "article_paths": [
+    "frontend/content/articles/2026-10-05-columbus-estrella-tower-downtown-review.json"
+  ],
+  "editorial_note": "Scheduled cloud handoff-only run for 2026-10-05 (Monday). One real-estate/development story cleared the full primary-record + two-independent-origin + currency + image bar: the Estrella, a downtown Columbus mixed-use tower at 175-199 E. Rich St., has been redrawn taller again -- to 25 stories and 296 apartments in a Certificate of Appropriateness application (COA2601058) filed September 30, 2026 -- and returns to the Columbus Downtown Commission for a conceptual (non-binding) design review on October 27, 2026. The story is anchored on two primary records pulled this run: the Ohio Department of Development's official 2025 TMUD award-descriptions document (the state's $4.5M credit for a then-24-story, 503,103-sq-ft, $122,605,000 design, downloaded and text-extracted this run) and the City of Columbus Downtown Commission meeting page (Oct. 27 meeting; Sept. 30 application deadline). It is corroborated by two independent news origins (Hoodline, Oct. 2, 2026, for the current 25-story filing; ABC6/FOX28, Jan. 28, 2025, for the state award) and by the developer's own first-party page, which still shows the earlier 24-story/290-unit design -- a discrepancy the article reports as a limitation. No lifestyle story cleared the two-origin bar this run, so only one article was produced. No recurring data format is due today that is unblocked: the one October format, 'What Rent Costs Here' (HUD FY2027 Fair Market Rents), remains held (see held_items). This receipt records the editorial outcome only; it is never publication authority. No import, image preparation, email delivery, or publication is claimed, and no git commit is treated as publication or downstream-import success.",
+  "artifacts": {
+    "article": "frontend/content/articles/2026-10-05-columbus-estrella-tower-downtown-review.json",
+    "image": "frontend/content/images/2026-10-05-columbus-estrella-tower-downtown-review.png",
+    "image_type": "CREN_GRAPHIC (height bar chart; image_role DATA)",
+    "brief": "Run state, sources, held items, and photo requests are recorded in this receipt; no separate brief file is committed, to keep the PR within the handoff's receipt+article+image scope."
+  },
+  "verification": {
+    "editorial_gate": "PASS 18/18 (frontend/scripts/editorial-quality-lib.mjs evaluateArticle).",
+    "schema_and_import_dry_run": "PASS. scripts/cloud-draft-import.mjs prepareCloudDraft ran clean against the committed package with a simulated source binding (date 2026-10-05): returned imageMode SOURCE_ASSET and gate 18/18; topic-slug ('development'), byline ('CRE News Staff'), article-date, and 48-hour freshness checks all accepted. A separate constraint sweep confirmed every docs/article-submission.schema.json length, enum, and pattern rule passes. Not an actual Vercel import.",
+    "image_plan": "SOURCE_ASSET (frontend/scripts/editorial-image-policy.mjs planEditorialImage; CREN_GRAPHIC, image_role DATA).",
+    "image_hashes_verified": "git hash-object and sha256sum recomputed from the committed PNG match cloud_image_asset (git_blob_sha 3fc83b7f68a8d485dc4d4525542e7854a0c14c0f; source_sha256 11c7693c7d4012af9c29529d5766ee36c917ecfcab0c8c12bd5fd42b70ac55d1; 72,675 bytes).",
+    "visual_review": "Bar-chart PNG (1600x900) opened and inspected in-session before attesting: a cream data panel titled 'The Estrella keeps growing taller' with the subtitle naming 175-199 E. Rich St.; a 'stories' y-axis from 0 to 25; three bars labeled 2023 (19), Jan. 2025 (24, the state-vetted figure), and Sept. 2026 (25, accented in red); the printed 'Data:' source line attributing the Ohio TMUD award record and the Downtown Commission filing; and the CREN mark clear of the source text. Values accurate to the records; labels legible and within the mobile-safe center band; no synthetic artifacts; faithful to the disclosed chart medium.",
+    "near_duplicate_guard": "render-cren-chart.mjs cleared the near-duplicate check on attempt 1 (min hamming distance 27 vs 8 existing images; threshold 18). An earlier locator-map variant was discarded in-session because its east label overflowed the mobile-safe band; the height chart is the committed image."
+  },
+  "story_facts_verified": {
+    "project": "The Estrella, a mixed-use tower proposed for 175-199 E. Rich St. in downtown Columbus (Red Brick / Fourth Street district, just east of Columbus Commons). Developer Bluestone Brothers; architect Berardi+Partners.",
+    "current_filing": "A Certificate of Appropriateness application, COA2601058, was filed September 30, 2026 describing a 25-story building with 296 apartments, roughly 30,000 sq ft of ground-floor commercial space for a fresh-food grocery, and 327 parking spaces (Hoodline, Oct. 2, 2026). The City of Columbus Downtown Commission page confirms an October 27, 2026 meeting (8:30 a.m.) and a September 30, 2026 application deadline for that agenda. The October 27 review is conceptual (non-binding), not an approval or a construction authorization.",
+    "state_award": "Ohio Department of Development 2025 TMUD award-descriptions record (released with Gov. DeWine's Jan. 27, 2025 announcement of $2 billion in TMUD-supported investment): The Estrella (Franklin County) -- Total Development Cost $122,605,000; Total Tax Credit $4,500,000; 175-199 Rich St., a 24-story, 503,103-square-foot mixed-use tower; fresh-food grocery in a food desert; approximately 1,239 construction jobs and 808 permanent jobs. Corroborated by ABC6/FOX28 (Jan. 28, 2025).",
+    "height_history": "19 stories (first pitched 2023) -> 24 stories (the version the state backed in Jan. 2025 and the commission last reviewed) -> 25 stories (the Sept. 30, 2026 COA filing). The 2023 and current-filing heights are from news reporting (Hoodline); the 24-story figure is from the primary state record.",
+    "original_contributions": "Direct reading and text-extraction of the primary Ohio TMUD award-descriptions PDF; a reconciled height-and-spec timeline (19 -> 24 -> 25 stories; 290 -> 296 units) built across the state record, the city meeting record, and the current filing; identification that the developer's own first-party project page still shows the earlier 24-story/290-unit/~18,000-sq-ft design, lagging the Sept. 30 filing; and an original CREN height chart from the verified records.",
+    "limitations_stated": "The 25-story/296-unit figures come from the Sept. 30 COA filing as reported by Hoodline; CREN could not open the COA2601058 application file through the city's Citizens Access Portal this run, and the developer's public page still lists the 24-story/290-unit design. The Oct. 27 review is conceptual and binds nothing. The TMUD credit is earned against taxes over time, not paid up front, and state awards can lapse if a project stalls. No grocery operator is named in the public record; no construction timeline is established."
+  },
+  "sources": {
+    "primary_records": [
+      "Ohio Department of Development, 2025 TMUD Award Descriptions (Office of Gov. Mike DeWine), https://content.govdelivery.com/attachments/OHIOGOVERNOR/2025/01/24/file_attachments/3142703/2025%200127%20TMUD%20Award%20Descriptions.pdf -- fetched 2026-10-05, HTTP 200; downloaded and text-extracted with pdftotext (266,857 bytes). The Estrella entry: $122,605,000 total cost, $4,500,000 credit, 24-story/503,103 sq ft, fresh-food grocery in a food desert, ~1,239 construction / 808 permanent jobs.",
+      "City of Columbus, Building and Zoning Services -- Downtown Commission meeting page, https://www.columbus.gov/Business-Development/Building-Zoning-Services/Boards-and-Commissions/Historic-Preservation-Development-Review-Boards-Commissions/Downtown-Commission -- fetched 2026-10-05, HTTP 200: October 27, 2026 meeting (8:30 a.m.); September 30, 2026 application deadline; applications filed via the Citizens Access Portal. Individual Oct. 27 agenda items were not yet listed at fetch time.",
+      "Bluestone Brothers Development, The Estrella project page (first-party), https://bluestonebrothers.com/theestrella -- fetched 2026-10-05, HTTP 200: still describes the earlier 24-floor, 290-apartment, ~18,000-sq-ft-commercial, 327-space-garage design, labeled Conceptual Design."
+    ],
+    "independent_news_origins": [
+      "Hoodline (hoodline.com), 'Estrella Tower Grows to 25 Stories as Downtown Columbus Board Takes Another Look', published 2026-10-02 -- fetched 2026-10-05, HTTP 200. Source for the current filing (COA2601058 filed Sept. 30, 2026; 25 stories/296 units; ~30,000 sq ft commercial; 327 parking; Oct. 27 conceptual review; prior heights 19 and 24 stories).",
+      "ABC6/FOX28 (myfox28columbus.com, WSYX/WTTE), 'State announces millions in tax credits for development projects', published 2025-01-28 -- fetched 2026-10-05, HTTP 200. Independent newsroom corroboration of the Jan. 2025 state TMUD award ($4.5M; 24-story/503,103 sq ft; $122,605,000 cost)."
+    ]
+  },
+  "idea_queues_consulted": [
+    "briefs/2026-10-04-social-listener.md (newest social listener within prior 48h): 2 VERIFIED LEADS -- Lead 2 Estrella Tower (selected and independently re-verified this run against primary state and city records plus two independent origins) and Lead 1 RPM Living Ohio Stater expansion (UIDRB hearing Oct. 22; held this run -- the current filing specifics rest on Hoodline plus the blocked Columbus Underground, and no City of Columbus/University Impact District primary filing was independently confirmed this run). Both treated as untrusted idea queues and independently assessed.",
+    "briefs/2026-10-03-social-listener.md (second newest within prior 48h): Bayer $2.2B New Albany -- no rezoning/land-use/housing primary record; Worthington referendum BOE decision still pending mid-October. Neither cleared the bar this run.",
+    "briefs/2026-10-04-seo-report.md (newest SEO report within prior 14 days): its five assignments were checked. Assignment 1 (Town High Plaza Zoning Committee outcome) -- the hearing is tonight (Oct. 5, 6:30 p.m.); no outcome exists yet this morning, so no outcome story. Assignment 3 (Worthington BOE) -- still pending. Assignment 5 (Ohio Stater/RPM Living) -- held for lack of an independently confirmed primary planning record. The Estrella was not among the five assignments but was Lead 2 in the Oct. 4 social listener; it is a confirmed new topic with no prior CREN coverage."
+  ],
+  "leads_surveyed_not_selected": [
+    "RPM Living / Ohio Stater expansion (2060 N. High St., University District; Oct. 4 social-listener Lead 1): a genuinely strong lead with a scheduled Oct. 22 University Impact District Review Board hearing, but the current project specifics (228 units/866 beds, expanded footprint) were confirmed this run only via Hoodline and the blocked Columbus Underground; no City of Columbus planning/UIDRB primary filing was independently opened. Held for a primary-record anchor; re-check before the Oct. 22 hearing.",
+    "Town High Plaza / 171-191 S. High St. appeal (follow-up to the Oct. 4 CREN article): Zoning Committee oral arguments are set for tonight, Oct. 5 at 6:30 p.m.; as of this morning's run no committee recommendation or Council vote has occurred, so there is no outcome to report. Watch for the committee action.",
+    "Worthington Harding rezoning referendum: Franklin County Board of Elections signature-validation decision ('mid-October') has not occurred. Held; watch item.",
+    "Bayer $2.2B New Albany pharmaceutical campus: no rezoning/land-use record or housing provision; a CREN housing angle would be speculative. Held.",
+    "HUD FY2027 Fair Market Rents ('What Rent Costs Here' recurring format): held again -- huduser.gov FY27 data files/API remained unreachable through the cloud egress this run; the recurring-format rule forbids estimating numbers.",
+    "Lifestyle: no lifestyle lead was independently verified to the two-origin bar this run."
+  ],
+  "held_items": [
+    "NEEDS_DATA: 'What Rent Costs Here' (HUD FY2027 Fair Market Rents for the Columbus, OH HUD Metro FMR Area). FY2027 FMRs are effective Oct. 1, 2026, but huduser.gov data files/API remained unreachable through the cloud egress this run, so the primary per-area values could not be pulled. Held rather than estimated, consistent with prior runs. Re-attempt when huduser.gov data files or the FMR API are reachable, or when an operator-supplied HUD data file is available.",
+    "WATCH: Town High Plaza / 171-191 S. High St. appeal (COA2600161, AA0001-2026) -- Zoning Committee oral arguments are tonight, Oct. 5, 2026; a committee recommendation and full Council vote, and any movement in the parallel 2025 receivership suit (2025EVH060528), would each be a decisive follow-up record.",
+    "WATCH: RPM Living / Ohio Stater redevelopment (2060 N. High St., University District) -- University Impact District Review Board hearing Oct. 22, 2026 (preliminary design/scale). A City of Columbus or UIDRB primary filing plus a second independent origin would clear it for a CREN article.",
+    "WATCH: Worthington referendum -- Franklin County Board of Elections signature-validation decision expected mid-October 2026.",
+    "WATCH: Estrella conceptual review outcome -- the Downtown Commission's Oct. 27, 2026 feedback, and any subsequent formal permit filings, would be a decisive follow-up record for this story."
+  ],
+  "photo_requests": [
+    "175-199 E. Rich Street, downtown Columbus -- a documentary photo of the current (vacant/under-assembly) site, before any demolition or construction, would let a future update lead with a real site photo instead of a data chart. Official developer renderings remain labeled renderings, never completed-project photographs, and are not rights-cleared for public redistribution.",
+    "Carried from prior runs: 2060 N. High St. (Ohio Stater), University District, before closure/demolition; 171-191 S. High Street, Downtown, before any demolition; 610 W. Town Street, Franklinton (1928 brick facade), before construction."
+  ],
+  "egress_status_this_run": {
+    "reachable": [
+      "content.govdelivery.com Ohio Governor's office TMUD award-descriptions PDF (HTTP 200; downloaded and text-extracted)",
+      "www.columbus.gov Downtown Commission meeting page (HTTP 200)",
+      "hoodline.com (HTTP 200; independent news origin)",
+      "myfox28columbus.com (HTTP 200; independent news origin)",
+      "bluestonebrothers.com developer project page (HTTP 200; first-party)",
+      "nominatim.openstreetmap.org geocoding (HTTP 200; used for the discarded locator-map variant)"
+    ],
+    "unavailable_or_limited": [
+      "columbusunderground.com, nbc4i.com, bizjournals.com/columbus, 10tv.com, axios.com/local/columbus (HTTP 403, consistent with prior runs) -- Columbus Underground and NBC4 coverage of the Estrella could not be fetched directly; corroboration drawn from Hoodline, ABC6/FOX28, and the primary state and city records instead",
+      "huduser.gov (FY2027 FMR data files/API unreachable through the cloud egress) -- blocked the 'What Rent Costs Here' recurring format again this run",
+      "The City of Columbus Citizens Access Portal did not expose the COA2601058 application file to a direct fetch this run; the filing's specifics are attributed to Hoodline's reporting, with the city meeting page confirming the Oct. 27 agenda and Sept. 30 deadline."
+    ]
+  },
+  "handoff_status": {
+    "discovery_reporting": "COMPLETED. One development story (the Estrella's enlarged 25-story design returning to the Downtown Commission on Oct. 27) cleared the full primary-record + two-independent-origin + currency + image bar and passed every gate 18/18 with an import dry-run clean.",
+    "github_commit": "Article JSON, CREN height-chart PNG, and this receipt committed to the routine branch and handed to main via PR/merge per the delivery sequence.",
+    "website_import": "PENDING. Not claimed as succeeded; Vercel imports from main at minute 05 subject to its gates. A git merge is not an import.",
+    "image_proof": "PENDING. image_url is null; Vercel prepares the image and sends the proof; only the configured owner's verified email approval of the exact unchanged article-image package can publish.",
+    "image_hold": "NONE for this story (the CREN height chart cleared the image contract, SOURCE_ASSET). Separate NEEDS_DATA hold on the HUD FMR recurring format (see held_items), unrelated to this article's image."
+  }
+}

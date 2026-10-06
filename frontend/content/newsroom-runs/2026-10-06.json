@@ -91,5 +91,15 @@
     "website_import": "PENDING. Not claimed as succeeded; Vercel imports from main at minute 05 subject to its gates. A git merge is not an import.",
     "image_proof": "PENDING. image_url is null; Vercel prepares the image and sends the proof; only the configured owner's verified email approval of the exact unchanged article-image package can publish.",
     "image_hold": "NONE blocking this story (the CREN data card cleared the image contract, SOURCE_ASSET). An optional-quality NEEDS_IMAGE re-attempt is recorded to upgrade the hero to the already-rights-cleared Commons photo on a run with working egress. Separate NEEDS_DATA hold on the HUD FMR recurring format is unrelated to this article."
-  }
+  },
+  "follow_up_runs": [
+    {
+      "completed_at": "2026-10-06T16:20:00Z",
+      "purpose": "Second cloud-handoff pass the same day: re-checked for a lifestyle story to fill the unused second article slot (cap is at most two articles per America/New_York date; one real-estate article was already committed by the 06:33 run above).",
+      "result": "NO_QUALIFYING_STORY (lifestyle). No overwrite of the already-committed real-estate article; no new article or image committed this pass.",
+      "discovery_notes": "Checked frontend/content/articles for same-day/recent duplicates (nothing already covers a new lifestyle angle for 2026-10-06). Ran node scripts/recent-articles.mjs with DATABASE_URL unset; it returned only its committed snapshot fallback (stale, through mid-August 2026) per policy -- treated as a minimum covered set, not live, and cross-checked against the current articles directory instead. Searched current coverage for a verifiable, non-generic lifestyle/neighborhood story: Axios Columbus's October 2026 roundup (Boo at the Zoo, Highball Halloween, the Italian Festival Oct. 9, Big Ten football) lists only recurring annual events with no housing/real-estate consequence and no new primary record this week; Prototype: The Experimental Museum (Scioto Audubon Metro Park) opened Nov. 1, 2025 and is not new news; no new Metro Park opening, neighborhood press release, or verifiable restaurant/venue opening with two independent origins and a primary record surfaced in this pass. Per the writing policy, a generic 'event is happening' item without a decisive local consequence or a primary record is not a story; per the handoff policy, a format from docs/RECURRING_DATA_FORMATS.md is only required when no story clears the bar for the day at all, which does not apply since the real-estate slot already cleared.",
+      "leads_held_for_next_run": "Same watch items as the 06:33 run (279.5-acre Brown-Norwich annexation, Town High Plaza appeal, Worthington referendum, Huntington building tax-credit outcome, HUD FY2027 FMR data pull) plus a standing lifestyle-angle gap carried forward from prior briefs.",
+      "credentials_used": "None. No DATABASE_URL, mail, Vercel, admin, or publication credential was requested, read, or used this pass."
+    }
+  ]
 }

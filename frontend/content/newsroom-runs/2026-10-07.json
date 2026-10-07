@@ -1,0 +1,89 @@
+{
+  "schema_version": "cren-cloud-run-v1",
+  "routine": "cre-news-newsroom",
+  "date": "2026-10-07",
+  "completed_at": "2026-10-07T16:23:01Z",
+  "story_result": "ARTIFACTS_COMMITTED",
+  "article_paths": [
+    "frontend/content/articles/2026-10-07-columbus-demolition-permits-september-2026.json"
+  ],
+  "editorial_note": "Scheduled cloud handoff-only run for 2026-10-07 (Wednesday). No breaking real-estate or lifestyle story cleared the full primary-record + two-independent-origin + currency + image bar this run (see discovery_notes and leads_surveyed_not_selected), so the routine produced the Demolition Watch recurring data format (frontend/docs/RECURRING_DATA_FORMATS.md, format 3), which was due the first Tuesday of October (Oct. 6) but deferred one run because the Oct. 6 run's breaking Huntington-building story filled that day's slot, per the handoff rule that a due format moves to the next run. September 2026 saw 22 City of Columbus demolition permits, the highest month of 2026 so far, led by a five-permit Near East Side block (E. Livingston Ave./Oak St.) and a four-permit single-parcel cluster in Linden (Westerville Rd.). CREN cross-checked every September address against both the city's Historic Districts layer and its Register of Historic Properties PDF; none of the 21 distinct addresses fell inside a protected district or matched an individually listed landmark. No lifestyle story was independently verified to the two-origin bar this run (persistent gap, carried from prior weeks' SEO reports). This receipt records the editorial outcome only; it is never publication authority. No import, image preparation, email delivery, or publication is claimed, and no git commit is treated as publication or downstream-import success.",
+  "artifacts": {
+    "article": "frontend/content/articles/2026-10-07-columbus-demolition-permits-september-2026.json",
+    "image": "frontend/content/images/2026-10-07-columbus-demolition-permits-september-2026.png",
+    "image_type": "CREN_GRAPHIC (bar chart; image_role DATA) -- built offline by scripts/render-cren-chart.mjs from the same City of Columbus Building Permits dataset used in the article body.",
+    "brief": "Run state, sources, held items, and photo requests are recorded in this receipt; no separate brief file is committed, to keep the PR within the handoff's receipt+article+image scope."
+  },
+  "verification": {
+    "editorial_gate": "PASS 18/18 (frontend/scripts/editorial-quality-lib.mjs evaluateArticle, run this session).",
+    "schema_validation": "PASS. Validated against frontend/docs/article-submission.schema.json with ajv (all required fields, length bounds, enums, and the v1.0.2 image-provenance conditional all satisfied).",
+    "import_dry_run": "PASS. scripts/cloud-draft-import.mjs prepareCloudDraft ran clean against the committed package with a simulated source binding (date 2026-10-07, now 2026-10-07T16:30Z): returned imageMode SOURCE_ASSET and gate 18/18; topic-slug ('development'), byline ('CRE News Staff'), article-date, 48-hour freshness, cloud_image_asset format, and image-review checks all accepted. Not an actual Vercel import; no SQL/credentials were used (stageCloudDraft/runCloudImport were not called).",
+    "image_plan": "SOURCE_ASSET (frontend/scripts/editorial-image-policy.mjs planEditorialImage; CREN_GRAPHIC, image_role DATA).",
+    "image_hashes_verified": "git hash-object and sha256sum recomputed from the committed PNG match cloud_image_asset (git_blob_sha 8c3355d31013421cf6568dbf1fbf4600c10ea751; source_sha256 91978ef921959fde17154389a6b12a79fb80b97ebc54d257a0c6c07737457196; 72,657 bytes).",
+    "visual_review": "Bar-chart PNG (1600x900) opened and inspected in-session before attesting: title 'Columbus demolition permits by month, 2026', subtitle 'September hit 22, the year's highest month so far', nine monthly bars (Jan 18 through Sep 22) with September highlighted in red against green for the rest of the year, y-axis gridlines to 25, and the source line 'Data: City of Columbus Building Permits (CC0), pulled Oct. 7, 2026' clear of the CREN mark. Every bar value traces to the dataset pull recorded in source S1. Text legible and within the mobile-safe center band; no synthetic artifacts; no building depicted or implied; faithful to the disclosed bar-chart medium.",
+    "near_duplicate_guard": "render-cren-chart.mjs cleared the near-duplicate check on attempt 5 (min hamming distance 18 vs 10 existing images)."
+  },
+  "story_facts_verified": {
+    "monthly_count": "City of Columbus Building Permits open data (ArcGIS feature service, CC0 1.0), queried October 7, 2026: September 2026 demolition-type permits (GENERAL_TYPE ending 'Demolition') = 22, the highest of any 2026 month so far, versus a prior high of 18 (January and May), 17 in August 2026, and 17 in September 2025 (about 29% year-over-year increase). Full 2026 monthly series through September: 18, 3, 12, 10, 18, 7, 11, 17, 22 (year-to-date total 118). Permit type split: 8 commercial, 14 one/two/three-family.",
+    "geography": "22 permits covered 21 distinct addresses across 11 ZIP codes. ZIP 43205 (Near East Side) and ZIP 43224 (Linden) tied for the most activity, five permits each. The Near East Side cluster (1065, 1071, 1077, 1081 E. Livingston Ave. and 1088 Oak St.) totaled $317,061 in declared value, about half of the month's $644,011 citywide total; the largest single permit, $94,297, was the commercial teardown at 1081 E. Livingston Ave. In Linden, four separate single-family teardown permits at 4000, 4004, 4014 and 4022 Westerville Rd. all share parcel number 010104571, totaling $60,000. One outlier permit, $33,000 at 4691 Central College Rd. (ZIP 43081), sits on the city's edge toward Westerville.",
+    "historic_cross_check": "Every September address was checked by point-in-polygon spatial query (maps2.columbus.gov/arcgis/rest/services/Schemas/Development/MapServer/18, the Historic Districts layer behind hub item 4fae82408663403499c387346437c56b_18) against the city's 18 historic districts; none intersected. A control point inside German Village correctly returned a match, confirming the query method. All 21 addresses were also checked against the city's PDF Register of Historic Properties (individually listed landmarks); none matched. The nearest listed property by street name, the Rickenbacker Boyhood Home (CR-28) at 1334 E. Livingston Ave., is a different, non-adjacent address not in this month's permit list.",
+    "original_contributions": "A fresh ArcGIS pull of September's demolition permits with parcel-level grouping that surfaced the four-address/one-parcel Westerville Road cluster (not visible from an address-only read of the feed); a point-in-polygon historic-district check run this session rather than a visual map read; a cross-check against the city's individual landmark register (not run in the August format precedent) that also surfaced and ruled out the nearby but distinct Rickenbacker Boyhood Home listing; and a CREN bar-chart hero built from the same verified monthly series.",
+    "limitations_stated": "The city updates its permit feed daily and late entries can still lift September's total; a declared value is the applicant's own demolition-cost estimate, not an assessed value or sale price; a permit is legal permission to demolish, not proof a building is already down; ownership and reuse plans for the Linden parcel and the Near East Side block are unknown and not asserted."
+  },
+  "sources": {
+    "primary_records": [
+      "City of Columbus, Building Permits (Open Data), ArcGIS feature service https://services1.arcgis.com/9yy6msODkIBzkUXU/arcgis/rest/services/Building_Permits/FeatureServer/0 (dataset page https://opendata.columbus.gov/datasets/columbus::building-permits), CC0 1.0 -- queried 2026-10-07, HTTP 200, for every September 2026 demolition-type record (22) plus monthly counts January-September 2026 and September 2025.",
+      "City of Columbus, Historic Districts (Open Data), feature service https://maps2.columbus.gov/arcgis/rest/services/Schemas/Development/MapServer/18 (dataset page https://hub.arcgis.com/datasets/4fae82408663403499c387346437c56b_18) -- queried 2026-10-07, HTTP 200, point-in-polygon test against all 22 September permit coordinates; none intersected a district.",
+      "City of Columbus, Register of Historic Properties (PDF) https://columbus.gov/files/sharedassets/city/v/1/building-and-zoning/bzs-boards-and-commissions/planning-document-library/columbus_register_of_historic_properties.pdf -- downloaded and pdftotext-extracted 2026-10-07, HTTP 200 (redirect followed); checked against all 21 distinct September addresses, no match."
+    ],
+    "independent_news_origins": [],
+    "background_prior_coverage": [
+      "CREN newsroom article 2026-09-27 (frontend/content/articles/2026-09-27-columbus-demolition-permits-august-2026.json): the same recurring format for August 2026 (17 permits). Used only as a methodology template; today's article is a distinct month with new facts, a new parcel-clustering finding, and a new landmark-register cross-check the August piece did not run."
+    ]
+  },
+  "idea_queues_consulted": [
+    "briefs/2026-10-06-social-listener.md (newest social listener within prior 48h): NO_VERIFIED_LEADS. The Estrella Tower (title-only observation on a Columbus Report archive page) and the Town High Plaza appeal (Oct. 5 oral arguments held, no recommendation posted) were both near-horizon items without an in-window, directly-accessed primary or independent source this run either (see leads_surveyed_not_selected).",
+    "briefs/2026-10-04-seo-report.md (newest SEO report within prior 14 days): reiterated the persistent lifestyle gap and five unresolved assignments (Town High Plaza, Bayer New Albany housing angle, Worthington BOE, BJ's Grove City, Ohio Stater/RPM Living); none had a decisive, independently corroborated primary record reachable this run."
+  ],
+  "leads_surveyed_not_selected": [
+    "Town High Plaza / 171-191 S. High St. appeal (AA0001-2026): Zoning Committee oral arguments were held Oct. 5, 2026; no committee recommendation or Council vote was posted to Legistar or reported by an accessible outlet as of this run. Watch item.",
+    "Estrella Tower (175-199 E. Rich St.), 25 stories / 296 units: the Oct. 6, 2026 Columbus Report newsletter referenced it in an archive-listing title, and its full text was accessible this run via WebFetch, but the underlying facts (COA2601058, Oct. 27 Downtown Commission review) were already reported by Hoodline on Oct. 2 and carried in CREN's Oct. 5 article; no new decisive record emerged this run to justify a second piece without duplicating that coverage.",
+    "Worthington referendum (Democracy Before Developers signatures vs. the Harding Hospital rezoning): Franklin County BOE certification remains expected mid-October 2026; not yet confirmed this run.",
+    "Huntington building (17 S. High St.) historic tax-credit outcome: the state's competitive Round 37 decision has not been announced; watch item carried from Oct. 6.",
+    "Bayer $2.2B New Albany pharmaceutical campus: still no land-use/rezoning or housing-provision primary record; a CREN real-estate or housing angle remains unsupported.",
+    "Lifestyle: no lifestyle lead was independently verified to the two-origin bar this run. Checked current coverage for a verifiable, non-generic lifestyle/neighborhood story with a primary record; found only recurring annual events (HighBall Halloween, Boo at the Zoo) with no new primary record and no housing/real-estate consequence, consistent with the gap documented in the Oct. 4 SEO report."
+  ],
+  "held_items": [
+    "WATCH: Town High Plaza / 171-191 S. High St. appeal (AA0001-2026) -- a Zoning Committee recommendation and full Council vote would be a decisive follow-up record.",
+    "WATCH: Worthington referendum -- Franklin County Board of Elections signature validation expected mid-October 2026.",
+    "WATCH: Ohio Historic Preservation Tax Credit outcome for 17 S. High St. -- whether the state awards a credit in this round, or Downtown Columbus, Inc. discloses a renovation budget or files permits, would each be a verifiable follow-up.",
+    "WATCH: Near East Side (1065-1088 E. Livingston Ave./Oak St.) and Linden (4000-4022 Westerville Rd.) demolition clusters from this run -- no reuse or construction filing is public yet; recheck when October permits close.",
+    "NEEDS_DATA: 'What Rent Costs Here' (HUD FY2027 Fair Market Rents) -- still held; huduser.gov remains unconfirmed reachable through the cloud egress this run (not re-attempted this run; prior runs recorded repeated failures).",
+    "Lifestyle gap: no lifestyle story has cleared the two-origin verification bar in several consecutive weeks; carried forward per the Oct. 4 SEO report."
+  ],
+  "photo_requests": [
+    "1081 E. Livingston Ave. and 1088 Oak St., Near East Side -- the single largest September demolition permit ($94,297) and the five-permit block; a dated exterior photo before any teardown would support a stronger future hero than this run's citywide chart.",
+    "4000-4022 Westerville Rd., Linden -- the four-address, single-parcel demolition cluster; a dated photo of the row before clearance would be useful if the owner's redevelopment plan becomes public.",
+    "Carried from prior runs: 171-191 South High Street (before any demolition); 17 S. High St. Huntington building (CC BY-SA 4.0 Commons photo already rights-cleared per the Oct. 6 brief, pending a run with working Wikimedia egress); 600 Stimmel Road / McCoy Park; 197 E. Gay Street; 610 W. Town Street, Franklinton."
+  ],
+  "egress_status_this_run": {
+    "reachable": [
+      "services1.arcgis.com Building Permits feature service (HTTP 200; primary permit data, queried directly)",
+      "maps2.columbus.gov Historic Districts feature service (HTTP 200; spatial point-in-polygon queries)",
+      "hub.arcgis.com dataset metadata API (HTTP 200)",
+      "columbus.gov Register of Historic Properties PDF (HTTP 200 after redirect; pdftotext-extracted)",
+      "thecolumbusreport.beehiiv.com archive (HTTP 200 via WebFetch)"
+    ],
+    "unavailable_or_limited": [
+      "columbus.legistar.com matter detail pages (returned 'Invalid parameters!' via direct WebFetch; no Zoning Committee recommendation document located this run)",
+      "columbusunderground.com, nbc4i.com, 10tv.com, bizjournals.com/columbus (consistent with prior runs' HTTP 403 pattern; not independently re-tested this run via WebSearch/WebFetch)"
+    ]
+  },
+  "handoff_status": {
+    "discovery_reporting": "COMPLETED. No breaking real-estate or lifestyle story cleared the full verification and image bar this run; the Demolition Watch recurring data format for September 2026 was produced instead, passed the editorial gate 18/18, validated against the submission schema, and passed the import dry-run clean.",
+    "github_commit": "Article JSON, CREN chart PNG, and this receipt committed to the routine branch and handed to main via PR/merge per the delivery sequence.",
+    "website_import": "PENDING. Not claimed as succeeded; Vercel imports from main at minute 05 subject to its gates. A git merge is not an import.",
+    "image_proof": "PENDING. image_url is null; Vercel prepares the image and sends the proof; only the configured owner's verified email approval of the exact unchanged article-image package can publish.",
+    "image_hold": "NONE. The CREN bar chart cleared the image contract (SOURCE_ASSET) with no blocking hold."
+  }
+}

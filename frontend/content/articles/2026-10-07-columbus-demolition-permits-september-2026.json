@@ -1,0 +1,311 @@
+{
+  "prompt_version": "cren-article-v1.0.2",
+  "title": "Columbus Issued 22 Demolition Permits in September 2026",
+  "category": "Development",
+  "author": "CRE News Staff",
+  "date": "2026-10-07",
+  "excerpt": "Columbus issued 22 demolition permits in September 2026, the year's busiest month, with a Near East Side block and a four-permit Linden parcel leading the list.",
+  "answer_summary": "Columbus issued 22 demolition permits in September 2026, the most of any month this year, according to city building records. A five-permit Near East Side block and a four-permit Linden parcel together accounted for 9 of the month's 22 permits.",
+  "primary_keyword": "demolition permits",
+  "meta_description": "Columbus issued 22 demolition permits in September 2026, the year's busiest month yet. CREN maps the sites and checks each against historic protections.",
+  "fact_checked_at": "2026-10-07T16:18:00Z",
+  "canonical_event_key": "columbus-demolition-permits-2026-09",
+  "area_slug": null,
+  "topic_slug": "development",
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "development",
+    "demolition",
+    "linden"
+  ],
+  "read_time": "5 min",
+  "featured": false,
+  "image_url": null,
+  "location": {
+    "name": "Columbus, Ohio",
+    "state": "OH"
+  },
+  "body": "Columbus issued 22 demolition permits in September 2026, the most of any month this year, according to city building records. A five-permit Near East Side block and a four-permit Linden parcel together accounted for 9 of the month's 22 permits.\n\n## How the count was built\n\nA demolition permit is the city's legal sign-off before a building can be torn down; it records the site address, the applicant's declared cost to raze the structure, and the date the city issued it. CREN counted every September record in the city's public [Building Permits dataset](https://opendata.columbus.gov/datasets/columbus::building-permits) whose permit type ended in the word Demolition, a feed the city releases into the public domain under a Creative Commons Zero waiver. CREN queried the dataset's live feature service on October 7, 2026, pulling each record's address, parcel number, declared value, unit count and ZIP code.\n\n## The year's busiest month\n\nSeptember's 22 permits topped every other month of 2026 so far, edging past the previous high of 18, set in both January and May. The total was also up from 17 in August and from 17 in September 2025, a roughly 29% year-over-year increase. Counting September, the city has issued 118 such permits across the first nine months of 2026. Because one site can draw more than one permit, these are permit counts, not building counts or project counts, and a permit records legal permission to demolish, not proof that a crew has already shown up.\n\n## Where September's teardowns clustered\n\nThe 22 permits covered 21 distinct addresses in 11 different ZIP codes, with two ZIP codes tied for the busiest: 43205 on the Near East Side and 43224 in Linden, each with five permits. The Near East Side total came from one block of East Livingston Avenue and Oak Street, where the city issued separate teardown permits for 1065, 1071, 1077 and 1081 E. Livingston Ave. and 1088 Oak St. Those five permits carried a combined declared value of $317,061, or nearly half of the month's $644,011 in total declared demolition costs citywide. The single largest permit, $94,297, covered the commercial building at 1081 E. Livingston Ave.\n\nIn Linden, four separate one-, two- and three-family teardown permits, each for a different street address (4000, 4004, 4014 and 4022 Westerville Rd.), all pointed to the same underlying parcel, parcel number 010104571, suggesting a single owner clearing a multi-address site; those four permits totaled $60,000. The month's lone permit outside Franklin County's familiar ZIP codes, a $33,000 single-family teardown at 4691 Central College Rd., sits in ZIP 43081 on the city's edge toward Westerville.\n\n## Checking for protected buildings\n\nCREN checked all 21 September addresses against two of the city's own historic-preservation records: the [Historic Districts](https://hub.arcgis.com/datasets/4fae82408663403499c387346437c56b_18) map, which covers 18 architecturally protected areas such as German Village, Victorian Village and the Brewery District, and the city's [Register of Historic Properties](https://columbus.gov/files/sharedassets/city/v/1/building-and-zoning/bzs-boards-and-commissions/planning-document-library/columbus_register_of_historic_properties.pdf), its list of individually designated landmark buildings. None of the 21 addresses fell inside a historic district, and none matched a listed individual property.\n\nThe closest match on paper was a different building entirely: the Rickenbacker Boyhood Home at 1334 E. Livingston Ave., listed as CR-28, sits on the same street as September's Near East Side cluster but roughly a quarter mile east, at a separate address not included in this month's permits. A demolition inside a historic district or affecting a registered landmark would trigger a separate review by the city's Historic Resources Commission; none of September's permits required that step.\n\n## What the permits do not settle\n\nThe city updates its permit feed daily, and late entries can still lift September's total after the fact, the same caveat that applied to August's count before this run. A declared value is the applicant's own estimate of teardown cost, not a county-assessed property value or a future sale price, and it says nothing about what, if anything, will be built on a cleared lot next.\n\nCREN does not know who owns the Linden parcel behind the four Westerville Road permits or what either cluster will become, and neither the building-permit record nor the city's [development coverage](/topics/development) discloses a reuse plan for either site. CREN will recheck the Near East Side and Linden sites when October permits close, watching for new construction filings on either cleared footprint.",
+  "source_ledger": [
+    {
+      "id": "S1",
+      "type": "PRIMARY",
+      "url": "https://opendata.columbus.gov/datasets/columbus::building-permits",
+      "publisher": "City of Columbus",
+      "title": "Building Permits (Open Data)",
+      "published_at": "2026-10-07",
+      "fetched_at": "2026-10-07T16:10:00Z",
+      "http_status": 200,
+      "fetch_note": "Queried the ArcGIS feature service behind this CC0 dataset on October 7, 2026 for every September 2026 record whose GENERAL_TYPE ends in 'Demolition' (22 records), and separately pulled monthly counts for January through September 2026 (18, 3, 12, 10, 18, 7, 11, 17, 22) and September 2025 (17) for comparison. Fields captured: SITE_ADDRESS, B1_SITUS_ZIP, G3_VALUE_TTL, B1_PARCEL_NBR, UNITS, ISSUED_DT, B1_ALT_ID, and point geometry for each September record."
+    },
+    {
+      "id": "S2",
+      "type": "PRIMARY",
+      "url": "https://hub.arcgis.com/datasets/4fae82408663403499c387346437c56b_18",
+      "publisher": "City of Columbus",
+      "title": "Historic Districts (Open Data)",
+      "published_at": null,
+      "fetched_at": "2026-10-07T16:14:00Z",
+      "http_status": 200,
+      "fetch_note": "Queried the underlying feature service (maps2.columbus.gov/arcgis/rest/services/Schemas/Development/MapServer/18) with a point-in-polygon spatial intersection test for each of the 22 September demolition sites' coordinates. None of the 21 distinct addresses intersected a historic district polygon; a control point inside German Village correctly returned a match, confirming the query worked."
+    },
+    {
+      "id": "S3",
+      "type": "PRIMARY",
+      "url": "https://columbus.gov/files/sharedassets/city/v/1/building-and-zoning/bzs-boards-and-commissions/planning-document-library/columbus_register_of_historic_properties.pdf",
+      "publisher": "City of Columbus",
+      "title": "Columbus Register of Historic Properties",
+      "published_at": null,
+      "fetched_at": "2026-10-07T16:15:00Z",
+      "http_status": 200,
+      "fetch_note": "Downloaded and text-extracted the city's PDF register of individually listed historic properties on October 7, 2026 and checked it for each of September's 21 demolition addresses. No match. The nearest entry by street name, the Rickenbacker Boyhood Home at 1334 E. Livingston Ave. (CR-28, listed 5/14/1984), is a different address than any in this month's permits."
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "C1",
+      "claim": "Columbus issued 22 demolition permits in September 2026, the most of any month this year, according to city building records.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "COMPARISON"
+    },
+    {
+      "id": "C2",
+      "claim": "A five-permit Near East Side block and a four-permit Linden parcel together accounted for 9 of the month's 22 permits.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "CALCULATION",
+      "calculation": "5 Near East Side permits (1065, 1071, 1077, 1081 E. Livingston Ave.; 1088 Oak St.) + 4 Linden permits (4000, 4004, 4014, 4022 Westerville Rd.) = 9 of 22 September permits."
+    },
+    {
+      "id": "C3",
+      "claim": "CREN counted every September record in the city's public Building Permits dataset whose permit type ended in the word Demolition, a feed the city releases into the public domain under a Creative Commons Zero waiver.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C4",
+      "claim": "September's 22 permits topped every other month of 2026 so far, edging past the previous high of 18, set in both January and May.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "COMPARISON"
+    },
+    {
+      "id": "C5",
+      "claim": "The total was also up from 17 in August and from 17 in September 2025, a roughly 29% year-over-year increase.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "CALCULATION",
+      "calculation": "(22 - 17) / 17 = 0.294, approximately 29% year-over-year increase from 17 permits in September 2025 to 22 in September 2026. Note: August 2026 was also 17 permits, matching September 2025's count."
+    },
+    {
+      "id": "C6",
+      "claim": "Counting September, the city has issued 118 such permits across the first nine months of 2026.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "CALCULATION",
+      "calculation": "18 (Jan) + 3 (Feb) + 12 (Mar) + 10 (Apr) + 18 (May) + 7 (Jun) + 11 (Jul) + 17 (Aug) + 22 (Sep) = 118."
+    },
+    {
+      "id": "C7",
+      "claim": "The 22 permits covered 21 distinct addresses in 11 different ZIP codes, with two ZIP codes tied for the busiest: 43205 on the Near East Side and 43224 in Linden, each with five permits.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C8",
+      "claim": "The Near East Side total came from one block of East Livingston Avenue and Oak Street, where the city issued separate teardown permits for 1065, 1071, 1077 and 1081 E. Livingston Ave. and 1088 Oak St.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C9",
+      "claim": "Those five permits carried a combined declared value of $317,061, or nearly half of the month's $644,011 in total declared demolition costs citywide.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "CALCULATION",
+      "calculation": "94,297 + 72,689 + 70,725 + 67,350 + 12,000 = $317,061. Citywide September total: sum of all 22 permits' declared values = $644,011. 317,061 / 644,011 = 49.2%."
+    },
+    {
+      "id": "C10",
+      "claim": "The single largest permit, $94,297, covered the commercial building at 1081 E. Livingston Ave.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C11",
+      "claim": "In Linden, four separate one-, two- and three-family teardown permits, each for a different street address (4000, 4004, 4014 and 4022 Westerville Rd.), all pointed to the same underlying parcel, parcel number 010104571, suggesting a single owner clearing a multi-address site; those four permits totaled $60,000.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "CALCULATION",
+      "calculation": "20,000 + 10,000 + 20,000 + 10,000 = $60,000 across four permits sharing parcel number 010104571."
+    },
+    {
+      "id": "C12",
+      "claim": "The month's lone permit outside Franklin County's familiar ZIP codes, a $33,000 single-family teardown at 4691 Central College Rd., sits in ZIP 43081 on the city's edge toward Westerville.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C13",
+      "claim": "None of the 21 addresses fell inside a historic district, and none matched a listed individual property.",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C14",
+      "claim": "The closest match on paper was a different building entirely: the Rickenbacker Boyhood Home at 1334 E. Livingston Ave., listed as CR-28, sits on the same street as September's Near East Side cluster but roughly a quarter mile east, at a separate address not included in this month's permits.",
+      "source_ids": [
+        "S1",
+        "S3"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C15",
+      "claim": "CREN queried the dataset's live feature service on October 7, 2026, pulling each record's address, parcel number, declared value, unit count and ZIP code.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C16",
+      "claim": "CREN checked all 21 September addresses against two of the city's own historic-preservation records: the [Historic Districts](https://hub.arcgis.com/datasets/4fae82408663403499c387346437c56b_18) map, which covers 18 architecturally protected areas such as German Village, Victorian Village and the Brewery District, and the city's [Register of Historic Properties](https://columbus.gov/files/sharedassets/city/v/1/building-and-zoning/bzs-boards-and-commissions/planning-document-library/columbus_register_of_historic_properties.pdf), its list of individually designated landmark buildings.",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "kind": "FACT"
+    }
+  ],
+  "entity_ledger": [
+    {
+      "name": "City of Columbus",
+      "source_ids": [
+        "S1",
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "name": "City of Columbus Building Permits dataset",
+      "source_ids": [
+        "S1"
+      ]
+    },
+    {
+      "name": "Historic Districts dataset",
+      "source_ids": [
+        "S2"
+      ]
+    },
+    {
+      "name": "Columbus Register of Historic Properties",
+      "source_ids": [
+        "S3"
+      ]
+    },
+    {
+      "name": "Rickenbacker Boyhood Home",
+      "source_ids": [
+        "S3"
+      ]
+    },
+    {
+      "name": "German Village",
+      "source_ids": [
+        "S2"
+      ]
+    },
+    {
+      "name": "Victorian Village",
+      "source_ids": [
+        "S2"
+      ]
+    },
+    {
+      "name": "Brewery District",
+      "source_ids": [
+        "S2"
+      ]
+    }
+  ],
+  "image_brief": {
+    "primary_request": "A CREN chart of Columbus demolition-permit activity that needs no photograph, built from public city data.",
+    "editorial_idea": "Show September 2026's monthly demolition-permit count against the rest of the year, since the story's point is the citywide trend, not any single building.",
+    "story_anchors": [
+      "22 demolition permits issued citywide in September 2026, the year's highest month so far",
+      "Near East Side (ZIP 43205) and Linden (ZIP 43224) tied for the most permits in a month with scattered addresses citywide",
+      "None of September's sites fell inside a historic district or on the individual landmark register"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "September's 22 permits span 21 addresses across 11 ZIP codes with no single subject building, so a documentary photograph of any one site would misrepresent a citywide count; a CREN chart built from the public permit dataset accurately represents the month as a whole.",
+    "image_policy_version": "cren-image-v2-real-photo-first",
+    "image_role": "DATA",
+    "source_review": [
+      {
+        "url": "https://opendata.columbus.gov/datasets/columbus::building-permits",
+        "outcome": "SELECTED",
+        "note": "City of Columbus Building Permits open dataset (CC0). Every bar on the chart is a monthly demolition-permit count pulled from this dataset; it is the chart's sole data source."
+      },
+      {
+        "url": "https://www.columbus.gov/",
+        "outcome": "UNSUITABLE",
+        "note": "Considered a documentary site photograph of the largest single permit (1081 E. Livingston Ave.), but that would misrepresent a 21-address, 11-ZIP-code citywide count as a single-site story; none was selected."
+      }
+    ],
+    "avoid": "Do not imply the chart is a photograph of any property; do not map or name a site the permit record does not list; do not treat a permit as proof a building has already been torn down."
+  },
+  "image_alt": "CREN bar chart of Columbus demolition permits issued by month from January to September 2026, with September at 22, the year's highest total.",
+  "image_provenance": {
+    "type": "CREN_GRAPHIC",
+    "caption": "CREN graphic. Data: City of Columbus Building Permits (CC0), pulled Oct. 7, 2026.",
+    "source": "https://opendata.columbus.gov/datasets/columbus::building-permits",
+    "license": "CC0 1.0 (public domain)",
+    "permission_evidence": "Original CREN chart built from the City of Columbus Building Permits open dataset; no third-party image content.",
+    "credit": "CREN graphic",
+    "location_note": "Columbus, Ohio (citywide; September demolition sites span 11 ZIP codes from the Near East Side to Linden to the city's Westerville-area edge).",
+    "date_note": "Chart created October 7, 2026; the data covers demolition permits issued January through September 2026, pulled October 7, 2026.",
+    "verified_by": "CREN cloud image desk",
+    "verified_at": "2026-10-07T16:20:00Z"
+  },
+  "cloud_image_asset": {
+    "path": "frontend/content/images/2026-10-07-columbus-demolition-permits-september-2026.png",
+    "git_blob_sha": "8c3355d31013421cf6568dbf1fbf4600c10ea751",
+    "source_sha256": "91978ef921959fde17154389a6b12a79fb80b97ebc54d257a0c6c07737457196",
+    "visual_review": {
+      "reviewed_by": "CREN cloud image desk",
+      "reviewed_at": "2026-10-07T16:20:00Z",
+      "natural_appearance": true,
+      "geometry_and_shadows": true,
+      "no_synthetic_artifacts": true,
+      "story_match": true,
+      "truthful_caption": true,
+      "mobile_crop": true
+    }
+  }
+}

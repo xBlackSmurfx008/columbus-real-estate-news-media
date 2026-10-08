@@ -1,0 +1,240 @@
+{
+  "prompt_version": "cren-article-v1.0.2",
+  "title": "Columbus's Biggest Building Permits Top $66 Million in a Week",
+  "category": "Development",
+  "author": "CRE News Staff",
+  "date": "2026-10-08",
+  "excerpt": "Columbus issued $66.8 million in new-construction building permits in one week, led by a 273-unit apartment cluster and a $28.2 million Harmon Avenue project.",
+  "body": "Columbus issued 28 new-construction building permits worth $66.8 million in the week of September 28 to October 4, 2026, the highest weekly total in the eight weeks CREN checked. Two projects, a 273-unit apartment cluster near the Dublin border and a commercial building on Harmon Avenue, made up $57.25 million of that total, about 86%.\n\n## How CREN counted this week's permits\n\nA building permit is the city's legal sign-off to start construction. It records the site address, the applicant's declared construction cost, the unit count for housing, and the date the city issued it. CREN queried the City of Columbus's public [Building Permits dataset](https://opendata.columbus.gov/datasets/columbus::building-permits), a feed the city releases into the public domain under a Creative Commons Zero waiver, for every new-structure permit issued between Sept. 28 and Oct. 4, 2026, then grouped permits sharing a parcel number into single projects before ranking them by declared value. One project can carry more than one structural permit, so a permit count is not a project count.\n\n## The week's two biggest projects\n\nThe single largest permit was a $27 million commercial filing at 1100 Harmon Ave. on Columbus's South Side, ZIP code 43223, paired with a second, $1.2 million permit at the same address for mechanical work, for a combined $28.2 million project.\n\nThe week's largest project by combined value sat on one 9.8-acre parcel in ZIP code 43016, near the Dublin-Columbus line, where the city issued four permits: three multifamily permits, for 119 units at 5151 Perrins Lane ($12.5 million), 118 units at 5211 Perrins Lane ($11.5 million), and 36 units at 5294 Haggerston Boulevard ($4.1 million), plus a fourth, $950,000 commercial permit with no listed units at 5180 Riggins Run. Together, the four permits total $29.05 million in declared value and 273 apartment units.\n\n## What property records confirm, and what they don't\n\n[Franklin County Auditor records](https://property.franklincountyauditor.com/_web/Datalets/Datalet.aspx?mode=&UseSearch=no&jur=025&pin=01029646100) show the parcel behind the Perrins Lane permits, parcel number 010296461, belongs to an entity called Havery Run LLC and was still classified as commercial vacant land with no recorded building value as of CREN's October 8, 2026 search, consistent with construction that has not yet broken ground. The Franklin County Auditor's property database was down for scheduled maintenance when CREN checked the Harmon Avenue parcel on the same day, so this week's reporting could not confirm who owns that site or what it will become, and CREN found no independent news coverage naming a developer for either project this week.\n\n## The rest of the week's top five\n\nThree smaller permits round out the week's top five by declared value: a $1,011,668 single-family home permit at 1250 Briarmeadow Drive in ZIP 43235, in northwest Columbus; a $1 million commercial permit at 6250 Westbourne Avenue in ZIP 43035, on the metro area's northern edge; and a $650,000 single-family home permit at 504 W. 1st Ave. in ZIP 43201, near Short North.\n\n## How this week compares to recent weeks\n\nColumbus's $66.8 million in new-structure permit value for the week of Sept. 28 to Oct. 4 topped every other week CREN checked going back to Aug. 10, 2026. The next-highest week, Sept. 21 to 27, totaled $48.5 million across 38 permits. The week of Sept. 7 to 13 carried a single $32 million permit, the largest of any week in the eight-week span, but that week's total declared value still came to only $37 million.\n\n## What to watch next\n\nDeclared construction value is the applicant's own cost estimate, not an appraisal or a sale price, and a permit is legal permission to build, not proof that construction has started. CREN will check the city's permit feed and the Franklin County Auditor's records again next week for site-plan filings or ownership records that could identify who is building the Harmon Avenue project and confirm that construction has started at the Perrins Lane site.",
+  "answer_summary": "Columbus issued 28 new-construction building permits worth $66.8 million in the week of September 28 to October 4, 2026, the highest weekly total in the eight weeks CREN checked. Two projects, a 273-unit apartment cluster near the Dublin border and a commercial building on Harmon Avenue, made up $57.25 million of that total, about 86%.",
+  "primary_keyword": "building permits",
+  "meta_description": "Columbus issued $66.8 million in building permits in one week, the highest in two months. CREN ranks the five biggest and checks who owns the sites.",
+  "fact_checked_at": "2026-10-08T17:30:00Z",
+  "canonical_event_key": "columbus-biggest-permits-2026-09-28",
+  "area_slug": null,
+  "topic_slug": "development",
+  "tags": [
+    "columbus-ohio",
+    "central-ohio-real-estate",
+    "development",
+    "construction-permits",
+    "dublin"
+  ],
+  "read_time": "4 min read",
+  "featured": false,
+  "image_url": null,
+  "location": {
+    "name": "Columbus, Ohio",
+    "state": "OH"
+  },
+  "source_ledger": [
+    {
+      "id": "S1",
+      "type": "PRIMARY",
+      "url": "https://opendata.columbus.gov/datasets/columbus::building-permits",
+      "publisher": "City of Columbus",
+      "title": "Building Permits (Open Data)",
+      "published_at": null,
+      "fetched_at": "2026-10-08T17:30:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "S2",
+      "type": "PRIMARY",
+      "url": "https://property.franklincountyauditor.com/_web/Datalets/Datalet.aspx?mode=&UseSearch=no&jur=025&pin=01029646100",
+      "publisher": "Franklin County Auditor",
+      "title": "Parcel 010-296461-00 property record",
+      "published_at": null,
+      "fetched_at": "2026-10-08T17:30:00Z",
+      "http_status": 200
+    },
+    {
+      "id": "S3",
+      "type": "PRIMARY",
+      "url": "https://property.franklincountyauditor.com/_web/Datalets/Datalet.aspx?mode=&UseSearch=no&jur=025&pin=01035193400",
+      "publisher": "Franklin County Auditor",
+      "title": "Parcel 010-351934-00 property record (system under maintenance at time of access)",
+      "published_at": null,
+      "fetched_at": "2026-10-08T17:30:00Z",
+      "http_status": 200
+    }
+  ],
+  "claim_ledger": [
+    {
+      "id": "C1",
+      "claim": "Columbus issued 28 new-construction building permits worth $66.8 million in the week of September 28 to October 4, 2026, the highest weekly total in the eight weeks CREN checked.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "CALCULATION",
+      "calculation": "Sum of G3_VALUE_TTL for all GENERAL_TYPE values ending 'New Structure' with ISSUED_DT >= 2026-09-28 and < 2026-10-05 = $66,831,507 across 28 records, queried from the Building Permits ArcGIS feature service. Compared against the same sum for each prior week back to 2026-08-10 (ranging $8.16M-$48.46M); this week's total is the highest of the eight."
+    },
+    {
+      "id": "C2",
+      "claim": "Two projects, a 273-unit apartment cluster near the Dublin border and a commercial building on Harmon Avenue, made up $57.25 million of that total, about 86%.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "CALCULATION",
+      "calculation": "Perrins Lane/Haggerston Blvd/Riggins Run cluster (parcel 010296461) totals $29,050,000; Harmon Ave. cluster (parcel 010351934) totals $28,200,000. Sum = $57,250,000. $57,250,000 / $66,831,507 = 0.857, about 86%."
+    },
+    {
+      "id": "C3",
+      "claim": "CREN queried the City of Columbus's public Building Permits dataset, a feed the city releases into the public domain under a Creative Commons Zero waiver, for every new-structure permit issued between Sept. 28 and Oct. 4, 2026, then grouped permits sharing a parcel number into single projects before ranking them by declared value.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C4",
+      "claim": "The single largest permit was a $27 million commercial filing at 1100 Harmon Ave. on Columbus's South Side, ZIP code 43223, paired with a second, $1.2 million permit at the same address for mechanical work, for a combined $28.2 million project.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C5",
+      "claim": "The week's largest project by combined value sat on one 9.8-acre parcel in ZIP code 43016, near the Dublin-Columbus line, where the city issued four permits: three multifamily permits, for 119 units at 5151 Perrins Lane ($12.5 million), 118 units at 5211 Perrins Lane ($11.5 million), and 36 units at 5294 Haggerston Boulevard ($4.1 million), plus a fourth, $950,000 commercial permit with no listed units at 5180 Riggins Run.",
+      "source_ids": [
+        "S1",
+        "S2"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C6",
+      "claim": "Together, the four permits total $29.05 million in declared value and 273 apartment units.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "CALCULATION",
+      "calculation": "$12,500,000 + $11,500,000 + $4,100,000 + $950,000 = $29,050,000. Units: 119 + 118 + 36 + 0 = 273."
+    },
+    {
+      "id": "C7",
+      "claim": "Franklin County Auditor records show the parcel behind the Perrins Lane permits, parcel number 010296461, belongs to an entity called Havery Run LLC and was still classified as commercial vacant land with no recorded building value as of CREN's October 8, 2026 search, consistent with construction that has not yet broken ground.",
+      "source_ids": [
+        "S2"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C8",
+      "claim": "The Franklin County Auditor's property database was down for scheduled maintenance when CREN checked the Harmon Avenue parcel on the same day, so this week's reporting could not confirm who owns that site or what it will become, and CREN found no independent news coverage naming a developer for either project this week.",
+      "source_ids": [
+        "S3"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C9",
+      "claim": "Three smaller permits round out the week's top five by declared value: a $1,011,668 single-family home permit at 1250 Briarmeadow Drive in ZIP 43235, in northwest Columbus; a $1 million commercial permit at 6250 Westbourne Avenue in ZIP 43035, on the metro area's northern edge; and a $650,000 single-family home permit at 504 W. 1st Ave. in ZIP 43201, near Short North.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "FACT"
+    },
+    {
+      "id": "C10",
+      "claim": "Columbus's $66.8 million in new-structure permit value for the week of Sept. 28 to Oct. 4 topped every other week CREN checked going back to Aug. 10, 2026.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "COMPARISON",
+      "calculation": "Weekly G3_VALUE_TTL sums (2026): Aug 10-17 $25.44M; Aug 17-24 $16.59M; Aug 24-31 $10.31M; Aug 31-Sep 7 $33.74M; Sep 7-14 $37.04M; Sep 14-21 $8.16M; Sep 21-28 $48.46M; Sep 28-Oct 5 $66.83M (highest of the eight)."
+    },
+    {
+      "id": "C11",
+      "claim": "The next-highest week, Sept. 21 to 27, totaled $48.5 million across 38 permits.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "COMPARISON"
+    },
+    {
+      "id": "C12",
+      "claim": "The week of Sept. 7 to 13 carried a single $32 million permit, the largest of any week in the eight-week span, but that week's total declared value still came to only $37 million.",
+      "source_ids": [
+        "S1"
+      ],
+      "kind": "COMPARISON"
+    }
+  ],
+  "entity_ledger": [
+    {
+      "name": "Havery Run LLC",
+      "source_ids": [
+        "S2"
+      ]
+    },
+    {
+      "name": "City of Columbus Department of Building and Zoning Services",
+      "source_ids": [
+        "S1"
+      ]
+    },
+    {
+      "name": "Franklin County Auditor",
+      "source_ids": [
+        "S2",
+        "S3"
+      ]
+    }
+  ],
+  "image_brief": {
+    "primary_request": "A CREN map of the week's five biggest new-construction building permits, built from public city data, with no photograph required.",
+    "editorial_idea": "Plot the week's top five permitted projects by declared value across the metro so readers can see that this week's unusually high total is concentrated in two large, geographically separate projects rather than spread evenly citywide.",
+    "story_anchors": [
+      "A 273-unit, four-permit apartment cluster on one parcel near the Dublin-Columbus line (ZIP 43016) was the week's largest project by combined value",
+      "A $28.2 million, two-permit commercial project on Harmon Avenue on the South Side (ZIP 43223) was the single largest permit",
+      "The week's $66.8 million total was the highest of any week CREN checked since Aug. 10, 2026"
+    ],
+    "source_asset_considered": true,
+    "source_asset_note": "This week's two largest projects are vacant-land or under-maintenance parcels with no confirmed developer, so no rights-cleared documentary photograph of either site exists; a CREN map built from the public permit dataset and site coordinates accurately represents the week's citywide pattern without implying a photograph of either project.",
+    "image_policy_version": "cren-image-v2-real-photo-first",
+    "image_role": "DATA",
+    "source_review": [
+      {
+        "url": "https://opendata.columbus.gov/datasets/columbus::building-permits",
+        "outcome": "SELECTED",
+        "note": "City of Columbus Building Permits open dataset (CC0). Every point on the map is a permit site pulled from this dataset's coordinates and declared value."
+      },
+      {
+        "url": "https://property.franklincountyauditor.com/_web/Datalets/Datalet.aspx?mode=&UseSearch=no&jur=025&pin=01035193400",
+        "outcome": "UNAVAILABLE",
+        "note": "Checked for a documentary photo lead or ownership record for the Harmon Avenue site; the Franklin County Auditor database was down for maintenance, and no rights-cleared photograph of either top site was located this run."
+      }
+    ],
+    "avoid": "Do not imply the map is a photograph of any property; do not name a developer the permit or auditor record does not confirm; do not treat a permit as proof that construction has started."
+  },
+  "image_alt": "CREN map of Columbus's five biggest building permits for the week of Sept. 28 to Oct. 4, 2026, with the Dublin-area and Harmon Avenue sites marked largest.",
+  "image_provenance": {
+    "type": "CREN_GRAPHIC",
+    "caption": "CREN graphic. Data: City of Columbus Building Permits (CC0), pulled Oct. 8, 2026.",
+    "source": "https://opendata.columbus.gov/datasets/columbus::building-permits",
+    "license": "CC0 1.0 (public domain)",
+    "permission_evidence": "Original CREN map built from the City of Columbus Building Permits open dataset; no third-party image content.",
+    "credit": "CREN graphic",
+    "location_note": "Columbus, Ohio metro area; the five mapped permit sites span ZIP codes 43016, 43201, 43223, 43235 and 43035.",
+    "date_note": "Map created October 8, 2026; the data covers new-structure permits issued Sept. 28 through Oct. 4, 2026, pulled October 8, 2026.",
+    "verified_by": "CREN cloud image desk",
+    "verified_at": "2026-10-08T17:30:00Z"
+  },
+  "cloud_image_asset": {
+    "path": "frontend/content/images/2026-10-08-columbus-biggest-permits-week.png",
+    "git_blob_sha": "7c85883d02b1d2d2850ed5824fde044eadc54add",
+    "source_sha256": "910785f7a6052b5254a2dd3b5edadbc5252c26ba8379c36b1ff17d12e4e71d89",
+    "visual_review": {
+      "reviewed_by": "CREN cloud image desk",
+      "reviewed_at": "2026-10-08T17:30:00Z",
+      "natural_appearance": true,
+      "geometry_and_shadows": true,
+      "no_synthetic_artifacts": true,
+      "story_match": true,
+      "truthful_caption": true,
+      "mobile_crop": true
+    }
+  }
+}

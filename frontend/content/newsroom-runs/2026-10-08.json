@@ -1,0 +1,87 @@
+{
+  "schema_version": "cren-cloud-run-v1",
+  "routine": "cre-news-newsroom",
+  "date": "2026-10-08",
+  "completed_at": "2026-10-08T17:45:00Z",
+  "story_result": "ARTIFACTS_COMMITTED",
+  "article_paths": [
+    "frontend/content/articles/2026-10-08-columbus-biggest-permits-week-of-sept-28.json"
+  ],
+  "editorial_note": "Scheduled cloud handoff-only run for 2026-10-08 (Thursday). No breaking real-estate or lifestyle story cleared the full primary-record + two-independent-origin + currency + image bar this run (see discovery_notes and leads_surveyed_not_selected), so the routine produced the Biggest Permits of the Week recurring data format (frontend/docs/RECURRING_DATA_FORMATS.md, format 2), due on the Thursday run. Using the most recently completed Monday-Sunday week (Sept. 28-Oct. 4, 2026), Columbus issued 28 new-structure building permits worth a combined $66,831,507, the highest weekly declared value CREN found in the eight weeks it checked back to Aug. 10, 2026. CREN grouped permits sharing a parcel number into single projects before ranking: a four-permit, 273-unit apartment cluster on one parcel in ZIP 43016 near the Dublin-Columbus line ($29.05M) and a two-permit commercial project at 1100 Harmon Ave. on the South Side, ZIP 43223 ($28.2M), together accounted for about 86% of the week's value. CREN cross-checked the Perrins Lane parcel against the Franklin County Auditor's property record, confirming it was still classified as vacant commercial land with no building value, consistent with construction not yet underway, and that it is owned by an entity called Havery Run LLC. The Franklin County Auditor's database was down for scheduled maintenance when CREN checked the Harmon Avenue parcel, and no independent news coverage naming a developer for either project was found this run; both gaps are disclosed in the article rather than filled with an unverified guess. No lifestyle story was independently verified to the two-origin bar this run (persistent gap, carried from prior weeks). This receipt records the editorial outcome only; it is never publication authority. No import, image preparation, email delivery, or publication is claimed, and no git commit is treated as publication or downstream-import success.",
+  "artifacts": {
+    "article": "frontend/content/articles/2026-10-08-columbus-biggest-permits-week-of-sept-28.json",
+    "image": "frontend/content/images/2026-10-08-columbus-biggest-permits-week.png",
+    "image_type": "CREN_GRAPHIC (map; image_role DATA) -- built offline by scripts/render-cren-chart.mjs from the City of Columbus Building Permits dataset, with one point per project after parcel-level grouping.",
+    "brief": "Run state, sources, held items, and photo requests are recorded in this receipt; no separate brief file is committed, to keep the PR within the handoff's receipt+article+image scope."
+  },
+  "verification": {
+    "editorial_gate": "PASS 18/18 (frontend/scripts/editorial-quality-lib.mjs evaluateArticle, run this session).",
+    "schema_validation": "PASS. Checked field-by-field against frontend/docs/article-submission.schema.json's required fields, length bounds, enums, and the v1.0.2 image-provenance conditional (ajv's 2020-12 meta-schema was not resolvable offline in this environment, so validation was performed with an equivalent manual field-by-field script covering every required/length/enum/pattern constraint in the schema; all passed).",
+    "import_dry_run": "PASS. scripts/cloud-draft-import.mjs prepareCloudDraft ran clean against the committed package with a simulated source binding (date 2026-10-08, now 2026-10-08T17:40Z): returned imageMode SOURCE_ASSET and gate 18/18; topic-slug ('development'), byline ('CRE News Staff'), article-date, fact_checked_at freshness, cloud_image_asset format, and image-review checks all accepted. Not an actual Vercel import; no SQL/credentials were used (stageCloudDraft/runCloudImport were not called).",
+    "image_plan": "SOURCE_ASSET (frontend/scripts/editorial-image-policy.mjs planEditorialImage; CREN_GRAPHIC, image_role DATA).",
+    "image_hashes_verified": "git hash-object and sha256sum recomputed from the committed PNG match cloud_image_asset (git_blob_sha 7c85883d02b1d2d2850ed5824fde044eadc54add; source_sha256 910785f7a6052b5254a2dd3b5edadbc5252c26ba8379c36b1ff17d12e4e71d89; 83,530 bytes).",
+    "visual_review": "Map PNG (1600x900) opened and inspected in-session before attesting: title 'Columbus's five biggest building permits', subtitle 'Week of Sept. 28-Oct. 4, 2026, by declared value', five labeled points (Perrins Ln. cluster, 1100 Harmon Ave., Briarmeadow Dr., Westbourne Ave., W. 1st Ave.) with the Perrins Lane cluster correctly marked as the primary (largest) point in red, north arrow, and the source line 'Data: City of Columbus Building Permits (CC0), pulled Oct. 8, 2026' clear of the CREN mark. Every point and dollar figure traces to the permit-level data pulled in source S1. Text legible and within the mobile-safe center band; no synthetic artifacts; no building or property depicted or implied; faithful to the disclosed map medium.",
+    "near_duplicate_guard": "render-cren-chart.mjs cleared the near-duplicate check on attempt 2 (min hamming distance 20 vs 11 existing images)."
+  },
+  "story_facts_verified": {
+    "weekly_total": "City of Columbus Building Permits open data (ArcGIS feature service, CC0 1.0), queried October 8, 2026: 28 new-structure permits (GENERAL_TYPE ending 'New Structure') issued Sept. 28-Oct. 4, 2026 (ISSUED_DT >= 2026-09-28 and < 2026-10-05), total declared value $66,831,507. Compared against the same query for each of the seven prior weeks back to Aug. 10, 2026 (Aug10-17 $25,440,372/18 permits; Aug17-24 $16,594,441/38; Aug24-31 $10,307,874/26; Aug31-Sep7 $33,738,340/10; Sep7-14 $37,042,261/14; Sep14-21 $8,164,645/19; Sep21-28 $48,457,210/38): the Sept. 28-Oct. 4 week is the highest total of the eight.",
+    "top_projects": "After grouping permits sharing a B1_PARCEL_NBR into projects: parcel 010296461 (5151 Perrins Ln. 119u/$12.5M, 5211 Perrins Ln. Unit 1101 118u/$11.5M, 5294 Haggerston Blvd. 36u/$4.1M, 5180 Riggins Run 0u/$950,000; ZIP 43016) totals $29,050,000 and 273 units, the week's largest project by combined value. Parcel 010351934 (1100 Harmon Ave. $27,000,000 and 1100 Harmon Ave. Unit Mech $1,200,000; ZIP 43223) totals $28,200,000, the single largest permit of the week. Three further standalone permits round out the top five: 1250 Briarmeadow Dr. (ZIP 43235, $1,011,668, 1 unit), 6250 Westbourne Ave. (ZIP 43035, $1,000,000, commercial), and 504 W. 1st Ave. (ZIP 43201, $650,000, 1 unit).",
+    "property_record_check": "Franklin County Auditor Datalet record for parcel 010-296461-00 (pin 01029646100, jurisdiction 025), accessed October 8, 2026: owner of record Havery Run LLC, property class '400 - COMMERCIAL VACANT LAND', 9.829 acres, $0 improvement value -- confirms the site had not begun construction as of the auditor's current record. The same Auditor system returned 'System is currently unavailable due to maintenance' for parcel 010-351934-00 (the Harmon Avenue site) when checked the same day, so CREN could not confirm that parcel's owner this run.",
+    "original_contributions": "Parcel-level grouping of the week's 28 raw permits into projects (surfacing the four-permit Perrins Lane cluster and the two-permit Harmon Avenue project, neither visible from an address-only read of the feed); an eight-week declared-value comparison (Aug. 10-Oct. 4, 2026) establishing this week as the period's highest; and a Franklin County Auditor cross-check of the week's largest project's parcel, confirming pre-construction status and ownership where the city feed alone does not show either.",
+    "limitations_stated": "Declared value is the applicant's own construction-cost estimate, not an appraisal or sale price; a permit is legal permission to build, not proof construction has started; the Auditor record for the Harmon Avenue parcel could not be checked due to a system maintenance outage; no independent news coverage naming a developer for either top project was found this run."
+  },
+  "sources": {
+    "primary_records": [
+      "City of Columbus, Building Permits (Open Data), ArcGIS feature service https://services1.arcgis.com/9yy6msODkIBzkUXU/arcgis/rest/services/Building_Permits/FeatureServer/0 (dataset page https://opendata.columbus.gov/datasets/columbus::building-permits), CC0 1.0 -- queried 2026-10-08, HTTP 200, for every new-structure record issued Sept. 28-Oct. 4, 2026 (28 records) plus weekly totals back to Aug. 10, 2026.",
+      "Franklin County Auditor property record (Datalet), https://property.franklincountyauditor.com/_web/Datalets/Datalet.aspx (parcel 010-296461-00, pin 01029646100, jur 025) -- accessed 2026-10-08, HTTP 200, owner/land-use/acreage/improvement-value confirmed for the Perrins Lane parcel.",
+      "Franklin County Auditor property record (Datalet), same system (parcel 010-351934-00, pin 01035193400) -- accessed 2026-10-08, HTTP 200 (page content: system under maintenance), owner could not be confirmed for the Harmon Avenue parcel this run."
+    ],
+    "independent_news_origins": [],
+    "background_prior_coverage": [
+      "CREN newsroom article 2026-09-29 (frontend/content/articles/2026-09-29-columbus-permit-pulse.json): the weekly Permit Pulse format for the week of Sept. 21-27, 2026 (new residential units only). Used only as a methodology precedent for querying the same feed; today's article covers a different week, all new-structure permit types (not units-only), and ranks by declared value rather than unit count, per the Biggest Permits of the Week format definition."
+    ]
+  },
+  "idea_queues_consulted": [
+    "briefs/2026-10-06-social-listener.md (newest social listener within prior 48h): NO_VERIFIED_LEADS. Near-horizon items (Estrella Tower, Town High Plaza appeal) remained without an in-window, directly-accessed primary or independent source this run (see leads_surveyed_not_selected).",
+    "briefs/2026-10-04-seo-report.md (newest SEO report within prior 14 days): listed five open assignments (Town High Plaza, Bayer New Albany, Worthington BOE, BJ's Grove City, Ohio Stater/RPM Living); none had a decisive, independently corroborated primary record reachable this run (see leads_surveyed_not_selected)."
+  ],
+  "leads_surveyed_not_selected": [
+    "Town High Plaza / 171-191 S. High St. appeal (AA0001-2026): WebFetch of columbus.legistar.com's matter-detail page returned 'Invalid parameters!' again this run; no committee recommendation or Council vote was located via WebSearch. Watch item carried forward.",
+    "Worthington Harding Hospital referendum / Franklin County BOE certification: WebSearch located Franklin County BOE 'Notice of Election' filings (by-petition and by-commission) dated around Aug. 6-17, 2026 for the Nov. 3, 2026 ballot, but these concern a citizen-proposed charter amendment on the petition-signature threshold and referendum timeline, not a certification of the Boundless/Harding Hospital rezoning referendum itself; a Sept. 10, 2026 Axios article (background only, outside this run's window) places any Boundless referendum vote on the November 2027 ballot, not November 2026. No BOE certification of the Harding Hospital referendum was found this run. Watch item carried forward.",
+    "BJ's Wholesale Club, Grove City (Stringtown Rd.): WebSearch found no Grove City Planning Commission or Council primary record and no second independent origin beyond the Hoodline/Yahoo Finance pair already recorded in the Sept. 28 social listener brief. Not advanced.",
+    "Ohio Stater / 2060 N. High St. (RPM Living redevelopment): WebSearch found continued background coverage (The Lantern, Urban Ohio forum discussion of a University Impact District Review Board conceptual review) but no official city zoning case file, hearing date, or outcome. Not advanced.",
+    "Lifestyle: checked current restaurant-opening and event coverage for a verifiable, non-generic, in-window lifestyle story with a primary record and a housing/real-estate angle; found only recurring seasonal items (Ohio State Homecoming, Oct. 5-10) and restaurant-opening roundups without confirmed in-window dates or primary sourcing. No lifestyle story cleared the bar this run, consistent with the persistent gap documented in the Oct. 4 SEO report."
+  ],
+  "held_items": [
+    "WATCH: Town High Plaza / 171-191 S. High St. appeal (AA0001-2026) -- a Zoning Committee recommendation and full Council vote would be a decisive follow-up record; Legistar matter-detail access continues to fail from this environment.",
+    "WATCH: Worthington Harding Hospital referendum -- whether Democracy Before Developers' petition is certified for a future ballot remains unconfirmed; the Nov. 3, 2026 ballot items located this run are a separate charter-amendment question, not the referendum itself.",
+    "WATCH: 1100 Harmon Ave. (ZIP 43223) commercial project -- owner/developer unconfirmed after a Franklin County Auditor maintenance outage; recheck next week.",
+    "WATCH: Perrins Ln./Haggerston Blvd./Riggins Run apartment cluster (ZIP 43016, parcel 010296461, owner Havery Run LLC) -- still vacant land per the Auditor as of Oct. 8; recheck for site-plan filings or construction start.",
+    "NEEDS_DATA: 'What Rent Costs Here' (HUD FY2027 Fair Market Rents) -- still held; huduser.gov reachability not re-attempted this run.",
+    "Lifestyle gap: no lifestyle story has cleared the two-origin verification bar in several consecutive weeks; carried forward."
+  ],
+  "photo_requests": [
+    "1100 Harmon Ave., South Side (ZIP 43223) -- the week's single largest new-construction permit ($27M); a dated exterior photo of the current site would support a stronger future hero than this week's citywide map if the project is confirmed.",
+    "5151-5294 Perrins Ln./Haggerston Blvd./Riggins Run, near the Dublin-Columbus line (ZIP 43016) -- the week's largest project by combined value (273 units); still vacant land per county records, so a dated photo of the current vacant parcel would help confirm pre-construction status visually.",
+    "Carried from prior runs: 171-191 South High Street (before any demolition); 2060 N. High St. (Ohio Stater, before closure/redevelopment); 1209-1213 Stringtown Rd., Grove City (BJ's Wholesale Club site)."
+  ],
+  "egress_status_this_run": {
+    "reachable": [
+      "services1.arcgis.com Building Permits feature service (HTTP 200; primary permit data, queried directly, 9 separate weekly queries)",
+      "opendata.columbus.gov dataset page (HTTP 200)",
+      "property.franklincountyauditor.com Datalet parcel records (HTTP 200 for both parcels checked; one returned a 'system under maintenance' message as page content rather than parcel data)",
+      "WebSearch and WebFetch generally functional for news and government sources this run"
+    ],
+    "unavailable_or_limited": [
+      "columbus.legistar.com matter-detail pages (returned 'Invalid parameters!' via direct WebFetch; consistent with prior runs)",
+      "columbusunderground.com, nbc4i.com, 10tv.com, bizjournals.com/columbus (not independently re-tested this run; consistent with prior runs' blocked pattern)"
+    ]
+  },
+  "handoff_status": {
+    "discovery_reporting": "COMPLETED. No breaking real-estate or lifestyle story cleared the full verification and image bar this run; the Biggest Permits of the Week recurring data format for the week of Sept. 28-Oct. 4, 2026 was produced instead, passed the editorial gate 18/18, passed a manual field-by-field schema check, and passed the import dry-run clean.",
+    "github_commit": "Article JSON, CREN map PNG, and this receipt committed to the routine branch and handed to main via PR/merge per the delivery sequence.",
+    "website_import": "PENDING. Not claimed as succeeded; Vercel imports from main at minute 05 subject to its gates. A git merge is not an import.",
+    "image_proof": "PENDING. image_url is null; Vercel prepares the image and sends the proof; only the configured owner's verified email approval of the exact unchanged article-image package can publish.",
+    "image_hold": "NONE. The CREN map cleared the image contract (SOURCE_ASSET) with no blocking hold."
+  }
+}

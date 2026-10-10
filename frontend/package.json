@@ -27,6 +27,8 @@
     "newsroom:prune-intake": "node scripts/prune-intake-security.mjs",
     "newsroom:migrate-agent-operations": "node scripts/migrate-agent-operations.mjs",
     "newsroom:cadence": "node --experimental-strip-types scripts/newsroom-cadence.mjs",
+    "newsroom:run-guard": "node scripts/newsroom-run-guard.mjs",
+    "newsroom:ledgers": "node scripts/newsroom-ledgers.mjs",
     "release:configure-supervised": "node scripts/configure-supervised-rollout.mjs",
     "newsroom:configure-email-dns": "python3 scripts/configure-editorial_email_dns.py",
     "newsroom:email-review": "node --experimental-strip-types scripts/editorial-email-review.mjs",

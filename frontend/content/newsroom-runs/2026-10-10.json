@@ -1,0 +1,62 @@
+{
+  "schema_version": "cren-cloud-run-v1",
+  "routine": "cre-news-newsroom",
+  "date": "2026-10-10",
+  "completed_at": "2026-10-10T10:40:00Z",
+  "story_result": "NO_QUALIFYING_STORY",
+  "article_paths": [],
+  "editorial_note": "Scheduled cloud handoff-only run for 2026-10-10 (Saturday). No breaking real-estate or lifestyle story cleared the full primary-record + two-independent-origin + currency + non-duplicate + image bar this run, and no recurring data format is both due today and sourceable. Per frontend/docs/RECURRING_DATA_FORMATS.md the weekday-anchored formats do not fire on a Saturday (Permit Pulse is the Monday run; Biggest Permits the Thursday run, produced 2026-10-08; Demolition Watch the first Tuesday, covered 2026-10-07; Zoning Watch the second Wednesday, which is 2026-10-14, not today), the quarterly Columbus Home Price Index was already run 2026-10-03, and the one annual format arguably due this month -- 'What Rent Costs Here' (HUD FY2027 Fair Market Rents) -- remains unsourceable: huduser.gov returned HTTP 202 (AWS WAF bot challenge) for the FMR portal page and the FY2027 data-file download, and the HUD FMR API returned HTTP 401 (bearer token required) this run, so per the recurring-format rule ('If the data pull fails, say so in the brief and hold; never estimate numbers') the format is held, not estimated. The routine therefore produces this completion receipt with no article, which is the correct, documented outcome for a quiet, source-limited day. This receipt records the editorial outcome only; it is never publication authority. No website import, image preparation, email delivery, or publication is claimed, and no git commit is treated as publication or downstream-import success. No DATABASE_URL, email-provider, Vercel, admin, publication, or HUD credentials were requested, printed, copied, or used (a presence-only check confirmed none were present in the session environment this run); newsroom-run.mjs and publish-article.mjs were not called.",
+  "artifacts": {
+    "article": null,
+    "image": null,
+    "brief": "Run state, idea queues consulted, leads surveyed, held items, photo requests, and egress state are recorded in this receipt; no separate brief file is committed, to keep the PR within the handoff's receipt+article+image scope."
+  },
+  "idea_queues_consulted": [
+    "briefs/2026-10-09-social-listener.md (newest social listener within the prior 48h). Result was NO_VERIFIED_LEADS. Its near-horizon items were re-checked against primary records this run: the Town High Plaza appeal (AA0001-2026) remains at 'Second Reading' with no new vote; the Franklin County BOC Rezoning Hearing (Oct 13) and Planning Commission (Oct 14) have not yet occurred; Estrella Tower review remains set for Oct 27; the RPM Living/Ohio Stater UIDRB review remains set for Oct 22; Worthington BOE certification is still unconfirmed; Zone In Phase 2 comment period runs through Oct 24.",
+    "briefs/2026-10-06-social-listener.md (second newest within the prior 48h). NO_VERIFIED_LEADS; carried-forward near-horizon items only. Nothing new cleared.",
+    "briefs/2026-10-04-seo-report.md (newest SEO report within the prior 14 days). Its open assignments (Bayer New Albany campus, BJ's Wholesale Grove City, Ohio Stater/2060 N. High St., and the persistent lifestyle gap) were treated as an untrusted idea queue and independently re-checked; none reached a decisive, two-origin, non-duplicate, image-ready state this run (see leads_surveyed_not_selected)."
+  ],
+  "leads_surveyed_not_selected": [
+    "Town High Plaza / 171-191 S. High St. demolition appeal (AA0001-2026, COA2600161): DUPLICATE + no material change. CREN already published the advance/hearing story 2026-10-04 (frontend/content/articles/2026-10-04-downtown-columbus-high-street-demolition-appeal.json). The Columbus Legistar web API (webapi.legistar.com/v1/columbus/matters/138758) was reachable this run, HTTP 200: MatterStatusName 'Second Reading', the single history action remains 'Read and Filed' at the Zoning Committee on 2026-10-05, MatterAgendaDate/MatterPassedDate 2026-10-05. No committee recommendation, Council vote, or enactment has occurred since the Oct 4 article, so there is no material change to report; a new article would duplicate it. Carried as a watch item for the decisive outcome.",
+    "City Council zoning pipeline (Legistar, reachable HTTP 200; the recent-matters scan is the closest thing to 'new' this run): the Clerk's Office posted bulletin public notices PN0393-PN0400 dated Oct 6-8, 2026, including PN0397-2026 'City Council Zoning Agenda for October 19, 2026' and PN0396-2026 'City of Columbus Graphics Commission Zoning Meeting October 20, 2026'. These are advance notices of future meetings, not decisions. The only zoning legislation in the recent window is two council variances introduced Oct 2 and still on Second Reading -- CV26-074 (ordinance 2814-2026, 1107 E. Mound St., 43205) and CV26-054 (ordinance 2815-2026, 370 & 376 Woodland Ave., 43201) -- neither voted nor independently corroborated, with generic local consequence and no rights-cleared image. None clears the strong-story + two-origin + decisive-event bar; not advanced. A Zoning Watch-style map of the pending variance docket is the natural vehicle if these mature, and that monthly format is due the second Wednesday (Oct 14), not today.",
+    "'What Rent Costs Here' / HUD FY2027 Fair Market Rents (Columbus, OH HUD Metro FMR Area): FY2027 FMRs are effective Oct 1, 2026, so this annual October format is arguably due, but the per-area bedroom-level table lives on huduser.gov, which returned HTTP 202 (AWS WAF challenge) for both the FMR portal page and the FY2027 data-file download this run, and the HUD FMR API returned HTTP 401 (token required). No official Columbus metro figures could be obtained. Per the recurring-format rule the format is HELD, not estimated from non-primary aggregators. This is the same block recorded on 2026-10-02, 2026-10-03, and 2026-10-09.",
+    "Franklin County rezoning docket -- BOC Rezoning Hearing Oct 13 and Planning Commission Oct 14 (surveyed in detail in the 2026-10-09 receipt: ZON-26-08 Macca Auto Sales 3280 S. Hamilton Rd.; ZON-26-09 Lennox Town Center 777 Kinnear Rd.; ZON-26-11 Hayden Run Rd.; JEFF-26-07 Clark State Rd.): both hearings are in the future and have not occurred, so no decision exists to report. These remain small, routine, uncontested township cases; recheck after the hearings for any denial, controversy, or material change.",
+    "Bayer $2.2B New Albany pharmaceutical campus (SEO-report assignment): no new primary housing-provision or land-use approval record located this run; not a newsroom-day story.",
+    "Ohio Stater / 2060 N. High St. (RPM Living redevelopment, University District): no official city zoning case file or UIDRB agenda for the Oct 22, 2026 conceptual review was accessible this run; only background coverage exists and the hearing has not occurred. No decisive primary record; not advanced.",
+    "Worthington Harding/Boundless rezoning referendum (Franklin County Board of Elections): no BOE certification of the referendum petition was found this run; no decisive October development.",
+    "Lifestyle: re-checked current Columbus neighborhood, events, and housing-market coverage. Found only undated real-estate-aggregator snapshots and promotional pages, with no in-window primary source, confirmed date, or non-generic angle that could be verified to the two-origin bar. No lifestyle story cleared this run; consistent with the persistent multi-week lifestyle gap documented in the Oct. 4 SEO report."
+  ],
+  "held_items": [
+    "WATCH: Town High Plaza / 171-191 S. High St. appeal (AA0001-2026) -- oral arguments 'Read and Filed' at the Zoning Committee Oct 5; a committee recommendation and full Council vote, or movement in the parallel receivership suit, would each be a decisive, non-duplicate follow-up record.",
+    "WATCH: Columbus City Council zoning agenda for Oct 19, 2026 (PN0397-2026) and the pending council variances CV26-074 (1107 E. Mound St.) and CV26-054 (370 & 376 Woodland Ave.) -- recheck after the Oct 19 session for any decisive vote or contested case.",
+    "WATCH: Franklin County rezoning docket -- BOC hearing Oct 13 and Planning Commission Oct 14; recheck after the hearings. The monthly Zoning Watch format (due the second Wednesday, Oct 14) is the natural vehicle if any case matures.",
+    "WATCH: Estrella Tower (175-199 E. Rich St., COA2601058) -- Downtown Commission conceptual review set for Oct 27, 2026; already covered 2026-10-05, so only a material change or the review outcome would warrant a follow-up.",
+    "WATCH: RPM Living / Ohio Stater (2060 N. High St.) -- University Impact District Review Board conceptual review set for Oct 22, 2026; needs a primary city zoning/application record before a story.",
+    "WATCH: Worthington Harding/Boundless rezoning referendum -- BOE certification and the applicable ballot date remain unconfirmed.",
+    "NEEDS_DATA: 'What Rent Costs Here' (HUD FY2027 Fair Market Rents) -- held because huduser.gov is WAF-blocked (HTTP 202 challenge) and the HUD FMR API needs a token (HTTP 401); retry the data pull on the next run before producing this annual format. Do not estimate from aggregators.",
+    "GAP: no lifestyle story has cleared the two-origin verification bar in several consecutive weeks; carried forward."
+  ],
+  "photo_requests": [
+    "Carried from prior runs (owner shoots; routine never contacts anyone): 171-191 South High Street (dated exterior, before any demolition); 2060 N. High St. (Ohio Stater, before closure/redevelopment); 1209-1213 Stringtown Rd., Grove City (BJ's Wholesale Club site); 600 Stimmel Road / McCoy Park, southwest Columbus (before any NWSL-facility groundbreaking); 197 E. Gay Street, Downtown (before any approved demolition); 777 Kinnear Rd. (Lennox Town Center) and the Hayden Run Rd. commercial-PD site, if either Franklin County rezoning advances after the Oct 13-14 hearings."
+  ],
+  "egress_status_this_run": {
+    "reachable": [
+      "webapi.legistar.com Columbus matters API (HTTP 200; used for the recent-legislation scan and the AA0001-2026 matter record and history)",
+      "columbus.legistar.com Calendar and Legislation pages (HTTP 200)",
+      "fred.stlouisfed.org fredgraph CSV (HTTP 200; confirmed reachable but not needed -- the quarterly Home Price Index format was already run 2026-10-03 and FRED's next ATNHPIUS18140Q update is Oct 27)",
+      "WebSearch and WebFetch generally functional for news and government sources"
+    ],
+    "unavailable_or_limited": [
+      "huduser.gov FMR portal page and FY2027 data file (HTTP 202 AWS WAF challenge) and the HUD FMR API (HTTP 401 token required) -- blocked the 'What Rent Costs Here' data pull again",
+      "columbus.gov /Government/City-Bulletin and /bulletin/ paths (HTTP 404/301 at the attempted URLs; bulletin content is instead visible as the PN public-notice matters in Legistar)",
+      "columbusunderground.com, nbc4i.com, 10tv.com, bizjournals.com/columbus (consistent with prior runs' blocked pattern; not the deciding factor today)"
+    ]
+  },
+  "handoff_status": {
+    "discovery_reporting": "COMPLETED. The newest social-listener and SEO-report idea queues, the near-horizon watch items, recent Columbus City Council legislation and bulletin public notices via Legistar, the recurring-format schedule and the HUD FMR data source, and general real-estate and lifestyle searches were all checked. No story cleared the full verification/currency/non-duplicate/image bar, and no recurring format was both due today and sourceable, so no article was produced.",
+    "github_commit": "This completion receipt is committed to the routine branch and handed to main via PR and merge per the delivery sequence. No article or image files are part of this run.",
+    "website_import": "NOT APPLICABLE / PENDING. No article package was produced to import; a git merge is not an import and none is claimed.",
+    "image_proof": "NOT APPLICABLE. No article, so no image, proof, or approval is in play.",
+    "image_hold": "NONE this run (no image was needed); the 'What Rent Costs Here' format is held for a data-access reason, not an image reason."
+  }
+}
